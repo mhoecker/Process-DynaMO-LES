@@ -1,3 +1,4 @@
+function FluxTower2NetCDF(inloc,fname,outloc)
 %% 
 %% This script converts the raw 32 columns of acii data into
 %% a CDl ascii file which it the uses `ncgen` to  convert the 
@@ -11,12 +12,10 @@
 %% This program is provided with no guarntees whatsoever
 %%
 %%
-loc = "/home/mhoecker/work/les/forMartin/input/";
 tmp = "/home/mhoecker/tmp/";
-fname = 'DYNAMO_2011_Leg3_PSD_flux_5min_all';
-cdlid = fopen([tmp fname '.cdl'],'w');
+cdlid = fopen([tmp fname '.cdf'],'w');
 fprintf(cdlid,'netcdf %s {\n', fname);
-X = load([loc fname,'.txt']);
+X = load([inloc fname,'.txt']);
 Ns = size(X);
 t = X(:,1);
 N = Ns(1);
@@ -236,5 +235,4 @@ for i=1:M
 endfor
 fprintf(cdlid,'}\n', fname)
 fclose(cdlid)
-unix(['ncgen -o ' fname '.nc ' tmp fname '.cdl'])
-unix(['rm ' tmp fname '.cdl'])
+unix(['ncgen -o ' outloc fname '.nc ' tmp fname '.cdl && rm ' tmp fname '.cdl'])
