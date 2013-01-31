@@ -12,18 +12,24 @@ function FluxTower2NetCDF(inloc,fname,outloc)
 %% This program is provided with no guarntees whatsoever
 %%
 %%
+txtfile = [inloc fname,'.txt'];
+ncfile = [outloc fname '.nc'];
 tmp = "/home/mhoecker/tmp/";
-cdlid = fopen([tmp fname '.cdf'],'w');
-fprintf(cdlid,'netcdf %s {\n', fname);
-X = load([inloc fname,'.txt']);
+cdffile = [tmp fname '.cdf'];
+#
+X = load(txtfile);
 Ns = size(X);
 t = X(:,1);
 N = Ns(1);
 M = Ns(2);
+#
+cdlid = fopen(cdffile,'w');
+fprintf(cdlid,'netcdf %s {\n', fname);
+#
 vars = {};
 longname = {};
 units = {};
-instrument = {}
+instrument = {};
 for i=1:M;
  vars = {vars{:},['var' num2str(i)]};
  units = {units{:},'TBD'};
@@ -235,4 +241,4 @@ for i=1:M
 endfor
 fprintf(cdlid,'}\n', fname)
 fclose(cdlid)
-unix(['ncgen -o ' outloc fname '.nc ' tmp fname '.cdl && rm ' tmp fname '.cdl'])
+unix(['ncgen -o ' ncfile ' ' cdffile ' && rm ' cdffile])
