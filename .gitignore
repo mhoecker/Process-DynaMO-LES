@@ -2,3 +2,5 @@
 # gedit backup files
 *.*~
 *~
+# Octave core dumps
+octave-core
