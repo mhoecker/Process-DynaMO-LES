@@ -14,7 +14,7 @@ if(nargin<1)
 endif
 	switch(termtype)
 		case 'epsposter'
-			termtxt = 'postscript eps enhanced color size 15in,10in font "Helvetica,48" blacktext linewidth 2';
+			termtxt = 'postscript eps enhanced color size 12in,9in font "Helvetica,48" blacktext linewidth 2';
 			termsfx = '.eps';
 		case 'epsarticle'
 			termtxt = 'postscript eps enhanced color size 9in,6in font "Helvetica,12" blacktext linewidth 2';
