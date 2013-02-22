@@ -62,7 +62,7 @@ Cavg = mean(Cur(1,:)); # Find and average current velocity
 #
 #Create artificial samples times
 #
-Ntsam = max(tnc)*Cavg/dxnc;
+Ntsam = floor(max(tnc)*Cavg/dxnc);
 tsam = dxnc/Cavg:dxnc/Cavg:max(tnc);
 idxsam = 1:Ntsam;
 idxsam = mod(idxsam-1,Nxnc)+1;
@@ -73,6 +73,8 @@ for i=1:Ntsam
  [w1,w2] = weights(tsam(i),tnc(t1idx),tnc(t2idx));
  Ty(:,i) = w1*Tync(t1idx,:,idxsam(i))+w2*Tync(t2idx,:,idxsam(i));
 endfor
+Tymax = max(max(Ty));
+Tymin = min(min(Ty));
 #
 [tx,zz] = meshgrid(tsam,znc);
 Nsteps = 8;
@@ -81,32 +83,46 @@ Nzstep = floor(Nznc/Nsteps);
 #
 #
 [termtxt,termsfx] = termselect(termtype);
-FakeTfile =  [tmp "Stiched_T-chain"];
-binmatrix(tsam,znc,Ty,[FakeTfile ".dat"]);
-fid = fopen([FakeTfile ".plt"],"w");
-fprintf(fid,"set xrange [%f:%f]\n",min(tsam),max(tsam));
-fprintf(fid,"set view map\n");
-fprintf(fid,"set pm3d\n");
-fprintf(fid,"set isosamples 128,128\n");
-fprintf(fid,"tri(x) = (x-floor(x))\n");
-fprintf(fid,"set palette mode HSV\n");
-fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
-fprintf(fid,"unset surface\n");
-fprintf(fid,"set xlabel 'time (s)'\n");
-fprintf(fid,"set ylabel 'depth (m)'\n");
-fprintf(fid,"set cblabel 'Temperature (C)'\n");
-fprintf(fid,"set yrange [*:*] reverse\n");
-fprintf(fid,"set yrange [*:*] reverse\n");
-fprintf(fid,"set key bmargin\n");
-fprintf(fid,"set key horizontal\n");
-fprintf(fid,"set output '%s'\n",[FakeTfile termsfx]);
-fprintf(fid,"set term %s\n",termtxt);
-fprintf(fid,"splot '%s' matrix binary lc 'black' notitle\n",[FakeTfile ".dat"]);
+factor(Ntsam)
+pieces = max(factor(Ntsam))
+if(pieces>Ntsam/pieces)
+	pieces=Ntsam/pieces;
+endif
+chunk =Ntsam/pieces
+places = 1+floor(log(pieces)/log(10));
+for i=1:pieces
+	FakeTfile =  ["Stiched_T-chain" padint2str(i,places)];
+	jstart = 1+chunk*(i-1);
+	jstop = chunk*i;
+	tchunk = tsam(jstart:jstop);
+	Tychunk = Ty(:,jstart:jstop);
+	binmatrix(tchunk,znc,Tychunk,[tmp FakeTfile ".dat"]);
+	fid = fopen([tmp FakeTfile ".plt"],"w");
+	fprintf(fid,"set xrange [%f:%f]\n",min(tchunk),max(tchunk));
+	fprintf(fid,"set view map\n");
+	fprintf(fid,"set pm3d\n");
+	fprintf(fid,"set isosamples 128,128\n");
+	fprintf(fid,"tri(x) = (x-floor(x))\n");
+	fprintf(fid,"set palette mode HSV\n");
+	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
+	fprintf(fid,"unset surface\n");
+	fprintf(fid,"set xlabel 'time (s)'\n");
+	fprintf(fid,"set ylabel 'depth (m)'\n");
+	fprintf(fid,"set cblabel 'Temperature (C)'\n");
+	fprintf(fid,"set cbrange [%f:%f]\n",Tymin,Tymax);
+	fprintf(fid,"set yrange [*:*] reverse\n");
+	fprintf(fid,"set key bmargin\n");
+	fprintf(fid,"set key horizontal\n");
+	fprintf(fid,"set output '%s'\n",[output_dir FakeTfile termsfx]);
+	fprintf(fid,"set term %s\n",termtxt);
+	fprintf(fid,"splot '%s' matrix binary lc 'black' notitle\n",[tmp FakeTfile ".dat"]);
 #
-fclose(fid);
-unix(["gnuplot " FakeTfile ".plt"]);
+	fclose(fid);
+	unix(["gnuplot " tmp  FakeTfile ".plt"]);
 #
-save("-V7",[FakeTfile ".mat"],"tsam","znc","Ty");
+	clear tchunk Tychunk jstart jstop	
+end
+save("-V7",[output_dir FakeTfile ".mat"],"tsam","znc","Ty");
 #
 eta = Wave.ht; # Wave height in meters
 t2 = Wave.time-min(Wave.time); # Time in seconds of wave height measurement
