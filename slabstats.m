@@ -5,20 +5,7 @@ tmp = "/home/mhoecker/tmp/";
 if(nargin<3) 
 	termtype="png";
 endif
-switch(termtype)
-	case 'epsposter'
-		termtxt = 'postscript eps enhanced color size 15in,10in font "Helvetica,48" blacktext linewidth 2';
-		termsfx = '.eps';
-	case 'epsarticle'
-		termtxt = 'postscript eps enhanced color size 9in,6in font "Helvetica,12" blacktext linewidth 2';
-		termsfx = '.eps';
-	case 'epsarticlesmall'
-		termtxt = 'postscript eps enhanced color size 4.5in,3in font "Helvetica,10" blacktext linewidth 2';
-		termsfx = '.eps';
-	otherwise
-		termtxt = "png size 1536,1024 truecolor linewidth 2";
-		termsfx = '.png';
-end
+[temtxt,termsfx] = termselect(termtype);
 #
 # Import Simulation Data
 # 
