@@ -53,12 +53,10 @@ FTz = zeros(Nxnc,Nync,Ntnc);
 PTz = zeros(Nxnc,Nync,Ntnc);
 RTz = zeros(Nxnc,Nync,Ntnc);
 #
+places = 1+floor(log(Ntnc)/log(10));
 for i=1:Ntnc
-	num = num2str(i);
-	if(i<10)
-		num = ["0" num];
-        endif
-        tstamp = num2str(tnc(i));
+	num = padint2str(i,places);
+        tstamp = num2str(tnc(i),"%05.1f");
 	Tav(i) = mean(mean(Tznc(i,:,:)));
 	DTz(:,:,i) = squeeze(Tznc(i,:,:))- Tav(i);
 	rmsTz(i) = sqrt(sum(sum(DTz(i,:,:).^2))/(Nxnc*Nync));
