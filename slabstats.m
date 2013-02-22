@@ -96,8 +96,8 @@ for i=1:Ntnc
 	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 	fprintf(fid,"unset surface\n");
 	fprintf(fid,"unset key\n");
-	fprintf(fid,"set xtics out\n");
-	fprintf(fid,"set ytics out\n");
+	fprintf(fid,"set xtics out nomirror\n");
+	fprintf(fid,"set ytics out nomirror\n");
 #
 	fprintf(fid,"set title 'SST anomaly (C) at t = %gs'\n",tnc(i));
 	fprintf(fid,"set xrange [%f:%f]\n",min(xnc),max(xnc));
