@@ -5,7 +5,7 @@ tmp = "/home/mhoecker/tmp/";
 if(nargin<3) 
 	termtype="png";
 endif
-[temtxt,termsfx] = termselect(termtype);
+[termtxt,termsfx] = termselect(termtype);
 #
 # Import Simulation Data
 # 
@@ -93,7 +93,7 @@ for i=1:Ntnc
 	fprintf(fid,"set pm3d\n");
 	fprintf(fid,"set palette mode HSV\n");
 	fprintf(fid,"tri(x) = (x-floor(x))\n");
-	fprintf(fid,"set palette function %s,%s,%s\n" , '(.5+.5*+tanh(pi*(.5-gray)))*.8' , '.5+.5*tanh(4*pi*(1-gray))', '.5+.5*tanh(4*pi*gray)');
+	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 	fprintf(fid,"unset surface\n");
 	fprintf(fid,"unset key\n");
 #
@@ -111,14 +111,14 @@ for i=1:Ntnc
 	fprintf(fid,"set yrange [%f:%f]\n",0,max(l)/2);
 	fprintf(fid,"set xlabel 'Crosswind Wave # (rad/m)'\n");
 	fprintf(fid,"set ylabel 'Upwind Wave # (rad/m)'\n");
-	fprintf(fid,"set cbrange [%e:%e]\n",6*rmsTz(i)/sqrt(Nxnc*Nync),3*rmsTz(i));
+	fprintf(fid,"set cbrange [%e:%e]\n",3*rmsTz(i)/sqrt(Nxnc*Nync),12*rmsTz(i));
 	fprintf(fid,"set logscale cb\n");
-	fprintf(fid,"set palette function %s,%s,%s\n" , '(1-gray)*.8' , '.5+.5*tanh(4*pi*gray)', '.5+.5*tanh(4*pi*(1-gray))');
+	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 	fprintf(fid,"splot '%s' matrix binary notitle\n",PTdat);
 #
 	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_Rsq" num termsfx]);	
 	fprintf(fid,"set title 'Autocorrelation^2 at t = %gs'\n",tnc(i));
-	fprintf(fid,"set xrange [%f:%f]\n",min(Dx)/2,max(Dx)/2);
+	fprintf(fid,"set xrange [%f:%f]\n",min(Dx),max(Dx));
 	fprintf(fid,"set yrange [%f:%f]\n",0,max(Dy));
 	fprintf(fid,"set xlabel 'Crosswind Dist. (m)'\n");
 	fprintf(fid,"set ylabel 'Upwind Dist. (m)'\n");

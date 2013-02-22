@@ -90,15 +90,16 @@ fprintf(fid,"set pm3d\n");
 fprintf(fid,"set isosamples 128,128\n");
 fprintf(fid,"tri(x) = (x-floor(x))\n");
 fprintf(fid,"set palette mode HSV\n");
-fprintf(fid,"set palette function %s,%s,%s\n",'(1-gray)*.8',"1","1");
+fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 fprintf(fid,"unset surface\n");
 fprintf(fid,"set xlabel 'time (s)'\n");
 fprintf(fid,"set ylabel 'depth (m)'\n");
 fprintf(fid,"set cblabel 'Temperature (C)'\n");
 fprintf(fid,"set yrange [*:*] reverse\n");
+fprintf(fid,"set yrange [*:*] reverse\n");
 fprintf(fid,"set key bmargin\n");
 fprintf(fid,"set key horizontal\n");
-fprintf(fid,"set output '%s'\n",[FakeTfile "." termsfx]);
+fprintf(fid,"set output '%s'\n",[FakeTfile termsfx]);
 fprintf(fid,"set term %s\n",termtxt);
 fprintf(fid,"splot '%s' matrix binary lc 'black' notitle\n",[FakeTfile ".dat"]);
 #
