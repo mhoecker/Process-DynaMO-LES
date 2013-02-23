@@ -101,10 +101,12 @@ for i=1:pieces
 	fprintf(fid,"set view map\n");
 	fprintf(fid,"set pm3d\n");
 	fprintf(fid,"set isosamples 128,128\n");
-	fprintf(fid,"set title 'Synthetic Temperature Profiles'\n");
+	fprintf(fid,"set title 'Synthetic Profile Temperature (C)'\n");
 	fprintf(fid,"set palette mode HSV\n");
 	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 	fprintf(fid,"unset surface\n");
+	fprintf(fid,"set xtics out rotate by -30\n");
+	fprintf(fid,"set ytics out\n");
 	fprintf(fid,"set xlabel 'Time (s)'\n");
 	fprintf(fid,"set ylabel 'Depth (m)'\n");
 	fprintf(fid,"set cblabel 'Temperature (C)'\n");
