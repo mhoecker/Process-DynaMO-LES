@@ -96,8 +96,9 @@ for i=1:Ntnc
 	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
 	fprintf(fid,"unset surface\n");
 	fprintf(fid,"unset key\n");
-	fprintf(fid,"set xtics out nomirror\n");
+	fprintf(fid,"set xtics out nomirror rotate by -30\n");
 	fprintf(fid,"set ytics out nomirror\n");
+	fprintf(fid,"set size ratio -1\n");
 #
 	fprintf(fid,"set title 'SST anomaly (C) at t = %gs'\n",tnc(i));
 	fprintf(fid,"set xrange [%f:%f]\n",min(xnc),max(xnc));
@@ -127,6 +128,7 @@ for i=1:Ntnc
 	fprintf(fid,"set cbrange [1e-3:1]\n");
 	fprintf(fid,"splot '%s' matrix binary notitle\n",RTdat);
 #
+	fprintf(fid,"set size noratio\n");
 	fprintf(fid,"set xtics in\n");
 	fprintf(fid,"set ytics in\n");
 	fprintf(fid,"unset title\n");
