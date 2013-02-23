@@ -14,11 +14,11 @@ if(nargin<1)
 endif
 	switch(termtype)
 		case 'epsposter'
-			termtxt = 'postscript eps enhanced color size 12in,9in font "Helvetica,48" blacktext linewidth 2';
+			termtxt = 'postscript eps enhanced color size 12in,12in font "Helvetica,48" blacktext linewidth 2';
 			termsfx = '.eps';
 		case 'pngposter'
 			# if blown up to 12inx9in creates a 300dpi image
-			termtxt = 'png enhanced butt truecolor size 3600,2700 nocrop font "Helvetica,64" linewidth 6';
+			termtxt = 'png enhanced butt truecolor size 3600,3600 nocrop font "Helvetica,96" linewidth 6';
 			termsfx = '.png';
 		case 'epsarticle'
 			termtxt = 'postscript eps enhanced color size 9in,6in font "Helvetica,12" blacktext linewidth 2';
