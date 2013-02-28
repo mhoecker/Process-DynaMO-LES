@@ -1,0 +1,38 @@
+// to run this file
+// ncap2 -S heatflux.nco in.nc out.nc
+//
+//	Co-ordinates are interlaced
+//	xu ; E/W  
+//	yu ; N/S
+//	zu ; Depth
+//	xw ; E/W
+//	yv ; N/S
+//	zw ; Depth
+//	Variables
+//	float wm(time, zw, yu, xw);
+//	float t(time, zu, yu, xw);
+//	float s(time, zu, yu, xw);
+//wtd = wm(0,$zw,0,$xw);
+//ttd = wm(0,$zu,0,$xw);
+//Calculate the horizontal means
+Tmean=t.avg($xw,$yu);
+Smean=s.avg($xw,$yu);
+wmean=wm.avg($xw,$yu);
+// Calculate Perturbations
+Tp = t-Tmean;
+Sp = s-Smean;
+wp = wm-wmean;
+// dimension sizes
+*sz_zu=$zu.size;
+*sz_zw=$zw.size;
+// Calculate fluxes
+Tf = Tp;
+Sf = Sp;
+for(*idx=1;idx<sz_zu-1;idx++)
+ *wi=(wp(:,idx-1,:,:)+wp(:,idx,:,:))/2;
+ Tf(:,idx,:,:) = Tp(:,idx,:,:)*wi;
+ Sf(:,idx,:,:) = Sp(:,idx,:,:)*wi;
+//end loop
+Tf(:,sz_zu-1,:,:) = Tp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
+Sf(:,sz_zu-1,:,:) = Sp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
+
