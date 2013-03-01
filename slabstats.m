@@ -77,10 +77,12 @@ for i=1:Ntnc
 	PTzmax = max(max(PTz(:,:,i)));
 #
 	DTdat = [tmp "SurfTempAnomoly" num ".dat"];
+	[output_dir "SurfTempStat_SSTA" num termsfx]
 	PTdat = [tmp "SurfTempPSD" num ".dat"];
 	RTdat = [tmp "SurfTempR" num ".dat"];
 	RTtdat = [tmp "SurfTempRt" num ".dat"];
-	binmatrix(xnc,ync,squeeze(DTz(:,:,i)),DTdat,"w");
+	Dtaxlabel = {'Crosswind Dist. (m)','Upwind Dist. (m)',['SST anomaly (C) at t = ' num2str(tnc(i)) 's']};
+	plotslice([output_dir "SurfTempStat_SSTA" num],squeeze(DTz(:,:,i)),xnc,ync,Dtaxlabel,termtype)
 	binmatrix(k  ,l  ,squeeze(PTz(:,:,i)),PTdat,"w");
 	binmatrix(Dx ,Dy ,squeeze(RTz(:,:,i)),RTdat,"w");
 	binmatrix(Dy ,Dx ,squeeze(RTz(:,:,i))',RTtdat,"w");
@@ -88,7 +90,6 @@ for i=1:Ntnc
 	fid = fopen([tmp "SurfTempStat" num ".plt"],"w");
 #
 	fprintf(fid,"set terminal %s\n",termtxt);
-	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_SSTA" num termsfx]);	
 	fprintf(fid,"set view map\n");
 	fprintf(fid,"set size ratio -1\n");
 	fprintf(fid,"set pm3d\n");
@@ -99,14 +100,6 @@ for i=1:Ntnc
 	fprintf(fid,"set xtics out nomirror rotate by -30\n");
 	fprintf(fid,"set ytics out nomirror\n");
 	fprintf(fid,"set size ratio -1\n");
-#
-	fprintf(fid,"set title 'SST anomaly (C) at t = %gs'\n",tnc(i));
-	fprintf(fid,"set xrange [%f:%f]\n",min(xnc),max(xnc));
-	fprintf(fid,"set xlabel 'Crosswind Dist. (m)'\n");
-	fprintf(fid,"set yrange [%f:%f]\n",min(ync),max(ync));
-	fprintf(fid,"set ylabel 'Upwind Dist. (m)'\n");
-	fprintf(fid,"set cbrange [-%e:%e]\n",7*rmsTz(i),7*rmsTz(i));
-	fprintf(fid,"splot '%s' matrix binary notitle\n",DTdat);
 #
 	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_PSD" num termsfx]);	
 	fprintf(fid,"set title 'Spectral Density (C^2 m^2 / rad^2) at t = %g'\n",tnc(i));
