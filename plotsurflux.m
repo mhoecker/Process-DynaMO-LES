@@ -26,7 +26,7 @@ function [t] = plotsurflux(ncfile,trange,basename,tmpdir)
 #
 #The header of the netCDF file 
 #dimensions:
-#	t = 7200 ;
+#	t =  ;
 #variables:
 #	double t(t) ;
 #		t:units = "days" ;
