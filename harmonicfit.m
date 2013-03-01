@@ -44,8 +44,8 @@ for i=1:Nt
  end
 end
 SCvsq = SCval'*SCval;
-[SCvsi,rcon] = inv(SCvsq);
-if(rcon>eps*trace(SCvsi))
+if(abs(det(SCvsq))>eps*trace(SCvsq))
+ SCvsi = inv(SCvsq);
  SCamp = SCvsq\SCval'*xgood';
  ygood = SCamp'*SCval';
  err=xgood-ygood;
