@@ -14,6 +14,10 @@
 //	float s(time, zu, yu, xw);
 //wtd = wm(0,$zw,0,$xw);
 //ttd = wm(0,$zu,0,$xw);
+//
+// Nominal value for oceanic heat capicity J / K m^3
+*rhoCP = 4000000.0;
+//
 //Calculate the horizontal means
 Tmean=t.avg($xw,$yu);
 Smean=s.avg($xw,$yu);
@@ -28,11 +32,16 @@ wp = wm-wmean;
 // Calculate fluxes
 Tf = Tp;
 Sf = Sp;
-for(*idx=1;idx<sz_zu-1;idx++)
+*idx=1;
+while(idx<sz_zu-1){
  *wi=(wp(:,idx-1,:,:)+wp(:,idx,:,:))/2;
- Tf(:,idx,:,:) = Tp(:,idx,:,:)*wi;
+ Tf(:,idx,:,:) = rhoCP*Tp(:,idx,:,:)*wi;
  Sf(:,idx,:,:) = Sp(:,idx,:,:)*wi;
+ idx++;
+}
 //end loop
-Tf(:,sz_zu-1,:,:) = Tp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
+Tf(:,sz_zu-1,:,:) = rhoCP*Tp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
 Sf(:,sz_zu-1,:,:) = Sp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
+Tfmean=Tf.avg($xw,$yu);
+Sfmean=Sf.avg($xw,$yu);
 
