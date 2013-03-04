@@ -30,6 +30,8 @@ dxnc = Lx/(Nxnc+1);
 #
 Dx = xnc-xnc(ceil((Nxnc+1)/2));
 Dy = ync-ync(ceil((Nync+1)/2));
+idxz=find(Dx==0);
+idyz=find(Dy==0);
 k = (1:1:Nxnc)-ceil((Nxnc+1)/2);
 dk = 2*pi/Lx;
 k = k*dk;
@@ -56,7 +58,8 @@ PTz = zeros(Nxnc,Nync,Ntnc);
 RTz = zeros(Nxnc,Nync,Ntnc);
 #
 places = 1+floor(log(Ntnc)/log(10));
-for i=1:Ntnc
+#for i=1:length(tnc)
+for i=25
 	num = padint2str(i,places);
         tstamp = num2str(tnc(i),"%05.1f");
 	Tav(i) = mean(mean(Tznc(i,:,:)));
@@ -74,73 +77,24 @@ for i=1:Ntnc
 	PTz(:,:,i) = (abs(FTz(:,:,i))^2)/(Nxnc*Nync);
 	RTz(:,:,i) = fftshift(real(ifft2(ifftshift(PTz(:,:,i)))));
 	RTz(:,:,i) = (RTz(:,:,i)/max(max(RTz(:,:,i)))).^2;
+	RTzx = squeeze(RTz(idxz,:,i));
+	R1dmin = 2e-3;
+	iRx = find(RTzx>R1dmin/2);
+	RTzy = squeeze(RTz(:,idyz,i))';
+	iRy = find(RTzy>R1dmin/2);
 	PTzmax = max(max(PTz(:,:,i)));
 #
-	DTdat = [tmp "SurfTempAnomoly" num ".dat"];
-	[output_dir "SurfTempStat_SSTA" num termsfx]
-	PTdat = [tmp "SurfTempPSD" num ".dat"];
-	RTdat = [tmp "SurfTempR" num ".dat"];
-	RTtdat = [tmp "SurfTempRt" num ".dat"];
-	Dtaxlabel = {'Crosswind Dist. (m)','Upwind Dist. (m)',['SST anomaly (C) at t = ' num2str(tnc(i)) 's']};
-	plotslice([output_dir "SurfTempStat_SSTA" num],squeeze(DTz(:,:,i)),xnc,ync,Dtaxlabel,termtype)
-	binmatrix(k  ,l  ,squeeze(PTz(:,:,i)),PTdat,"w");
-	binmatrix(Dx ,Dy ,squeeze(RTz(:,:,i)),RTdat,"w");
-	binmatrix(Dy ,Dx ,squeeze(RTz(:,:,i))',RTtdat,"w");
+	Dtaxlabel = {'Upwind Dist. (m)','Crosswind Dist. (m)',['SST anomaly (C) at t = ' num2str(tnc(i)) 's']};
+	plotslice([output_dir "SurfTempStat_SSTA" num],squeeze(DTz(:,:,i))',ync,xnc,Dtaxlabel,termtype);
 #
-	fid = fopen([tmp "SurfTempStat" num ".plt"],"w");
+	Paxlabel = {'Upwind Wave # (rad/m)','Crosswind Wave # (rad/m)',['Spectral Density (C^2 m^2 / rad^2) at t =' num2str(tnc(i)) 's'],'set logscale cb',['set cbrange [' num2str(R1dmin/10) ':1]']};
+	plotslice([output_dir "SurfTempStat_PSD" num],squeeze(PTz(:,:,i))',l,k,Paxlabel,termtype);
 #
-	fprintf(fid,"set terminal %s\n",termtxt);
-	fprintf(fid,"set view map\n");
-	fprintf(fid,"set size ratio -1\n");
-	fprintf(fid,"set pm3d\n");
-	fprintf(fid,"set palette mode HSV\n");
-	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
-	fprintf(fid,"unset surface\n");
-	fprintf(fid,"unset key\n");
-	fprintf(fid,"set xtics out nomirror rotate by -30\n");
-	fprintf(fid,"set ytics out nomirror\n");
-	fprintf(fid,"set size ratio -1\n");
+	Raxlabel = {'Upwind Dist. (m)','Crosswind Dist. (m)',['Autocorrelation^2 at t =' num2str(tnc(i)) 's'],'set logscale cb',['set cbrange [' num2str(R1dmin/10) ':1]']};
+	plotslice([output_dir "SurfTempStat_Rsq" num],squeeze(RTz(:,:,i))',Dy,Dx,Raxlabel,termtype);
+	axeslabels = {'Crosswind Distance (m)','Autocorrelation^2',['Conditional Autocorrelation^2 at t =' num2str(tnc(i)) 's'],['set style data filledcurves y1=' num2str(log10(R1dmin))],'set linetype 1 lc rgb "#ffa0a0"','set logscale y',['set yrange [' num2str(R1dmin) ':1]'],'set xrange [0:*]','set label right at graph 1,0 offset character -1,1 "Langmuir Cell Size" front','set arrow from graph 1,0.01 to graph .85,0.01  size character 2,20 filled lw 4 front'};
+	myplot([output_dir "SurfTempStat_R1Dx" num],Dx(iRx),RTzx(iRx),axeslabels,termtype);
+	axeslabels = {'Upwind Distance (m)','Autocorrelation^2',['Conditional Autocorrelation^2 at t =' num2str(tnc(i)) 's'],['set style data filledcurves y1=' num2str(log10(R1dmin))],'set linetype 1 lc rgb "#a0a0ff"','set logscale y',['set yrange [' num2str(R1dmin) ':1]'],'set xrange [0:*]'};
+	myplot([output_dir "SurfTempStat_R1Dy" num],Dy(iRy),RTzy(iRy),axeslabels,termtype);
 #
-	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_PSD" num termsfx]);	
-	fprintf(fid,"set title 'Spectral Density (C^2 m^2 / rad^2) at t = %g'\n",tnc(i));
-	fprintf(fid,"set xrange [%f:%f]\n",min(k)/3,max(k)/3);
-	fprintf(fid,"set yrange [%f:%f]\n",-dl,max(l)/2);
-	fprintf(fid,"set xlabel 'Crosswind Wave # (rad/m)'\n");
-	fprintf(fid,"set ylabel 'Upwind Wave # (rad/m)'\n");
-	fprintf(fid,"set cbrange [%e:%e]\n",PTzmax/sqrt(Nxnc*Nync),PTzmax);
-	fprintf(fid,"set logscale cb\n");
-	fprintf(fid,"set palette maxcolor 128 function .8*(1-gray),.5+.5*ceil(127./128-gray),.5+.5*floor(127./128+gray)\n");
-	fprintf(fid,"splot '%s' matrix binary notitle\n",PTdat);
-#
-	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_Rsq" num termsfx]);	
-	fprintf(fid,"set title 'Autocorrelation^2 at t = %gs'\n",tnc(i));
-	fprintf(fid,"set xrange [%f:%f]\n",min(Dx),max(Dx));
-	fprintf(fid,"set yrange [%f:%f]\n",0,max(Dy));
-	fprintf(fid,"set xlabel 'Crosswind Dist. (m)'\n");
-	fprintf(fid,"set ylabel 'Upwind Dist. (m)'\n");
-	fprintf(fid,"set cbrange [1e-3:1]\n");
-	fprintf(fid,"splot '%s' matrix binary notitle\n",RTdat);
-#
-	fprintf(fid,"set size noratio\n");
-	fprintf(fid,"set xtics in\n");
-	fprintf(fid,"set ytics in\n");
-	fprintf(fid,"unset title\n");
-	fprintf(fid,"unset colorbox\n");
-	fprintf(fid,"set output '%s'\n",[output_dir "SurfTempStat_R1D" num termsfx]);
-	fprintf(fid,"set multiplot layout 2,1 title 'Conditional Autocorrelation^2 at t = %gs'\n",tnc(i));
-	fprintf(fid,"set logscale y\n");
-	fprintf(fid,"set size ratio 0\n");
-	fprintf(fid,"set key\n");
-	fprintf(fid,"set xrange [%f:%f]\n",0,max(Dx));
-	fprintf(fid,"set yrange [1e-3:1]\n");
-	fprintf(fid,"set ylabel 'Autocorrelation^2'\n");
-	fprintf(fid,"set xlabel 'Crosswind Dist. (m)'\n");
-	fprintf(fid,"plot '%s' matrix binary u 1:3:3 every :::192::192 w linespoints title 'Crosswind' lw 2 pt 1 ps 2\n",RTdat);
-	fprintf(fid,"set xrange [%f:%f]\n",0,max(Dy));
-	fprintf(fid,"set xlabel 'Upwind Dist. (m)'\n");
-	fprintf(fid,"plot '%s' matrix binary u 1:3:3 every :::192::192 w linespoints title 'Upwind' lt 2 lw 2 pt 8 ps 2\n",RTtdat);
-#
-	fclose(fid);
-unix(["gnuplot " tmp "SurfTempStat" num ".plt"])
-unix(["rm " tmp "SurfTempStat" num ".plt" " " RTdat " " PTdat " " DTdat " " RTtdat])
 endfor
