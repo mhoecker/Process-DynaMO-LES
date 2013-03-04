@@ -20,7 +20,7 @@ endif
 			termsfx = '.eps';
 		case 'pngposter'
 			# if blown up to 12inx12in creates a 300dpi image
-			termtxt = 'png enhanced butt truecolor size 3600,3600 nocrop font "Helvetica,96" linewidth 6';
+			termtxt = 'png enhanced truecolor size 3600,3600 nocrop font "Helvetica,96" linewidth 6';
 			termsfx = '.png';
 		case 'epsarticle'
 			termtxt = 'postscript eps enhanced color size 9in,6in font "Helvetica,12" blacktext linewidth 2';
