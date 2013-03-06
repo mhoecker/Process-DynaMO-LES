@@ -2,46 +2,58 @@
 // ncap2 -S heatflux.nco in.nc out.nc
 //
 //	Co-ordinates are interlaced
-//	xu ; E/W  
-//	yu ; N/S
-//	zu ; Depth
-//	xw ; E/W
-//	yv ; N/S
-//	zw ; Depth
+//	xu E/W  
+//	yu N/S
+//	zu Depth
+//	xw E/W
+//	yv N/S
+//	zw Depth
 //	Variables
 //	float wm(time, zw, yu, xw);
 //	float t(time, zu, yu, xw);
 //	float s(time, zu, yu, xw);
-//wtd = wm(0,$zw,0,$xw);
-//ttd = wm(0,$zu,0,$xw);
 //
-// Nominal value for oceanic heat capicity J / K m^3
+// Nominal value for oceanic heat capacity J / K m^3
 *rhoCP = 4000000.0;
 //
 //Calculate the horizontal means
-Tmean=t.avg($xw,$yu);
-Smean=s.avg($xw,$yu);
-wmean=wm.avg($xw,$yu);
-// Calculate Perturbations
-Tp = t-Tmean;
-Sp = s-Smean;
-wp = wm-wmean;
+*T=double(t);
+*S=double(s);
+*w=double(wm);
+Tmean=T.avg($yu,$xw);
+Smean=S.avg($yu,$xw);
+wmean=w.avg($yu,$xw);
+// Calculate Perturbations	
+Tp[$time,$zu,$yu,$xw]=0.0;
+Sp[$time,$zu,$yu,$xw]=0.0;
+wp[$time,$zw,$yu,$xw]=0.0;
+Tp=T-Tmean;
+Sp=S-Smean;
+wp=w-wmean;
+// make the 
+
 // dimension sizes
 *sz_zu=$zu.size;
 *sz_zw=$zw.size;
+//
+defdim("Z",sz_zu);
+Z[$Z]=0.0f;
+*sz=$Z.size;
 // Calculate fluxes
-Tf = Tp;
-Sf = Sp;
-*idx=1;
-while(idx<sz_zu-1){
- *wi=(wp(:,idx-1,:,:)+wp(:,idx,:,:))/2;
- Tf(:,idx,:,:) = rhoCP*Tp(:,idx,:,:)*wi;
- Sf(:,idx,:,:) = Sp(:,idx,:,:)*wi;
+Tf[$time,$Z,$yu,$xw]=0.0;
+Sf[$time,$Z,$yu,$xw]=0.0;
+*idx=0;
+while(idx<sz-1){
+ Z(idx)=float(zw(idx+1)+zw(idx))/2;
+ *wi=(wp(:,idx+1,:,:)+wp(:,idx,:,:))/2;
+ Tf(:,idx,:,:)=rhoCP*Tp(:,idx,:,:)*wi;
+ Sf(:,idx,:,:)=Sp(:,idx,:,:)*wi;
  idx++;
 }
 //end loop
-Tf(:,sz_zu-1,:,:) = rhoCP*Tp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
-Sf(:,sz_zu-1,:,:) = Sp(:,sz_zu-1,:,:)*wp(:,sz_zw-1,:,:);
+Z(sz-1)=zu(sz-1);
+Tf(:,sz-1,:,:)=rhoCP*Tp(:,sz-1,:,:)*wp(:,sz-1,:,:);
+Sf(:,sz-1,:,:)=Sp(:,sz-1,:,:)*wp(:,sz-1,:,:);
 Tfmean=Tf.avg($xw,$yu);
 Sfmean=Sf.avg($xw,$yu);
 
