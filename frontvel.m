@@ -12,7 +12,9 @@ function [u,du] = frontvel(t,x)
 %
 %
 M = length(t)*(length(t)-1)/2;
-dimgood = find(var(x,0,2)>0);
+u = var(x,0,2);
+dimgood = find(u>0);
+u = u*0;
 N = length(dimgood);
 dt = zeros(1,M);
 dx = zeros(N,M);
@@ -31,6 +33,10 @@ err = dt-uip'*dx;
 sige = sum(err.*err)/(M-N-1);
 duip = sqrt(sige*diag(Asqinv)/M);
 uipmag = sqrt(sum(uip.*uip));
-u = uip'/uipmag^2;
+up = uip/uipmag^2;
 du = sum(2*abs(duip.*uip))/uipmag^3;
+for i=1:N
+ j = dimgood(i)
+ u(j) = up(i);
+end
 end
