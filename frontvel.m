@@ -1,7 +1,7 @@
-function [u,err,A,Asqinv] = frontvel(t,x,y,z)
+function [u,du] = frontvel(t,x)
 %function [u,err,A,Asqinv] = frontvel(t,x,y,z)
-% 
-% from a list of observations 
+%
+% from a list of observations
 % t = time
 % x = x-coordinate
 % y = y-coordinate
@@ -12,38 +12,25 @@ function [u,err,A,Asqinv] = frontvel(t,x,y,z)
 %
 %
 M = length(t)*(length(t)-1)/2;
+dimgood = find(var(x,0,2)>0);
+N = length(dimgood);
 dt = zeros(1,M);
-dx = zeros(1,M);
-if(nargin>2)
- dy = zeros(1,M);
- if(nargin>3)
-  dy = zeros(1,M);
- end
-end	
+dx = zeros(N,M);
 k = 0;
 for i=1:length(x)
  for j=i+1:length(x)
   k = k+1;
   dt(k) = t(i)-t(j);
-  dx(k) = x(i)-x(j);
-  if(nargin>2)
-   dy(k) = y(i)-y(j);
-   if(nargin>3)
-    dz(k) = z(i)-z(j);
-   end
-  end
+  dx(:,k) = x(dimgood,i)-x(dimgood,j);
  end
 end
-A=[dx];
-if(nargin>2)
- A = [A;dy];
- if(nargin>3)
-  A = [A;dz];
- end
-end	
-Asq = A*A';
+Asq = dx*dx';
 Asqinv = inv(Asq);
-u = Asqinv*A*dt';
-u = u'/sum(u.*u);
-err = dt-u*A/(u*u');
+uip = Asqinv*dx*dt';
+err = dt-uip'*dx;
+sige = sum(err.*err)/(M-N-1);
+duip = sqrt(sige*diag(Asqinv)/M);
+uipmag = sqrt(sum(uip.*uip));
+u = uip'/uipmag^2;
+du = sum(2*abs(duip.*uip))/uipmag^3;
 end
