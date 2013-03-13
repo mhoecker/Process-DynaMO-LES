@@ -20,7 +20,7 @@ switch(win)
  case 'cos2w'#window using three cosine functions (jump rolls off like f^-8)
   w = (3-4*cos(2*pi*(tgood+dt/2-min(tgood))/Period)+cos(4*pi*(tgood+dt/2-min(tgood))/Period))/8;
  otherwise
-  w = ones(size(xin));
+  w = ones(size(xgood));
 end
 # window the data
 nowinvar = var(xgood,1);
