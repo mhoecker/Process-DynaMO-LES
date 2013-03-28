@@ -27,7 +27,7 @@ function myplot(output,x,y,axeslabels,termtype)
 	fid = fopen(pltfile,"w");
 #
 	fprintf(fid,"set terminal %s\n",termtxt);
-	fprintf(fid,"set output '%s'\n",outfile);	
+	fprintf(fid,"set output '%s'\n",outfile);
 	fprintf(fid,"set xtics out nomirror rotate by -30\n");
 	fprintf(fid,"set ytics out nomirror\n");
 	fprintf(fid,"set xlabel '%s'\n",axeslabels{1});

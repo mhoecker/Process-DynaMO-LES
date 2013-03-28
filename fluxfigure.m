@@ -49,5 +49,25 @@ output = '/home/mhoecker/work/Dynamo/plots/run1/MeanHeatFluxDiv'
 axeslabels = {'Heat Flux Divergence (W/m^3)','Depth (m)','Divergence of Mean Turbulent Heat Flux','set style data filledcurves x1=0','set linetype 1 lc rgb "#a0a0ff"',['set label "Cooling" at ' num2str(minx/2) ',' num2str(meany) ' center front'],['set label "Warming" at ' num2str(maxx/2) ',' num2str(meany) ' center front']
 }
 myplot(output,x,y,axeslabels,termtype);
+clear axeslabels
+dz = ddz(y);
+x = x*dz;
+minx = min(x);
+maxx = max(x);
+meany = mean(y);
+output = '/home/mhoecker/work/Dynamo/plots/run1/MeanHeatFluxDiv'
+axeslabels = {'Heat Flux Divergence (W/m^3)','Depth (m)','Divergence of Mean Turbulent Heat Flux','set style data filledcurves x1=0','set linetype 1 lc rgb "#a0a0ff"',['set label "Cooling" at ' num2str(minx/2) ',' num2str(meany) ' center front'],['set label "Warming" at ' num2str(maxx/2) ',' num2str(meany) ' center front']
+}
+myplot(output,x,y,axeslabels,termtype);
+clear axeslabels
+dz = ddz(y);
+x = x*dz;
+minx = min(x);
+maxx = max(x);
+meany = mean(y);
+output = '/home/mhoecker/work/Dynamo/plots/run1/MeanHeatFluxDiv'
+axeslabels = {'Heat Flux Divergence (W/m^3)','Depth (m)','Divergence of Mean Turbulent Heat Flux','set style data filledcurves x1=0','set linetype 1 lc rgb "#a0a0ff"',['set label "Cooling" at ' num2str(minx/2) ',' num2str(meany) ' center front'],['set label "Warming" at ' num2str(maxx/2) ',' num2str(meany) ' center front']
+}
+myplot(output,x,y,axeslabels,termtype);
 ncclose(nc);
 

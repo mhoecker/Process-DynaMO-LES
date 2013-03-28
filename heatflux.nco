@@ -20,40 +20,106 @@
 *T=double(t);
 *S=double(s);
 *w=double(wm);
+*u=double(um);
+*v=double(vm);
 Tmean=T.avg($yu,$xw);
+Tmean@units="C";
+Tmean@long_name="Mean Temperature";
 Smean=S.avg($yu,$xw);
+Smean@units="g/kg";
+Smean@long_name="Mean Salinity";
+umean=u.avg($yu,$xu);
+umean@units="m/s";
+umean@long_name="Mean Crosswind Velocity";
+vmean=v.avg($yv,$xw);
+vmean@units="m/s";
+vmean@long_name="Mean Upwind Velocity";
 wmean=w.avg($yu,$xw);
+wmean@units="m/s";
+wmean@long_name="Mean Vertical Velocity";
 // Calculate Perturbations	
 Tp[$time,$zu,$yu,$xw]=0.0;
+Tp@units="C";
+Tp@long_name="Temperature Anomaly";
 Sp[$time,$zu,$yu,$xw]=0.0;
+Sp@units="g/kg";
+Sp@long_name="Salinity Anomaly";
+up[$time,$zu,$yu,$xu]=0.0;
+up@units="m/s";
+up@long_name="Crosswind Velocity Anomaly";
+vp[$time,$zw,$yv,$xw]=0.0;
+vp@units="m/s";
+vp@long_name="Upwind Velocity Anomaly";
 wp[$time,$zw,$yu,$xw]=0.0;
+wp@units="m/s";
+wp@long_name="Vertical Velocity Anomaly";
+uwf[$time,$zu,$yu,$xw]=0.0;
+uwf@units="m^2/s^2";
+uwf@long_name="Vertical Crosswind Velocity Flux";
+vwf[$time,$zu,$yu,$xw]=0.0;
+vwf@units="m^2/s^2";
+vwf@long_name="Vertical Upwind Velocity Flux";
+Tf[$time,$zu,$yu,$xw]=0.0;
+Tf@units="W/m^2";
+Tf@long_name="Vertical Heat Flux";
+Sf[$time,$zu,$yu,$xw]=0.0;
+Sf@units="g m / kg s";
+Sf@long_name="Vertical Salinity Flux";
+// Calculate Perturbations
 Tp=T-Tmean;
 Sp=S-Smean;
+up=u-umean;
+vp=v-vmean;
 wp=w-wmean;
-// make the 
-
-// dimension sizes
-*sz_zu=$zu.size;
-*sz_zw=$zw.size;
-//
-defdim("Z",sz_zu);
-Z[$Z]=0.0f;
-*sz=$Z.size;
-// Calculate fluxes
-Tf[$time,$Z,$yu,$xw]=0.0;
-Sf[$time,$Z,$yu,$xw]=0.0;
+// Interpolate to a common grid
 *idx=0;
-while(idx<sz-1){
- Z(idx)=float(zw(idx+1)+zw(idx))/2;
- *wi=(wp(:,idx+1,:,:)+wp(:,idx,:,:))/2;
- Tf(:,idx,:,:)=rhoCP*Tp(:,idx,:,:)*wi;
- Sf(:,idx,:,:)=Sp(:,idx,:,:)*wi;
- idx++;
+*idy=0;
+*idz=0;
+ui = 0.0*Tf;
+ui@units="m/s";
+ui@long_name="Interpolated Crosswind Velocity Anomaly";
+vi = 0.0*Tf;
+vi@units="m/s";
+vi@long_name="Interpolated Upwind Velocity Anomaly";
+wi = 0.0*Tf;
+wi@units="m/s";
+wi@long_name="Interpolated Vertical Velocity Anomaly";
+// interpolate u from xu onto xw
+while(idx<$xw.size-2){
+  ui(:,:,:,idx)=(up(:,:,:,idx)+up(:,:,:,idx+1))/2;
+  idx++;
 }
-//end loop
-Z(sz-1)=zu(sz-1);
-Tf(:,sz-1,:,:)=rhoCP*Tp(:,sz-1,:,:)*wp(:,sz-1,:,:);
-Sf(:,sz-1,:,:)=Sp(:,sz-1,:,:)*wp(:,sz-1,:,:);
+ui(:,:,:,idx)=(up(:,:,:,idx)+up(:,:,:,1))/2;
+// interpolate v from yv onto yu
+while(idy<$yu.size-1){
+  vi(:,:,idy,:)=(vp(:,:,idy,:)+vp(:,:,idy+1,:))/2;
+  idy++;
+}
+vi(:,:,idy,:)=(vp(:,:,idy,:)+vp(:,:,1,:))/2;
+// interpolate w from zw onto zu
+while(idz<$zu.size-2){
+ wi(:,idz,:,:)=(wp(:,idz,:,:)+wp(:,idz+1,:,:))/2;
+ idz++;
+}
+wi(:,idz,:,:)=wp(:,idz,:,:);
+// Calculate correlations
+Tf=rhoCP*Tp*wi;
+Sf=Sp*wi;
+uwf=ui*wi;
+vwf=vi*wi;
+wwf=wi*wi;
 Tfmean=Tf.avg($xw,$yu);
+Tfmean@units="W/m^2";
+Tfmean@long_name="Mean Heat Flux";
 Sfmean=Sf.avg($xw,$yu);
-
+Sfmean@units="g m / kg s";
+Sf@long_name="Mean Salinity Flux";
+uwfmean=uwf.avg($xw,$yu);
+uwfmean@units="m^2/kg^2";
+uwfmean@long_name="Mean Vertical Crosswind Velocity Flux"; 
+vwfmean=vwf.avg($xw,$yu);
+vwfmean@units="m^2/s^2";
+vwfmean@long_name="Mean Vertical Upwind Velocity Flux";
+wwfmean=wwf.avg($xw,$yu);
+wwfmean@units="m^2/s^2";
+wwfmean@long_name="Mean Square Vertical Velocity Anomaly";
