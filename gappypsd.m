@@ -1,7 +1,7 @@
-function [Px,dPx,f,xfit,err] = gappypsd(x,t,win)
-# function [Px,dPx,f,xfit,err] = gappypsd(x,t,win)
+function [Px,dPx,f,xfit,err] = gappypsd(x,t,win,ftest)
+# function [Px,dPx,f,xfit,err] = gappypsd(x,t,win,flist)
 # Calculate the 1-sided Power spectral density of a gappy time series
-# 
+#
 # Regresses onto the fourier frequencies which correspond to the
 # sample period over which there is good data as if it were sampled evenly
 # returns those values whose regression coefficients are significantly distinct from zero
@@ -17,8 +17,8 @@ function [Px,dPx,f,xfit,err] = gappypsd(x,t,win)
 #  xwin = xgood.*(3-4*cos(2*pi*(tgood-min(t))/Period)+cos(4*pi*(t-min(t))/Period))/8;
 #
 # otherwise no windowing function is used
-#  
 #
+# if ftest is given the code regresses onto those frequencies instead of the fourier frequencies
 #
 #
 #
@@ -35,8 +35,14 @@ Period = (max(t)-min(t))*(N/(N+1));
 df = 1/(Period);
 idxgood = find(~isnan(x));
 Ngood = length(idxgood);
-Nf = floor((Ngood-1)/2);
-f = (1:Nf)*df;
+if(nargin()<4)
+ Nf = floor((Ngood-1)/2);
+ f = (1:Nf)*df;
+else
+ f = ftest;
+ Nf = length(f);
+ win = '';
+end
 # Initialize the output arrays to NaN
 Fx = f*NaN;
 dFx = f*NaN;
@@ -45,7 +51,7 @@ errratio = 1;
 # Initialize empty arrays for fitting frequencies
 fgood = [];
 relerr = [];
-# Sucessively fit each freq individually, 
+# Sucessively fit each freq individually,
 # calculate and store relative error
 for i=1:length(f)
 # Fit the current canidate frequency
