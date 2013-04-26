@@ -11,26 +11,29 @@ dt = diff(t);
 % Distance from nominal station
 dpos = sqrt(lat.^2+(lon-80.5).^2);
 % indecies of points near station
-idxclose = find((dpos<maxdpos).*(t>734818).*(t<734841));
+dnumstart = datenum([2011,11,21,0,0,0]);
+dnumstop = datenum([2011,11,29,0,0,0]);
+idxclose = find((dpos<maxdpos).*(t>dnumstart).*(t<dnumstop));
 % depths
 z = nc{'z'}(:);
 % choose times near station
-tgood = t(idxclose);
+tgood = t(idxclose)-datenum([2011,1,1,0,0,0]);
 % velocity data
 u = nc{'u'}(:,:);
 %v = nc{'v'}(:,:);
 % choose times near station
 u = u(idxclose,:);
 s = min(tgood):1/24:max(tgood);
-size(z)
-size(tgood)
+figure(1)
+plot(s)
+figure(2)
 [zt,tt] = meshgrid(z,tgood);
 [zs,ss] = meshgrid(z,s);
 ulp = ss;
 uhp = ss;
 for i=1:length(z)
- ulp(:,i) =csqfil(u(:,i),tgood,s,5);
  uhp(:,i) =csqfil(u(:,i),tgood,s);
+ ulp(:,i) =csqfil(uhp(:,i),s,s,5);
 end%for
 uhp = uhp-ulp;
 %
