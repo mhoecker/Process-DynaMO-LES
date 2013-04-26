@@ -11,8 +11,8 @@ dt = diff(t);
 % Distance from nominal station
 dpos = sqrt(lat.^2+(lon-80.5).^2);
 % indecies of points near station
-dnumstart = datenum([2011,11,21,0,0,0]);
-dnumstop = datenum([2011,11,29,0,0,0]);
+dnumstart = datenum([2011,11,20,0,0,0]);
+dnumstop = datenum([2011,11,30,0,0,0]);
 idxclose = find((dpos<maxdpos).*(t>dnumstart).*(t<dnumstop));
 % depths
 z = nc{'z'}(:);
@@ -33,7 +33,7 @@ ulp = ss;
 uhp = ss;
 for i=1:length(z)
  uhp(:,i) =csqfil(u(:,i),tgood,s);
- ulp(:,i) =csqfil(uhp(:,i),s,s,5);
+ ulp(:,i) =csqfil(uhp(:,i),s,s,3);
 end%for
 uhp = uhp-ulp;
 %
