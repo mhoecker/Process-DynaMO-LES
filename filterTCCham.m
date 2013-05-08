@@ -42,6 +42,31 @@ for j=1:length(TCCham.depth)
 end%for
 %
 ddzmatrix = ddz(TCCham.depth);
+hsize = size(rhohourly);
+nanderhourly = zeros(hsize);
+nanderlp = zeros(hsize);
+for i=1:hsize(2)
+ for j=1:hsize(1)
+  if(isnan(rhohourly(j,i)))
+   switch j
+    case {1}
+     nander(j,i)=NaN;
+     nander(j+1,i)=NaN;
+     nander(j+2,i)=NaN;
+    case {hsize(1)}
+     nander(j,i)=NaN;
+     nander(j-1,i)=NaN;
+     nander(j-2,i)=NaN;
+    otherwise
+     nander(j,i)=NaN;
+     nander(j+1,i)=NaN;
+     nander(j-1,i)=NaN;
+   end%switch
+  end%if
+ end%for
+end%for
+sighourly = rhohourly-1000;
+sighourly(find(isnan(sighourly)))=0;
 hnan = find(isnan(rhohourly));
 lpnan = find(isnan(rholp));
 rhohourly(hnan)=0;
@@ -55,7 +80,8 @@ lpnan = find(abs(drhodzlp)>10);
 drhodzhourly(hnan)=NaN;
 drhodzlp(lpnan)=NaN;
 %
-save([fileloc filename "filtered.mat"],"lat","lon","time","thourly","Sa","Tc","rho","Sahourly","Tchourly","rhohourly","Salp","Tclp","rholp","drhodzhourly","drhodzlp");
+depth = TCCham.depth;
+save([fileloc filename "filtered.mat"],"lat","lon","time","thourly","Sa","Tc","rho","Sahourly","Tchourly","rhohourly","Salp","Tclp","rholp","drhodzhourly","drhodzlp","P","depth");
 %
 figure(1)
 subplot(4,1,1)
