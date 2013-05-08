@@ -44,7 +44,7 @@ for i=1:length(z)
  vhp(:,i) =csqfil(v(:,i),t,s);
  vlp(:,i) =csqfil(vhp(:,i),s,s,3);
 end%for
-save("/home/mhoecker/work/Dynamo/adcp150_filled_with_140_filtered_1hr_3day.mat","s","lat","lon","Uss","Vss","uhp","ulp","vhp","vlp")
+save("/home/mhoecker/work/Dynamo/Observations/mat/ADCP/adcp150_filled_with_140_filtered_1hr_3day.mat","z","s","lats","lons","Uss","Vss","uhp","ulp","vhp","vlp")
 uhp = uhp-ulp;
 vhp = vhp-vlp;
 %
