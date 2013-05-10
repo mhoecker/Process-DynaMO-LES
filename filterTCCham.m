@@ -3,126 +3,67 @@ gswloc = "/home/mhoecker/work/TEOS-10/";
 gswlib = "/home/mhoecker/work/TEOS-10/library/";
 fileloc = "/home/mhoecker/work/Dynamo/Observations/AurelieObs/";
 filename = "TCCham10_leg3";
-lat = 0;
-lon = 80;
+TCChamF.lat = 0;
+TCChamF.lon = 80.5;
 addpath(gswloc);
 addpath(gswlib);
 load([fileloc filename ".mat"]);
+TCChamF.depth = TCCham.depth;
 tidx = 1:length(TCCham.time);
-time = TCCham.time(tidx);
-thourly = min(time):1./24:max(time);
+TCChamF.t = TCCham.time(tidx);
+TCChamF.th = floor(min(TCChamF.t)*24)/24:1./24:ceil(max(TCChamF.t)*24)/24;
 % Get Pressure from depth
-P = gsw_p_from_z(-TCCham.depth,lat);
-Sa = 0*TCCham.S(:,tidx);
-Tc = 0*TCCham.T(:,tidx);
-rho = 0*TCCham.T(:,tidx);
-[tt,zz]=meshgrid(thourly,-TCCham.depth);
-Sahourly = tt*0;
-Salp = Sahourly;
-Tchourly = tt*0;
-Tclp = Tchourly;
-rhohourly = tt*0;
-rholp = rhohourly;
+TCChamF.P = gsw_p_from_z(-TCChamF.depth,lat);
+TCChamF.Pm = mean(TCChamF.P);
+TCChamF.Sa = 0*TCCham.S(:,tidx);
+TCChamF.Tc = 0*TCCham.T(:,tidx);
+TCChamF.epsd = TCCham.EPSILON(:,tidx);
+TCChamF.rho = TCChamF.Tc;
+TCChamF.rhoSa = TCChamF.Tc;
+TCChamF.rhoTc = TCChamF.Tc;
+[tt,zz]=meshgrid(TCChamF.th,-TCCham.depth);
+%
+filsize         = size(tt);
+TCChamF.Sah     = zeros(filsize);
+TCChamF.Salp    = zeros(filsize);
+TCChamF.Tch     = zeros(filsize);
+TCChamF.Tclp    = zeros(filsize);
+TCChamF.epsh    = zeros(filsize);
+TCChamF.epslp   = zeros(filsize);
+TCChamF.rhoh    = zeros(filsize);
+TCChamF.rholp   = zeros(filsize);
+TCChamF.spiceh  = zeros(filsize);
+TCChamF.spicelp = zeros(filsize);
 % need to be done for each time slice and reassembled
-for i=1:length(time)
- Sa(:,i) = gsw_SA_from_SP(TCCham.S(:,tidx(i)),P,lon,lat);
- Tc(:,i) = gsw_CT_from_t(Sa(:,i),TCCham.T(:,tidx(i)),P);
+for i=1:length(TCChamF.t)
+ TCChamF.Sa(:,i) = gsw_SA_from_SP(TCCham.S(:,tidx(i)),TCChamF.P,TCChamF.lon,TCChamF.lat);
+ TCChamF.Tc(:,i) = gsw_CT_from_t(TCChamF.Sa(:,i),TCCham.T(:,tidx(i)),TCChamF.P);
  for j=1:length(TCCham.depth)
-  rho(j,i) = gsw_rho_CT(Sa(j,i),Tc(j,i),mean(P));
+  TCChamF.rho(j,i) = gsw_rho_CT(TCChamF.Sa(j,i),TCChamF.Tc(j,i),TCChamF.Pm);
  end%for
+% Calculate the density from salinity or temperature alone
 end%for
+TCChamF.Tcmean= nanmean(nanmean(TCChamF.Tc,2));
+TCChamF.Samean= nanmean(nanmean(TCChamF.Sa,2));
+%
+TCChamF.rhomean = gsw_rho_CT(TCChamF.Samean,TCChamF.Tcmean,TCChamF.Pm);
+%
+TCChamF.alpha = (gsw_rho_CT(TCChamF.Samean,TCChamF.Tcmean*1.001,TCChamF.Pm)-TCChamF.rhomean)/(TCChamF.Tcmean*0.001);
+TCChamF.beta  = (gsw_rho_CT(TCChamF.Samean*1.001,TCChamF.Tcmean,TCChamF.Pm)-TCChamF.rhomean)/(TCChamF.Samean*0.001);
+%
 % Filter each depth in time
 for j=1:length(TCCham.depth)
- Sahourly(j,:)  = csqfil(Sa(j,:) ,time   ,thourly);
- Salp(j,:)      = csqfil(Sahourly(j,:) ,thourly,thourly,3);
- Tchourly(j,:)  = csqfil(Tc(j,:) ,time   ,thourly);
- Tclp(j,:)      = csqfil(Tchourly(j,:) ,thourly,thourly,3);
- rhohourly(j,:) = csqfil(rho(j,:),time  ,thourly);
- rholp(j,:)     = csqfil(rhohourly(j,:),thourly,thourly,3);
+ TCChamF.Sah(j,:)     = csqfil(TCChamF.Sa(j,:)     ,TCChamF.t  ,TCChamF.th);
+ TCChamF.Salp(j,:)    = csqfil(TCChamF.Sah(j,:)    ,TCChamF.th ,TCChamF.th,3);
+ TCChamF.Tch(j,:)     = csqfil(TCChamF.Tc(j,:)     ,TCChamF.t  ,TCChamF.th);
+ TCChamF.Tclp(j,:)    = csqfil(TCChamF.Tch(j,:)    ,TCChamF.th ,TCChamF.th,3);
+ TCChamF.epsh(j,:)    = csqfil(TCChamF.epsd(j,:)   ,TCChamF.t  ,TCChamF.th);
+ TCChamF.epslp(j,:)   = csqfil(TCChamF.epsh(j,:)   ,TCChamF.th ,TCChamF.th,3);
+ TCChamF.rhoh(j,:)    = csqfil(TCChamF.rho(j,:)    ,TCChamF.t  ,TCChamF.th);
+ TCChamF.rholp(j,:)   = csqfil(TCChamF.rhoh(j,:)   ,TCChamF.th ,TCChamF.th,3);
 end%for
+TCChamF.spice   = linearSpice(TCChamF.Tc-TCChamF.Tcmean,TCChamF.Sa-TCChamF.Samean,TCChamF.alpha,TCChamF.beta);
+TCChamF.spiceh  = linearSpice(TCChamF.Tch-TCChamF.Tcmean,TCChamF.Sah-TCChamF.Samean,TCChamF.alpha,TCChamF.beta);
+TCChamF.spicelp = linearSpice(TCChamF.Tclp-TCChamF.Tcmean,TCChamF.Salp-TCChamF.Samean,TCChamF.alpha,TCChamF.beta);
 %
-ddzmatrix = ddz(TCCham.depth);
-hsize = size(rhohourly);
-nanderhourly = zeros(hsize);
-nanderlp = zeros(hsize);
-for i=1:hsize(2)
- for j=1:hsize(1)
-  if(isnan(rhohourly(j,i)))
-   switch j
-    case {1}
-     nander(j,i)=NaN;
-     nander(j+1,i)=NaN;
-     nander(j+2,i)=NaN;
-    case {hsize(1)}
-     nander(j,i)=NaN;
-     nander(j-1,i)=NaN;
-     nander(j-2,i)=NaN;
-    otherwise
-     nander(j,i)=NaN;
-     nander(j+1,i)=NaN;
-     nander(j-1,i)=NaN;
-   end%switch
-  end%if
- end%for
-end%for
-sighourly = rhohourly-1000;
-sighourly(find(isnan(sighourly)))=0;
-hnan = find(isnan(rhohourly));
-lpnan = find(isnan(rholp));
-rhohourly(hnan)=0;
-rholp(lpnan)=0;
-drhodzhourly = (ddzmatrix'*rhohourly);
-drhodzlp = (ddzmatrix'*rholp);
-rhohourly(hnan)=NaN;
-rholp(lpnan)=NaN;
-hnan = find(abs(drhodzhourly)>10);
-lpnan = find(abs(drhodzlp)>10);
-drhodzhourly(hnan)=NaN;
-drhodzlp(lpnan)=NaN;
-%
-depth = TCCham.depth;
-save([fileloc filename "filtered.mat"],"lat","lon","time","thourly","Sa","Tc","rho","Sahourly","Tchourly","rhohourly","Salp","Tclp","rholp","drhodzhourly","drhodzlp","P","depth");
-%
-figure(1)
-subplot(4,1,1)
-pcolor(tt,zz,Sahourly-Salp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,2)
-pcolor(tt,zz,Sahourly-Salp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-subplot(4,1,3)
-pcolor(tt,zz,Salp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,4)
-pcolor(tt,zz,Salp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-print(["/home/mhoecker/work/Dynamo/plots/Filtered/" filename "SaFiltered.png"],"-dpng","-S1280,1024")
-%
-figure(2)
-subplot(4,1,1)
-pcolor(tt,zz,Tchourly-Tclp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,2)
-pcolor(tt,zz,Tchourly-Tclp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-subplot(4,1,3)
-pcolor(tt,zz,Tclp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,4)
-pcolor(tt,zz,Tclp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-print(["/home/mhoecker/work/Dynamo/plots/Filtered/" filename "TcFiltered.png"],"-dpng","-S1280,1024")
-%
-figure(3)
-subplot(4,1,1)
-pcolor(tt,zz,rhohourly-rholp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,2)
-pcolor(tt,zz,rhohourly-rholp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-subplot(4,1,3)
-pcolor(tt,zz,rholp);shading flat;colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,4)
-pcolor(tt,zz,rholp);shading flat;colorbar;axis([min(time),max(time),-300,0]);
-print(["/home/mhoecker/work/Dynamo/plots/Filtered/" filename "rhoFiltered.png"],"-dpng","-S1280,1024")
-%
-figure(4)
-subplot(4,1,1)
-pcolor(tt,zz,drhodzhourly); shading flat; colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,2)
-pcolor(tt,zz,drhodzhourly); shading flat; colorbar;axis([min(time),max(time),-300,0]);
-subplot(4,1,3)
-pcolor(tt,zz,drhodzlp); shading flat; colorbar;axis([min(time),max(time),-50,0]);
-subplot(4,1,4)
-pcolor(tt,zz,drhodzlp); shading flat; colorbar;axis([min(time),max(time),-300,0]);
-print(["/home/mhoecker/work/Dynamo/plots/Filtered/" filename "drhodzFiltered.png"],"-dpng","-S1280,1024")
+save([fileloc filename "filtered.mat"],"TCChamF");
