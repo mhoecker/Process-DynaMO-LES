@@ -8,12 +8,12 @@ function [form,S] = binarray(x,y,filename)
 		fwrite(fid,xy,'float');
 		fclose(fid);
 		form = [' binary format="'];
-		for i=1:S(1) 
+		for i=1:S(1)
 			form = [form '%float'];
 		end
 		form = [form '" '];
 	else
-		printf("binarray(xy,filename) was given a mishapen argument\n")
-		printf("Function assumes xy is a [M,N] matrix\n")
+		printf("binarray(x,y,filename) was given a mishapen arguments\n")
+		printf("Function assumes [x;y] is a [M,N] matrix\n")
 	endif
 endfunction
