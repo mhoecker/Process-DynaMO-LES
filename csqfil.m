@@ -37,17 +37,18 @@ function [y] = csqfil(x,t,s,T)
 % Filtered band
   subplot(2,2,2);
   loglog(f,Pw,"b;cosq ;",f,(T*f).^-10,"k;fT^{-10};",f,Pwa,"r;T/3 moving avg. ;",f,(T*f).^-2,"k;fT^{-2};");
-  axis([1/T,128/T,128^(-6),1]);
+  axis([1/T,128/T,128^(-6),2]);
 %  title(["cosq filter 1/T=" num2str(1/T)]);
   xlabel("freq.");
   ylabel("Filter");
 % weights
   subplot(2,1,2);
   plot(t,w,"b;cosq ;",t,wa,"r;T/3 moving avg. ;");
-  axis([-T/2,T/2,0,max([1.05*wa])]);
+  axis([-T/2,T/2,0,1.05*max([w,wa])]);
   title(["cosq filter, T=" num2str(T)]);
   xlabel("Time diff.");
   ylabel("Weight")
+  print("csqfilldemo.png","-dpng","-S1280,1024","-F:8")
  else
   if(nargin<4)
    T = 3*mean(diff(s));
