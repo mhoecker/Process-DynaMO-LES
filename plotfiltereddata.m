@@ -41,18 +41,24 @@ Sxhp = dzmatrix*uhp';
 Syhp = dzmatrix*vhp';
 Sxlp = dzmatrix*ulp';
 Sylp = dzmatrix*vlp';
+Ssqh = Sxhp.^2+Syhp.^2;
 Sshp = (Sxhp-Sxlp).^2+(Syhp-Sylp).^2;
 Sslp = Sxlp.^2+Sylp.^2;
+Sslpmean = nanmean(nanmean(Sslp,1),2);
+Sshpmean = nanmean(nanmean(Sshp,1),2);
+Ssrange = 2.^[-4,4];
+Sshprange = log10(Sshpmean*Ssrange);
+Sslprange = log10(Sslpmean*Ssrange);
 %
 figure(1)
 subplot(4,1,1)
-pcolor(ss,zs,Sshp');shading flat;colorbar; axis(xyshal); title("(Shear)^2, high pass velocity"); ylabel("depth")
+pcolor(ss,zs,log10(Sshp'));shading flat;caxis(Sshprange);colorbar; axis(xyshal); title("(Shear)^2, high pass velocity"); ylabel("depth")
 subplot(4,1,2)
-pcolor(ss,zs,Sshp');shading flat;colorbar;axis(xydeep);ylabel("depth")
+pcolor(ss,zs,log10(Sshp'));shading flat;caxis(Sshprange);colorbar;axis(xydeep);ylabel("depth")
 subplot(4,1,3)
-pcolor(ss,zs,Sslp');shading flat;colorbar; axis(xyranges); title("(Shear)^2, low pass velocity"); ylabel("depth")
+pcolor(ss,zs,log10(Sslp'));shading flat;caxis(Sslprange);colorbar; axis(xyshal); title("(Shear)^2, low pass velocity"); ylabel("depth")
 subplot(4,1,4)
-pcolor(ss,zs,Sslp');shading flat;colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
+pcolor(ss,zs,log10(Sslp'));shading flat;caxis(Sslprange);colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
 print([plotdir "Shearsq.png"],device,imsize,font)
 close all
 %
@@ -100,7 +106,7 @@ close all
 %
 figure(1)
 subplot(4,1,1)
-pcolor(tt,zt,log10(TCChamF.epsh)-log10(TCChamF.epslp)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("High pass Dissipation/Low Pass Dissipation")
+pcolor(tt,zt,log10(TCChamF.epsh)-log10(TCChamF.epslp)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("Hourly Dissipation/Low Pass Dissipation")
 subplot(4,1,2)
 pcolor(tt,zt,log10(TCChamF.epsh)-log10(TCChamF.epslp)); shading flat; colorbar;axis(xydeep);ylabel("depth");
 subplot(4,1,3)
@@ -149,13 +155,26 @@ close all
 figure(1)
 Sshpt = interp2(zs,ss,Sshp',zt,tt);
 Sslpt = interp2(zs,ss,Sslp',zt,tt);
+Ssqht = interp2(zs,ss,Ssqh',zt,tt);
 subplot(4,1,1)
-pcolor(tt,zt,4*(Nsqh-Nsqlp)./Sshpt);shading flat; axis(xyshal);caxis([-1,3]);colorbar;ylabel("depth");title("High pass Dynamic Stability")
+pcolor(tt,zt,real(log10(4*Nsqh./Ssqht)));shading flat; axis(xyshal);caxis([-3,3]);colorbar;ylabel("depth");title("Hourly Daynamic Stability")
 subplot(4,1,2)
-pcolor(tt,zt,4*(Nsqh-Nsqlp)./Sshpt);shading flat;caxis([-1,3]);colorbar;axis(xydeep);ylabel("depth")
+pcolor(tt,zt,real(log10(4*Nsqh./Ssqht)));shading flat;caxis([-3,3]);colorbar;axis(xydeep);ylabel("depth")
 subplot(4,1,3)
-pcolor(tt,zt,4*Nsqlp./Sslpt);shading flat;axis(xyshal);caxis([-1,3]);colorbar;ylabel("depth");title("Low pass Dynamic Stability")
+pcolor(tt,zt,log10(4*Nsqlp./Sslpt));shading flat;axis(xyshal);caxis([-3,3]);colorbar;ylabel("depth");title("Low pass Dynamic Stability")
 subplot(4,1,4)
-pcolor(tt,zt,4*Nsqlp./Sslpt);shading flat;caxis([-1,3]);colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
+pcolor(tt,zt,log10(4*Nsqlp./Sslpt));shading flat;caxis([-3,3]);colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
 print([plotdir "Stability.png"],device,imsize,font)
+close all
+%
+figure(1)
+subplot(4,1,1)
+pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("High pass Dissipation scaled by Low Pass Shear cubed")
+subplot(4,1,2)
+pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xydeep);ylabel("depth");
+subplot(4,1,3)
+pcolor(tt,zt,log10(TCChamF.epslp)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("Low Pass Dissipation scaled by Low Pass Shear cubed")
+subplot(4,1,4)
+pcolor(tt,zt,log10(TCChamF.epslp)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
+print(["/home/mhoecker/work/Dynamo/plots/Filtered/" TCChfilename adcpfilename "scaledepsFiltered.png"],device,imsize,font)
 close all
