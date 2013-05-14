@@ -3,12 +3,12 @@ function [termtxt,termsfx] = termselect(termtype)
 # choose a consistent terminal type for gnuplot
 # the options are
 #
-# 		'epsposter' 12"x12" 48pt text
+#		'epsposter' 12"x12" 48pt text
 #		'epsarticle' 9"x6" 12pt text
 #		'epsarticlesmall' 4.5"x3" 10pt font
 #		'pngposter' is intended to be blown up to 12"x12"
 #		'canvas' cerates an interactive web page
-#		
+#
 #		if the term type is unrecognized the funtion returns values for a png
 #
 if(nargin<1)
