@@ -1,13 +1,8 @@
 #function filadcptonetcdf(filename,fileloc,ncloc,tmpdir)
 # filter to netCDF
-	filename = "adcp150_filled_with_140_filtered_1hr_3day";
-	fileloc  = "/home/mhoecker/work/Dynamo/Observations/mat/ADCP/";
-	ncloc    = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/";
 	tmpdir   = "/home/mhoecker/tmp/";
-	matfile  = [fileloc filename ".mat"];
-	cdffile  = [tmpdir filename ".cdf"];
-	ncfile   = [ncloc filename ".nc"];
-	load(matfile)
+	cdffile  = [tmpdir filename "_filtered_1hr_3day.cdf"];
+	ncfile   = [fileloc filename "_filtered_1hr_3day.nc"];
 	val = {s(:)};
 	val = {val{:},z(:)};
 	val = {val{:},Uss(:)};
