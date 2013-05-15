@@ -3,8 +3,8 @@ clear all
 close all
 tzero = datenum([2010,12,31]);
 xyranges = [315,329,-250,0];
-xyshal = [xyranges(1),xyranges(2),xyranges(4)+.4*(xyranges(3)-xyranges(4)),xyranges(4)];
-xydeep = [xyranges(1),xyranges(2),xyranges(3),xyranges(3)+.7*(xyranges(4)-xyranges(3))];
+xyshal = [xyranges(1),xyranges(2),xyranges(4)+.25*(xyranges(3)-xyranges(4)),xyranges(4)];
+xydeep = [xyranges(1),xyranges(2),xyranges(3),xyranges(3)+.8*(xyranges(4)-xyranges(3))];
 imsize = "-S1280,1024";
 font = "-F:8";
 device = "-dpng";
@@ -12,8 +12,17 @@ addpath "/home/mhoecker/work/TEOS-10";
 addpath "/home/mhoecker/work/TEOS-10/library";
 plotdir = "/home/mhoecker/work/Dynamo/plots/Filtered/";
 adcpfilename = "adcp150_filled_with_140_filtered_1hr_3day";
-adcpfile = ["/home/mhoecker/work/Dynamo/Observations/mat/ADCP/" adcpfilename ".mat"];
-load(adcpfile);
+adcpfile = ["/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/" adcpfilename ".nc"];
+# load adcp data
+nc = netcdf(adcpfile,'r');
+s = nc{'t'}(:);
+z = nc{'z'}(:);
+uhp = nc{'uhp'}(:);
+vhp = nc{'vhp'}(:);
+ulp = nc{'ulp'}(:);
+vlp = nc{'vlp'}(:);
+lats = nc{'lat'}(:);
+lons = nc{'lon'}(:);
 [zs,ss] = meshgrid(z,s-tzero);
 uhrange = max(max(abs(uhp-ulp)));
 ulrange = max(max(abs(ulp)));
@@ -65,6 +74,10 @@ close all
 TCChfilename = "TCCham10_leg3filtered";
 TCChfile = ["/home/mhoecker/work/Dynamo/Observations/AurelieObs/"  TCChfilename ".mat"];
 load(TCChfile);
+
+spiceh  = (TCChamF.Tch-TCChamF.Tcmean)*TCChamF.alpha-(TCChamF.Sah-TCChamF.Samean)*TCChamF.beta;
+spicelp = (TCChamF.Tclp-TCChamF.Tcmean)*TCChamF.alpha-(TCChamF.Sah-TCChamF.Samean)*TCChamF.beta;
+
 %
 [tt,zt] = meshgrid(TCChamF.th-tzero,-TCChamF.depth);
 %
@@ -118,13 +131,13 @@ close all
 %
 figure(1)
 subplot(4,1,1)
-pcolor(tt,zt,TCChamF.spiceh-TCChamF.spicelp);shading flat;colorbar;axis(xyshal);ylabel("depth");title("High pass Spice")
+pcolor(tt,zt,spiceh-spicelp);shading flat;colorbar;axis(xyshal);ylabel("depth");title("High pass Spice")
 subplot(4,1,2)
-pcolor(tt,zt,TCChamF.spiceh-TCChamF.spicelp);shading flat;colorbar;axis(xydeep);ylabel("depth");
+pcolor(tt,zt,spiceh-spicelp);shading flat;colorbar;axis(xydeep);ylabel("depth");
 subplot(4,1,3)
-pcolor(tt,zt,TCChamF.spicelp);shading flat;colorbar;axis(xyshal);ylabel("depth");title("Low pass Spice")
+pcolor(tt,zt,spicelp);shading flat;colorbar;axis(xyshal);ylabel("depth");title("Low pass Spice")
 subplot(4,1,4)
-pcolor(tt,zt,TCChamF.spicelp);shading flat;colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
+pcolor(tt,zt,spicelp);shading flat;colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
 print(["/home/mhoecker/work/Dynamo/plots/Filtered/" TCChfilename "spiceFiltered.png"],device,imsize,font)
 close all
 %
@@ -169,12 +182,29 @@ close all
 %
 figure(1)
 subplot(4,1,1)
-pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("High pass Dissipation scaled by Low Pass Shear cubed")
+pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("Hourly Dissipation scaled by Low Pass Shear cubed")
 subplot(4,1,2)
 pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xydeep);ylabel("depth");
 subplot(4,1,3)
-pcolor(tt,zt,log10(TCChamF.epslp)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xyshal);ylabel("depth");title("Low Pass Dissipation scaled by Low Pass Shear cubed")
+pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(abs(Nsqlp))); shading flat; colorbar;axis(xyshal);ylabel("depth");title("Hourly Dissipation scaled by Low Pass Stratification cubed")
 subplot(4,1,4)
-pcolor(tt,zt,log10(TCChamF.epslp)-1.5*log10(Sslpt)); shading flat; colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
+pcolor(tt,zt,log10(TCChamF.epsh)-1.5*log10(abs(Nsqlp))); shading flat; colorbar;axis(xydeep);ylabel("depth");xlabel("2011 yearday")
 print(["/home/mhoecker/work/Dynamo/plots/Filtered/" TCChfilename adcpfilename "scaledepsFiltered.png"],device,imsize,font)
+close all
+%
+figure(1)
+subplot(2,2,1)
+plot(TCChamF.alpha*(TCChamF.Tch-TCChamF.Tcmean),TCChamF.beta*(TCChamF.Sah-TCChamF.Samean),".");ylabel("Salinity");title("Hourly T/S Density Anomaly")
+subplot(2,2,2)
+plot(TCChamF.alpha*(TCChamF.Tch-TCChamF.Tclp),TCChamF.beta*(TCChamF.Sah-TCChamF.Salp),".");title("High pass T/S Density Anomaly")
+subplot(2,2,3)
+plot(TCChamF.alpha*(TCChamF.Tclp-TCChamF.Tcmean),TCChamF.beta*(TCChamF.Salp-TCChamF.Samean));ylabel("Salinity");title("Daily T/S Density Anomaly")
+subplot(2,2,4)
+plot(TCChamF.Tclp-TCChamF.Tcmean,TCChamF.Salp-TCChamF.Samean);ylabel("Salinity");title("Daily T/S Anomaly")
+print(["/home/mhoecker/work/Dynamo/plots/Filtered/" TCChfilename adcpfilename "TSFiltered.png"],device,imsize,font)
+close all
+%
+[spice,spice2,rholin] = linearSpice(TCChamF.Tclp-TCChamF.Tcmean,TCChamF.Salp-TCChamF.Samean,TCChamF.alpha,TCChamF.beta);
+pcolorContour("/home/mhoecker/tmp/test","png",TCChamF.th-tzero,-TCChamF.depth,spice,rholin)
+pcolorContour("/home/mhoecker/tmp/test2","png",TCChamF.th-tzero,-TCChamF.depth,spice2,rholin)
 close all
