@@ -310,5 +310,5 @@ for i=1:Nvar
 endfor
 fprintf(cdlid,'}\n')
 fclose(cdlid)
-unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile ])
-%unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile '&& rm ' cdffile])
+%unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile ])
+unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile '&& rm ' cdffile])
