@@ -1,4 +1,4 @@
-%filteradcp
+%function filteradcp(filename,fileloc)
 tmpdir   = "/home/mhoecker/tmp/";
 fileloc = '/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/';
 filename = 'adcp150_filled_with_140';
@@ -27,7 +27,7 @@ tgood = t(idxclose);
 % velocity data
 u = nc{'u'}(:,:);
 v = nc{'v'}(:,:);
-% choose times near station
+% choose days near station
 s = floor(min(tgood)):1/24:ceil(max(tgood));
 ulp = zeros(length(s),length(z));
 uhp = zeros(length(s),length(z));
@@ -150,7 +150,7 @@ for i=1:Nvar
 endfor
 #Declare global attributes
 fprintf(cdlid,':filtering = "%s";\n',"weighted average , weight=(1+cos(2*pi*(s-t)/T))^2 for |s-t| < T/2");
-fprintf(cdlid,':source = "%s";\n',[filename '.mat']);
+fprintf(cdlid,':source = "%s";\n',[filename '.nc']);
 fprintf(cdlid,':instrument = "ADCP";\n');
 fprintf(cdlid,':vessel = "R/V Roger Revelle";\n');
 readme = "In all summary files depth is relative to sea surface.\
@@ -179,3 +179,4 @@ endfor
 fprintf(cdlid,'}\n')
 fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile '&& rm ' cdffile])
+%end%function
