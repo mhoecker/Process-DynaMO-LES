@@ -34,6 +34,7 @@ end%if
  fprintf(pltid,'#set xlabel "xlabel"\n')
  fprintf(pltid,'#set ylabel "ylabel"\n')
  fprintf(pltid,'#set cblabel "cblabel"\n')
+ fprintf(pltid,'set cbrange [%f:%f]\n',min(min(z1)),max(max(z1)))
  fprintf(pltid,'set term %s\n',termtxt);
  fprintf(pltid,'set palette mode HSV\n');
  fprintf(pltid,'set palette function (1-gray)*.8,1,1\n');
