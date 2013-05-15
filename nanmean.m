@@ -5,6 +5,8 @@ function themean = nanmean(hasnan,dim)
  nonan = hasnan;
  Ntot = size(hasnan)(dim);
  Nnan = sum(isnan(hasnan),dim);
- nonan(find(isnan(hasnan))) = 0 ;
+ if(Nnan>0)
+  nonan(find(isnan(hasnan))) = 0 ;
+ end%if
  themean = sum(nonan,dim)./(Ntot-Nnan);
 end%function
