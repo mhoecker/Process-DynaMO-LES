@@ -7,14 +7,17 @@ function fileout = LESinitialTS(fileloc,filename,wantdate,outloc)
  if(nargin<4)
   outloc = "";
  end%if
- gsw_data = 'gsw_data_v3_0.mat';
- gsw_data_file = which(gsw_data);
- load(gsw_data_file,'version_number','version_date');
  gswloc = "/home/mhoecker/work/TEOS-10/";
  gswlib = "/home/mhoecker/work/TEOS-10/library/";
+ addpath(gswloc)
+ addpath(gswlib)
+ gsw_data = 'gsw_data_v3_0.mat';
+ gsw_data_file = which(gsw_data)
+ load(gsw_data_file,'version_number','version_date');
  ncfile = [fileloc filename ".nc"];
  nc = netcdf(ncfile,"r");
  t = nc{'th'}(:);
+ z = nc{'z'}(:);
  lat = nc{'lat'}(:);
  lon = nc{'lon'}(:);
  dateidx = find(abs(t-wantdate)==min(abs(t-wantdate)),1);
@@ -22,12 +25,12 @@ function fileout = LESinitialTS(fileloc,filename,wantdate,outloc)
  clear t;
  Tc = nc{'Tc'}(dateidx,:);
  Sa = nc{'Sa'}(dateidx,:);
+ P = nc{'P'}(:);
  idxgood = find(isnan(Tc).*isnan(Sa)==0);
- clear Sa Tc
- z = nc{'z'}(idxgood);
- Tc = nc{'Tc'}(dateidx,idxgood);
- Sa = nc{'Sa'}(dateidx,idxgood);
- P = nc{'P'}(idxgood);
+ z = z(idxgood);
+ Tc = Tc(idxgood);
+ Sa = Sa(idxgood);
+ P = P(idxgood);
  Sp = gsw_SP_from_SA(Sa,P,lon,lat);
  ncclose(nc);
  #
