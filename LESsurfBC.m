@@ -2,26 +2,26 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  # function LESsurfBC(fileloc,ncfile,wantdates,outloc)
  # fileloc  - directiory of the data file
  # filename - name of the data file (no suffix, it is assumed to be .nc)
- # wantdates - [start date, end date] in matlab datenum format
+ # wantdates - [start date, end date] in 2011 yearday
  # outloc   - directory of output file (assume to be the currentdirectory if not given)
  if(nargin<4)
   outloc = "";
  end%if
  ncfile = [fileloc filename ".nc"];
  nc = netcdf(ncfile,"r");
- t = nc{'t'}(:);
+ t = nc{'Yday'}(:);
  dateidx = find((t>=min(wantdates))&(t<=max(wantdates)));
- t = nc{'t'}(dateidx);
+ t = nc{'Yday'}(dateidx);
  tmodel = (t-min(t))*24;
- shortw = 1.01*nc{'SW'}(dateidx);
- surfac = nc{'LW'}(dateidx)+nc{'Sen'}(dateidx)+nc{'RainF'}(dateidx);
- LW = nc{'LW'}(dateidx);
- Sen = nc{'Sen'}(dateidx);
- RainF = nc{'RainF'}(dateidx);
- latent = nc{'La'}(dateidx);
- precip = nc{'Precip'}(dateidx);
- Taux   = nc{'Tau_x'}(dateidx);
- Tauy   = nc{'Tau_y'}(dateidx);
+ shortw = -nc{'Solarup'}(dateidx)-nc{'Solardn'}(dateidx);
+ surfac = -nc{'IRup'}(dateidx)-nc{'IRdn'}(dateidx)-nc{'shf'}(dateidx)-nc{'rhf'}(dateidx);
+ LW = -nc{'IRup'}(dateidx)-nc{'IRdn'}(dateidx);
+ Sen = -nc{'shf'}(dateidx);
+ RainF = -nc{'rhf'}(dateidx);
+ latent = -nc{'lhf'}(dateidx);
+ precip = nc{'P'}(dateidx);
+ Taux   = nc{'stresx'}(dateidx);
+ Tauy   = nc{'stresy'}(dateidx);
  fadein = 1-exp((min(t)-t)*8);
  L = 30;
  Lmax = 1000;
@@ -39,42 +39,47 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  # plot forcing functions
  figure(1)
  subplot(3,1,1)
- plot(tmodel,shortw,";swf_{top};")
+ plot(tmodel,shortw,";Net Short Wave Flux (swf_{top});")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  subplot(3,1,2)
- plot(tmodel,surfac,";hf_{top};")
+ plot(tmodel,surfac,";Net Non-Penetrating Heat Flux (hf_{top});")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  subplot(3,1,3)
- plot(tmodel,latent,";lhf_{top};")
+ plot(tmodel,latent,";Latent Heat Flux (lhf_{top});")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  xlabel("model hour")
  print([outname "heat.png"],"-dpng")
  figure(2)
- plot(tmodel,precip,";rain;")
+ plot(tmodel,precip,";Precipitation Rate;")
  axis([min(tmodel),max(tmodel)])
  xlabel("model hour")
  ylabel("mm/hr")
  print([outname "rain.png"],"-dpng")
  figure(3)
- plot(tmodel,Taux,";ustr_{t};",tmodel,Tauy,";vstr_{t};")
+ subplot(2,1,1)
+ plot(tmodel,Taux,";East/West stress;")
+ axis([min(tmodel),max(tmodel)])
+ ylabel("Pa")
+ subplot(2,1,2)
+ plot(tmodel,Tauy,";North/South stress;")
  axis([min(tmodel),max(tmodel)])
  xlabel("model hour")
  ylabel("Pa")
  print([outname "stress.png"],"-dpng")
  figure(4)
  subplot(3,1,1)
- plot(tmodel,LW,";LW;")
+ plot(tmodel,LW,";Net Long Wave Radiation;")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  subplot(3,1,2)
- plot(tmodel,Sen,";Sen;")
+ plot(tmodel,Sen,";Sensible Heat;")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  subplot(3,1,3)
- plot(tmodel,RainF,";RainF;")
+ plot(tmodel,RainF,";Rain Heat Flux;")
  ylabel("W/m^2")
  axis([min(tmodel),max(tmodel)])
  xlabel("model hour")
