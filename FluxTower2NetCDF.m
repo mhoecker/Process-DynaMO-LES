@@ -1,14 +1,14 @@
 function FluxTower2NetCDF(inloc,fname,outloc)
-%% 
+%%
 %% This script converts the raw 32 columns of acii data into
-%% a CDl ascii file which it the uses `ncgen` to  convert the 
-%% CDL text file into a NetCDF file.  "ncgen" is a utility program 
+%% a CDl ascii file it then uses `ncgen` to  convert the
+%% CDL text file into a NetCDF file.  "ncgen" is a utility program
 %% which is part of NetCDF which can be aquired here
 %% http://www.unidata.ucar.edu/software/netcdf/
 %%
 %% Mart!n Hoecker-Martinez
 %% mhoecker@coas.oregonstate.edu
-%% 
+%%
 %% This program is provided with no guarntees whatsoever
 %%
 %%
@@ -198,10 +198,8 @@ fprintf(cdlid,'dimensions:\n %s=%i;\n',vars{1},N);
 fprintf(cdlid,'variables:\n');
 for i=1:M
  fprintf(cdlid,'double %s(%s);\n',vars{i},vars{1});
-endfor
 # Add units, long_name and instrument
-fprintf(cdlid,'\n');
-for i=1:M
+ fprintf(cdlid,'\n');
  fprintf(cdlid,'%s:units = "%s";\n',vars{i},units{i});
  fprintf(cdlid,'%s:long_name = "%s";\n',vars{i},longname{i});
  if(length(instrument{i})>1)
@@ -225,7 +223,7 @@ fprintf(cdlid,'data:\n')
 Y = X;
 for i=1:M
  y = X(:,i);
- fprintf(cdlid,'%s =\n',vars{i}); 
+ fprintf(cdlid,'%s =\n',vars{i});
  for j=1:N
   if(isnan(y(j))==1)
    fprintf(cdlid,'NaN');
