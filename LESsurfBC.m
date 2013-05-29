@@ -24,11 +24,8 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  Tauy   = nc{'stresy'}(dateidx);
  fadein = 1-exp((min(t)-t)*8);
  L = 30;
- Lmin = eps*L;
+ Lmax = 1000;
  Height = 2;
- wave_height = Height*fadein;
- wave_length = Lmin+(L-Lmin)*fadein;
- wave_direct = mod(atan2(Taux,Tauy)*180/pi+360,360);
  outname = [outloc int2str(floor(min(t))) "-" int2str(ceil(max(t))) filename];
  fileout = [outname ".bc"];
  outid = fopen(fileout,"w");
@@ -36,7 +33,7 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  fprintf(outid,' \n');
  fprintf(outid,' swf_top, hf_top, lhf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle\n');
  for i=1:length(t);
-  fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',tmodel(i),shortw(i),surfac(i),latent(i),precip(i),Taux(i),Tauy(i),wave_length(i),wave_height(i),wave_direct(i))
+  fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',tmodel(i),shortw(i),surfac(i),latent(i),precip(i),Taux(i),Tauy(i),Lmax*L/(L+(Lmax-L)*fadein(i)),Height*fadein(i),mod(atan2(Taux(i),Tauy(i))*180/pi+360,360))
  end%for
  fclose(outid)
  # plot forcing functions
@@ -56,22 +53,11 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  xlabel("model hour")
  print([outname "heat.png"],"-dpng")
  figure(2)
- subplot(3,1,1)
  plot(tmodel,precip,";Precipitation Rate;")
  axis([min(tmodel),max(tmodel)])
  xlabel("model hour")
  ylabel("mm/hr")
- subplot(3,1,2)
- plot(tmodel,wave_height,";wave height;",tmodel,wave_length,";wave length;")
- axis([min(tmodel),max(tmodel)])
- xlabel("model hour")
- ylabel("m")
- subplot(3,1,3)
- plot(tmodel,wave_direct,";wave-direction;")
- axis([min(tmodel),max(tmodel)])
- xlabel("model hour")
- ylabel("degrees")
- print([outname "rain_waves.png"],"-dpng")
+ print([outname "rain.png"],"-dpng")
  figure(3)
  subplot(2,1,1)
  plot(tmodel,Taux,";East/West stress;")
