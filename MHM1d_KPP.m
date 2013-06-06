@@ -2,49 +2,40 @@ tic
 clear
 close all
 
-% choose model:
-% imod=0: original KPP :
-%     Large, W.G., J.C. McWilliams and S.C. Doney, 1994, "Oceanic
-%        vertical mixing: A review and a model with a nonlocal boundary
-%        layer parameterization", Reviews of Geophysics, Vol. 32 (4)
-%        pp. 363-403.
-% imod=1: add Sullivan & McWilliams parameterization of Langmuir circulations
-% imod=2: Updated KPP with nonlocal momentum fluxes included, Smyth et al. (2002)
+% Updated KPP with nonlocal momentum fluxes included, Smyth et al. (2002)
 %     Smyth, W.D., E.D. Skyllingstad, G.B. Crawford and H. Wijesekera,
 %        2002, "Nonlocal fluxes and Stokes drift effects in the
 %        K-profile parameterization", Ocean Dynamics 52 (3), 104-115.
-imod=2;
 
 % choose dataset:
-% iprofs=1: COARE
-% iprofs=2: Dynamo
-iprofs=2;
-
+adcpfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc";
+TCChamfile = "/home/mhoecker/work/Dynamo/Observations/AurelieObs/netCDF/TCCham10_leg3_filtered_1hr_3day.nc";
+varfile={adcpfile,adcpfile,TCChamfile,TCChamfile,TCChamfile};
+varname={"uhp","vhp","Tc_h","Sa_h","epsilon_h"};
+tname = {"t","t","th","th","th"};
+zname = {"z","z","z","z","z"};
+zsign = [+1,+1,+1,+1,+1];
+order = [-1,-1,-1-,1,-1];
 % set up time parameters
-if iprofs==1
-    tstart=366.0; % start time in days (1992 for COARE data)
-    days=1;
-    frot=-4.45e-6; %COARE value
-elseif iprofs==2;
-    tstart=328.02; % start time in days (2011 for DYNAMO data)
-    days=2;
-    frot=0; %DYNAMO value
-end
+tstart=328.02+datenum([2011,1,1])-1; % start time in days (eg for DYNAMO data tstart=328.02+datenum([2011,1,1])-1)
+days=2;
+frot=0; %DYNAMO value
+
 dt=240; % time step [s]
 nstep=15; % number of time steps per save
 nsave=(3600*24/(nstep*dt))*days; % number of saves
 tend=tstart+(nsave*nstep*dt)/24/3600;
 
 % set up depth parameters
-Lz=96;
-nn=64;
-dz=Lz/(nn-1);
+Lz=96; % Maximum depth
+nn=64; % number of depth bins
+dz=Lz/(nn-1); % depth spacing
 z=-[.5*dz:dz:Lz-.5*dz]'; % model z coordinate for prognostic variables[m]
 zp=-[0:dz:Lz]'; % model z coordinate for fluxes[m]
 nn=length(z);
 
 %% read U, V, T, S profiles **** NEED TO SPECIFY INPUT FILES
-[U_o V_o T_o S_o E_o U_obs V_obs T_obs S_obs t_cham t_adcp z_T z_S z_U z_V]=initialize_profiles(tstart,tend,z,iprofs);
+[U V T S E]=initial_profile_netCDF(t,z,varfile,varname,tname,zname,zsign,order);
 
 %% read and plot surface fluxes **** NEED TO SPECIFY INPUT FILES
 [t_sfc0 swrd_sfc ustar2_sfc vstar2_sfc hflx_sfc precip_sfc] = read_surface(iprofs);
@@ -83,53 +74,11 @@ xlabel('t [hr]')
 ylabel('\tau_x, \tau_y [N/m^2]')
 ylim([-.2 .4])
 
-%% read and plot short-wave penetration parameters  **** NEED TO SPECIFY INPUT FILES
-[t_r r1_r amu1_r r2_r amu2_r] = read_pene(iprofs);
-t_r=t_r-tstart%*24*3600;
-pkr=t_r<=tend_sfc & t_r>=0;
-
-% plot penetration parameters
-
-h=figure(23);
-set(h,'Position', [624 594 672 504]-[600 580 0 0])
-lw=1.5;
-subplot(3,1,1)
-if sum(pkr)>1
-    plot(t_r(pkr)/3600,r1_r(pkr),'b','linewidth',lw)
-    hold on
-    plot(t_r(pkr)/3600,r2_r(pkr),'r--','linewidth',lw)
-else
-    plot(t_r(1)/3600*[0 1],r1_r(1)*[1 1],'b','linewidth',lw)
-    hold on
-    plot(t_r(1)/3600*[0 1],r2_r(1)*[1 1],'r','linewidth',lw)
-end
-% xlabel('t [hr]')
-ylabel('r_1, r_2')
-ylim([0 1])
-title('Paulson-Simpson penetration coefficients')
-
-subplot(3,1,2)
-if sum(pkr)>1
-    plot(t_r(pkr)/3600,amu1_r(pkr),'b','linewidth',lw);
-    hold on
-    plot(t_r(pkr)/3600,amu1_r(pkr),'b*','linewidth',lw)
-else
-    plot(t_r(1)/3600*[0 1],amu1_r(1)*[1 1],'b','linewidth',lw)
-    hold on
-    plot(t_r(1)/3600*[0 1],amu1_r(1)*[1 1],'b*','linewidth',lw)
-end
-% ylim([-1 20])
-% xlabel('t [hr]')
-ylabel('\mu_1')
-subplot(3,1,3)
-if sum(pkr)>1
-    plot(t_r(pkr)/3600,amu2_r(pkr),'r','linewidth',lw)
-else
-    plot(t_r(pkr)/3600*[0 1],amu2_r(pkr)*[1 1],'r','linewidth',lw)
-end
-xlabel('t [hr]')
-ylabel('\mu_2')
-% ylim([-.2 .4])
+%% short-wave penetration parameters  **** NEED TO SPECIFY INPUT FILES
+R1_rad
+amu1_r
+R2_rad = 1-r1
+amu2_r] = read_pene(iprofs);
 
 
 %% prepare for time stepping

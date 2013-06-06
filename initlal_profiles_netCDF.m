@@ -42,8 +42,6 @@ function [U, V, T, S, E] = initial_profile_netCDF(t,z,varfile,varname,tname,znam
   end%if
   vars = {};
   [zz,tt] - meshgrid(z,t);
-  tmin = min(t)-mean(diff(t));
-  tmax = max(t)+mean(diff(t));
   zmin = min(z)-mean(diff(z));
   zmax = 0;
   % ingest the data files
@@ -52,7 +50,7 @@ function [U, V, T, S, E] = initial_profile_netCDF(t,z,varfile,varname,tname,znam
    nc = netcdf(varfile{i},"r");
    % calculate the range of time
    ti = nc{tname{i}}(:);
-   tidx = find((ti>=tmin)*(ti<=tmax);
+   tidx = [find(ti<t,2,'last'),find(ti>t,2,'first')];
    % calculate the range of depths, and correct the sign
    zi = zsign(i)*nc{zname{i}}(:);
    zidx = find((zi>=zmin)*(zi<=zmax);
