@@ -3,5 +3,11 @@
 # gedit backup files
 *.*~
 *~
+#ignore vi backup files
+*.swp
 # Octave core dumps
 octave-core
+# don't save gitdot.sh output
+gitdot.dot
+gitdot.png
+gitdot.svg
