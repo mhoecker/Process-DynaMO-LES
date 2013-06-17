@@ -51,7 +51,7 @@ function [y] = csqfil(x,t,s,T)
   print("csqfilldemo.png","-dpng","-S1280,1024","-F:8")
  else
   if(nargin<4)
-   T = 3*mean(diff(s));
+   T = 3*mean(abs(diff(s)));
   end%if
   N = length(t);
   M = length(s);
