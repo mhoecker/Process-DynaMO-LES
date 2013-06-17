@@ -8,7 +8,7 @@ secs(x) = seconds(x)+60*(minutes(x)+60*hours(x))
 hrs(x) = secs(x)/3600
 set xtics 1
 #set ytics
-set lmargin at screen .1
+set lmargin at screen .05
 set rmargin at screen .7
 set key out
 set ytics
@@ -17,7 +17,7 @@ topmar(n) = (2*M-0.25)/(2*M)-(n%M)/(1.0*M)
 botmar(n) = (2*M-0.25)/(2*M)-(.75+n%M)/(1.0*M)
 n=0;
 #set term svg size 1024,768 dynamic enhanced mouse font "Arial,6"
-set term png size 1024,768 enhanced font "Arial,8"
+set term png size 1280,1024 enhanced font "Arial,8"
 set output basename."1".termsfx
 set multiplot
 set tmargin at screen topmar(n);
