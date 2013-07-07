@@ -43,7 +43,7 @@ minx = min(x);
 maxx = max(x);
 meany = mean(y);
 output = [outdir '/Means/MeanHeatFluxDiv_t' num2str(tnc)];
-axeslabels = {'Heat Flux Divergence (W/m^3)','Depth (m)',['Divergence of Mean Turbulent Heat Flux at ' num2str(tnc/3600) ' hrs'],'set style data filledcurves x1=0','set linetype 1 lc rgb "#a0a0ff"',['set label "Cooling" at ' num2str(maxx/2) ',' num2str(meany) ' center front'],['set label "Warming" at ' num2str(minx/2) ',' num2str(meany) ' center front'],['set yrange [*:-10]']};
+axeslabels = {'Heat Flux Divergence (W/m^3)','Depth (m)',['Divergence of Mean Turbulent Heat Flux at ' num2str(tnc/3600) ' hrs'],'set style data filledcurves x1=0','set linetype 1 lc rgb "#a0a0ff"',['set label "Cooling" at ' num2str(maxx/2) ',' num2str(meany) ' center front'],['set label "Warming" at ' num2str(minx/2) ',' num2str(meany) ' center front'],['set yrange [*:-2]']};
 myplot(output,x,y,axeslabels,termtype);
 clear axeslabels
 x = -24*3600*x/(3990*1025);
@@ -51,7 +51,7 @@ minx = min(x);
 maxx = max(x);
 meany = mean(y);
 output = [outdir '/Means/MeanHeatWarming_t' num2str(tnc)];
-axeslabels = {"Warming (^oC/day)",'Depth (m)',['Warming due to Turbulent Heat Flux at ' num2str(tnc/3600) ' hrs'],'set style data filledcurves x1=0','set linetype 1 lc rgb "#a500ff"',['set yrange [*:-10]'],['set xrange [-.75:1.5]']};
+axeslabels = {"Warming (^oC/day)",'Depth (m)',['Warming due to Turbulent Heat Flux at ' num2str(tnc/3600) ' hrs'],'set style data filledcurves x1=0','set linetype 1 lc rgb "#a500ff"',['set yrange [*:-2]'],['set xrange [-.75:1.5]']};
 myplot(output,x,y,axeslabels,termtype);
 clear axeslabels
 x = nc{'umean'}(:);
