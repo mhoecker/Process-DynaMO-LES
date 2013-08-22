@@ -11,3 +11,7 @@ octave-core
 gitdot.dot
 gitdot.png
 gitdot.svg
+# ignore pdfs
+*.pdf
+# ignore ziped files
+*.zip
