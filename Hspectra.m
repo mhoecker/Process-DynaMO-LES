@@ -25,8 +25,9 @@ function [Pzgrid,khun,z] = Hspectra(rstnc,outname,term)
  kh = sqrt(kk.^2+ll.^2);
  [khlist,khsort] = sort(kh(:));
  khun = unique(khlist)';
+ N = zeros(size(khun));
  for i=1:length(khun)
-  khidx = {khidx{:},find(khlist==khun(i))];
+  khidx = {khidx{:},find(khlist==khun(i))};
   N(i) = length(khidx);
  end%for
  Pzgrid = [];

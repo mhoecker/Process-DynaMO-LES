@@ -26,9 +26,10 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
  kh = sqrt(kk.^2+ll.^2);
  [khlist,khsort] = sort(kh(:));
  khun = unique(khlist)';
- N = zeros(size(khun);
+ N = zeros(size(khun));
+ khidx = {};
  for i=1:length(khun)
-  khidx = {khidx{:},find(khlist==khun(i))];
+  khidx = {khidx{:},find(khlist==khun(i))};
   N(i) = length(khidx);
  end%for
  Pzgrid = [];
@@ -44,22 +45,22 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
   for j=1:length(khun)
    Pzb(j) = 2*pi*khun(j)*sum(Pzl(khidx{j}))/N(j);
   end%for
-%  subplot(1,2,1)
-%  pcolor(kk,ll,log(Pz)/log(10)); shading flat
-%  xlabel([xname " Wavenumber (rad/" xunits ")"]);
-%  ylabel([yname " Wavenumber (rad/" yunits ")"]);
-%  axis([0,Nx*dk/2,-Ny*dl/2,Ny*dl/2])
-%  crange = log([min(Pzb(2:end)),2*max(Pzb(2:end))]/max(khun))/log(10);
-%  caxis(crange)
-%  subplot(1,2,2)
-%  loglog(khun(2:end),Pzb(2:end),".",khun(2:end),max(Pzb(2:end))*(khun(2:end)./min([dk,dl])).^(-5/3),"k;k^{-5/3};")
-%  axis([min([dk,dl]),max(khun),max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]])
-%  title([zname"=" num2str(z(i)) "(" zunits ")"])
-%  xlabel(["Horizontal Wavenumber (rad/" xunits ")"])
-%  ylabel(["Spectral Energy Density ([" uunits "]^2/rad/" xunits ")"])
-%  caxis(crange)
-%  colorbar();
-%  print([outname "Hspectra-" num2str(i,"%06i") ".png"],"-dpng")
+  subplot(1,2,1)
+  pcolor(kk,ll,log(Pz)/log(10)); shading flat
+  xlabel([xname " Wavenumber (rad/" xunits ")"]);
+  ylabel([yname " Wavenumber (rad/" yunits ")"]);
+  axis([0,Nx*dk/2,-Ny*dl/2,Ny*dl/2])
+  crange = log([min(Pzb(2:end)),2*max(Pzb(2:end))]/max(khun))/log(10);
+  caxis(crange)
+  subplot(1,2,2)
+  loglog(khun(2:end),Pzb(2:end),".",khun(2:end),max(Pzb(2:end))*(khun(2:end)./min([dk,dl])).^(-5/3),"k;k^{-5/3};")
+  axis([min([dk,dl]),max(khun),max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]])
+  title([zname"=" num2str(z(i)) "(" zunits ")"])
+  xlabel(["Horizontal Wavenumber (rad/" xunits ")"])
+  ylabel(["Spectral Energy Density ([" uunits "]^2/rad/" xunits ")"])
+  caxis(crange)
+  colorbar();
+  print([outname varname "-" num2str(i,"%06i") ".png"],"-dpng")
   Pzgrid = [Pzgrid;Pzb];
  end%for
 % figure(2)
