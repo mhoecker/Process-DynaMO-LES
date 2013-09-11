@@ -25,6 +25,10 @@ function [Pzgrid,khun,z] = Hspectra(rstnc,outname,term)
  kh = sqrt(kk.^2+ll.^2);
  [khlist,khsort] = sort(kh(:));
  khun = unique(khlist)';
+ for i=1:length(khun)
+  khidx = {khidx{:},find(khlist==khun(i))];
+  N(i) = length(khidx);
+ end%for
  Pzgrid = [];
  figure(1)
  for i=1:Nz
@@ -39,9 +43,7 @@ function [Pzgrid,khun,z] = Hspectra(rstnc,outname,term)
   Pzl = Pz(khsort);
   Pzb = zeros(size(khun));
   for j=1:length(khun)
-   khidx = find(khlist==khun(j));
-   N = length(khidx);
-   Pzb(j) = 2*pi*khun(j)*sum(Pzl(khidx))/N;
+   Pzb(j) = 2*pi*khun(j)*sum(Pzl(khidx{j}))/N(j);
   end%for
   subplot(1,2,1)
   pcolor(kk,ll,log(Pz)/log(10)); shading flat
