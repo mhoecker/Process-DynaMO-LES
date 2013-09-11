@@ -70,11 +70,10 @@ fprintf(pltid,"plot '%s' %s w lines lc -1 not\n",xyname,arrayform)
 fprintf(pltid,"set view map\n")
 fprintf(pltid,"set pm3d\n")
 if(sign(cmax*cmin)==1)
- fprintf(pltid,"set palette mode HSV\n")
- fprintf(pltid,"set palette functions (gray)*.8,1,1\n")
+ fprintf(pltid,"%s",paltext("hue"))
 else
  fprintf(pltid,"set cbrange [%f:%f]\n",cmin,cmax)
- fprintf(pltid,"set palette defined (0 'blue', %f 'cyan', %f 'white', %f 'yellow', 1 'red')\n",-.875*cmin/crange,-cmin/crange,(.125*cmax-cmin)/crange)
+ fprintf(pltid,"%s",paltext("pm",cmin,cmax))
 end%if
 fprintf(pltid,"set xtics out offset 0,char .5\n")
 fprintf(pltid,"set cbtics offset char -0.75,0\n")
