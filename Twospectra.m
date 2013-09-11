@@ -4,6 +4,7 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
  end%if
  nc = netcdf(ncfile,'r');
  u = nc{varname}(:);
+ uunits = nc{varname}.units;
  x = nc{xname}(:);
  xunits = nc{xname}.units;
  y = nc{yname}(:);
@@ -27,8 +28,8 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
  khun = unique(khlist)';
  Pzgrid = [];
  figure(1)
-% for i=1:Nz
- for i=1:2
+ for i=1:Nz
+% for i=1:2
   uz = squeeze(u(i,1,:,:));
   Fuz = fft2(uz);
   Pz = fftshift(real(Fuz.*conj(Fuz)));
@@ -45,14 +46,15 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
   xlabel([xname " Wavenumber (rad/" xunits ")"]);
   ylabel([yname " Wavenumber (rad/" yunits ")"]);
   axis([0,Nx*dk/2,-Ny*dl/2,Ny*dl/2])
-  caxis(log(max(Pzb(2:end))*[.5/(Nx*Ny)^2,2])/log(10))
+  crange = log([min(Pzb(2:end)),2*max(Pzb(2:end))])/log(10);
+  caxis(crange)
   subplot(1,2,2)
   loglog(khun(2:end),Pzb(2:end),".",khun(2:end),max(Pzb(2:end))*(khun(2:end)./min([dk,dl])).^(-5/3),"k;k^{-5/3};")
   axis([min([dk,dl]),max(khun),max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]])
   title([zname"=" num2str(z(i)) "(" zunits ")"])
   xlabel(["Horizontal Wavenumber (rad/" xunits ")"])
-  ylabel(["Spectral Energy Density ([" zunits "]^2/rad/" xunits ")"])
-  caxis(log(max(Pzb(2:end))*[.5/(Nx*Ny)^2,2])/log(10))
+  ylabel(["Spectral Energy Density ([" uunits "]^2/rad/" xunits ")"])
+  caxis(crange)
   colorbar();
   print([outname "Hspectra-" num2str(i,"%06i") ".png"],"-dpng")
   Pzgrid = [Pzgrid;Pzb];
@@ -67,6 +69,7 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
 % caxis(log(max(max(Pzgrid))*[.5/(Nx*Ny)^2,2])/log(10))
 % colorbar();
 % print([outname "Hspectra-all.png"],"-dpng")
+ save([outname varname "all.mat"],"Pzgrid","khun","z");
  binmatrix(khun,z,Pzgrid,[outname varname "-all.dat"]);
  ncclose(nc);
 end%function
