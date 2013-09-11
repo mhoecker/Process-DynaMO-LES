@@ -33,8 +33,8 @@ function myplot(output,x,y,axeslabels,termtype)
 	fprintf(fid,"set xlabel '%s'\n",axeslabels{1});
 	fprintf(fid,"set ylabel '%s'\n",axeslabels{2});
 	fprintf(fid,"set title '%s'\n",axeslabels{3});
-	fprintf(fid,"set xrange [%f:%f]\n",min(x),max(x));
-	fprintf(fid,"set yrange [%f:%f]\n",min(min(y)),max(max(y)));
+	fprintf(fid,"set xrange [%f:%f]\n",min(x)*(1+eps),max(x)*(1+eps));
+	fprintf(fid,"set yrange [%f:%f]\n",min(min(y))*(1+eps),max(max(y)))*(1+eps);
 	for i=4:length(axeslabels)
 		fprintf(fid,'%s\n',axeslabels{i});
 	endfor
