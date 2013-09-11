@@ -35,7 +35,7 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
  Pzgrid = [];
  figure(1)
  for i=1:Nz
-% for i=1:2
+% for i=1:3
   uz = squeeze(u(i,1,:,:));
   Fuz = fft2(uz);
   Pz = fftshift(real(Fuz.*conj(Fuz)));
@@ -45,22 +45,24 @@ function [Pzgrid,khun,z] = Twospectra(ncfile,varname,xname,yname,zname,outname,t
   for j=1:length(khun)
    Pzb(j) = 2*pi*khun(j)*sum(Pzl(khidx{j}))/N(j);
   end%for
-  subplot(1,2,1)
-  pcolor(kk,ll,log(Pz)/log(10)); shading flat
-  xlabel([xname " Wavenumber (rad/" xunits ")"]);
-  ylabel([yname " Wavenumber (rad/" yunits ")"]);
-  axis([0,Nx*dk/2,-Ny*dl/2,Ny*dl/2])
-  crange = log([min(Pzb(2:end)),2*max(Pzb(2:end))]/max(khun))/log(10);
-  caxis(crange)
-  subplot(1,2,2)
-  loglog(khun(2:end),Pzb(2:end),".",khun(2:end),max(Pzb(2:end))*(khun(2:end)./min([dk,dl])).^(-5/3),"k;k^{-5/3};")
-  axis([min([dk,dl]),max(khun),max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]])
-  title([zname"=" num2str(z(i)) "(" zunits ")"])
-  xlabel(["Horizontal Wavenumber (rad/" xunits ")"])
-  ylabel(["Spectral Energy Density ([" uunits "]^2/rad/" xunits ")"])
-  caxis(crange)
-  colorbar();
-  print([outname varname "-" num2str(i,"%06i") ".png"],"-dpng")
+  if 1==0
+   subplot(1,2,1)
+   pcolor(kk,ll,log(Pz)/log(10)); shading flat
+   xlabel([xname " Wavenumber (rad/" xunits ")"]);
+   ylabel([yname " Wavenumber (rad/" yunits ")"]);
+   axis([0,Nx*dk/2,-Ny*dl/2,Ny*dl/2])
+   crange = log(max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]/max(khun))/log(10);
+   caxis(crange)
+   subplot(1,2,2)
+   loglog(khun(2:end),Pzb(2:end),".",khun(2:end),max(Pzb(2:end))*(khun(2:end)./min([dk,dl])).^(-5/3),"k;k^{-5/3};")
+   axis([min([dk,dl]),max(khun),max(Pzb(2:end))*[.5/(Nx*Ny)^2,2]])
+   title([zname"=" num2str(z(i)) "(" zunits ")"])
+   xlabel(["Horizontal Wavenumber (rad/" xunits ")"])
+   ylabel(["Spectral Energy Density ([" uunits "]^2/rad/" xunits ")"])
+   caxis(crange)
+   colorbar();
+   print([outname varname "-" num2str(i,"%06i") ".png"],"-dpng")
+  end%if
   Pzgrid = [Pzgrid;Pzb];
  end%for
 % figure(2)
