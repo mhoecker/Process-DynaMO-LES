@@ -19,6 +19,8 @@ datsdir = "/home/mhoecker/work/Dynamo/output/";
 %
 % run 8
 %/home/mhoecker/work/Dynamo/output/run8/dyno_328Rev_5-a_21600_rst.nc
-Hspectra([ datsdir "run8/dyno_328Rev_5-a_64800_rst.nc"],[ plotdir "run8/dissipation/64800"]);
-Hspectra([ datsdir "run8/dyno_328Rev_5-a_43200_rst.nc"],[ plotdir "run8/dissipation/43200"]);
-Hspectra([ datsdir "run8/dyno_328Rev_5-a_21600_rst.nc"],[ plotdir "run8/dissipation/21600"]);
+Hspectra([ datsdir "run8/dyno_328Rev_5-a_64800_rst.nc"],[ plotdir "run8/dissipation/108000"]);
+Hspectra([ datsdir "run8/dyno_328Rev_5-a_64800_rst.nc"],[ plotdir "run8/dissipation/86400"]);
+%Hspectra([ datsdir "run8/dyno_328Rev_5-a_64800_rst.nc"],[ plotdir "run8/dissipation/64800"]);
+%Hspectra([ datsdir "run8/dyno_328Rev_5-a_43200_rst.nc"],[ plotdir "run8/dissipation/43200"]);
+%Hspectra([ datsdir "run8/dyno_328Rev_5-a_21600_rst.nc"],[ plotdir "run8/dissipation/21600"]);
