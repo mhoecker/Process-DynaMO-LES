@@ -2,7 +2,14 @@ term = 'png';
 tmp  = '/home/mhoecker/tmp/';
 datdir = '/home/mhoecker/work/Dynamo/plots/';
 plotdir = '/home/mhoecker/work/Dynamo/plots/';
-roots = {'run8/dissipation/108000','run8/dissipation/86400','run8/dissipation/64800','run8/dissipation/43200','run8/dissipation/21600','run7/dissipation/14400','run7/dissipation/7200'};
+roots = {
+'run8/dissipation/108000',
+'run8/dissipation/86400',
+'run8/dissipation/64800',
+'run8/dissipation/43200',
+'run8/dissipation/21600',
+'run7/dissipation/14400',
+'run7/dissipation/7200'};
 for i=1:length(roots)
 datname = [datdir roots{i} 'Hspectra-all.dat'];
 outname = [plotdir roots{i} 'Hspectra-all'];
