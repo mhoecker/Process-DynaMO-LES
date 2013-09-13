@@ -1,14 +1,14 @@
 function [h,t]=Wavecorrected2NetCDF(inloc,fname,outloc)
-%% 
+%%
 %% This script converts the raw 4 columns of acii data into
-%% a CDl ascii file which it then uses `ncgen` to  convert the 
-%% CDL text file into a NetCDF file.  "ncgen" is a utility program 
+%% a CDl ascii file which it then uses `ncgen` to  convert the
+%% CDL text file into a NetCDF file.  "ncgen" is a utility program
 %% which is part of NetCDF which can be aquired here
 %% http://www.unidata.ucar.edu/software/netcdf/
 %%
 %% Mart!n Hoecker-Martinez
 %% mhoecker@coas.oregonstate.edu
-%% 
+%%
 %% This program is provided with no guarntees whatsoever
 %%
 %%
@@ -71,12 +71,12 @@ fprintf(cdlid,'data:\n')
 X = [t,h];
 for i=1:M
  y = X(:,i);
- fprintf(cdlid,'%s =\n',vars{i}); 
+ fprintf(cdlid,'%s =\n',vars{i});
  for j=1:N
   if(isnan(y(j))==1)
    fprintf(cdlid,'NaN');
   else
-   fprintf(cdlid,'%f',y(j));
+   fprintf(cdlid,'%20.20g',y(j));
   endif
   if(j<N)
    fprintf(cdlid,', ');

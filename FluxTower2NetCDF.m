@@ -228,7 +228,7 @@ for i=1:M
   if(isnan(y(j))==1)
    fprintf(cdlid,'NaN');
   else
-   fprintf(cdlid,'%f',y(j));
+   fprintf(cdlid,'%20.20g',y(j));
   endif
   if(j<N)
    fprintf(cdlid,', ');
