@@ -46,7 +46,7 @@ function fig1(sfxnc,chmnc,outdir)
 % epsilon is plotted on a log10 scale
 t0sim = 328 % simulated start time is 2011 yearday 328
 trange = [t0sim-2,t0sim+2]
-sfx = netcdf(sfxnc,'r')
+sfx = netcdf(sfxnc,'r');
 tsfx = sfx{'Yday'}(:);
 sfxtidx = find(tsfx>=trange(1),1):find(tsfx>=trange(2),1);
 tsfx = sfx{'Yday'}(sfxtidx);
@@ -54,7 +54,7 @@ stress = sfx{'stress'}(sfxtidx);
 p = sfx{'P'}(sfxtidx);
 precip = sfx{'Precip'}(sfxtidx);
 Jh = sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx);
-ncclose(sfx)
+ncclose(sfx);
 figure(1)
 subplot(4,1,1)
 plot(tsfx,stress)
@@ -67,7 +67,7 @@ ylabel("Precipitation rate (mm/hour)")
 subplot(4,1,3)
 plot(tsfx,Jh)
 ylabel("Heat Flux (W/m^2)")
-chm = netcdf(chmnc,'r')
+chm = netcdf(chmnc,'r');
 zchm = chm{'z'}(:);
 tchm = chm{'t'}(:);
 chmtidx = find(tchm>=trange(1),1):find(tchm>=trange(2),1);
@@ -81,13 +81,13 @@ colorbar()
 xlabel("2011 Year Day")
 ylabel("Depth (m)")
 %clabel("Log_{10} epsilon (W/kg)")
-ncclose(chm)
+ncclose(chm);
 print([outdir 'fig1.png'],'-dpng')
 end%function
 %
 %
 %figure 2
-function fig2(outdir)
+function  fig2(chmnc,adcpnc,outdir)
 %
 % two side by side plots with a common y axis (depth)
 %
