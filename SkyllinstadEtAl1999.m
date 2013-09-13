@@ -1,4 +1,4 @@
-function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,outdir)
+function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % function skyllinstad1999(dagnc,sfxnc,chmnc,outdir)
 % dagnc - dag file from LES (netCDF)
 % sfxnc - surface flux file (netCDF)
@@ -16,13 +16,17 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,outdir)
   sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMetRev2/Revelle1minuteLeg3_r2.nc'
  end%if
  if nargin()<3
-  chmnc = ''
+  chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  outdir = '/home/mhoecker/tmp/'
+  adcpnc = ''
+ end%if
+ if nargin()<5
+  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
  fig1(sfxnc,chmnc,outdir)
+ fig2(chmnc,adcpnc,outdir)
 end%function
 
 % figure 1
@@ -51,20 +55,47 @@ p = sfx{'P'}(sfxtidx);
 precip = sfx{'Precip'}(sfxtidx);
 Jh = sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx);
 ncclose(sfx)
-subplot(3,1,1)
+figure(1)
+subplot(4,1,1)
 plot(tsfx,stress)
-subplot(3,1,2)
+ylabel("Wind Stress (Pa)")
+subplot(4,1,2)
 plot(tsfx,p)
+ylabel("Precipitation rate (mm/hour)")
 % Add cumulative precip
 %plot(tsfx,p,tsfx,precip-precip(1))
-subplot(3,1,3)
-plot(tsfx,-Jh)
-%chm = netcdf(chmnc,'r')
-%ncclose(chm)
+subplot(4,1,3)
+plot(tsfx,Jh)
+ylabel("Heat Flux (W/m^2)")
+chm = netcdf(chmnc,'r')
+zchm = chm{'z'}(:);
+tchm = chm{'t'}(:);
+chmtidx = find(tchm>=trange(1),1):find(tchm>=trange(2),1);
+tchm = chm{'t'}(chmtidx);
+epschm = chm{'epsilon'}(chmtidx,:)';
+[tt,zz] = meshgrid(tchm,zchm);
+subplot(4,1,4)
+pcolor(tt,-zz,log(epschm)/log(10)); shading flat
+axis([trange,-120,-20])
+colorbar()
+xlabel("2011 Year Day")
+ylabel("Depth (m)")
+%clabel("Log_{10} epsilon (W/kg)")
+ncclose(chm)
 print([outdir 'fig1.png'],'-dpng')
 end%function
-
+%
+%
 %figure 2
+function fig2(outdir)
+%
+% two side by side plots with a common y axis (depth)
+%
+% 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
+% 2nd plot E/W (u) and N/S (v) velocity at simulation start
+figure(2)
+print([outdir 'fig2.png'],'-dpng')
+end%function
 
 %figure 3
 
