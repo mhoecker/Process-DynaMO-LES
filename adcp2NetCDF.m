@@ -1,6 +1,6 @@
 	function [readme] = adcp2NetCDF(inloc,fname,outloc)
 #	function [readme] = adcp2NetCDF(inloc,fname,outloc)
-#	inloc = the irectory containing the file
+#	inloc = the directory containing the file
 #	fname = the base name of the file
 #		do not include extension '.mat'
 #	outloc = the directory for the netCDF file
