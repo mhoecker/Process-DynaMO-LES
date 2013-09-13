@@ -6,6 +6,7 @@ netcdfdir = 'netCDF/'
 % /media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/mat/FluxTower/PSDflx_leg3.mat
 fluxdir = 'FluxTower/';
 fluxfile = 'PSDflx_leg3';
+FluxTower2NetCDF([ObsDir matdir fluxdir],fluxfile,[ObsDir netcdfdir fluxdir])
 %
 % Convert ADCP data
 adcpdir = 'ADCP/';
