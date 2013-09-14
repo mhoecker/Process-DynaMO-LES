@@ -52,9 +52,9 @@
 #	[32,1] = AX_TILT
 #	[33,1] = AY_TILT
 #
- size(cham.time)
- size(cham.depth)
- size(cham.EPSILON)
+# size(cham.time)
+# size(cham.depth)
+# size(cham.EPSILON)
 	val = {cham.time(:)-datenum(2011,1,0),cham.depth(:),cham.EPSILON(:),cham.T(:),cham.S(:),cham.CHI(:)};
 
 	Nvar = length(val);
@@ -149,24 +149,25 @@ fprintf(cdlid,':vessel = "R/V Roger Revelle";\n');
 #readme = "";
 #fprintf(cdlid,':readme = "%s";\n',readme);
 # Declare Data
-fprintf(cdlid,'data:\n')
-for i=1:Nvar
- y = val{i}(:);
- fprintf(cdlid,'%s =\n',vars{i});
- for j=1:length(y)
-  if(isnan(y(j))==1)
-   fprintf(cdlid,'NaN');
-  else
-   fprintf(cdlid,'%20.20g',y(j));
-  endif
-  if(j<length(y))
-   fprintf(cdlid,', ');
-  else
-   fprintf(cdlid,';\n');
-  endif
- endfor
-endfor
-fprintf(cdlid,'}\n',fname)
+writeCDFdata(cdlid,val,vars)
+#fprintf(cdlid,'data:\n')
+#for i=1:Nvar
+# y = val{i}(:);
+# fprintf(cdlid,'%s =\n',vars{i});
+# for j=1:length(y)
+#  if(isnan(y(j))==1)
+#   fprintf(cdlid,'NaN');
+#  else
+#   fprintf(cdlid,'%20.20g',y(j));
+#  end%if
+#  if(j<length(y))
+#   fprintf(cdlid,', ');
+#  else
+#   fprintf(cdlid,';\n');
+#  end%if
+# end%for
+#end%for
+#fprintf(cdlid,'}\n',fname)
 fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' outfile '&& rm ' cdffile])
 endfunction

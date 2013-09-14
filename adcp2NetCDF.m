@@ -159,24 +159,25 @@ readme = "In all summary files depth is relative to sea surface.\
   After that it should be combined with RDI150, HDSS50 should be navigated, cleaned and combined with RDI75";
 fprintf(cdlid,':readme = "%s";\n',readme);
 # Declare Data
-fprintf(cdlid,'data:\n')
-for i=1:Nvar
- y = val{i}(:);
- fprintf(cdlid,'%s =\n',vars{i});
- for j=1:length(y)
-  if(isnan(y(j))==1)
-   fprintf(cdlid,'NaN');
-  else
-   fprintf(cdlid,'%20.20g',y(j));
-  endif
-  if(j<length(y))
-   fprintf(cdlid,', ');
-  else
-   fprintf(cdlid,';\n');
-  endif
- endfor
-endfor
-fprintf(cdlid,'}\n',fname)
+writeCDFdata(cdlid,val,vars)
+#fprintf(cdlid,'data:\n')
+#for i=1:Nvar
+# y = val{i}(:);
+# fprintf(cdlid,'%s =\n',vars{i});
+# for j=1:length(y)
+#  if(isnan(y(j))==1)
+#   fprintf(cdlid,'NaN');
+#  else
+#   fprintf(cdlid,'%20.20g',y(j));
+#  end%if
+#  if(j<length(y))
+#   fprintf(cdlid,', ');
+#  else
+#   fprintf(cdlid,';\n');
+#  end%if
+# end%for
+#end%for
+#fprintf(cdlid,'}\n',fname)
 fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' outfile '&& rm ' cdffile])
 endfunction
