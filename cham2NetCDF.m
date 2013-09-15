@@ -168,6 +168,6 @@ writeCDFdata(cdlid,val,vars)
 # end%for
 #end%for
 #fprintf(cdlid,'}\n',fname)
-fclose(cdlid)
+#fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' outfile '&& rm ' cdffile])
 endfunction
