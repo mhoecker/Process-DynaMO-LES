@@ -44,8 +44,8 @@ function fig1(sfxnc,chmnc,outdir)
 % The simulated time is highlighted on the line plots
 % line plots are filled
 % epsilon is plotted on a log10 scale
-t0sim = 328 % simulated start time is 2011 yearday 328
-trange = [t0sim-2,t0sim+2]
+t0sim = 328; % simulated start time is 2011 yearday 328
+trange = [t0sim-2,t0sim+2];
 sfx = netcdf(sfxnc,'r');
 tsfx = sfx{'Yday'}(:);
 sfxtidx = find(tsfx>=trange(1),1):find(tsfx>=trange(2),1);
@@ -74,10 +74,10 @@ tchm = chm{'t'}(:);
 chmtidx = find(tchm>=trange(1),1):find(tchm>=trange(2),1);
 tchm = chm{'t'}(chmtidx);
 epschm = chm{'epsilon'}(chmtidx,:)';
-binmatrix(tchm',-zchm,epschm,[outdir "fig1d.dat"]);
+binmatrix(tchm',zchm,epschm,[outdir "fig1d.dat"]);
 [tt,zz] = meshgrid(tchm,zchm);
 subplot(4,1,4)
-pcolor(tt,-zz,log(epschm)/log(10)); shading flat
+pcolor(tt,zz,log(epschm)/log(10)); shading flat
 axis([trange,-120,-20])
 colorbar()
 xlabel("2011 Year Day")
@@ -96,7 +96,29 @@ function  fig2(chmnc,adcpnc,outdir)
 %
 % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
 % 2nd plot E/W (u) and N/S (v) velocity at simulation start
+adcp = netcdf(adcpnc,'r');
+adcpt = adcp{'t'}(:);
+adcpz = adcp{'z'}(:);
+adcptidx = find(adcpt>328,1);
+adcpt = adcp{'t'}(adcptidx);
+adcpulp = adcp{'ulp'}(adcptidx,:);
+adcpvlp = adcp{'vlp'}(adcptidx,:);
+ncclose(adcp);
+[Ulpcoef,Vlpcoef,Uhcoef,Vhcoef] = uvLegendre("",adcpnc,328,max(z),5);
+chm = netcdf(chmnc,'r');
+chmt = chm{'t'}(:);
+chmz = chm{'z'}(:);
+chmtidx = find(chmt>328,1);
+chmt = chm{'t'}(chmtidx);
+chmT = chm{'T'}(chmtidx,:);
+chmS = chm{'S'}(chmtidx,:);
+ncclose(chm)
+#
 figure(2)
+subplot(1,2,1)
+plot(chmT,chmz,chmS,chmz)
+subplot(1,2,2)
+plot(adcpulp,adcpz,adcpvlp,adcpz)
 print([outdir 'fig2.png'],'-dpng')
 end%function
 
