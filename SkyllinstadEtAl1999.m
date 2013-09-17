@@ -85,6 +85,7 @@ ylabel("Depth (m)")
 %clabel("Log_{10} epsilon (W/kg)")
 ncclose(chm);
 print([outdir 'fig1.png'],'-dpng')
+unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt")
 end%function
 %
 %
