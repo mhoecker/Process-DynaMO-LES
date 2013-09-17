@@ -19,7 +19,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  adcpnc = ''
+  adcpnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc'
  end%if
  if nargin()<5
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
@@ -67,12 +67,14 @@ ylabel("Precipitation rate (mm/hour)")
 subplot(4,1,3)
 plot(tsfx,Jh)
 ylabel("Heat Flux (W/m^2)")
+binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
 chm = netcdf(chmnc,'r');
 zchm = chm{'z'}(:);
 tchm = chm{'t'}(:);
 chmtidx = find(tchm>=trange(1),1):find(tchm>=trange(2),1);
 tchm = chm{'t'}(chmtidx);
 epschm = chm{'epsilon'}(chmtidx,:)';
+binmatrix(tchm',-zchm,epschm,[outdir "fig1d.dat"]);
 [tt,zz] = meshgrid(tchm,zchm);
 subplot(4,1,4)
 pcolor(tt,-zz,log(epschm)/log(10)); shading flat
