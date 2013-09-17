@@ -17,5 +17,7 @@ adcp2NetCDF([ObsDir matdir adcpdir],adcpfile,[ObsDir netcdfdir adcpdir]);
 chamdir = 'Chameleon/';
 chamfile = 'dn11b_sum_clean_v2';
 cham2NetCDF([ObsDir matdir chamdir],chamfile,[ObsDir netcdfdir chamdir]);
-
+%
+% Filter adcp
+filteradcp(adcpfile,[ObsDir netcdfdir adcpdir])
 end%function
