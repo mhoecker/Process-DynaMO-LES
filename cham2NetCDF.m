@@ -55,7 +55,7 @@
 # size(cham.time)
 # size(cham.depth)
 # size(cham.EPSILON)
-	val = {cham.time(:)-datenum(2011,1,0),cham.depth(:),cham.EPSILON(:),cham.T(:),cham.S(:),cham.CHI(:)};
+	val = {cham.time(:)-datenum(2011,1,0),-cham.depth(:),cham.EPSILON(:),cham.T(:),cham.S(:),cham.CHI(:)};
 
 	Nvar = length(val);
 	Ndim = 2;
