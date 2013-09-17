@@ -28,7 +28,7 @@
 #  [8,1] = depth
 #  [9,1] = ind
 #
-	val = {adcp.time(:)};
+	val = {adcp.time(:)-datenum(2011,1,0)};
 	val = {val{:},-adcp.depth(:)};
 	val = {val{:},adcp.uship(:)};
 	val = {val{:},adcp.vship(:)};
@@ -80,7 +80,7 @@ endif
 #	01 time
 vars{1} = 't';
 units{1} = 'd';
-longname{1} = 'time since 1999 Dec 31 00:00:00';
+longname{1} = '2011 yearday';
 dims{1} = [vars{1}];
 #	02 depth
 vars{2} = 'z';
