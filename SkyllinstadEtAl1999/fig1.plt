@@ -1,4 +1,5 @@
 reset
+datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy'
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.png"
 set term pdf enhanced color size 9in,6in font "Helvetica,12" linewidth 2
@@ -17,7 +18,7 @@ set bmargin at screen .775
 #set ylabel "Wind Stress (Pa)"
 set ylabel "{/Symbol t} (Pa)"
 set x2tics .5 offset 0,-.3
-plot "fig1abc.dat" binary format="%f%f%f%f" u 1:2 lc -1 not axis x2y1
+plot datdir."fig1abc.dat" binary format="%f%f%f%f" u 1:2 lc -1 not axis x2y1
 unset x2tics
 set tmargin at screen .775
 set bmargin at screen .575
@@ -26,7 +27,7 @@ unset ylabel
 #set y2label "Percipitation (mm/h)"
 set y2label "P (mm/h)"
 set y2tics mirror
-plot "fig1abc.dat" binary format="%f%f%f%f" u 1:3 lc -1 axes x1y2 not
+plot datdir."fig1abc.dat" binary format="%f%f%f%f" u 1:3 lc -1 axes x1y2 not
 set tmargin at screen .575
 set bmargin at screen .375
 unset y2tics
@@ -34,7 +35,7 @@ set ytics mirror rangelimited
 unset y2label
 #set ylabel "Surface Heat Flux J_h (W/m^2)"
 set ylabel "J_h (W/m^2)"
-plot "fig1abc.dat" binary format="%f%f%f%f" u 1:4 lc -1 not
+plot datdir."fig1abc.dat" binary format="%f%f%f%f" u 1:4 lc -1 not
 set tmargin at screen .375
 set bmargin at screen .075
 set format x "%g"
@@ -59,7 +60,7 @@ set colorbox size .02,.3
 unset surface
 set logscale cb
 set logscale z
-splot "fig1d.dat" binary matrix not
+splot datdir."fig1d.dat" binary matrix not
 unset multiplot
 set term wxt
 replot
