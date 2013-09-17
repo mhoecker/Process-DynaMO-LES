@@ -11,7 +11,7 @@ cdffile  = [tmpdir filename filtersuffix ".cdf"];
 ncfile   = [fileloc filename filtersuffix ".nc"];
 maxdpos = .2;
 nc = netcdf([fileloc filename '.nc'],'r');
-t = nc{'t'}(:);
+t = nc{'t'}(:)-datenum(2011,1,0);
 lat = nc{'lat'}(:);
 lon = nc{'lon'}(:);
 Us = nc{'Us'}(:);
@@ -22,9 +22,7 @@ dt = diff(t);
 % Distance from nominal station
 dpos = sqrt(lat.^2+(lon-80.5).^2);
 % indecies of points near station
-dnumstart = datenum([2011,11,11,0,0,0]);
-dnumstop = datenum([2011,12,3,0,0,0]);
-idxclose = find((dpos<maxdpos).*(t>dnumstart).*(t<dnumstop));
+idxclose = find((dpos<maxdpos));
 % depths
 z = nc{'z'}(:);
 % choose times near station
@@ -76,7 +74,7 @@ end%for
 #	01 time
 vars{1} = 't';
 units{1} = 'd';
-longname{1} = 'time since 1999 Dec 31 00:00:00';
+longname{1} = '2011 yearday';
 dims{1} = [vars{1}];
 #	02 depth
 vars{2} = 'z';
