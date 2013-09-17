@@ -6,7 +6,7 @@ function palette = paltext(paltype,cmin,cmax)
 % palype = "euh" or "backrainbow" gives a inverted rainbow with balck and white end members
 % palype = "plusminus" or "pm" gives blue to cyan to white to yellow to red, white is the midpoint
 %   if cmin and cmax are given white is placed at zero
- if nargin()==1
+ if nargin()<=1
   cmin = -1;
   cmax = +1;
  end%if
