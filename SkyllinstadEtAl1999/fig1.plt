@@ -1,5 +1,5 @@
 reset
-datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy'
+datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.png"
 set term pdf enhanced color size 9in,6in font "Helvetica,12" linewidth 2
@@ -49,8 +49,10 @@ set format cb "10^{%L}"
 set cblabel "{/Symbol e} (W/kg)" offset 1,0
 set view map
 set pm3d
-set palette defined (0 'blue', 0.25 'cyan', 0.5 'white', 0.75 'yellow', 1 'red')
-unset object 1
+#set palette defined (0 'blue', 0.25 'cyan', 0.5 'white', 0.75 'yellow', 1 'red')
+c(x) = (.5*(x)**.5+(.5-.5*(1-x)**.5))
+set palette maxcolors 7
+set palette function c(gray),c(gray),c(gray);unset object 1
 set palette mode HSV function 0,0,(1-gray)*.85
 set cbrange [1e-10:1e-5]
 set yrange [-100:-20]
