@@ -27,10 +27,12 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 
  fig1(sfxnc,chmnc,outdir)
  fig2(chmnc,adcpnc,outdir)
+ fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
 % figure 1
 function fig1(sfxnc,chmnc,outdir)
+useoctplot=0;
 %function fig1(sfxnc,chmnc,outdir)
 %
 % 4 plots stacked vertically with a common x-axis (yearday)
@@ -46,6 +48,7 @@ function fig1(sfxnc,chmnc,outdir)
 % epsilon is plotted on a log10 scale
 t0sim = 328; % simulated start time is 2011 yearday 328
 trange = [t0sim-2,t0sim+2];
+# Extract Flux data
 sfx = netcdf(sfxnc,'r');
 tsfx = sfx{'Yday'}(:);
 sfxtidx = find(tsfx>=trange(1),1):find(tsfx>=trange(2),1);
@@ -55,37 +58,41 @@ p = sfx{'P'}(sfxtidx);
 precip = sfx{'Precip'}(sfxtidx);
 Jh = sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx);
 ncclose(sfx);
-figure(1)
-subplot(4,1,1)
-plot(tsfx,stress)
-ylabel("Wind Stress (Pa)")
-subplot(4,1,2)
-plot(tsfx,p)
-ylabel("Precipitation rate (mm/hour)")
-% Add cumulative precip
-%plot(tsfx,p,tsfx,precip-precip(1))
-subplot(4,1,3)
-plot(tsfx,Jh)
-ylabel("Heat Flux (W/m^2)")
+# Save Flux data
 binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
+# Extract epsilon profiles
 chm = netcdf(chmnc,'r');
 zchm = chm{'z'}(:);
 tchm = chm{'t'}(:);
 chmtidx = find(tchm>=trange(1),1):find(tchm>=trange(2),1);
 tchm = chm{'t'}(chmtidx);
 epschm = chm{'epsilon'}(chmtidx,:)';
-binmatrix(tchm',zchm,epschm,[outdir "fig1d.dat"]);
-[tt,zz] = meshgrid(tchm,zchm);
-subplot(4,1,4)
-pcolor(tt,zz,log(epschm)/log(10)); shading flat
-axis([trange,-120,-20])
-colorbar()
-xlabel("2011 Year Day")
-ylabel("Depth (m)")
-%clabel("Log_{10} epsilon (W/kg)")
 ncclose(chm);
-print([outdir 'fig1.png'],'-dpng')
-unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt")
+# Save epsilon profiles
+binmatrix(tchm',zchm,epschm,[outdir "fig1d.dat"]);
+# Plot using octave or Gnuplot
+if(useoctplot==1)
+ figure(1)
+ subplot(4,1,1)
+ plot(tsfx,stress)
+ ylabel("Wind Stress (Pa)")
+ subplot(4,1,2)
+ plot(tsfx,p)
+ ylabel("Precipitation rate (mm/hour)")
+ subplot(4,1,3)
+ plot(tsfx,Jh)
+ ylabel("Heat Flux (W/m^2)")
+ [tt,zz] = meshgrid(tchm,zchm);
+ subplot(4,1,4)
+ pcolor(tt,zz,log(epschm)/log(10)); shading flat
+ axis([trange,-120,-20])
+ colorbar()
+ xlabel("2011 Year Day")
+ ylabel("Depth (m)")
+ print([outdir 'fig1.png'],'-dpng')
+else
+ unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt")
+end%if
 end%function
 %
 %
@@ -96,32 +103,64 @@ function  fig2(chmnc,adcpnc,outdir)
 %
 % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
 % 2nd plot E/W (u) and N/S (v) velocity at simulation start
+useoctplot=0;
+dsim = 100;
+tsim0 = 328;
+% read ADCP file
 adcp = netcdf(adcpnc,'r');
 adcpt = adcp{'t'}(:);
 adcpz = adcp{'z'}(:);
-adcptidx = find(adcpt>328,1);
-adcpt = adcp{'t'}(adcptidx);
-adcpulp = adcp{'ulp'}(adcptidx,:);
-adcpvlp = adcp{'vlp'}(adcptidx,:);
+adcptidx = find(adcpt>tsim0,1);
+adcpzidx = find(adcpz>-dsim);
+adcpt = squeeze(adcp{'t'}(adcptidx));
+adcpz = squeeze(adcp{'z'}(adcpzidx));
+adcpulp = squeeze(adcp{'ulp'}(adcptidx,adcpzidx));
+adcpvlp = squeeze(adcp{'vlp'}(adcptidx,adcpzidx));
 ncclose(adcp);
-[Ulpcoef,Vlpcoef,Uhcoef,Vhcoef] = uvLegendre("",adcpnc,328,max(z),5);
+# Extract Legendre coefficients from adcp file
+[Ulpcoef,Vlpcoef,Uhcoef,Vhcoef,zfit] = uvLegendre(adcpnc,tsim0,dsim,5);
+adcpx = (2*abs(adcpz)-(min(zfit)+max(zfit)))/(max(zfit)-min(zfit));
+adcpx(find(adcpx>1))=1;
+adcpx(find(adcpx<-1))=-1;
+ULlp = zeros(size(adcpz'));
+VLlp = zeros(size(adcpz'));
+for i=1:length(Ulpcoef)
+ ULlp = ULlp+Ulpcoef(i).*legendre(i-1,adcpx)(1,:);
+ VLlp = VLlp+Vlpcoef(i).*legendre(i-1,adcpx)(1,:);
+end%for
+# save U,V profiles
+binarray(adcpz',[adcpulp;adcpvlp;ULlp;VLlp],[outdir "fig2b.dat"])
+# read Chameleon file
 chm = netcdf(chmnc,'r');
 chmt = chm{'t'}(:);
 chmz = chm{'z'}(:);
-chmtidx = find(chmt>328,1);
-chmt = chm{'t'}(chmtidx);
-chmT = chm{'T'}(chmtidx,:);
-chmS = chm{'S'}(chmtidx,:);
+chmtidx = find(chmt>tsim0,1);
+chmzidx = find(chmz>-dsim);
+chmt = squeeze(chm{'t'}(chmtidx));
+chmz = squeeze(chm{'z'}(chmzidx));
+chmT = squeeze(chm{'T'}(chmtidx,chmzidx));
+chmS = squeeze(chm{'S'}(chmtidx,chmzidx));
 ncclose(chm)
-#
-figure(2)
-subplot(1,2,1)
-plot(chmT,chmz,chmS,chmz)
-subplot(1,2,2)
-plot(adcpulp,adcpz,adcpvlp,adcpz)
-print([outdir 'fig2.png'],'-dpng')
+# Save T,S profiles
+binarray(chmz',[chmT;chmS],[outdir "fig2a.dat"]);
+# Plot using octave or gnuplot script
+if(useoctplot==1)
+ figure(2)
+ subplot(1,2,1)
+ plot(chmT,chmz,chmS,chmz)
+ subplot(1,2,2)
+ plot(adcpulp,adcpz,adcpvlp,adcpz)
+ print([outdir 'fig2.png'],'-dpng')
+else
+ unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt")
+end%if
 end%function
 
 %figure 3
+function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
+% Comparison of Temperature, Salinity, and Velocity in observations
+% and model.  The surface heat and momentum forcings are also shown
+%
+end%function
 
 %figure 4
