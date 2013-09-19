@@ -1,17 +1,16 @@
-function [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef] = uvLegendre(fileloc,adcpfile,wantdate,max_depth,order)
- ncfile = [fileloc adcpfile ".nc"]
- nc = netcdf(ncfile,"r");
+function [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef,z] = uvLegendre(adcpfile,wantdate,max_depth,order)
+ nc = netcdf(adcpfile,"r");
  t = nc{'t'}(:);
  dateidx = find(abs(t-wantdate)==min(abs(t-wantdate)),1);
  dateused  = t(dateidx);
  clear t;
- U = nc{'ulp'}(dateidx,:);
- V = nc{'vlp'}(dateidx,:);
+ U = squeeze(nc{'ulp'}(dateidx,:));
+ V = squeeze(nc{'vlp'}(dateidx,:));
  z = abs(nc{'z'}(:));
- if(nargin<4)
+ if(nargin<3)
   max_depth = max(abs(z));
  end%if
- good = (isnan(U)==0)&(isnan(V)==0)&(abs(z')<=max_depth);
+ good = (isnan(U)==0)&(isnan(V)==0)&(abs(z')<=abs(max_depth));
  idxgood = find(good);
  clear U V z
  z = abs(nc{'z'}(idxgood));
@@ -33,7 +32,7 @@ function [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef] = uvLegendre(fileloc,adcpfile,wantdate,
   Uh = [Uh(imin),Uh];
   Vh = [Vh(imin),Vh];
  end%if
- if(nargin<5)
+ if(nargin<4)
   order = 9;
  end%if
  Ulpcoef = fitLegendre(z,Ulp,order);
