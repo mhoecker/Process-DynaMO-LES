@@ -25,21 +25,31 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
-% fig1(sfxnc,chmnc,outdir)
-% fig2(chmnc,adcpnc,outdir)
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ fig1(sfxnc,chmnc,outdir);
+ fig2(chmnc,adcpnc,outdir)
+% fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
+function idx = inclusiverange(variable,limits)
+  a=(abs(variable-min(limits)));
+  b=(abs(variable-max(limits)));
+  abidx = sort([find(a==min(a),1),find(b==min(b),1)]);
+  idx = abidx(1):abidx(2);
+end%function
 function [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange)
  % Extract Flux data
  sfx = netcdf(sfxnc,'r');
  tsfx = sfx{'Yday'}(:);
- sfxtidx = find(tsfx>=trange(1),1):find(tsfx>=trange(2),1);
+ if nargin()>1
+  sfxtidx = inclusiverange(tsfx,trange);
+ else
+  sfxtidx = 1:length(tsfx);
+ end%if
  tsfx = squeeze(sfx{'Yday'}(sfxtidx));
  stress = squeeze(sfx{'stress'}(sfxtidx));
  p = squeeze(sfx{'P'}(sfxtidx));
  Jh = squeeze(sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx));
- wdir = squezze(sfx{'wdir'}(sfxtidx));
+ wdir = squeeze(sfx{'Wdir'}(sfxtidx));
  % Some other things to extract
  #precip = squeeze(sfx{'Precip'}(sfxtidx));
  ncclose(sfx);
@@ -49,16 +59,16 @@ function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
  % Extract profile data from Chameleon
  chm = netcdf(chmnc,'r');
  % Restrict time index
- tchm = chm{'t'}(:);
+ tchm = squeeze(chm{'t'}(:));
  if nargin()>1
-  chmtidx = sort(find(tchm>=min(trange),1):find(tchm>=max(trange),1));
+  chmtidx = inclusiverange(tchm,trange);
  else
   chmtidx = 1:length(tchm);
  end%if
  % restict depth range
- zchm = chm{'z'}(:);
+ zchm = squeeze(chm{'z'}(:));
  if nargin()>2
-  chmzidx = sort(find(zchm>=min(zrange),1):find(zchm<=max(zrange),1));
+  chmzidx = inclusiverange(zchm,zrange);
  else
   chmzidx = 1:length(zchm);
  end%if
@@ -71,8 +81,28 @@ function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
  ncclose(chm);
 end%function
 
-function ADCPprofiles(adcpnc,trange,zrange)
+function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  % Extract ADCP profiles
+ adcp = netcdf(adcpnc,'r');
+ tadcp = adcp{'t'}(:);
+ zadcp = adcp{'z'}(:);
+ if nargin()>1
+  adcptidx = inclusiverange(tadcp,trange);
+ else
+  adcptidx = 1:length(tadcp);
+ end%if
+ % restict depth range
+ zadcp = squeeze(adcp{'z'}(:));
+ if nargin()>2
+  adcpzidx = inclusiverange(zadcp,zrange);
+ else
+  adcpzidx = 1:length(zadcp);
+ end%if
+ tadcp = squeeze(adcp{'t'}(adcptidx));
+ zadcp = squeeze(adcp{'z'}(adcpzidx));
+ ulpadcp = squeeze(adcp{'ulp'}(adcptidx,adcpzidx));
+ vlpadcp = squeeze(adcp{'vlp'}(adcptidx,adcpzidx));
+ ncclose(adcp);
 end%function
 
 % figure 1
@@ -92,15 +122,17 @@ function fig1(sfxnc,chmnc,outdir)
  % epsilon is plotted on a log10 scale
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
+ dsim = 100; % Maximum simulation depth
  trange = [t0sim-2,t0sim+2];
+ zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange)
+ [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange);
  # Save Flux data
- binarray(tsfx',[stress;p;Jh],[outdir "fig1abc.dat"]);
+ binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
  # Extract epsilon profiles
- [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange)
+ [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
  # Save epsilon profiles
- binmatrix(tchm',zchm,epschm',[outdir "fig1d.dat"]);
+ binmatrix(tchm',zchm',epschm',[outdir "fig1d.dat"]);
  # Plot using octave or Gnuplot
  if(useoctplot==1)
   figure(1)
@@ -115,14 +147,15 @@ function fig1(sfxnc,chmnc,outdir)
   ylabel("Heat Flux (W/m^2)")
   [tt,zz] = meshgrid(tchm,zchm);
   subplot(4,1,4)
-  pcolor(tt,zz,log(epschm')/log(10)); shading flat
-  axis([trange,-120,-20])
+  pcolor(tt,zz,log(epschm')/log(10));
+  shading flat;
+  axis([trange,zrange]);
   colorbar()
   xlabel("2011 Year Day")
   ylabel("Depth (m)")
   print([outdir 'fig1.png'],'-dpng')
  else
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt");
  end%if
 end%function
 %
@@ -137,32 +170,25 @@ function  fig2(chmnc,adcpnc,outdir)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 100; % Maximum simulation depth
+ trange = [t0sim,t0sim];
+ zrange = sort([0,-dsim]);
  % read ADCP file
- adcp = netcdf(adcpnc,'r');
- adcpt = adcp{'t'}(:);
- adcpz = adcp{'z'}(:);
- adcptidx = find(adcpt>tsim0,1);
- adcpzidx = find(adcpz>-dsim);
- adcpt = squeeze(adcp{'t'}(adcptidx));
- adcpz = squeeze(adcp{'z'}(adcpzidx));
- adcpulp = squeeze(adcp{'ulp'}(adcptidx,adcpzidx));
- adcpvlp = squeeze(adcp{'vlp'}(adcptidx,adcpzidx));
- ncclose(adcp);
+ [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  # Extract Legendre coefficients from adcp file
- [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef,zfit] = uvLegendre(adcpnc,tsim0,dsim,5);
- adcpx = (2*abs(adcpz)-(min(zfit)+max(zfit)))/(max(zfit)-min(zfit));
- adcpx(find(adcpx>1))=1;
- adcpx(find(adcpx<-1))=-1;
- ULlp = zeros(size(adcpz'));
- VLlp = zeros(size(adcpz'));
+ [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef,zfit] = uvLegendre(adcpnc,t0sim,dsim,5);
+ xadcp = (2*abs(zadcp)-(min(zfit)+max(zfit)))/(max(zfit)-min(zfit));
+ xadcp(find(xadcp>1))=1;
+ xadcp(find(xadcp<-1))=-1;
+ ULlp = zeros(size(zadcp'));
+ VLlp = zeros(size(zadcp'));
  for i=1:length(Ulpcoef)
-  ULlp = ULlp+Ulpcoef(i).*legendre(i-1,adcpx)(1,:);
-  VLlp = VLlp+Vlpcoef(i).*legendre(i-1,adcpx)(1,:);
+  ULlp = ULlp+Ulpcoef(i).*legendre(i-1,xadcp)(1,:);
+  VLlp = VLlp+Vlpcoef(i).*legendre(i-1,xadcp)(1,:);
  end%for
  # save U,V profiles
- binarray(adcpz',[adcpulp;adcpvlp;ULlp;VLlp],[outdir "fig2b.dat"])
+ binarray(zadcp',[ulpadcp;vlpadcp;ULlp;VLlp],[outdir "fig2b.dat"]);
  # read Chameleon file
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
+ [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Save T,S profiles
  binarray(zchm',[Tchm;Schm],[outdir "fig2a.dat"]);
  # Plot using octave or gnuplot script
@@ -171,10 +197,10 @@ function  fig2(chmnc,adcpnc,outdir)
   subplot(1,2,1)
   plot(Tchm,zchm,Schm,zchm)
   subplot(1,2,2)
-  plot(adcpulp,adcpz,adcpvlp,adcpz)
+  plot(ulpadcp,zadcp,vlpadcp,zadcp)
   print([outdir 'fig2.png'],'-dpng')
  else
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt");
  end%if
 end%function
 
