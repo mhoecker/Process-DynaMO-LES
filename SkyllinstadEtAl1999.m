@@ -27,7 +27,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 
  fig1(sfxnc,chmnc,outdir);
  fig2(chmnc,adcpnc,outdir)
-% fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
 function idx = inclusiverange(variable,limits)
@@ -39,7 +39,7 @@ end%function
 function [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange)
  % Extract Flux data
  sfx = netcdf(sfxnc,'r');
- tsfx = sfx{'Yday'}(:);
+ tsfx = squeeze(sfx{'Yday'}(:));
  if nargin()>1
   sfxtidx = inclusiverange(tsfx,trange);
  else
@@ -84,8 +84,8 @@ end%function
 function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  % Extract ADCP profiles
  adcp = netcdf(adcpnc,'r');
- tadcp = adcp{'t'}(:);
- zadcp = adcp{'z'}(:);
+ tadcp = squeeze(adcp{'t'}(:));
+ zadcp = squeeze(adcp{'z'}(:));
  if nargin()>1
   adcptidx = inclusiverange(tadcp,trange);
  else
@@ -196,8 +196,10 @@ function  fig2(chmnc,adcpnc,outdir)
   figure(2)
   subplot(1,2,1)
   plot(Tchm,zchm,Schm,zchm)
+  axis([min([Tchm,Schm]),max([Tchm,Schm]),zrange])
   subplot(1,2,2)
   plot(ulpadcp,zadcp,vlpadcp,zadcp)
+  axis([min([ulpadcp,vlpadcp]),max([ulpadcp,vlpadcp]),zrange])
   print([outdir 'fig2.png'],'-dpng')
  else
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt");
@@ -212,8 +214,30 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  useoctplot=1; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 100; % Maximum simulation depth
+ trange = [t0sim,t0sim+1];
+ zrange = sort([0,-dsim]);
+ [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
+ stressm = stress.*sin(wdir*pi/180);
+ stressz = stress.*cos(wdir*pi/180);
+ [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ [ttchm,zzchm] = meshgrid(tchm,zchm);
+ [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
+ [ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
  if(useoctplot==1)
-  subplot(5,2,1)
+  figure(3)
+  subplot(4,1,1)
+  plot(tsfx,Jh)
+  subplot(4,1,2)
+  plot(tsfx,stressz,tsfx,stressm)
+  axis([trange])
+  subplot(4,1,3)
+  pcolor(ttchm,zzchm,Tchm')
+  shading flat
+  axis([trange])
+  subplot(4,1,4)
+  pcolor(ttadcp,zzadcp,ulpadcp')
+  shading flat
+  axis([trange])
  else
  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
  end%if
