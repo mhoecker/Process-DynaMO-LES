@@ -105,6 +105,32 @@ function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  ncclose(adcp);
 end%function
 
+function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,trange,zrange)
+ % Extract diagnostic profiles
+ dag = netcdf(dagnc,'r');
+ tdag = squeeze(dag{'time'}(:));
+ if nargin()>1
+  dagtidx = inclusiverange(tdag,trange);
+ else
+  dagtidx = 1:length(tdag);
+ end%if
+ % restict depth range
+ zdag = -squeeze(dag{'zzu'}(:));
+ if nargin()>2
+  dagzidx = inclusiverange(zdag,zrange);
+ else
+  dagzidx = 1:length(zdag);
+ end%if
+ tdag = squeeze(dag{'time'}(dagtidx));
+ zdag = -squeeze(dag{'zzu'}(dagzidx));
+ uavgdag = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
+ vavgdag = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
+ Tavgdag = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
+ Savgdag = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
+ ncclose(dag);
+end%function
+
+
 % figure 1
 function fig1(sfxnc,chmnc,outdir)
  %function fig1(sfxnc,chmnc,outdir)
@@ -122,7 +148,7 @@ function fig1(sfxnc,chmnc,outdir)
  % epsilon is plotted on a log10 scale
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 100; % Maximum simulation depth
+ dsim = 80; % Maximum simulation depth
  trange = [t0sim-2,t0sim+2];
  zrange = sort([0,-dsim]);
  % Extract Flux data
@@ -169,7 +195,7 @@ function  fig2(chmnc,adcpnc,outdir)
  % 2nd plot E/W (u) and N/S (v) velocity at simulation start
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 100; % Maximum simulation depth
+ dsim = 80; % Maximum simulation depth
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
  % read ADCP file
@@ -213,7 +239,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %
  useoctplot=1; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 100; % Maximum simulation depth
+ dsim = 80; % Maximum simulation depth
  trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);
  [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
@@ -223,21 +249,45 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [ttchm,zzchm] = meshgrid(tchm,zchm);
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  [ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
- if(useoctplot==1)
+ [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc);
+ [ttdag,zzdag] = meshgrid(tdag,zdag);
+  if(useoctplot==1)
   figure(3)
-  subplot(4,1,1)
+  subplot(5,2,1)
   plot(tsfx,Jh)
-  subplot(4,1,2)
+  subplot(5,2,2)
   plot(tsfx,stressz,tsfx,stressm)
   axis([trange])
-  subplot(4,1,3)
+  subplot(5,2,3)
   pcolor(ttchm,zzchm,Tchm')
   shading flat
   axis([trange])
-  subplot(4,1,4)
+  subplot(5,2,4)
+  pcolor(ttdag,zzdag,Tavgdag')
+  shading flat
+  subplot(5,2,5)
+  pcolor(ttchm,zzchm,Schm')
+  shading flat
+  axis([trange])
+  axis([trange])
+  subplot(5,2,6)
+  pcolor(ttdag,zzdag,Savgdag')
+  shading flat
+  subplot(5,2,7)
   pcolor(ttadcp,zzadcp,ulpadcp')
   shading flat
   axis([trange])
+  subplot(5,2,8)
+  pcolor(ttdag,zzdag,uavgdag')
+  shading flat
+  subplot(5,2,9)
+  pcolor(ttadcp,zzadcp,vlpadcp')
+  shading flat
+  axis([trange])
+  subplot(5,2,10)
+  pcolor(ttdag,zzdag,vavgdag')
+  shading flat
+  print([outdir 'fig3.png'],'-dpng')
  else
  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
  end%if
