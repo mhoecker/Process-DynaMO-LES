@@ -25,8 +25,8 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
- fig1(sfxnc,chmnc,outdir);
- fig2(chmnc,adcpnc,outdir)
+# fig1(sfxnc,chmnc,outdir);
+# fig2(chmnc,adcpnc,outdir)
  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
@@ -237,24 +237,46 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
- useoctplot=1; % 1 plot using octave syntax, 0 use gnuplot script
+ useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
- trange = [t0sim,t0sim+1];
+ trange = [t0sim,t0sim+2];
  zrange = sort([0,-dsim]);
+ # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
- stressm = stress.*sin(wdir*pi/180);
- stressz = stress.*cos(wdir*pi/180);
+ # Decomplse Stress into components
+ stressm = -stress.*sin(wdir*pi/180);
+ stressz = -stress.*cos(wdir*pi/180);
+ # Save surface flux profiles
+ binarray(tsfx',[Jh,p,stressm,stressz]',[outdir "fig3ab.dat"]);
+ # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- [ttchm,zzchm] = meshgrid(tchm,zchm);
+ # Save T,S profiles
+ binmatrix(tchm',zchm',Tchm',[outdir "fig3c.dat"]);
+ binmatrix(tchm',zchm',Schm',[outdir "fig3e.dat"]);
+ # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
- [ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
- [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc);
- [ttdag,zzdag] = meshgrid(tdag,zdag);
-  if(useoctplot==1)
+ # save U,V profiles
+ binmatrix(tadcp',zadcp',ulpadcp',[outdir "fig3g.dat"]);
+ binmatrix(tadcp',zadcp',vlpadcp',[outdir "fig3i.dat"]);
+ # Extract simulation data
+ [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # convert to yearday
+ tdag = t0sim+tdag/(24*3600);
+ # save Simulated profiles
+ binmatrix(tdag',zdag',Tavgdag',[outdir "fig3d.dat"]);
+ binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
+ binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
+ binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
+ if(useoctplot==1)
+  # Make co-ordinate 2-D arrays from lists
+  [ttchm,zzchm] = meshgrid(tchm,zchm);
+  [ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
+  [ttdag,zzdag] = meshgrid(tdag,zdag);
+  # Picture time!
   figure(3)
   subplot(5,2,1)
-  plot(tsfx,Jh)
+  plot(tsfx,Jh,tsfx,p)
   subplot(5,2,2)
   plot(tsfx,stressz,tsfx,stressm)
   axis([trange])
@@ -289,7 +311,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
   shading flat
   print([outdir 'fig3.png'],'-dpng')
  else
- unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
  end%if
 end%function
 
