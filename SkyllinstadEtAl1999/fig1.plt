@@ -3,6 +3,8 @@ datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.png"
 set term pdf enhanced monochrome dashed size 9in,6in font "Helvetica,12" linewidth 2
+set palette gray gamma 2
+set palette maxcolors 8
 set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.pdf"
 set multiplot
 set style data lines
@@ -49,10 +51,6 @@ set format cb "10^{%L}"
 set cblabel "{/Symbol e} (W/kg)" offset 1,0
 set view map
 set pm3d
-set palette gray gamma 2
-#c(x) = .1+.5*(.5*(x)**.5+(.5-.5*(1-x)**.5))
-set palette maxcolors 8
-#set palette function c(gray),c(gray),c(gray);
 unset object 1
 set object 1 rectangle from 328,graph 0 to 329,graph 1
 set cbrange [1e-10:1e-2]
