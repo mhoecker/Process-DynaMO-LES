@@ -93,11 +93,25 @@ instrument = {instrument{:},""};
 val = {val{:},PSDfx.Solardn(:)};
 #
 k=k+1;
+vars = {vars{:},"Solarup"};
+units = {units{:},"Watt/meter^2"};
+longname = {longname{:},"Upward Short Wave Radiation Flux"};
+instrument = {instrument{:},"estimated from Payne (1972)"};
+val = {val{:},PSDfx.Solarup(:)};
+#
+k=k+1;
 vars = {vars{:},"IRdn"};
 units = {units{:},"Watt/meter^2"};
 longname = {longname{:},"Downward Long Wave Radiation Flux"};
 instrument = {instrument{:},""};
 val = {val{:},PSDfx.IRdn(:)};
+#
+k=k+1;
+vars = {vars{:},"IRup"};
+units = {units{:},"Watt/meter^2"};
+longname = {longname{:},"Upward Long Wave Radiation Flux"};
+instrument = {instrument{:},""};
+val = {val{:},PSDfx.IRup(:)};
 #
 k=k+1;
 vars = {vars{:},"P"};
