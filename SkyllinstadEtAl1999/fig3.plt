@@ -1,5 +1,6 @@
 reset
 datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
+load datdir."limits.plt"
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig3.png"
 set term pdf enhanced monochrome dashed size 9in,6in font "Helvetica,12" linewidth 2
@@ -16,13 +17,13 @@ set ytics
 # Surface Observations
 set format x ""
 set ylabel "J_h (W/m^2)"
-set x2tics mirror 328,.25,329.75
+set x2tics mirror t0sim,.25,t0sim+1.75
 set lmargin at screen .1
 set rmargin at screen .5
 set tmargin at screen .9
 set bmargin at screen .75
-set xrange [328:330]
-set x2range [328:330]
+set xrange [t0sim:t0sim+2]
+set x2range [t0sim:t0sim+2]
 set x2label "2011 year day"
 set yrange [-1000:1000]
 set ytics nomirror -800,400,800
@@ -50,9 +51,9 @@ unset x2label
 #
 # Profile Observations
 #
-set xtics mirror 328,.25,329.75
+set xtics mirror t0sim,.25,t0sim+1.75
 set ytics mirror -70,20,-10
-set yrange[-80:0]
+set yrange[-dsim:0]
 # Temperature
 set cbrange [26.5:30.5]
 set cblabel "T (^oC)"

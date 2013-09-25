@@ -1,5 +1,6 @@
 reset
 datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
+load datdir."limits.plt"
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.png"
 set term pdf enhanced monochrome dashed size 9in,6in font "Helvetica,12" linewidth 2
@@ -9,8 +10,8 @@ set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999cop
 set multiplot
 set style data lines
 set ytics
-set xrange [326:330]
-set object 1 rectangle from 328,graph 0 to 329,graph 1 fc rgb "gray90" fs pattern 3
+set xrange [t0sim-2:t0sim+2]
+set object 1 rectangle from t0sim,graph 0 to t0sim+1,graph 1 fc rgb "gray90" fs pattern 3
 set rmargin at screen .9
 set lmargin at screen .1
 set xtics .5
@@ -54,7 +55,7 @@ set pm3d
 unset object 1
 set object 1 rectangle from 328,graph 0 to 329,graph 1
 set cbrange [1e-10:1e-2]
-set yrange [-100:-20]
+set yrange [-dsim:-20]
 set colorbox user
 set colorbox origin .91,.075
 set colorbox size .02,.3

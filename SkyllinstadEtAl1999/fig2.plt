@@ -1,5 +1,6 @@
 reset
 datdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
+load datdir."limits.plt"
 #set term png enhanced size 1536,1024 truecolor nocrop linewidth 2
 #set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/fig1.png"
 set term pdf enhanced monochrome dashed size 9in,6in font "Helvetica,12" linewidth 2
@@ -9,8 +10,8 @@ set tmargin at screen .9
 set bmargin at screen .1
 set xtics nomirror rangelimited
 set x2tics nomirror rangelimited
-set yrange [-100:0]
-set y2range [-100:0]
+set yrange [-dsim:0]
+set y2range [-dsim:0]
 set xlabel "T (^oC)"
 set x2label "S (psu)"
 set lmargin at screen .1
