@@ -13,8 +13,9 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
  end%if
  if nargin()<2
-  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMetRev2/Revelle1minuteLeg3_r2.nc'
- end%if
+  %sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMetRev2/Revelle1minuteLeg3_r2.nc'
+  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
+end%if
  if nargin()<3
   chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
@@ -25,9 +26,22 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
-# fig1(sfxnc,chmnc,outdir);
-# fig2(chmnc,adcpnc,outdir)
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ fig1(sfxnc,chmnc,outdir);
+ fig2(chmnc,adcpnc,outdir);
+ fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+end%function
+
+function [useoctplot,t0sim,dsim]=simparam(outdir)
+ useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
+ t0sim = 328; % simulated start time is 2011 yearday 328
+ dsim = 80; % Maximum simulation depth
+ if(useoctplot!=1)
+  limitsfile = [outdir "limits.plt"];
+  fid = fopen(limitsfile,"w");
+  fprintf(fid,"t0sim=%f\n",t0sim);
+  fprintf(fid,"dsim=%f\n",dsim);
+  fclose(fid);
+ end%if
 end%function
 
 function idx = inclusiverange(variable,limits)
@@ -36,20 +50,21 @@ function idx = inclusiverange(variable,limits)
   abidx = sort([find(a==min(a),1),find(b==min(b),1)]);
   idx = abidx(1):abidx(2);
 end%function
+
 function [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange)
  % Extract Flux data
  sfx = netcdf(sfxnc,'r');
- tsfx = squeeze(sfx{'Yday'}(:));
+ tsfx = squeeze(sfx{'yday'}(:));
  if nargin()>1
   sfxtidx = inclusiverange(tsfx,trange);
  else
   sfxtidx = 1:length(tsfx);
  end%if
- tsfx = squeeze(sfx{'Yday'}(sfxtidx));
+ tsfx = squeeze(sfx{'yday'}(sfxtidx));
  stress = squeeze(sfx{'stress'}(sfxtidx));
  p = squeeze(sfx{'P'}(sfxtidx));
  Jh = squeeze(sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx));
- wdir = squeeze(sfx{'Wdir'}(sfxtidx));
+ wdir = squeeze(sfx{'wdir'}(sfxtidx));
  % Some other things to extract
  #precip = squeeze(sfx{'Precip'}(sfxtidx));
  ncclose(sfx);
@@ -146,9 +161,7 @@ function fig1(sfxnc,chmnc,outdir)
  % The simulated time is highlighted on the line plots
  % line plots are filled
  % epsilon is plotted on a log10 scale
- useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
- t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 80; % Maximum simulation depth
+ [useoctplot,t0sim,dsim]=simparam(outdir);
  trange = [t0sim-2,t0sim+2];
  zrange = sort([0,-dsim]);
  % Extract Flux data
@@ -193,9 +206,7 @@ function  fig2(chmnc,adcpnc,outdir)
  %
  % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
  % 2nd plot E/W (u) and N/S (v) velocity at simulation start
- useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
- t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 80; % Maximum simulation depth
+ [useoctplot,t0sim,dsim]=simparam(outdir);
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
  % read ADCP file
@@ -237,9 +248,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
- useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
- t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 80; % Maximum simulation depth
+ [useoctplot,t0sim,dsim]=simparam(outdir);
  trange = [t0sim,t0sim+2];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -316,3 +325,20 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
 %figure 4
+function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ % Plot time series of N^2 S^2 and Ri
+ [useoctplot,t0sim,dsim]=simparam();
+ useoctplot = 1;
+ # Extract surface fluxes
+ [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
+ # Extract Chameleon data
+ [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ # Extract simulation data
+ [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ #
+ if(useoctplot==1)
+ else
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
+ end%if
+ %
+end%function
