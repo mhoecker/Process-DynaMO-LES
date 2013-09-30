@@ -100,6 +100,17 @@ function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
  Ri = -(nu.^2).*g.*rho0.*alpha.*Jh./(kappaT.*stress.^2);
 end%function
 
+function [Ri,rho,Sh,Nsq] profileRi(U,V,zuv,T,Sal,zTS)
+ % Calculate the Richardson given a velocity and TS profile
+ ddzuv = ddz(zuv);
+ ddzTS = ddz(zTS);
+ pTS = gsw_p_from_z(zTS,0);
+ pref = mean(PTS)
+ SA = gsw_SA_from_SP(sss,80.5+0*sss,0*sss,0*sss);
+ rho = gsw_rho(T,SA,0);
+
+end%function
+
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
  % Extract profile data from Chameleon
  chm = netcdf(chmnc,'r');
