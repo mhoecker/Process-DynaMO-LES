@@ -32,10 +32,11 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
- fig1(sfxnc,chmnc,outdir);
- fig2(chmnc,adcpnc,outdir);
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig1(sfxnc,chmnc,outdir);
+ #fig2(chmnc,adcpnc,outdir);
+ #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function [useoctplot,t0sim,dsim,tfsim] = simparam(outdir)
@@ -100,15 +101,16 @@ function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
  Ri = -(nu.^2).*g.*rho0.*alpha.*Jh./(kappaT.*stress.^2);
 end%function
 
-function [Ri,rho,Sh,Nsq] profileRi(U,V,zuv,T,Sal,zTS)
+function [Ri,rho,Sh,Nsq] = profileRi(U,V,zuv,T,Sal,zTS)
  % Calculate the Richardson given a velocity and TS profile
  ddzuv = ddz(zuv);
  ddzTS = ddz(zTS);
+
  pTS = gsw_p_from_z(zTS,0);
- pref = mean(PTS)
+ pref = mean(PTS);
  SA = gsw_SA_from_SP(sss,80.5+0*sss,0*sss,0*sss);
  rho = gsw_rho(T,SA,0);
-
+ Ri = Nsq./(Sh.^2);
 end%function
 
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
@@ -161,7 +163,7 @@ function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  ncclose(adcp);
 end%function
 
-function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,trange,zrange)
+function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss]=DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag = netcdf(dagnc,'r');
  tdag = squeeze(dag{'time'}(:));
@@ -183,6 +185,15 @@ function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,trange,zr
  vavgdag = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
  Tavgdag = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
  Savgdag = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
+ tkeavg = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
+ tkePTra = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
+ tkeAdve = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
+ tkeBuoy = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
+ tkeSGTr = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
+ tkeSPro = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
+ tkeStDr = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
+ tkeSGPE = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
+ tkeDiss = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
 
@@ -379,6 +390,8 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # convert to yearday
+ tdag = t0sim+tdag/(24*3600);
  # Calulatwe the Driven Richarson number
  [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  #
@@ -402,6 +415,112 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   semilogy(tsfx,-4*Ri,tsfx,ones(size(tsfx)),"k")
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
+ else
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
+ end%if
+ %
+end%function
+
+function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ useoctplot=1;
+ trange = [t0sim,tfsim];
+ zrange = sort([0,-dsim]);
+ useoctplot = 1;
+ # Extract surface fluxes
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ # Extract Chameleon data
+ [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ # Extract simulation data
+ [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # convert to yearday
+ tdag = t0sim+tdag/(24*3600);
+ # Calulatwe the Driven Richarson number
+ [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
+ #
+ if(useoctplot==1)
+  # Make co-ordinate 2-D arrays from lists
+  [ttchm,zzchm] = meshgrid(tchm,zchm);
+  #[ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
+  [ttdag,zzdag] = meshgrid(tdag,zdag);
+  plotrows = 8;
+  plotcols = 1;
+  plotnumb = 0;
+  commoncaxis = [-.005,.005];
+  # Surface Ri#
+  %plotnumb = plotnumb+1;
+  %subplot(plotrows,plotcols,plotnumb)
+  %plot(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k",tsfx,0*ones(size(tsfx)),"k-",tsfx,-ones(size(tsfx)),"k")
+  %ylabel("4Ri")
+  %axis([trange,-2,2])
+  #  tke #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,log(tkeavg'));
+  shading flat
+  ylabel("log_{10} tke")
+  title("All plots (except tke) scaled by tke")
+  caxis([-10,0]+log(max(max(tkeavg))))
+  colorbar
+  # Pressure Transport of tke #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkePTra'./tkeavg');
+  shading flat
+  ylabel("P trans.")
+  caxis(commoncaxis)
+  colorbar
+  # Advection Transport of tke #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeAdve'./tkeavg');
+  shading flat
+  ylabel("Advect.")
+  caxis(commoncaxis)
+  colorbar
+  # Buoyancy Production of tke #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeBuoy'./tkeavg');
+  shading flat
+  ylabel("Buoy. Prod.")
+  caxis(commoncaxis)
+  colorbar
+  # Sub-gridscale tramsport of tke #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeSGTr'./tkeavg');
+  shading flat
+  caxis(commoncaxis)
+  ylabel("SGS trans.")
+  colorbar
+  # Shear Production #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeSPro'./tkeavg');
+  shading flat
+  caxis(commoncaxis)
+  ylabel("Shear Prod.")
+  colorbar
+  # Stokes Drift #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeStDr'./tkeavg');
+  shading flat
+  ylabel("Stokes Drift")
+  caxis(commoncaxis)
+  colorbar
+  # Sub-gridscale potential energy #
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeSGPE'./tkeavg');
+  shading flat
+  ylabel("SGS PE")
+  caxis(commoncaxis)
+  colorbar
+  # tkeDiss
+  # Print #
+  print([outdir "fig6.png"],"-dpng","-S1280,1536")
  else
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
  end%if
