@@ -9,12 +9,18 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % Upper-ocean turbulence during a westerly wind burst: A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
 %
+ gswpath = "/home/mhoecker/work/TEOS-10/";
+ addpath(gswpath);
+ gswpath = "/home/mhoecker/work/TEOS-10/library/";
+ addpath(gswpath);
  if nargin()<1
-  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
+%  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
+%  dagnc = '/media/mhoecker/20130916External/o448_1-a_dag.nc'
+  dagnc = '/media/mhoecker/20130916External/o448_1-b_dag.nc'
  end%if
  if nargin()<2
-  %sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMetRev2/Revelle1minuteLeg3_r2.nc'
-  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
+  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
+  %sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
 end%if
  if nargin()<3
   chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
@@ -29,16 +35,19 @@ end%if
  fig1(sfxnc,chmnc,outdir);
  fig2(chmnc,adcpnc,outdir);
  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
-function [useoctplot,t0sim,dsim]=simparam(outdir)
+function [useoctplot,t0sim,dsim,tfsim] = simparam(outdir)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
+ tfsim = t0sim+1; % Simulated stop time 2011 yearday
  if(useoctplot!=1)
   limitsfile = [outdir "limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"t0sim=%f\n",t0sim);
+  fprintf(fid,"tfsim=%f\n",tfsim);
   fprintf(fid,"dsim=%f\n",dsim);
   fclose(fid);
  end%if
@@ -51,23 +60,44 @@ function idx = inclusiverange(variable,limits)
   idx = abidx(1):abidx(2);
 end%function
 
-function [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet] = surfaceflux(sfxnc,trange)
  % Extract Flux data
  sfx = netcdf(sfxnc,'r');
- tsfx = squeeze(sfx{'yday'}(:));
+ tsfx = squeeze(sfx{'Yday'}(:));
  if nargin()>1
   sfxtidx = inclusiverange(tsfx,trange);
  else
   sfxtidx = 1:length(tsfx);
  end%if
- tsfx = squeeze(sfx{'yday'}(sfxtidx));
+ tsfx = squeeze(sfx{'Yday'}(sfxtidx));
  stress = squeeze(sfx{'stress'}(sfxtidx));
  p = squeeze(sfx{'P'}(sfxtidx));
  Jh = squeeze(sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx));
- wdir = squeeze(sfx{'wdir'}(sfxtidx));
+ wdir = squeeze(sfx{'Wdir'}(sfxtidx));
+ sst = squeeze(sfx{'SST'}(sfxtidx));
+ SalTSG = squeeze(sfx{'SalTSG'}(sfxtidx));
+ SolarNet = squeeze(sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx));
  % Some other things to extract
  #precip = squeeze(sfx{'Precip'}(sfxtidx));
  ncclose(sfx);
+end%function
+
+function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
+ % Convert surface stress and heat flux into a richardson number
+ %
+ % Ri = g * nu^2 * alpha * Jh* / (stress/nu)^2
+ %
+ nu = 1.05e-6; %
+ kappaT = 1.46e-7; %
+ % from
+ % Tables of Physical & Chemical Constants (16th edition 1995).
+ % 2.7.9 Physical properties of sea water.
+ % Kaye & Laby Online. Version 1.0 (2005) www.kayelaby.npl.co.uk
+ sssa = gsw_SA_from_SP(sss,80.5+0*sss,0*sss,0*sss);
+ alpha = gsw_alpha(sst,sssa,0*sst );
+ rho0 = gsw_rho(sst,sssa,0*sst);
+ g = grav = gsw_grav(0);
+ Ri = -(nu.^2).*g.*alpha.*Jh./(kappaT.*stress.^2);
 end%function
 
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
@@ -161,8 +191,8 @@ function fig1(sfxnc,chmnc,outdir)
  % The simulated time is highlighted on the line plots
  % line plots are filled
  % epsilon is plotted on a log10 scale
- [useoctplot,t0sim,dsim]=simparam(outdir);
- trange = [t0sim-2,t0sim+2];
+ [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
  % Extract Flux data
  [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange);
@@ -249,7 +279,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % and model.  The surface heat and momentum forcings are also shown
  %
  [useoctplot,t0sim,dsim]=simparam(outdir);
- trange = [t0sim,t0sim+2];
+ trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
@@ -327,16 +357,31 @@ end%function
 %figure 4
 function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Plot time series of N^2 S^2 and Ri
- [useoctplot,t0sim,dsim]=simparam();
+ [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ useoctplot=1;
+ trange = [t0sim,tfsim];
+ zrange = sort([0,-dsim]);
  useoctplot = 1;
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # Calulatwe the Driven Richarson number
+ [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  #
  if(useoctplot==1)
+  subplot(3,1,3)
+  semilogy(tsfx,Ri)
+  ylabel("Ri")
+  subplot(3,1,2)
+  plot(tsfx,stress)
+  ylabel("stress")
+  subplot(3,1,1)
+  plot(tsfx,Jh,tsfx,0*ones(size(tsfx)),"k")
+  ylabel("Jh-Solar")
+  print([outdir "fig4.png"],"-dpng")
  else
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
  end%if
