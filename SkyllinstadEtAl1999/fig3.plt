@@ -22,8 +22,8 @@ set lmargin at screen .1
 set rmargin at screen .5
 set tmargin at screen .9
 set bmargin at screen .75
-set xrange [t0sim:t0sim+2]
-set x2range [t0sim:t0sim+2]
+set xrange [t0sim:tfsim]
+set x2range [t0sim:tfsim]
 set x2label "2011 year day"
 set yrange [-1000:1000]
 set ytics nomirror -800,400,800
