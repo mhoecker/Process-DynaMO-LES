@@ -85,7 +85,7 @@ end%function
 function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
  % Convert surface stress and heat flux into a richardson number
  %
- % Ri = g * nu^2 * alpha * Jh* / (stress/nu)^2
+ % Ri = g * alpha * ( Jh / kappaT ) * / (stress/nu rho)^2
  %
  nu = 1.05e-6; %
  kappaT = 1.46e-7; %
@@ -97,7 +97,7 @@ function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
  alpha = gsw_alpha(sst,sssa,0*sst );
  rho0 = gsw_rho(sst,sssa,0*sst);
  g = grav = gsw_grav(0);
- Ri = -(nu.^2).*g.*alpha.*Jh./(kappaT.*stress.^2);
+ Ri = -(nu.^2).*g.*rho0.*alpha.*Jh./(kappaT.*stress.^2);
 end%function
 
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
@@ -359,7 +359,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Plot time series of N^2 S^2 and Ri
  [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
  useoctplot=1;
- trange = [t0sim,tfsim];
+ trange = [t0sim-3,tfsim+3];
  zrange = sort([0,-dsim]);
  useoctplot = 1;
  # Extract surface fluxes
@@ -372,15 +372,24 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  #
  if(useoctplot==1)
-  subplot(3,1,3)
-  semilogy(tsfx,Ri)
-  ylabel("Ri")
-  subplot(3,1,2)
-  plot(tsfx,stress)
-  ylabel("stress")
-  subplot(3,1,1)
-  plot(tsfx,Jh,tsfx,0*ones(size(tsfx)),"k")
-  ylabel("Jh-Solar")
+  subplot(4,1,1)
+%  plot(tsfx,Jh,tsfx,0*ones(size(tsfx)),"k")
+%  ylabel("Jh")
+%  subplot(4,1,2)
+%  plot(tsfx,stress)
+%  ylabel("stress")
+%  subplot(4,1,3)
+%  semilogy(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k")
+%  ylabel("+4Ri")
+%  subplot(4,1,4)
+%  semilogy(tsfx,-4*Ri,tsfx,ones(size(tsfx)),"k")
+%  ylabel("-4Ri")
+  subplot(2,1,1)
+  semilogy(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k")
+  ylabel("+4Ri")
+  subplot(2,1,2)
+  semilogy(tsfx,-4*Ri,tsfx,ones(size(tsfx)),"k")
+  ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
