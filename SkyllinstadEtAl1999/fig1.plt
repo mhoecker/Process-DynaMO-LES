@@ -10,7 +10,8 @@ set output "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999cop
 set multiplot
 set style data lines
 set ytics
-set xrange [t0sim-2:t0sim+2]
+set xrange [t0sim-1:tfsim+1]
+set x2range [t0sim-1:tfsim+1]
 set object 1 rectangle from t0sim,graph 0 to t0sim+1,graph 1 fc rgb "gray90" fs pattern 3
 set rmargin at screen .9
 set lmargin at screen .1
