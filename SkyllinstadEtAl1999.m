@@ -124,37 +124,37 @@ function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  ncclose(adcp);
 end%function
 
-function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss]=DAGprofiles(dagnc,trange,zrange)
+function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
- dag = netcdf(dagnc,'r');
- tdag = squeeze(dag{'time'}(:));
+ dag      = netcdf(dagnc,'r');
+ tdag     = squeeze(dag{'time'}(:));
  if nargin()>1
   dagtidx = inclusiverange(tdag,trange);
  else
   dagtidx = 1:length(tdag);
  end%if
  % restict depth range
- zdag = -squeeze(dag{'zzu'}(:));
+ zdag     = -squeeze(dag{'zzu'}(:));
  if nargin()>2
   dagzidx = inclusiverange(zdag,zrange);
  else
   dagzidx = 1:length(zdag);
  end%if
- tdag = squeeze(dag{'time'}(dagtidx));
- zdag = -squeeze(dag{'zzu'}(dagzidx));
- uavgdag = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
- vavgdag = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
- Tavgdag = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
- Savgdag = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
- tkeavg = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
- tkePTra = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
- tkeAdve = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
- tkeBuoy = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
- tkeSGTr = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
- tkeSPro = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
- tkeStDr = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
- tkeSGPE = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
- tkeDiss = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
+ tdag     = squeeze(dag{'time'}(dagtidx));
+ zdag     = -squeeze(dag{'zzu'}(dagzidx));
+ uavgdag  = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
+ vavgdag  = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
+ Tavgdag  = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
+ Savgdag  = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
+ tkeavg   = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
+ tkePTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
+ tkeAdve  = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
+ tkeBuoy  = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
+ tkeSGTr  = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
+ tkeSPro  = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
+ tkeStDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
+ tkeSGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
+ tkeDiss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
 
