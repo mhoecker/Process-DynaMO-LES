@@ -9,10 +9,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % Upper-ocean turbulence during a westerly wind burst: A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
 %
- gswpath = "/home/mhoecker/work/TEOS-10/";
- addpath(gswpath);
- gswpath = "/home/mhoecker/work/TEOS-10/library/";
- addpath(gswpath);
+ findgsw
  if nargin()<1
 %  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
 %  dagnc = '/media/mhoecker/20130916External/o448_1-a_dag.nc'
@@ -36,6 +33,7 @@ end%if
  #fig2(chmnc,adcpnc,outdir);
  #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
@@ -52,13 +50,6 @@ function [useoctplot,t0sim,dsim,tfsim] = simparam(outdir)
   fprintf(fid,"dsim=%f\n",dsim);
   fclose(fid);
  end%if
-end%function
-
-function idx = inclusiverange(variable,limits)
-  a=(abs(variable-min(limits)));
-  b=(abs(variable-max(limits)));
-  abidx = sort([find(a==min(a),1),find(b==min(b),1)]);
-  idx = abidx(1):abidx(2);
 end%function
 
 function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet] = surfaceflux(sfxnc,trange)
@@ -81,36 +72,6 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet] = surfaceflux(sfxnc,trange)
  % Some other things to extract
  #precip = squeeze(sfx{'Precip'}(sfxtidx));
  ncclose(sfx);
-end%function
-
-function [Ri,alpha,g,nu,kappaT] = surfaceRi(stress,Jh,sst,sss)
- % Convert surface stress and heat flux into a richardson number
- %
- % Ri = g * alpha * ( Jh / kappaT ) * / (stress/nu rho)^2
- %
- nu = 1.05e-6; %
- kappaT = 1.46e-7; %
- % from
- % Tables of Physical & Chemical Constants (16th edition 1995).
- % 2.7.9 Physical properties of sea water.
- % Kaye & Laby Online. Version 1.0 (2005) www.kayelaby.npl.co.uk
- sssa = gsw_SA_from_SP(sss,80.5+0*sss,0*sss,0*sss);
- alpha = gsw_alpha(sst,sssa,0*sst );
- rho0 = gsw_rho(sst,sssa,0*sst);
- g = grav = gsw_grav(0);
- Ri = -(nu.^2).*g.*rho0.*alpha.*Jh./(kappaT.*stress.^2);
-end%function
-
-function [Ri,rho,Sh,Nsq] = profileRi(U,V,zuv,T,Sal,zTS)
- % Calculate the Richardson given a velocity and TS profile
- ddzuv = ddz(zuv);
- ddzTS = ddz(zTS);
-
- pTS = gsw_p_from_z(zTS,0);
- pref = mean(PTS);
- SA = gsw_SA_from_SP(sss,80.5+0*sss,0*sss,0*sss);
- rho = gsw_rho(T,SA,0);
- Ri = Nsq./(Sh.^2);
 end%function
 
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
@@ -196,7 +157,6 @@ function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBu
  tkeDiss = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
-
 
 % figure 1
 function fig1(sfxnc,chmnc,outdir)
@@ -421,6 +381,11 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %
 end%function
 
+%figure 5
+function fig5(chmnc,adcpnc,sfxnc,dagnc,outdir)
+end%function
+
+% figure 6
 function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
  useoctplot=1;
