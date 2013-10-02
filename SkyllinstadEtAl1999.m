@@ -29,25 +29,35 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
- #fig1(sfxnc,chmnc,outdir);
- #fig2(chmnc,adcpnc,outdir);
- #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ testfig(outdir);
+ fig1(sfxnc,chmnc,outdir);
+ fig2(chmnc,adcpnc,outdir);
+ fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
-function [useoctplot,t0sim,dsim,tfsim] = simparam(outdir)
+function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
  tfsim = t0sim+1; % Simulated stop time 2011 yearday
+ if(nargin==1)
+  datdir = outdir;
+ end%if
  if(useoctplot!=1)
+  [gnuplotterm,termsfx] = termselect("pdfarticlebw");
   limitsfile = [outdir "limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"t0sim=%f\n",t0sim);
   fprintf(fid,"tfsim=%f\n",tfsim);
   fprintf(fid,"dsim=%f\n",dsim);
+  fprintf(fid,"outdir = '%s'\n",outdir);
+  fprintf(fid,"datdir = '%s'\n",datdir);
+  fprintf(fid,"termsfx = '%s'\n",termsfx);
+  fprintf(fid,"set term %s\n",gnuplotterm);
+  fprintf(fid,"%s",paltext("plusminus"));
   fclose(fid);
  end%if
 end%function
@@ -158,6 +168,17 @@ function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBu
  ncclose(dag);
 end%function
 
+function testfig(outdir)
+ [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir);
+  testfile = [outdir "test.plt"];
+  fid = fopen(testfile,"w");
+  fprintf(fid,"load '%slimits.plt'\n",outdir);
+  fprintf(fid,"set output outdir.'test'.termsfx\n");
+  fprintf(fid,"test\n",tfsim);
+  fclose(fid);
+  unix(["gnuplot " testfile])
+end%function
+
 % figure 1
 function fig1(sfxnc,chmnc,outdir)
  %function fig1(sfxnc,chmnc,outdir)
@@ -173,17 +194,13 @@ function fig1(sfxnc,chmnc,outdir)
  % The simulated time is highlighted on the line plots
  % line plots are filled
  % epsilon is plotted on a log10 scale
- [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
  % Extract Flux data
  [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange);
- # Save Flux data
- binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
  # Extract epsilon profiles
  [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
- # Save epsilon profiles
- binmatrix(tchm',zchm',epschm',[outdir "fig1d.dat"]);
  # Plot using octave or Gnuplot
  if(useoctplot==1)
   figure(1)
@@ -206,6 +223,10 @@ function fig1(sfxnc,chmnc,outdir)
   ylabel("Depth (m)")
   print([outdir 'fig1.png'],'-dpng')
  else
+  # Save Flux data
+  binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
+  # Save epsilon profiles
+  binmatrix(tchm',zchm',epschm',[outdir "fig1d.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt");
  end%if
 end%function
@@ -218,7 +239,7 @@ function  fig2(chmnc,adcpnc,outdir)
  %
  % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
  % 2nd plot E/W (u) and N/S (v) velocity at simulation start
- [useoctplot,t0sim,dsim]=simparam(outdir);
+ [useoctplot,t0sim,dsim]=plotparam(outdir);
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
  % read ADCP file
@@ -234,12 +255,8 @@ function  fig2(chmnc,adcpnc,outdir)
   ULlp = ULlp+Ulpcoef(i).*legendre(i-1,xadcp)(1,:);
   VLlp = VLlp+Vlpcoef(i).*legendre(i-1,xadcp)(1,:);
  end%for
- # save U,V profiles
- binarray(zadcp',[ulpadcp;vlpadcp;ULlp;VLlp],[outdir "fig2b.dat"]);
  # read Chameleon file
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Save T,S profiles
- binarray(zchm',[Tchm;Schm],[outdir "fig2a.dat"]);
  # Plot using octave or gnuplot script
  if(useoctplot==1)
   figure(2)
@@ -251,6 +268,10 @@ function  fig2(chmnc,adcpnc,outdir)
   axis([min([ulpadcp,vlpadcp]),max([ulpadcp,vlpadcp]),zrange])
   print([outdir 'fig2.png'],'-dpng')
  else
+  # save U,V profiles
+  binarray(zadcp',[ulpadcp;vlpadcp;ULlp;VLlp],[outdir "fig2b.dat"]);
+  # Save T,S profiles
+  binarray(zchm',[Tchm;Schm],[outdir "fig2a.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt");
  end%if
 end%function
@@ -260,7 +281,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
- [useoctplot,t0sim,dsim]=simparam(outdir);
+ [useoctplot,t0sim,dsim]=plotparam(outdir);
  trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -268,27 +289,14 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Decomplse Stress into components
  stressm = -stress.*sin(wdir*pi/180);
  stressz = -stress.*cos(wdir*pi/180);
- # Save surface flux profiles
- binarray(tsfx',[Jh,p,stressm,stressz]',[outdir "fig3ab.dat"]);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Save T,S profiles
- binmatrix(tchm',zchm',Tchm',[outdir "fig3c.dat"]);
- binmatrix(tchm',zchm',Schm',[outdir "fig3e.dat"]);
  # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
- # save U,V profiles
- binmatrix(tadcp',zadcp',ulpadcp',[outdir "fig3g.dat"]);
- binmatrix(tadcp',zadcp',vlpadcp',[outdir "fig3i.dat"]);
  # Extract simulation data
  [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
- # save Simulated profiles
- binmatrix(tdag',zdag',Tavgdag',[outdir "fig3d.dat"]);
- binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
- binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
- binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
  if(useoctplot==1)
   # Make co-ordinate 2-D arrays from lists
   [ttchm,zzchm] = meshgrid(tchm,zchm);
@@ -332,6 +340,19 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
   shading flat
   print([outdir 'fig3.png'],'-dpng')
  else
+  # Save T,S profiles
+  binmatrix(tchm',zchm',Tchm',[outdir "fig3c.dat"]);
+  binmatrix(tchm',zchm',Schm',[outdir "fig3e.dat"]);
+  # save U,V profiles
+  binmatrix(tadcp',zadcp',ulpadcp',[outdir "fig3g.dat"]);
+  binmatrix(tadcp',zadcp',vlpadcp',[outdir "fig3i.dat"]);
+  # Save surface flux profiles
+  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir "fig3ab.dat"]);
+  # save Simulated profiles
+  binmatrix(tdag',zdag',Tavgdag',[outdir "fig3d.dat"]);
+  binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
+  binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
+  binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
  end%if
 end%function
@@ -339,7 +360,7 @@ end%function
 %figure 4
 function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Plot time series of N^2 S^2 and Ri
- [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  useoctplot=1;
  trange = [t0sim-3,tfsim+3];
  zrange = sort([0,-dsim]);
@@ -387,21 +408,21 @@ end%function
 
 % figure 6
 function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
- [useoctplot,t0sim,dsim,tfsim]=simparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  useoctplot=1;
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  useoctplot = 1;
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ # Calulatwe the Driven Richarson number
+ [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
- # Calulatwe the Driven Richarson number
- [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  #
  if(useoctplot==1)
   # Make co-ordinate 2-D arrays from lists
@@ -487,7 +508,17 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   # Print #
   print([outdir "fig6.png"],"-dpng","-S1280,1536")
  else
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
+  # save files for gnuplot
+  binmatrix(tdag',zdag',tkeavg',[outdir "fig6a.dat"]);
+  binmatrix(tdag',zdag',tkePTra'./tkeavg',[outdir "fig6b.dat"]);
+  binmatrix(tdag',zdag',tkeAdve'./tkeavg',[outdir "fig6c.dat"]);
+  binmatrix(tdag',zdag',tkeBouy'./tkeavg',[outdir "fig6d.dat"]);
+  binmatrix(tdag',zdag',tkeSGTr'./tkeavg',[outdir "fig6e.dat"]);
+  binmatrix(tdag',zdag',tkeSPro'./tkeavg',[outdir "fig6f.dat"]);
+  binmatrix(tdag',zdag',tkeStDr'./tkeavg',[outdir "fig6g.dat"]);
+  binmatrix(tdag',zdag',tkeSGPE'./tkeavg',[outdir "fig6h.dat"]);
+  # invoke gnuplot
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt")
  end%if
  %
 end%function
