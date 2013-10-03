@@ -2,10 +2,10 @@ reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
 set palette maxcolors 8
-set pm3d
 set view map
 unset colorbox
 unset surface
+set pm3d
 set multiplot
 set style data lines
 set ytics
