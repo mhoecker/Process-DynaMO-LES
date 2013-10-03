@@ -9,7 +9,6 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % Upper-ocean turbulence during a westerly wind burst: A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
 %
- findgsw
  if nargin()<1
 %  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
 %  dagnc = '/media/mhoecker/20130916External/o448_1-a_dag.nc'
@@ -29,13 +28,13 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
- testfig(outdir);
+ #testfig(outdir);
  fig1(sfxnc,chmnc,outdir);
  fig2(chmnc,adcpnc,outdir);
  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
@@ -47,7 +46,7 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
   datdir = outdir;
  end%if
  if(useoctplot!=1)
-  [gnuplotterm,termsfx] = termselect("pdfarticlebw");
+  [gnuplotterm,termsfx] = termselect("pngposter");
   limitsfile = [outdir "limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"t0sim=%f\n",t0sim);
@@ -134,6 +133,82 @@ function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
  ncclose(adcp);
 end%function
 
+function [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,trange,zrange)
+ % Extract diagnostic profiles
+ dag      = netcdf(dagnc,'r');
+ tdag     = squeeze(dag{'time'}(:));
+ if nargin()>1
+  dagtidx = inclusiverange(tdag,trange);
+ else
+  dagtidx = 1:length(tdag);
+ end%if
+ % restict depth range
+ zdag     = -squeeze(dag{'zzu'}(:));
+ if nargin()>2
+  dagzidx = inclusiverange(zdag,zrange);
+ else
+  dagzidx = 1:length(zdag);
+ end%if
+ tdag     = squeeze(dag{'time'}(dagtidx));
+ zdag     = -squeeze(dag{'zzu'}(dagzidx));
+ uavgdag  = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
+ vavgdag  = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
+ ncclose(dag);
+end%function
+
+function [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,trange,zrange)
+ % Extract diagnostic profiles
+ dag      = netcdf(dagnc,'r');
+ tdag     = squeeze(dag{'time'}(:));
+ if nargin()>1
+  dagtidx = inclusiverange(tdag,trange);
+ else
+  dagtidx = 1:length(tdag);
+ end%if
+ % restict depth range
+ zdag     = -squeeze(dag{'zzu'}(:));
+ if nargin()>2
+  dagzidx = inclusiverange(zdag,zrange);
+ else
+  dagzidx = 1:length(zdag);
+ end%if
+ tdag     = squeeze(dag{'time'}(dagtidx));
+ zdag     = -squeeze(dag{'zzu'}(dagzidx));
+ Tavgdag  = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
+ Savgdag  = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
+end%function
+
+function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
+ % Extract diagnostic profiles
+ dag      = netcdf(dagnc,'r');
+ tdag     = squeeze(dag{'time'}(:));
+ if nargin()>1
+  dagtidx = inclusiverange(tdag,trange);
+ else
+  dagtidx = 1:length(tdag);
+ end%if
+ % restict depth range
+ zdag     = -squeeze(dag{'zzu'}(:));
+ if nargin()>2
+  dagzidx = inclusiverange(zdag,zrange);
+ else
+  dagzidx = 1:length(zdag);
+ end%if
+ tdag     = squeeze(dag{'time'}(dagtidx));
+ zdag     = -squeeze(dag{'zzu'}(dagzidx));
+ tkeavg   = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
+ tkePTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
+ tkeAdve  = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
+ BuoyPr  = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
+ tkeSGTr  = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
+ ShPr  = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
+ StDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
+ SGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
+ Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
+ ncclose(dag);
+end%function
+
+
 function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag      = netcdf(dagnc,'r');
@@ -170,13 +245,15 @@ end%function
 
 function testfig(outdir)
  [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir);
+ if(useoctplot!=1)
   testfile = [outdir "test.plt"];
   fid = fopen(testfile,"w");
   fprintf(fid,"load '%slimits.plt'\n",outdir);
   fprintf(fid,"set output outdir.'test'.termsfx\n");
   fprintf(fid,"test\n",tfsim);
   fclose(fid);
-  unix(["gnuplot " testfile])
+  unix(["gnuplot " testfile]);
+ end%if
 end%function
 
 % figure 1
@@ -294,7 +371,8 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  # Extract simulation data
- [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  if(useoctplot==1)
@@ -361,16 +439,16 @@ end%function
 function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Plot time series of N^2 S^2 and Ri
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- useoctplot=1;
+ #useoctplot=1;
  trange = [t0sim-3,tfsim+3];
  zrange = sort([0,-dsim]);
- useoctplot = 1;
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
- [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  # Calulatwe the Driven Richarson number
@@ -397,6 +475,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
+  binarray(tsfx',[Ri]',[outdir "fig4a.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
  end%if
  %
@@ -409,10 +488,8 @@ end%function
 % figure 6
 function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- useoctplot=1;
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
- useoctplot = 1;
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
  # Calulatwe the Driven Richarson number
@@ -420,7 +497,7 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
- [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss]=DAGprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  #
@@ -429,7 +506,7 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   [ttchm,zzchm] = meshgrid(tchm,zchm);
   #[ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
   [ttdag,zzdag] = meshgrid(tdag,zdag);
-  plotrows = 8;
+  plotrows = 9;
   plotcols = 1;
   plotnumb = 0;
   commoncaxis = [-.005,.005];
@@ -505,6 +582,13 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   caxis(commoncaxis)
   colorbar
   # tkeDiss
+  plotnumb = plotnumb+1;
+  subplot(plotrows,plotcols,plotnumb)
+  pcolor(ttdag,zzdag,tkeDiss'./tkeavg');
+  shading flat
+  ylabel("Dissipation")
+  caxis(commoncaxis)
+  colorbar
   # Print #
   print([outdir "fig6.png"],"-dpng","-S1280,1536")
  else
@@ -512,11 +596,12 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',tkeavg',[outdir "fig6a.dat"]);
   binmatrix(tdag',zdag',tkePTra'./tkeavg',[outdir "fig6b.dat"]);
   binmatrix(tdag',zdag',tkeAdve'./tkeavg',[outdir "fig6c.dat"]);
-  binmatrix(tdag',zdag',tkeBouy'./tkeavg',[outdir "fig6d.dat"]);
-  binmatrix(tdag',zdag',tkeSGTr'./tkeavg',[outdir "fig6e.dat"]);
-  binmatrix(tdag',zdag',tkeSPro'./tkeavg',[outdir "fig6f.dat"]);
-  binmatrix(tdag',zdag',tkeStDr'./tkeavg',[outdir "fig6g.dat"]);
-  binmatrix(tdag',zdag',tkeSGPE'./tkeavg',[outdir "fig6h.dat"]);
+  binmatrix(tdag',zdag',tkeSGTr'./tkeavg',[outdir "fig6d.dat"]);
+  binmatrix(tdag',zdag',BuoyPr'./tkeavg',[outdir "fig6e.dat"]);
+  binmatrix(tdag',zdag',ShPr'./tkeavg',[outdir "fig6f.dat"]);
+  binmatrix(tdag',zdag',StDr'./tkeavg',[outdir "fig6g.dat"]);
+  binmatrix(tdag',zdag',SGPE'./tkeavg',[outdir "fig6h.dat"]);
+  binmatrix(tdag',zdag',Diss'./tkeavg',[outdir "fig6i.dat"]);
   # invoke gnuplot
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt")
  end%if
