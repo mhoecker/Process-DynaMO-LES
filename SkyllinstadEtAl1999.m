@@ -11,8 +11,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 %
  if nargin()<1
 %  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-%  dagnc = '/media/mhoecker/20130916External/o448_1-a_dag.nc'
-  dagnc = '/media/mhoecker/20130916External/o448_1-b_dag.nc'
+  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
  end%if
  if nargin()<2
   sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
@@ -61,26 +60,23 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
  end%if
 end%function
 
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet] = surfaceflux(sfxnc,trange)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange)
  % Extract Flux data
- sfx = netcdf(sfxnc,'r');
- tsfx = squeeze(sfx{'Yday'}(:));
- if nargin()>1
-  sfxtidx = inclusiverange(tsfx,trange);
- else
-  sfxtidx = 1:length(tsfx);
- end%if
- tsfx = squeeze(sfx{'Yday'}(sfxtidx));
- stress = squeeze(sfx{'stress'}(sfxtidx));
- p = squeeze(sfx{'P'}(sfxtidx));
- Jh = squeeze(sfx{'shf'}(sfxtidx)+sfx{'lhf'}(sfxtidx)+sfx{'rhf'}(sfxtidx)+sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx)+sfx{'IRup'}(sfxtidx)+sfx{'IRdn'}(sfxtidx));
- wdir = squeeze(sfx{'Wdir'}(sfxtidx));
- sst = squeeze(sfx{'SST'}(sfxtidx));
- SalTSG = squeeze(sfx{'SalTSG'}(sfxtidx));
- SolarNet = squeeze(sfx{'Solarup'}(sfxtidx)+sfx{'Solardn'}(sfxtidx));
+ field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
+ field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"]
  % Some other things to extract
- #precip = squeeze(sfx{'Precip'}(sfxtidx));
- ncclose(sfx);
+ % "Precip";
+ sfx = surfluxvars(sfxnc,field,trange);
+ tsfx = sfx.Yday;
+ stress = sfx.stress;
+ p = sfx.P;
+ Jh = sfx.shf+sfx.lhf+sfx.rhf+sfx.Solarup+sfx.Solardn+sfx.IRup+sfx.IRdn;
+ wdir = sfx.Wdir;
+ sst = sfx.SST;
+ SalTSG = sfx.SalTSG;
+ SolarNet = sfx.Solarup+sfx.Solardn;
+ cp = sfx.cp;
+ sigH = sfx.sigH;
 end%function
 
 function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
@@ -207,6 +203,27 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] =
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
+
+function [tdag,zdag] = DAGheatprofiles(dagnc,trange,zrange)
+ dag      = netcdf(dagnc,'r');
+ tdag     = squeeze(dag{'time'}(:));
+ if nargin()>1
+  dagtidx = inclusiverange(tdag,trange);
+ else
+  dagtidx = 1:length(tdag);
+ end%if
+ % restict depth range
+ zdag     = -squeeze(dag{'zzu'}(:));
+ if nargin()>2
+  dagzidx = inclusiverange(zdag,zrange);
+ else
+  dagzidx = 1:length(zdag);
+ end%if
+ tdag     = squeeze(dag{'time'}(dagtidx));
+ zdag     = -squeeze(dag{'zzu'}(dagzidx));
+ ncclose(dag);
+end%function
+
 
 
 function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
