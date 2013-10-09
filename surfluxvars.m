@@ -9,14 +9,14 @@ function vars = surfluxvars(sfxnc,field,trange)
   field = ["Yday"];
  end%if
  % get the dimension variable
- tsfx = squeeze(sfx{field(1,:)}(:));
+ tsfx = squeeze(sfx{deblank(field(1,:))}(:));
  if nargin()>2
   sfxtidx = inclusiverange(tsfx,trange);
  else
   sfxtidx = 1:length(tsfx);
  end%if
  for i=1:length(field(:,1))
-  vars.(field(i,:)) = squeeze(sfx{field(i,:)}(sfxtidx));
+  vars.(deblank(field(i,:))) = squeeze(sfx{deblank(field(i,:))}(sfxtidx));
  end%for
  ncclose(sfx);
 end%function
