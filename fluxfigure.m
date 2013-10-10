@@ -1,9 +1,10 @@
 #this only needs to be run once!
-#rstnc = '/home/mhoecker/work/Dynamo/output/run1/dyno_sw2-a_21600_rst.nc' 
-#outloc = '/home/mhoecker/work/Dynamo/output/run1/'
+#rstnc = '/home/mhoecker/work/Dynamo/output/run7/dyno_sw2-a_21600_rst.nc'
+#outloc = '/home/mhoecker/work/Dynamo/output/run7/'
 #flxnc = fluxfromrst(rstnc,outloc);
 # The results are saved
 #
+pltloc = '/home/mhoecker/work/Dynamo/plots/run7/'
 flxnc = '/home/mhoecker/work/Dynamo/output/run1/dyno_sw2-a_21600_rst_flux.nc'
 nc = netcdf(flxnc , 'r');
 tnc = nc{'time'}(:);
