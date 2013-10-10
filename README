@@ -1,0 +1,16 @@
+Process-DynaMO-LES
+Processing Large Eddy Simulations of Dynamics of the Madden Julian Oscilation
+Author	Martin Hoecker-Martinez
+Date	September 11 2013
+The contents of this repository are provided without any guarantees of any kind.
+
+Scripts in this repository are intended to be run using Octave, the netCDF operators, Gnuplot or in a BASH shell.
+The general convention is that
+
+suffix	program
+.m	octave
+.nco	netCDF operators
+.plt	gnuplot
+.sh	shell
+
+The cor3_5 algorithm is the work of Jim Edsen and others and may be removed from the repository at any time.

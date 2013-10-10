@@ -3,7 +3,7 @@ function [y] = csqfil(x,t,s,T)
 % Filter the time series x with a weighting function
 %
 % weight(t,s) = (1+cos(2*pi*(s-t)/T))^2 for |s-t| < T/2
-% This filter has a 1/2 power point of f = 1/T
+% This filter has a 1/2 power point of f approx 1/T
 % first zero power at f~3/T
 % Roll off of (T*f)^(-10)
 % if T is not given T = 3*mean(diff(s))
@@ -30,14 +30,14 @@ function [y] = csqfil(x,t,s,T)
   subplot(2,2,1);
   plot(f,Pw,"b;cosq  ;",f,Pwa,"r;T/3 Moving avg. ;");
   grid on;
-  axis([0,1/T,.4,1]);
+  axis([0,.95/T,.1,1]);
 %  title(["cosq filter 1/T=" num2str(1/T)]);
   xlabel("freq.");
   ylabel("Filter");
 % Filtered band
   subplot(2,2,2);
   loglog(f,Pw,"b;cosq ;",f,(T*f).^-10,"k;fT^{-10};",f,Pwa,"r;T/3 moving avg. ;",f,(T*f).^-2,"k;fT^{-2};");
-  axis([1/T,128/T,128^(-6),2]);
+  axis([1/T,64/T,64^(-6),2]);
 %  title(["cosq filter 1/T=" num2str(1/T)]);
   xlabel("freq.");
   ylabel("Filter");
