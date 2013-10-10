@@ -63,7 +63,7 @@ end%function
 function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange)
  % Extract Flux data
  field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
- field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"]
+ field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"];
  % Some other things to extract
  % "Precip";
  sfx = surfluxvars(sfxnc,field,trange);
@@ -204,60 +204,59 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] =
  ncclose(dag);
 end%function
 
-function [tdag,zdag] = DAGheatprofiles(dagnc,trange,zrange)
- dag      = netcdf(dagnc,'r');
- tdag     = squeeze(dag{'time'}(:));
- if nargin()>1
-  dagtidx = inclusiverange(tdag,trange);
- else
-  dagtidx = 1:length(tdag);
- end%if
- % restict depth range
- zdag     = -squeeze(dag{'zzu'}(:));
- if nargin()>2
-  dagzidx = inclusiverange(zdag,zrange);
- else
-  dagzidx = 1:length(zdag);
- end%if
- tdag     = squeeze(dag{'time'}(dagtidx));
- zdag     = -squeeze(dag{'zzu'}(dagzidx));
- ncclose(dag);
+function [DAGheat] = DAGheatprofiles(dagnc,trange,zrange)
+ # Get variables with time and zzu as dimensions
+ field1 = ['time';'zzu'];
+ field1 = [field1;'t_ave';'t2_ave';];
+ DAGheat1 = dagvars(dagnc,field1,trange,zrange);
+ for i=1:length(feild1(:,1))
+  feildname = deblank(feild1(i,:));
+  DAGheat.(fieldname) = DAGheat1.(fieldname);
+ end%for
+ # Get variables with time and zzw as dimensions
+ field2 = ['time';'zzw'];
+ field2 = [field;'hf_ave'];
+ DAGheat2 = dagvars(dagnc,field2,trange,zrange);
+ for i=1:length(feild2(:,1))
+  feildname = deblank(feild2(i,:));
+  DAGheat.(fieldname) = DAGheat1.(fieldname);
+ end%for
+ # Get variables with time and z as dimensions
+ field3 = ['time';'z'];
+ field3 = [field3;'hf_top';];
+ DAGheat3 = dagvars(dagnc,field1,trange,zrange);
+ for i=1:length(feild3(:,1))
+  feildname = deblank(feild3(i,:));
+  DAGheat.(fieldname) = DAGheat1.(fieldname);
+ end%for
 end%function
 
 
 
 function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
- dag      = netcdf(dagnc,'r');
- tdag     = squeeze(dag{'time'}(:));
- if nargin()>1
-  dagtidx = inclusiverange(tdag,trange);
- else
-  dagtidx = 1:length(tdag);
- end%if
- % restict depth range
- zdag     = -squeeze(dag{'zzu'}(:));
- if nargin()>2
-  dagzidx = inclusiverange(zdag,zrange);
- else
-  dagzidx = 1:length(zdag);
- end%if
- tdag     = squeeze(dag{'time'}(dagtidx));
- zdag     = -squeeze(dag{'zzu'}(dagzidx));
- uavgdag  = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
- vavgdag  = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
- Tavgdag  = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
- Savgdag  = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
- tkeavg   = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
- tkePTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
- tkeAdve  = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
- tkeBuoy  = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
- tkeSGTr  = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
- tkeSPro  = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
- tkeStDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
- tkeSGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
- tkeDiss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
- ncclose(dag);
+ field = ['time';'zzu'];
+ field = [field;'u_ave';'v_ave';'t_ave'];
+ field = [field;'tke_ave';'p_ave';'a_ave'];
+ field = [field;'b_ave';'sg_ave';'sp_ave'];
+ field = [field;'sd_ave';'dpesg','disp_ave'];
+ dag=dagvars(dagnc,field,trange,zrange)
+ % Parse the output
+ tdag     = dag.time;
+ zdag     = dag.zzu;
+ uavgdag  = dag.u_ave;
+ vavgdag  = dag.v_ave;
+ Tavgdag  = dag.t_ave;
+ Savgdag  = dag.s_ave;
+ tkeavg   = dag.tke_ave;
+ tkePTra  = dag.p_ave;
+ tkeAdve  = dag.a_ave;
+ tkeBuoy  = dag.b_ave;
+ tkeSGTr  = dag.sg_ave;
+ tkeSPro  = dag.sp_ave;
+ tkeStDr  = dag.sd_ave;
+ tkeSGPE  = dag.dpesg;
+ tkeDiss  = dag.disp_ave;
 end%function
 
 function testfig(outdir)
@@ -448,7 +447,7 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
   binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
   binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt");
  end%if
 end%function
 
@@ -493,7 +492,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir "fig4.png"],"-dpng")
  else
   binarray(tsfx',[Ri]',[outdir "fig4a.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt");
  end%if
  %
 end%function
@@ -620,7 +619,7 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',SGPE'./tkeavg',[outdir "fig6h.dat"]);
   binmatrix(tdag',zdag',Diss'./tkeavg',[outdir "fig6i.dat"]);
   # invoke gnuplot
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt")
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
  end%if
  %
 end%function
