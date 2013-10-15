@@ -56,7 +56,7 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
   fprintf(fid,"datdir = '%s'\n",datdir);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
   fprintf(fid,"set term %s\n",gnuplotterm);
-  fprintf(fid,"%s",paltext("plusminus"));
+  fprintf(fid,"%s",paltext("euh"));
   fclose(fid);
  end%if
 end%function
@@ -639,7 +639,9 @@ function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  DAGheat.Yday = t0sim+DAGheat.time/(24*3600);
- #fieldnames(DAGheat)
+ # Convert depth to negavite definite
+ DAGheat.zzw = -DAGheat.zzw;
+ DAGheat.zzu = -DAGheat.zzu;
  if(useoctplot==1)
   subplot(3,1,1)
   [Ydayw,zzw2] = meshgrid(DAGheat.Yday,DAGheat.zzw);
