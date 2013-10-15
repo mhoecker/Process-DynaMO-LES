@@ -28,12 +28,13 @@ end%if
  end%if
 
  #testfig(outdir);
- fig1(sfxnc,chmnc,outdir);
- fig2(chmnc,adcpnc,outdir);
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig1(sfxnc,chmnc,outdir);
+ #fig2(chmnc,adcpnc,outdir);
+ #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
@@ -207,27 +208,27 @@ end%function
 function [DAGheat] = DAGheatprofiles(dagnc,trange,zrange)
  # Get variables with time and zzu as dimensions
  field1 = ['time';'zzu'];
- field1 = [field1;'t_ave';'t2_ave';];
+ field1 = [field1;'t_ave';'t2_ave'];#
  DAGheat1 = dagvars(dagnc,field1,trange,zrange);
- for i=1:length(feild1(:,1))
-  feildname = deblank(feild1(i,:));
+ for i=1:length(field1(:,1))
+  fieldname = deblank(field1(i,:));
   DAGheat.(fieldname) = DAGheat1.(fieldname);
  end%for
  # Get variables with time and zzw as dimensions
  field2 = ['time';'zzw'];
- field2 = [field;'hf_ave'];
+ field2 = [field2;'hf_ave';'wt_ave'];
  DAGheat2 = dagvars(dagnc,field2,trange,zrange);
- for i=1:length(feild2(:,1))
-  feildname = deblank(feild2(i,:));
-  DAGheat.(fieldname) = DAGheat1.(fieldname);
+ for i=1:length(field2(:,1))
+  fieldname = deblank(field2(i,:));
+  DAGheat.(fieldname) = DAGheat2.(fieldname);
  end%for
  # Get variables with time and z as dimensions
  field3 = ['time';'z'];
- field3 = [field3;'hf_top';];
- DAGheat3 = dagvars(dagnc,field1,trange,zrange);
- for i=1:length(feild3(:,1))
-  feildname = deblank(feild3(i,:));
-  DAGheat.(fieldname) = DAGheat1.(fieldname);
+ field3 = [field3;'q';];
+ DAGheat3 = dagvars(dagnc,field3,trange,zrange);
+ for i=1:length(field3(:,1))
+  fieldname = deblank(field3(i,:));
+  DAGheat.(fieldname) = DAGheat3.(fieldname);
  end%for
 end%function
 
@@ -456,7 +457,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Plot time series of N^2 S^2 and Ri
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  #useoctplot=1;
- trange = [t0sim-3,tfsim+3];
+ trange = [t0sim-2,tfsim+2];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
@@ -468,7 +469,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  # Calulatwe the Driven Richarson number
- [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
+ [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
  #
  if(useoctplot==1)
   subplot(4,1,1)
@@ -491,7 +492,7 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
-  binarray(tsfx',[Ri]',[outdir "fig4a.dat"]);
+  binarray(tsfx',[4*Ri,Jb,stress]',[outdir "fig4a.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt");
  end%if
  %
@@ -622,4 +623,38 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
  end%if
  %
+end%function
+% figure 7 Heat Profiles
+function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ trange = [t0sim,tfsim];
+ zrange = sort([0,-dsim]);
+ # Extract surface fluxes
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ # Calulatwe the Driven Richarson number
+ [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
+ # Extract Chameleon data
+ [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ # Extract simulation data
+ [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # convert to yearday
+ DAGheat.Yday = t0sim+DAGheat.time/(24*3600);
+ #fieldnames(DAGheat)
+ if(useoctplot==1)
+  subplot(3,1,1)
+  [Ydayw,zzw2] = meshgrid(DAGheat.Yday,DAGheat.zzw);
+  pcolor(Ydayw',-zzw2',DAGheat.hf_ave); shading flat;
+  subplot(3,1,2)
+  pcolor(Ydayw',-zzw2',DAGheat.wt_ave); shading flat;
+  subplot(3,1,3)
+  [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
+  pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
+ else
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir "fig7a.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir "fig7b.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[outdir "fig7c.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir "fig7d.dat"]);
+  # invoke gnuplot
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig7.plt");
+ end%if
 end%function
