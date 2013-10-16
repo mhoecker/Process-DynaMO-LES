@@ -35,7 +35,7 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
  if nargin()<8
   outloc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/nextrun/";
  end%if
- yeardates = wantdates-datenum(2010,12,31);
+ yeardates = wantdates-datenum(2010,12,31)
  flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime)
  figure(5)
  TSout = LESinitialTS(TSfile,min(yeardates),outloc,avgtime,maxdepth);
