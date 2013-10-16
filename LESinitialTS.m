@@ -1,6 +1,5 @@
 function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  #function fileout = LESinitialTS(fileloc,filename,date,outloc)
- # fileloc  - directiory of the data file
  # filename - name of the data file (no suffix, it is assumed to be .nc)
  # wantdate - date in matlab datenum format
  # outloc   - directory of output file (assume to be the currentdirectory if not given)
@@ -12,9 +11,9 @@ function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  nc = netcdf(filename,"r");
  t = nc{'t'}(:);
  z = nc{'z'}(:);
- dateidx = find(abs(t-wantdate)<avgtime,1);
+ dateidx = find(abs(t-wantdate)<avgtime);
  depthidx = find(abs(z)<=abs(maxdepth));
- dateused  = mean(t(dateidx));
+ dateused  = mean(t(dateidx))
  clear t;
  clear z;
  z = nc{'z'}(depthidx);
@@ -29,10 +28,10 @@ function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  Sp = gsw_SP_from_SA(Sa,P,80.5,0);
  ncclose(nc);
  #
- outname = [outloc "TS_profiles" int2str(floor(dateused))]
+ outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"  int2str(round(dateused))]
  fileout = [outname".ic"];
  outid = fopen(fileout,"w");
- fprintf(outid,'-z|Tc|Sp/%s.nc %sGMT\n',filename,datestr(dateused,"dd-mmm-yyyy HH"));
+ fprintf(outid,'-z|Tc|Sp/%s\n',filename);
  if(max(z)<0)
   imax = find(z==max(z));
   fprintf(outid,'%f %f %f\n',0.0,Tc(imax),Sp(imax))
