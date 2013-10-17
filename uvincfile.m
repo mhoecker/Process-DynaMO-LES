@@ -7,7 +7,7 @@ function [outname,Ucoef,Vcoef] = uvincfile(adcpfile,wantdate,maxdepth,outloc,avg
  #        parameter(Ucoef=(/+0.090021,-0.324402,+0.048989,+0.143456,+0.028982,-0.119650/))
  #C projection of V velocity from upper 150 m
  #        parameter(Vcoef=(/-0.0278478 +0.1446929 +0.0751749 +0.0310151 +0.0487805 -0.0327094/))
- outname = [outloc "UVCoefz0to" num2str(maxdepth) "m" int2str(round(wantdate))];
+ outname = [outloc "UVCoef"];
  if nargin()<7
   [Ucoef,Vcoef,Ufit,Vfit,z,U,V] = uvLegendre(adcpfile,wantdate,maxdepth,avgtime,order);
  else
@@ -23,12 +23,14 @@ function [outname,Ucoef,Vcoef] = uvincfile(adcpfile,wantdate,maxdepth,outloc,avg
  fprintf(incid,"%s\n",["C projection of V velocity from upper " num2str(maxdepth) " m"]);
  fprintf(incid,"%s\n",[leadspace "parameter(Vcoef=(/" num2str(Vcoef) "/))" ]);
  fclose(incid)
+ Umyfit = expandlegendre(Ucoef,-z)
+ Vmyfit = expandlegendre(Vcoef,-z)
  subplot(1,2,1)
- plot(Ufit,-z,"+;fit;",U,-z)
+ plot(Ufit,-z,"+;fit;",U,-z,Umyfit,-z)
  ylabel("Depth (m)")
  xlabel("Zonal Velocity (m/s)")
  subplot(1,2,2)
- plot(Vfit,-z,"+;fit;",V,-z)
+ plot(Vfit,-z,"+;fit;",V,-z,Vmyfit,-z)
  ylabel("Depth (m)")
  xlabel("Meridional Velocity (m/s)")
  print([outname ".png"],"-dpng")
