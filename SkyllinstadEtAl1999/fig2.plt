@@ -4,8 +4,8 @@ set output outdir."fig2".termsfx
 set multiplot
 set tmargin at screen .9
 set bmargin at screen .1
-set xtics nomirror rangelimited
-set x2tics nomirror rangelimited
+set xtics nomirror rotate by -30 rangelimited
+set x2tics nomirror rotate by 30 rangelimited
 set yrange [-dsim:0]
 set y2range [-dsim:0]
 set xlabel "T (^oC)"
@@ -24,14 +24,16 @@ unset ytics
 unset ylabel
 set y2label "Z (m)"
 set y2tics mirror
-set xrange [-.4:.4]
-set x2range [-.2:.2]
+#set autoscale x
+#set autoscale x2
+set xrange [-.6:.6]
+set x2range [-.6:.6]
 set xlabel "U (m/s)"
 set x2label "V (m/s)"
 set yzeroaxis
 plot \
-datdir."fig2b.dat" binary format="%f%f%f%f%f" u 2:1 w lines axes x1y2 title "U "   ls 1 ,\
-datdir."fig2b.dat" binary format="%f%f%f%f%f" u 3:1 w lines axes x2y2 title "V "   ls 2 ,\
-datdir."fig2b.dat" binary format="%f%f%f%f%f" u 4:1 w lines axes x1y2 title "U_{L5}" ls 3,\
-datdir."fig2b.dat" binary format="%f%f%f%f%f" u 5:1 w lines axes x2y2 title "V_{L5}" ls 5
+datdir."fig2b.dat" binary format="%f%f%f%f%f" u 2:(-$1) w lines axes x1y2 title "U "   ls 1 ,\
+datdir."fig2b.dat" binary format="%f%f%f%f%f" u 3:(-$1) w lines axes x2y2 title "V "   ls 2 ,\
+datdir."fig2b.dat" binary format="%f%f%f%f%f" u 4:(-$1) w lines axes x1y2 title "U_{L5}" ls 3,\
+datdir."fig2b.dat" binary format="%f%f%f%f%f" u 5:(-$1) w lines axes x2y2 title "V_{L5}" ls 5
 unset multiplot
