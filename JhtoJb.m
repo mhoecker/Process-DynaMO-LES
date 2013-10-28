@@ -6,7 +6,7 @@ function [Jb,rho0,sssa,cp,alpha,g,kappaT] = JhtoJb(Jh,sst,sss,lat,lon)
  if(nargin()<5)
   lon = 80.5;
  end%if
- findgsw
+ findgsw;
  % measurements at surface P==0
  P = 0;
  % Other constants
