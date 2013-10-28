@@ -16,7 +16,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .9
 set bmargin at screen .75
-set xrange [t0sim:tfsim]
+set xrange  [t0sim:tfsim]
 set x2range [t0sim:tfsim]
 set x2tics t0sim+.25,.25,tfsim-.25
 set xtics t0sim+.25,.25,tfsim-.25
@@ -64,7 +64,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .75
 set bmargin at screen .6
-splot datdir."fig3c.dat" binary matrix title "T_{obs}"
+plot datdir."fig3c.dat" binary matrix w image title "T_{obs}"
 # Simulated
 unset ylabel
 set colorbox user origin .85,.61 size .01,.14
@@ -74,12 +74,12 @@ set lmargin at screen .5
 set rmargin at screen .85
 set tmargin at screen .75
 set bmargin at screen .6
-splot datdir."fig3d.dat" binary matrix title "T_{sim}"
+plot datdir."fig3d.dat" binary matrix w image title "T_{sim}"
 unset colorbox
 # Salinity
-set cbrange [35.2:35.7]
+set cbrange [35.0:35.8]
 set cblabel "S (psu)"
-set cbtics 35.2,.5/8.,35.7
+set cbtics 35.0,.8/8.,35.8
 set format cb "%4.2f"
 # Observed
 set ylabel "Z (m)"
@@ -89,7 +89,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .6
 set bmargin at screen .45
-splot datdir."fig3e.dat" binary matrix title "S_{obs}"
+plot datdir."fig3e.dat" binary matrix w image title "S_{obs}"
 # Simulated
 unset ylabel
 set format y ""
@@ -99,7 +99,7 @@ set rmargin at screen .85
 set tmargin at screen .6
 set bmargin at screen .45
 set colorbox user origin .85,.45 size .01,.14
-splot datdir."fig3f.dat" binary matrix title "S_{sim}"
+plot datdir."fig3f.dat" binary matrix w image title  "S_{sim}"
 unset colorbox
 # U Velocity
 set cbrange [-.2:1.2]
@@ -114,7 +114,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .45
 set bmargin at screen .3
-splot datdir."fig3g.dat" binary matrix title "u_{obs}"
+plot datdir."fig3g.dat" binary matrix w image title "u_{obs}"
 # Simulated
 unset ylabel
 set format y ""
@@ -123,7 +123,7 @@ set lmargin at screen .5
 set rmargin at screen .85
 set tmargin at screen .45
 set bmargin at screen .3
-splot datdir."fig3h.dat" binary matrix title "u_{sim}"
+plot datdir."fig3h.dat" binary matrix w image title "u_{sim}"
 # V velocity
 # Observed
 set ylabel "Z (m)"
@@ -133,7 +133,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .3
 set bmargin at screen .15
-splot datdir."fig3i.dat" binary matrix title "v_{obs}"
+plot datdir."fig3i.dat" binary matrix w image title "v_{obs}"
 # Simulated
 unset ylabel
 set format y ""
@@ -143,7 +143,7 @@ set rmargin at screen .85
 set tmargin at screen .3
 set bmargin at screen .15
 set colorbox user origin .85,.15 size .01,.28
-splot datdir."fig3j.dat" binary matrix title "v_{sim}"
+plot datdir."fig3j.dat" binary matrix w image title "v_{sim}"
 unset colorbox
 unset multiplot
 set term wxt
