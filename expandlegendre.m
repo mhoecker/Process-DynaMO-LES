@@ -16,5 +16,4 @@ function [y,x] = expandlegendre(Coef,z)
    y = y + Coef(l).*LegPolyCoef(l,m).*(x.^(m-1));
   end%for
  end%for
- LegPolyCoef
 end%function
