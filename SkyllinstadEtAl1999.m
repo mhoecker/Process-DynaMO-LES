@@ -10,8 +10,9 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % Journal of physical oceanography, 1999, 29, 5-28
 %
  if nargin()<1
-%  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
+  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
+  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
+  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone2/o512_1_dag.nc'
  end%if
  if nargin()<2
   sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
@@ -22,18 +23,21 @@ end%if
  end%if
  if nargin()<4
   adcpnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc'
+  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc";
+%  adcpvarnames = ["t";"z";"u";"v"];
  end%if
  if nargin()<5
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
  #testfig(outdir);
- #fig1(sfxnc,chmnc,outdir);
- #fig2(chmnc,adcpnc,outdir);
- #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ figRi(sfxnc,outdir);
+ fig1(sfxnc,chmnc,outdir);
+ fig2(chmnc,adcpnc,outdir);
+ fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
@@ -56,7 +60,7 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
   fprintf(fid,"datdir = '%s'\n",datdir);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
   fprintf(fid,"set term %s\n",gnuplotterm);
-  fprintf(fid,"%s",paltext("euh"));
+  fprintf(fid,"%s",paltext("hue"));
   fclose(fid);
  end%if
 end%function
@@ -106,27 +110,30 @@ function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
  ncclose(chm);
 end%function
 
-function [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange)
+function [t,z,u,v] = ADCPprofiles(adcpnc,trange,zrange,vars)
  % Extract ADCP profiles
+ if(nargin()<4)
+  vars = ['t';'z';'u';'v'];
+ end%if
  adcp = netcdf(adcpnc,'r');
- tadcp = squeeze(adcp{'t'}(:));
- zadcp = squeeze(adcp{'z'}(:));
+ t = squeeze(adcp{vars(1,:)}(:));
+ z = squeeze(adcp{vars(2,:)}(:));
  if nargin()>1
-  adcptidx = inclusiverange(tadcp,trange);
+  adcptidx = inclusiverange(t,trange);
  else
   adcptidx = 1:length(tadcp);
  end%if
  % restict depth range
- zadcp = squeeze(adcp{'z'}(:));
+ zadcp = squeeze(adcp{vars(2,:)}(:));
  if nargin()>2
-  adcpzidx = inclusiverange(zadcp,zrange);
+  adcpzidx = inclusiverange(z,zrange);
  else
-  adcpzidx = 1:length(zadcp);
+  adcpzidx = 1:length(z);
  end%if
- tadcp = squeeze(adcp{'t'}(adcptidx));
- zadcp = squeeze(adcp{'z'}(adcpzidx));
- ulpadcp = squeeze(adcp{'ulp'}(adcptidx,adcpzidx));
- vlpadcp = squeeze(adcp{'vlp'}(adcptidx,adcpzidx));
+ t = squeeze(adcp{vars(1,:)}(adcptidx));
+ z = squeeze(adcp{vars(2,:)}(adcpzidx));
+ u = squeeze(adcp{vars(3,:)}(adcptidx,adcpzidx));
+ v = squeeze(adcp{vars(4,:)}(adcptidx,adcpzidx));
  ncclose(adcp);
 end%function
 
@@ -175,7 +182,7 @@ function [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,trange,zrange)
  Savgdag  = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
 end%function
 
-function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
+function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag      = netcdf(dagnc,'r');
  tdag     = squeeze(dag{'time'}(:));
@@ -201,6 +208,7 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] =
  ShPr  = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
  StDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
  SGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
+ PEAdv  = squeeze(dag{'dpea'}(dagtidx,dagzidx,1,1));
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
@@ -336,19 +344,9 @@ function  fig2(chmnc,adcpnc,outdir)
  [useoctplot,t0sim,dsim]=plotparam(outdir);
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
- % read ADCP file
- [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
- # Extract Legendre coefficients from adcp file
- [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef,zfit] = uvLegendre(adcpnc,t0sim,dsim,5);
- xadcp = (2*abs(zadcp)-(min(zfit)+max(zfit)))/(max(zfit)-min(zfit));
- xadcp(find(xadcp>1))=1;
- xadcp(find(xadcp<-1))=-1;
- ULlp = zeros(size(zadcp'));
- VLlp = zeros(size(zadcp'));
- for i=1:length(Ulpcoef)
-  ULlp = ULlp+Ulpcoef(i).*legendre(i-1,xadcp)(1,:);
-  VLlp = VLlp+Vlpcoef(i).*legendre(i-1,xadcp)(1,:);
- end%for
+ # Extract Legendre coefficients and fit velocity profiles from adcp file
+ [Ucoef,Vcoef,Ufit,Vfit,zadcp,U,V] = uvLegendre(adcpnc,t0sim,dsim,0.25/24,5,["t";"z";"u";"v"]);
+ plot(U,zadcp,Ufit,zadcp)
  # read Chameleon file
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Plot using octave or gnuplot script
@@ -358,12 +356,12 @@ function  fig2(chmnc,adcpnc,outdir)
   plot(Tchm,zchm,Schm,zchm)
   axis([min([Tchm,Schm]),max([Tchm,Schm]),zrange])
   subplot(1,2,2)
-  plot(ulpadcp,zadcp,vlpadcp,zadcp)
-  axis([min([ulpadcp,vlpadcp]),max([ulpadcp,vlpadcp]),zrange])
+  plot(U,zadcp,V,zadcp)
+  axis([min([U,V]),max([U,V]),zrange])
   print([outdir 'fig2.png'],'-dpng')
  else
   # save U,V profiles
-  binarray(zadcp',[ulpadcp;vlpadcp;ULlp;VLlp],[outdir "fig2b.dat"]);
+  binarray(zadcp,[U;V;Ufit;Vfit],[outdir "fig2b.dat"]);
   # Save T,S profiles
   binarray(zchm',[Tchm;Schm],[outdir "fig2a.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt");
@@ -385,6 +383,10 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
  stressz = -stress.*cos(wdir*pi/180);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ # Convert Chameleon Salinity from absolute to practical
+ findgsw; # Check to make sure Gibbs Sea Water is in the path
+ Pchm = gsw_p_from_z(zchm,0);
+ Schm = gsw_SP_from_SA(Schm,Pchm,80.5,0);
  # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  # Extract simulation data
@@ -502,6 +504,27 @@ end%function
 function fig5(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
+% figure Ri
+function figRi(sfxnc,outdir)
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ trange = [t0sim-4,tfsim];
+ zrange = sort([0,-dsim]);
+ # Extract surface fluxes
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ # Calulatwe the Driven Richarson number
+ [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
+ figure(1)
+ subplot(3,1,1)
+ plot(tsfx,Jb)
+ axis([trange,0,max(Jb)])
+ subplot(3,1,2)
+ semilogy(tsfx,.25*stress.^2)
+ axis([trange])
+ subplot(3,1,3)
+ plot(tsfx,sign(4*Ri)+sign(4*Ri-1))
+ axis([trange,-2.5,2.5])
+end%function
+
 % figure 6
 function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
@@ -514,7 +537,7 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
- [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  #
@@ -618,7 +641,8 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',ShPr'./tkeavg',[outdir "fig6f.dat"]);
   binmatrix(tdag',zdag',StDr'./tkeavg',[outdir "fig6g.dat"]);
   binmatrix(tdag',zdag',SGPE'./tkeavg',[outdir "fig6h.dat"]);
-  binmatrix(tdag',zdag',Diss'./tkeavg',[outdir "fig6i.dat"]);
+  binmatrix(tdag',zdag',PEAdv'./tkeavg',[outdir "fig6i.dat"]);
+  binmatrix(tdag',zdag',Diss'./tkeavg',[outdir "fig6j.dat"]);
   # invoke gnuplot
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
  end%if
@@ -642,6 +666,7 @@ function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Convert depth to negavite definite
  DAGheat.zzw = -DAGheat.zzw;
  DAGheat.zzu = -DAGheat.zzu;
+ DAGheat.trange = max(max(DAGheat.t_ave))-min(min(DAGheat.t_ave));
  if(useoctplot==1)
   subplot(3,1,1)
   [Ydayw,zzw2] = meshgrid(DAGheat.Yday,DAGheat.zzw);
@@ -654,7 +679,7 @@ function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
  else
   binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir "fig7a.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir "fig7b.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[outdir "fig7c.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave'./DAGheat.trange^2,[outdir "fig7c.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir "fig7d.dat"]);
   # invoke gnuplot
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig7.plt");
