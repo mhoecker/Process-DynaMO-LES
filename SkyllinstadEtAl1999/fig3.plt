@@ -1,7 +1,14 @@
 reset
+Tmin = 26.75
+Tmax = 30.25
+Smin = 34.75
+Smax = 35.75
+UVmin = -0.25
+UVmax = +1.0
+cbmarks = 8
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
-set palette maxcolors 8
+set palette maxcolors cbmarks
 set view map
 unset colorbox
 unset surface
@@ -54,7 +61,7 @@ set yrange[-dsim:0]
 # Temperature
 set cbrange [26.5:30.5]
 set cblabel "T (^oC)"
-set cbtics 26.5,4.0/8.,30.5
+set cbtics Tmin,(Tmax-Tmin)/(0.0+cbmarks),Tmax
 set format cb "%4.2f"
 # Observed
 set ylabel "Z (m)"
@@ -79,7 +86,7 @@ unset colorbox
 # Salinity
 set cbrange [35.0:35.8]
 set cblabel "S (psu)"
-set cbtics 35.0,.8/8.,35.8
+set cbtics Smin,(Smax-Smin)/(0.0+cbmarks),Smax
 set format cb "%4.2f"
 # Observed
 set ylabel "Z (m)"
@@ -103,7 +110,7 @@ plot datdir."fig3f.dat" binary matrix w image title  "S_{sim}"
 unset colorbox
 # U Velocity
 set cbrange [-.2:1.2]
-set cbtics -.2,1.4/8.,1.2
+set cbtics UVmin,(UVmax-UVmin)/(0.0+cbmarks),UVmax
 set format cb "%4.2f"
 set cblabel "u,v (m/s)"
 # Observed
@@ -114,7 +121,8 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .45
 set bmargin at screen .3
-plot datdir."fig3g.dat" binary matrix w image title "u_{obs}"
+set ylabel "u"
+plot datdir."fig3g.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -123,7 +131,7 @@ set lmargin at screen .5
 set rmargin at screen .85
 set tmargin at screen .45
 set bmargin at screen .3
-plot datdir."fig3h.dat" binary matrix w image title "u_{sim}"
+plot datdir."fig3h.dat" binary matrix w image notitle
 # V velocity
 # Observed
 set ylabel "Z (m)"
@@ -133,7 +141,9 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .3
 set bmargin at screen .15
-plot datdir."fig3i.dat" binary matrix w image title "v_{obs}"
+set ylabel "v"
+set xlabel "Observed Fields"
+plot datdir."fig3i.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -143,7 +153,8 @@ set rmargin at screen .85
 set tmargin at screen .3
 set bmargin at screen .15
 set colorbox user origin .85,.15 size .01,.28
-plot datdir."fig3j.dat" binary matrix w image title "v_{sim}"
+set xlabel "Simulated Fields"
+plot datdir."fig3j.dat" binary matrix w image notitle
 unset colorbox
 unset multiplot
 set term wxt
