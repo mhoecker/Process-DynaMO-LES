@@ -47,6 +47,7 @@ function [Pzgrid,khun,z] = Hspectra(rstnc,outname,term)
   for j=1:length(khun)
    Pzb(j) = 2*pi*khun(j)*sum(Pzl(khidx{j}))/N(j);
   end%for
+  binarray(khun,Pzb,[outname "Hspectra-1D-" num2str(i,"%06i") ".dat"]);
   subplot(1,2,1)
   pcolor(kk,ll,log(Pz)/log(10)); shading flat
   xlabel("k Zonal Wavenumber (rad/m)");
