@@ -5,10 +5,11 @@ Smin = 34.75
 Smax = 35.75
 UVmin = -0.25
 UVmax = +1.0
-cbmarks = 8
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
-set palette maxcolors cbmarks
+palcolors = 8
+cbmarks = palcolors
+set palette maxcolors palcolors
 set view map
 unset colorbox
 unset surface
@@ -59,10 +60,12 @@ set xtics mirror
 set ytics mirror -70,20,-10
 set yrange[-dsim:0]
 # Temperature
-set cbrange [26.5:30.5]
 set cblabel "T (^oC)"
-set cbtics Tmin,(Tmax-Tmin)/(0.0+cbmarks),Tmax
-set format cb "%4.2f"
+cbmin = 26.5#Tmin
+cbmax = 30.5#Tmax
+set cbrange [cbmin:cbmax]
+set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set format cb "%4.1f"
 # Observed
 set ylabel "Z (m)"
 set format y "%g"
@@ -71,7 +74,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .75
 set bmargin at screen .6
-plot datdir."fig3c.dat" binary matrix w image title "T_{obs}"
+plot datdir."fig3c.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set colorbox user origin .85,.61 size .01,.14
@@ -81,13 +84,16 @@ set lmargin at screen .5
 set rmargin at screen .85
 set tmargin at screen .75
 set bmargin at screen .6
-plot datdir."fig3d.dat" binary matrix w image title "T_{sim}"
+plot datdir."fig3d.dat" binary matrix w image notitle
 unset colorbox
 # Salinity
 set cbrange [35.0:35.8]
 set cblabel "S (psu)"
-set cbtics Smin,(Smax-Smin)/(0.0+cbmarks),Smax
-set format cb "%4.2f"
+cbmin = 35.0#Smin
+cbmax = 35.8#Smax
+set cbrange [cbmin:cbmax]
+set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set format cb "%4.1f"
 # Observed
 set ylabel "Z (m)"
 set format y "%g"
@@ -96,7 +102,7 @@ set lmargin at screen .15
 set rmargin at screen .5
 set tmargin at screen .6
 set bmargin at screen .45
-plot datdir."fig3e.dat" binary matrix w image title "S_{obs}"
+plot datdir."fig3e.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -106,13 +112,16 @@ set rmargin at screen .85
 set tmargin at screen .6
 set bmargin at screen .45
 set colorbox user origin .85,.45 size .01,.14
-plot datdir."fig3f.dat" binary matrix w image title  "S_{sim}"
+plot datdir."fig3f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
 set cbrange [-.2:1.2]
-set cbtics UVmin,(UVmax-UVmin)/(0.0+cbmarks),UVmax
 set format cb "%4.2f"
 set cblabel "u,v (m/s)"
+cbmin = -0.2#umin
+cbmax = 1.2#umax
+set cbrange [cbmin:cbmax]
+set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 # Observed
 set ylabel "Z (m)"
 set format y "%g"
