@@ -24,6 +24,8 @@ set table outdir."fig6h".".tab"
 splot datdir."fig6h.dat" binary matrix
 set table outdir."fig6i".".tab"
 splot datdir."fig6i.dat" binary matrix
+set table outdir."fig6j".".tab"
+splot datdir."fig6j.dat" binary matrix
 unset contour
 unset table
 #
@@ -72,8 +74,9 @@ set colorbox user origin .85,dvmargin size .02,(rows-2)*dvmargin
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set ylabel "<w'P'>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6b.dat" binary matrix  w image , \
-outdir."fig6b.tab" lc 0 notitle
+plot datdir."fig6b.dat" binary matrix  w image
+# , \
+#outdir."fig6b.tab" lc 0 notitle
 unset colorbox
 #
 # Plot Advective transport
@@ -81,48 +84,54 @@ set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<w'tke>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6c.dat" binary matrix w image, \
-outdir."fig6c.tab" lc 0 notitle
+plot datdir."fig6c.dat" binary matrix w image
+#, \
+#outdir."fig6c.tab" lc 0 notitle
 #
 # Plot sub-gridscale transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<w'_{sg}tke>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6d.dat" binary matrix w image, \
-outdir."fig6d.tab" lc 0 notitle
+plot datdir."fig6d.dat" binary matrix w image
+#, \
+#outdir."fig6d.tab" lc 0 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<b'w'>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6e.dat" binary matrix w image, \
-outdir."fig6e.tab" lc 0 notitle
+plot datdir."fig6e.dat" binary matrix w image
+#, \
+#outdir."fig6e.tab" lc 0 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<SP>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6f.dat" binary matrix w image, \
-outdir."fig6f.tab" lc 0 notitle
+plot datdir."fig6f.dat" binary matrix w image
+#, \
+#outdir."fig6f.tab" lc 0 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<St>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6g.dat" binary matrix w image , \
-outdir."fig6g.tab" lc 0 notitle
+plot datdir."fig6g.dat" binary matrix w image
+# , \
+#outdir."fig6g.tab" lc 0 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<sgs B>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6h.dat" binary matrix w image, \
-outdir."fig6h.tab" lc 0 notitle
+plot datdir."fig6h.dat" binary matrix w image
+#, \
+#outdir."fig6h.tab" lc 0 notitle
 #
 # Plot
 set format x "%g"
@@ -130,6 +139,8 @@ set xtics offset 0,.5
 set xlabel "2011 UTC yearday" offset 0,1
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
+set ylabel "<{/Symbol e}>_{x,y}/<tke>_{x,y}"
 set bmargin at screen vmargin
-plot datdir."fig6i.dat" binary matrix w image title "<{/Symbol e}>_{x,y}/<tke>_{x,y}", \
-outdir."fig6i.tab" lc 0 notitle
+plot datdir."fig6j.dat" binary matrix w image
+#, \
+#outdir."fig6i.tab" lc 0 notitle
