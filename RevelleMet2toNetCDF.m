@@ -1,6 +1,6 @@
 function RevelleMet2toNetCDF(inloc,fname,outloc,tmp)
  %
- % This script converts RevelleMetRev2 mat data into
+ % This script converts RevelleMet mat data into
  % a CDl ascii file which it then uses `ncgen` to  convert the
  % CDL text file into a NetCDF file.  "ncgen" is a utility program
  % which is part of NetCDF which can be aquired here
@@ -12,6 +12,15 @@ function RevelleMet2toNetCDF(inloc,fname,outloc,tmp)
  % This program is provided with no guarntees whatsoever
  %
  %
+ if(nargin<1)
+  inloc='/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/mat/RevelleMetRev3/';
+ end%if
+ if(nargin<2)
+  fname='Revelle1minuteLeg3_r3';
+ end%if
+ if(nargin<3)
+  outloc="/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/";
+end%if
  if(nargin<4)
   tmp = "/home/mhoecker/tmp/";
   %tmp = [outloc "tmp"];
@@ -328,6 +337,24 @@ function RevelleMet2toNetCDF(inloc,fname,outloc,tmp)
  vals{i} = interped;
  clear interped;
  i = i+1;
+ %TseaTSG       Temperature (C) from thermosalinograph 5 m
+ vars{i} = "TseaTSG";
+ units{i} = "Celsius";
+ longname{i} = "Temperature from thermosalinograph 5 m";
+ instrument{i} =  'Thermosalinograph';
+ vartype{i} = 'double';
+ vals{i} = TseaTSG;
+ clear TsaeTSG;
+ i = i+1;
+ %SalTSG       Salinity from the Thermosalinograph at 5 m depth (PSU)
+ vars{i} = "SalTSG";
+ units{i} = "psu";
+ longname{i} = "Salinity from the Thermosalinograph at 5 m";
+ instrument{i} =  'Thermosalinograph';
+ vartype{i} = 'double';
+ vals{i} = SalTSG;
+ clear SalTSG;
+ i = i+1;
  %T02       Temperature (C) adjusted to 2 m
  vars{i} = "T02";
  units{i} = "Celsius";
@@ -354,6 +381,37 @@ function RevelleMet2toNetCDF(inloc,fname,outloc,tmp)
  vartype{i} = 'double';
  vals{i} = RH02;
  clear RH02;
+ i = i+1;
+ %sigH Significant wave height (m)
+ vars{i} = "sigH";
+ units{i} = "m";
+ longname{i} = "Significant wave height";
+ instrument{i} =  '';
+ vartype{i} = 'double';
+ vals{i} = sigH;
+ clear sigH;
+ i = i+1;
+ %cp        Phase speed of dominant waves (m/s)
+ vars{i} = "cp";
+ units{i} = "m/s";
+ longname{i} = "Phase speed of dominant waves";
+ instrument{i} =  '';
+ vartype{i} = 'double';
+ vals{i} = cp;
+ clear cp;
+ i = i+1;
+ %sigDir    Direction of dominant wave (deg) - placeholder
+ %vars{i} = "sigDir";
+ %units{i} = "deg";
+ %longname{i} = "Direction of dominant wave";
+ %instrument{i} =  '';
+ %vartype{i} = 'double';
+ %vals{i} = sigDir;
+ %clear sigDir;
+ %dSolar    Measured diffuse radiation (W/m2)
+ %zenith    Solar zenith angle (deg)
+ %Smax      Solar radiation at surface with no atmosphere (W/m2)
+ %Sclr      Modeled clear sky radiation at ocean surface (W/m2)
  % Declare Dimensions
  fprintf(cdlid,'dimensions:\n %s=%i;\n',vars{1},length(vals{1}));
  % Declare variables with units, long_name and instrument
@@ -383,7 +441,7 @@ function RevelleMet2toNetCDF(inloc,fname,outloc,tmp)
    if(isnan(y(j))==1)
     fprintf(cdlid,'NaN');
    else
-    fprintf(cdlid,'%f',y(j));
+    fprintf(cdlid,'%20.20g',y(j));
    endif
    if(j<length(y))
     fprintf(cdlid,', ');

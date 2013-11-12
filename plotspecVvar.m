@@ -15,8 +15,8 @@ if nargin()<1
   tmp  = '/home/mhoecker/tmp/';
  end%if
  for i=1:length(roots)
-  datname = [datdir roots{i} '.dat'];
-  outname = [plotdir roots{i} ];
+  datname = [datdir roots{i} '.dat']
+  outname = [plotdir roots{i} ]
   logform = "'10^{%L}'";
   addpath /home/mhoecker/work/Dynamo/octavescripts
   [termtxt,termsfx] = termselect(term);
@@ -38,7 +38,7 @@ if nargin()<1
   fprintf(pltid,"%s",paltext("pm"))
   fprintf(pltid,"set format x %s\n",logform)
   fprintf(pltid,"set format cb %s\n",logform)
-  fprintf(pltid,"set cbrange [1e-1:1e5]\n")
+  fprintf(pltid,"set cbrange [1e0:*]\n")
   fprintf(pltid,"splot '%s' binary matrix\n",datname)
   fclose(pltid)
   unix(["gnuplot " pltname ])

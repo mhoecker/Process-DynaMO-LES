@@ -1,41 +1,62 @@
-function LESsurfBC(fileloc,filename,wantdates,outloc)
+function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
  # function LESsurfBC(fileloc,ncfile,wantdates,outloc)
- # fileloc  - directiory of the data file
- # filename - name of the data file (no suffix, it is assumed to be .nc)
+ # filename - name of the data file
  # wantdates - [start date, end date] in 2011 yearday
  # outloc   - directory of output file (assume to be the currentdirectory if not given)
- if(nargin<4)
+ if(nargin<3)
   outloc = "";
  end%if
- ncfile = [fileloc filename ".nc"];
- nc = netcdf(ncfile,"r");
+ findgsw;
+ nc = netcdf(filename,"r");
  t = nc{'Yday'}(:);
  dateidx = find((t>=min(wantdates))&(t<=max(wantdates)));
  t = nc{'Yday'}(dateidx);
- tmodel = (t-min(t))*24;
+ s = min(t):avgtime:max(t);
+ tmodel = (s-min(t))*24;
  shortw = -nc{'Solarup'}(dateidx)-nc{'Solardn'}(dateidx);
+ shortw = meanfil(shortw,t,s,avgtime);
+ %
  surfac = -nc{'IRup'}(dateidx)-nc{'IRdn'}(dateidx)-nc{'shf'}(dateidx)-nc{'rhf'}(dateidx);
+ surfac = meanfil(surfac,t,s,avgtime);
+ %
  LW = -nc{'IRup'}(dateidx)-nc{'IRdn'}(dateidx);
+ LW = meanfil(LW,t,s,avgtime);
+ %
  Sen = -nc{'shf'}(dateidx);
+ Sen = meanfil(Sen,t,s,avgtime);
+ %
  RainF = -nc{'rhf'}(dateidx);
+ RainF = meanfil(RainF,t,s,avgtime);
+ %
  latent = -nc{'lhf'}(dateidx);
+ latent = meanfil(latent,t,s,avgtime);
+ %
  precip = nc{'P'}(dateidx);
- Taux   = nc{'stresx'}(dateidx);
- Tauy   = nc{'stresy'}(dateidx);
- fadein = 1-exp((min(t)-t)*8);
- L = 30;
- Lmin = eps*L;
- Height = 2;
- wave_height = Height*fadein;
- wave_length = Lmin+(L-Lmin)*fadein;
- wave_direct = mod(atan2(Taux,Tauy)*180/pi+360,360);
- outname = [outloc int2str(floor(min(t))) "-" int2str(ceil(max(t))) filename];
+ precip = meanfil(precip,t,s,avgtime);
+ %
+ Taux   = -nc{'stress'}(dateidx).*sin(nc{'Wdir'}(dateidx)*pi/180);
+ Taux = meanfil(Taux,t,s,avgtime);
+ %
+ Tauy   = -nc{'stress'}(dateidx).*cos(nc{'Wdir'}(dateidx)*pi/180);
+ Tauy = meanfil(Tauy,t,s,avgtime);
+ %
+ wave_height = nc{'sigH'}(dateidx);
+ wave_height = meanfil(wave_height,t,s,avgtime);
+ %
+ wave_length = (2*pi./gsw_grav(0))*nc{'sigH'}(dateidx).^2;
+ wave_length = meanfil(wave_length,t,s,avgtime);
+ %
+ wave_direct = exp(nc{'Wdir'}(dateidx)*I*pi/180);
+ wave_direct = meanfil(wave_direct,t,s,avgtime);
+ wave_direct = mod(180+imag(log(wave_direct))*180/pi,360);
+ %
+ outname = [outloc "Surface_Flux_" int2str(floor(min(t))) "-" int2str(ceil(max(t)))];
  fileout = [outname ".bc"];
  outid = fopen(fileout,"w");
  fprintf(outid,'Flux=%s.nc  waves=%s %sGMT-%sGMT\n',filename,"faked",datestr(min(t),"dd-mmm-yyyy HH"),datestr(max(t),"dd-mmm-yyyy HH"));
  fprintf(outid,' \n');
  fprintf(outid,' swf_top, hf_top, lhf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle\n');
- for i=1:length(t);
+ for i=1:length(tmodel);
   fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',tmodel(i),shortw(i),surfac(i),latent(i),precip(i),Taux(i),Tauy(i),wave_length(i),wave_height(i),wave_direct(i))
  end%for
  fclose(outid)
@@ -68,7 +89,7 @@ function LESsurfBC(fileloc,filename,wantdates,outloc)
  ylabel("m")
  subplot(3,1,3)
  plot(tmodel,wave_direct,";wave-direction;")
- axis([min(tmodel),max(tmodel)])
+ axis([min(tmodel),max(tmodel),0,360])
  xlabel("model hour")
  ylabel("degrees")
  print([outname "rain_waves.png"],"-dpng")

@@ -1,6 +1,6 @@
 	function [readme] = adcp2NetCDF(inloc,fname,outloc)
 #	function [readme] = adcp2NetCDF(inloc,fname,outloc)
-#	inloc = the irectory containing the file
+#	inloc = the directory containing the file
 #	fname = the base name of the file
 #		do not include extension '.mat'
 #	outloc = the directory for the netCDF file
@@ -28,7 +28,7 @@
 #  [8,1] = depth
 #  [9,1] = ind
 #
-	val = {adcp.time(:)};
+	val = {adcp.time(:)-datenum(2011,1,0)};
 	val = {val{:},-adcp.depth(:)};
 	val = {val{:},adcp.uship(:)};
 	val = {val{:},adcp.vship(:)};
@@ -80,7 +80,7 @@ endif
 #	01 time
 vars{1} = 't';
 units{1} = 'd';
-longname{1} = 'time since 1999 Dec 31 00:00:00';
+longname{1} = '2011 yearday';
 dims{1} = [vars{1}];
 #	02 depth
 vars{2} = 'z';
@@ -159,24 +159,25 @@ readme = "In all summary files depth is relative to sea surface.\
   After that it should be combined with RDI150, HDSS50 should be navigated, cleaned and combined with RDI75";
 fprintf(cdlid,':readme = "%s";\n',readme);
 # Declare Data
-fprintf(cdlid,'data:\n')
-for i=1:Nvar
- y = val{i}(:);
- fprintf(cdlid,'%s =\n',vars{i});
- for j=1:length(y)
-  if(isnan(y(j))==1)
-   fprintf(cdlid,'NaN');
-  else
-   fprintf(cdlid,'%f',y(j));
-  endif
-  if(j<length(y))
-   fprintf(cdlid,', ');
-  else
-   fprintf(cdlid,';\n');
-  endif
- endfor
-endfor
-fprintf(cdlid,'}\n',fname)
-fclose(cdlid)
+writeCDFdata(cdlid,val,vars)
+#fprintf(cdlid,'data:\n')
+#for i=1:Nvar
+# y = val{i}(:);
+# fprintf(cdlid,'%s =\n',vars{i});
+# for j=1:length(y)
+#  if(isnan(y(j))==1)
+#   fprintf(cdlid,'NaN');
+#  else
+#   fprintf(cdlid,'%20.20g',y(j));
+#  end%if
+#  if(j<length(y))
+#   fprintf(cdlid,', ');
+#  else
+#   fprintf(cdlid,';\n');
+#  end%if
+# end%for
+#end%for
+#fprintf(cdlid,'}\n',fname)
+#fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' outfile '&& rm ' cdffile])
 endfunction

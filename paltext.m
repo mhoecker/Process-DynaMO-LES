@@ -6,18 +6,18 @@ function palette = paltext(paltype,cmin,cmax)
 % palype = "euh" or "backrainbow" gives a inverted rainbow with balck and white end members
 % palype = "plusminus" or "pm" gives blue to cyan to white to yellow to red, white is the midpoint
 %   if cmin and cmax are given white is placed at zero
- if nargin()==1
+ if nargin()<=1
   cmin = -1;
   cmax = +1;
  end%if
  crange = cmax-cmin;
  switch paltype
   case {"rainbow" "hue"}
-   palette = ["set palette mode HSV\n set palette functions (gray)*.8,(1-gray)**.125,gray**.125\n"];
+   palette = ["set palette mode HSV\nset palette functions (gray)*.8,(1-gray)**.125,gray**.125\n"];
   case {"backrainbow" "euh"}
-   palette = ["set palette mode HSV\n set palette functions (1-gray)*.8,(1-gray)**.125,gray**.125\n"];
+   palette = ["c(x) = (.5*(x)**.5+(.5-.5*(1-x)**.5)); set palette maxcolors 7; set palette function c(gray),c(gray),c(gray);\n"];
   case { "plusminus" "pm" "minusplus" "mp" "bluered" "br" }
-   palette = ["set palette mode RGB\n set palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'white', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'white', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n"];
   otherwise
    palette =  "set palette grey"
  end%switch
