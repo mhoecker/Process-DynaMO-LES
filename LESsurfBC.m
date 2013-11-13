@@ -43,7 +43,7 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
  wave_height = nc{'sigH'}(dateidx);
  wave_height = meanfil(wave_height,t,s,avgtime);
  %
- wave_length = (2*pi./gsw_grav(0))*nc{'sigH'}(dateidx).^2;
+ wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
  wave_length = meanfil(wave_length,t,s,avgtime);
  %
  wave_direct = exp(nc{'Wdir'}(dateidx)*I*pi/180);
