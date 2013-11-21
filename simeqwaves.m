@@ -1,14 +1,19 @@
-function [P,k,w] = simeqwaves(krange,wrange)
+function [P,k,w] = simeqwaves(krange,wrange,outdir)
+ if(nargin()<3)
+  outdir = "/home/mhoecker/work/Dynamo/MJOconvolve/"
+ end%if
  findgsw;
- dk = min(abs(krange));
- kmax = max(abs(krange));
- k = -kmax:dk:kmax;
+ dk = mean(diff(krange));
+ kmax = max(krange);
+ kmin = min(krange);
+ k = kmin:dk:kmax;
  #
- dw = min(abs(wrange));
- wmax = max(abs(wrange));
- w = 0:dw:wmax;
- wmag = 16;
- wfind = 0:dw/wmag:wmax+dw;
+ dw = mean(diff(wrange));
+ wmax = max(wrange);
+ wmin = min(wrange);
+ w = wmin:dw:wmax;
+ wmag = 8;
+ wfind = wmin-dw:dw/wmag:wmax+dw;
  #
  [kk,ww] = meshgrid(k,w);
  P = zeros(size(kk));
@@ -33,10 +38,13 @@ function [P,k,w] = simeqwaves(krange,wrange)
   end%for
  end%for
  #Magically turn the number of modes into a dpectral density
- binmatrix(k,w,Pin,'/home/mhoecker/tmp/eqwaves.dat');
+ binmatrix(k,w,Pin,[outdir 'eqwaves.dat']);
+ meanidx = find((kk==0).*(ww==0));
+ Pin(meanidx) = 0;
  P = SelfConvolve2D(sqrt(Pin),w,k).^2;
+ P(meanidx) = 0;
  #P = Pin;
- binmatrix(k,w,P,'/home/mhoecker/tmp/eqwaves2.dat');
+ binmatrix(k,w,P,[outdir 'eqwaves2.dat']);
  if(length(k)*length(w)<2^5)
   subplot(1,2,1)
   pcolor(kk,ww,exp(log(Pin))); shading flat
@@ -49,6 +57,6 @@ function [P,k,w] = simeqwaves(krange,wrange)
   axis([-kmax,kmax,0,wmax])
   xlabel("wavenumber (rad/m)")
   ylabel("frequency (rad/s)")
-  print('/home/mhoecker/tmp/eqwave.png','-dpng')
+  print([outdir '/home/mhoecker/tmp/eqwave.png'],'-dpng')
  end%if
 end%function
