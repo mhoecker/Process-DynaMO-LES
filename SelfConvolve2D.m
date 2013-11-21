@@ -1,8 +1,8 @@
 function AstarA = SelfConvolve2D(A,w,k)
  # Assumes
  #A is indexed so that A(i,j) = A[w(i),k(j)]
- #w is a one sided interval with equal spacing
- #k is an even interval with equal spacing
+ #w is an interval with equal spacing
+ #k is an interval with equal spacing
  dw = mean(diff(w));
  dk = mean(diff(k));
  dwdk = abs(dk*dw);
