@@ -55,8 +55,8 @@ vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set colorbox user origin .85,vmargin-dvmargin/4 size .02,1.25*dvmargin
 set format x ""
-set yrange [-dsim:0]
-set ytics -dsim*3.5/4,dsim/4.0,-.5*dsim/4
+set yrange [-dsim/2:0]
+set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
 set format cb "10^{%L}m^2/s^2"
 set cbtics offset -.5,0
 set logscale cb
