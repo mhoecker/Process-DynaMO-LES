@@ -21,7 +21,9 @@ set pm3d
 set multiplot
 set ytics
 # set dates
-set xrange [328:*]
+set xtics t0sim,.25,tfsim
+set mxtics 6
+set xrange [t0sim:tfsim]
 # heat flux
 set cbrange [-.0003:0.00005]
 set format cb "%1.1e"
