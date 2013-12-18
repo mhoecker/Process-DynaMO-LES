@@ -9,6 +9,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % Upper-ocean turbulence during a westerly wind burst: A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
 %
+ ensureSkyllingstad1999;
  if nargin()<1
   %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
   %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
@@ -40,31 +41,28 @@ end%if
  fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ % Remove the figure ploting commands from the PATH
+ removeSkyllingstad1999;
 end%function
 
-function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
- useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
- t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 80; % Maximum simulation depth
- tfsim = t0sim+1; % Simulated stop time 2011 yearday
- if(nargin==1)
-  datdir = outdir;
- end%if
- if(useoctplot!=1)
-  [gnuplotterm,termsfx] = termselect("pngposter");
-  limitsfile = [outdir "limits.plt"];
-  fid = fopen(limitsfile,"w");
-  fprintf(fid,"t0sim=%f\n",t0sim);
-  fprintf(fid,"tfsim=%f\n",tfsim);
-  fprintf(fid,"dsim=%f\n",dsim);
-  fprintf(fid,"outdir = '%s'\n",outdir);
-  fprintf(fid,"datdir = '%s'\n",datdir);
-  fprintf(fid,"termsfx = '%s'\n",termsfx);
-  fprintf(fid,"set term %s\n",gnuplotterm);
-  fprintf(fid,"%s",paltext("hue"));
-  fclose(fid);
+function ensureSkyllingstad1999
+ % Ensure Skyllingstad1999 is in the path,
+ % return the version number and date
+ testpath = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
+ if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
+  addpath(testpath);
  end%if
 end%function
+
+function removeSkyllingstad1999
+ % Ensure Skyllingstad1999 is in the path,
+ % return the version number and date
+ testpath = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
+ if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
+  rmpath(testpath);
+ end%if
+end%function
+
 
 function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange)
  % Extract Flux data
@@ -83,32 +81,6 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc
  SolarNet = sfx.Solarup+sfx.Solardn;
  cp = sfx.cp;
  sigH = sfx.sigH;
-end%function
-
-function [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange)
- % Extract profile data from Chameleon
- chm = netcdf(chmnc,'r');
- % Restrict time index
- tchm = squeeze(chm{'t'}(:));
- if nargin()>1
-  chmtidx = inclusiverange(tchm,trange);
- else
-  chmtidx = 1:length(tchm);
- end%if
- % restict depth range
- zchm = squeeze(chm{'z'}(:));
- if nargin()>2
-  chmzidx = inclusiverange(zchm,zrange);
- else
-  chmzidx = 1:length(zchm);
- end%if
- % Extract desired data
- tchm   = squeeze(chm{'t'}(chmtidx));
- zchm   = squeeze(chm{'z'}(chmzidx));
- epschm = squeeze(chm{'epsilon'}(chmtidx,chmzidx));
- Tchm   = squeeze(chm{'T'}(chmtidx,chmzidx));
- Schm   = squeeze(chm{'S'}(chmtidx,chmzidx));
- ncclose(chm);
 end%function
 
 function [t,z,u,v] = ADCPprofiles(adcpnc,trange,zrange,vars)
@@ -242,7 +214,6 @@ function [DAGheat] = DAGheatprofiles(dagnc,trange,zrange)
 end%function
 
 
-
 function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  field = ['time';'zzu'];
@@ -280,225 +251,6 @@ function testfig(outdir)
   fclose(fid);
   unix(["gnuplot " testfile]);
  end%if
-end%function
-
-% figure 1
-function fig1(sfxnc,chmnc,outdir)
- %function fig1(sfxnc,chmnc,outdir)
- %
- % 4 plots stacked vertically with a common x-axis (yearday)
- %
- % 1st plot is Wind stress (tau~Pa) as a function of time
- % 2nd plot is Precipitation (P~mm/h) as a function of time
- % 3rd plot is Net Heat flux (J~W/m^2) as a function of time
- % 4th plot is Turbulent dissipation (epsilon~W/kg) as a function of depth (m) and time
- %
- % The simulated time is bracketed by 2 days prior and 1 day after
- % The simulated time is highlighted on the line plots
- % line plots are filled
- % epsilon is plotted on a log10 scale
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- trange = [t0sim-1,tfsim+1];
- zrange = sort([0,-dsim]);
- % Extract Flux data
- [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange);
- # Extract epsilon profiles
- [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
- # Plot using octave or Gnuplot
- if(useoctplot==1)
-  figure(1)
-  subplot(4,1,1)
-  plot(tsfx,stress)
-  ylabel("Wind Stress (Pa)")
-  subplot(4,1,2)
-  plot(tsfx,p)
-  ylabel("Precipitation rate (mm/hour)")
-  subplot(4,1,3)
-  plot(tsfx,Jh)
-  ylabel("Heat Flux (W/m^2)")
-  [tt,zz] = meshgrid(tchm,zchm);
-  subplot(4,1,4)
-  pcolor(tt,zz,log(epschm')/log(10));
-  shading flat;
-  axis([trange,zrange]);
-  colorbar()
-  xlabel("2011 Year Day")
-  ylabel("Depth (m)")
-  print([outdir 'fig1.png'],'-dpng')
- else
-  # Save Flux data
-  binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
-  # Save epsilon profiles
-  binmatrix(tchm',zchm',epschm',[outdir "fig1d.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt");
- end%if
-end%function
-%
-%
-%figure 2
-function  fig2(chmnc,adcpnc,outdir)
- %
- % two side by side plots with a common y axis (depth)
- %
- % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
- % 2nd plot E/W (u) and N/S (v) velocity at simulation start
- [useoctplot,t0sim,dsim]=plotparam(outdir);
- trange = [t0sim,t0sim];
- zrange = sort([0,-dsim]);
- # Extract Legendre coefficients and fit velocity profiles from adcp file
- [Ucoef,Vcoef,Ufit,Vfit,zadcp,U,V] = uvLegendre(adcpnc,t0sim,dsim,0.25/24,5,["t";"z";"u";"v"]);
- plot(U,zadcp,Ufit,zadcp)
- # read Chameleon file
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Plot using octave or gnuplot script
- if(useoctplot==1)
-  figure(2)
-  subplot(1,2,1)
-  plot(Tchm,zchm,Schm,zchm)
-  axis([min([Tchm,Schm]),max([Tchm,Schm]),zrange])
-  subplot(1,2,2)
-  plot(U,zadcp,V,zadcp)
-  axis([min([U,V]),max([U,V]),zrange])
-  print([outdir 'fig2.png'],'-dpng')
- else
-  # save U,V profiles
-  binarray(zadcp,[U;V;Ufit;Vfit],[outdir "fig2b.dat"]);
-  # Save T,S profiles
-  binarray(zchm',[Tchm;Schm],[outdir "fig2a.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig2.plt");
- end%if
-end%function
-
-%figure 3
-function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
- % Comparison of Temperature, Salinity, and Velocity in observations
- % and model.  The surface heat and momentum forcings are also shown
- %
- [useoctplot,t0sim,dsim]=plotparam(outdir);
- trange = [t0sim,t0sim+1];
- zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
- # Decomplse Stress into components
- stressm = -stress.*sin(wdir*pi/180);
- stressz = -stress.*cos(wdir*pi/180);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Convert Chameleon Salinity from absolute to practical
- findgsw; # Check to make sure Gibbs Sea Water is in the path
- Pchm = gsw_p_from_z(zchm,0);
- Schm = gsw_SP_from_SA(Schm,Pchm,80.5,0);
- # extract ADCP data
- [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
- # Extract simulation data
- [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- # convert to yearday
- tdag = t0sim+tdag/(24*3600);
- if(useoctplot==1)
-  # Make co-ordinate 2-D arrays from lists
-  [ttchm,zzchm] = meshgrid(tchm,zchm);
-  [ttadcp,zzadcp] = meshgrid(tadcp,zadcp);
-  [ttdag,zzdag] = meshgrid(tdag,zdag);
-  # Picture time!
-  figure(3)
-  subplot(5,2,1)
-  plot(tsfx,Jh,tsfx,p)
-  subplot(5,2,2)
-  plot(tsfx,stressz,tsfx,stressm)
-  axis([trange])
-  subplot(5,2,3)
-  pcolor(ttchm,zzchm,Tchm')
-  shading flat
-  axis([trange])
-  subplot(5,2,4)
-  pcolor(ttdag,zzdag,Tavgdag')
-  shading flat
-  subplot(5,2,5)
-  pcolor(ttchm,zzchm,Schm')
-  shading flat
-  axis([trange])
-  axis([trange])
-  subplot(5,2,6)
-  pcolor(ttdag,zzdag,Savgdag')
-  shading flat
-  subplot(5,2,7)
-  pcolor(ttadcp,zzadcp,ulpadcp')
-  shading flat
-  axis([trange])
-  subplot(5,2,8)
-  pcolor(ttdag,zzdag,uavgdag')
-  shading flat
-  subplot(5,2,9)
-  pcolor(ttadcp,zzadcp,vlpadcp')
-  shading flat
-  axis([trange])
-  subplot(5,2,10)
-  pcolor(ttdag,zzdag,vavgdag')
-  shading flat
-  print([outdir 'fig3.png'],'-dpng')
- else
-  # Save T,S profiles
-  binmatrix(tchm',zchm',Tchm',[outdir "fig3c.dat"]);
-  binmatrix(tchm',zchm',Schm',[outdir "fig3e.dat"]);
-  # save U,V profiles
-  binmatrix(tadcp',zadcp',ulpadcp',[outdir "fig3g.dat"]);
-  binmatrix(tadcp',zadcp',vlpadcp',[outdir "fig3i.dat"]);
-  # Save surface flux profiles
-  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir "fig3ab.dat"]);
-  # save Simulated profiles
-  binmatrix(tdag',zdag',Tavgdag',[outdir "fig3d.dat"]);
-  binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
-  binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
-  binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt");
- end%if
-end%function
-
-%figure 4
-function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
- % Plot time series of N^2 S^2 and Ri
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- #useoctplot=1;
- trange = [t0sim-2,tfsim+2];
- zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Extract simulation data
- [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- # convert to yearday
- tdag = t0sim+tdag/(24*3600);
- # Calulatwe the Driven Richarson number
- [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
- #
- if(useoctplot==1)
-  subplot(4,1,1)
-%  plot(tsfx,Jh,tsfx,0*ones(size(tsfx)),"k")
-%  ylabel("Jh")
-%  subplot(4,1,2)
-%  plot(tsfx,stress)
-%  ylabel("stress")
-%  subplot(4,1,3)
-%  semilogy(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k")
-%  ylabel("+4Ri")
-%  subplot(4,1,4)
-%  semilogy(tsfx,-4*Ri,tsfx,ones(size(tsfx)),"k")
-%  ylabel("-4Ri")
-  subplot(2,1,1)
-  semilogy(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k")
-  ylabel("+4Ri")
-  subplot(2,1,2)
-  semilogy(tsfx,-4*Ri,tsfx,ones(size(tsfx)),"k")
-  ylabel("-4Ri")
-  print([outdir "fig4.png"],"-dpng")
- else
-  binarray(tsfx',[4*Ri,Jb,stress]',[outdir "fig4a.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt");
- end%if
- %
 end%function
 
 %figure 5
@@ -648,41 +400,4 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
  end%if
  %
-end%function
-% figure 7 Heat Profiles
-function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- trange = [t0sim,tfsim];
- zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
- # Calulatwe the Driven Richarson number
- [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
- # Extract simulation data
- [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- # convert to yearday
- DAGheat.Yday = t0sim+DAGheat.time/(24*3600);
- # Convert depth to negavite definite
- DAGheat.zzw = -DAGheat.zzw;
- DAGheat.zzu = -DAGheat.zzu;
- DAGheat.trange = max(max(DAGheat.t_ave))-min(min(DAGheat.t_ave));
- if(useoctplot==1)
-  subplot(3,1,1)
-  [Ydayw,zzw2] = meshgrid(DAGheat.Yday,DAGheat.zzw);
-  pcolor(Ydayw',-zzw2',DAGheat.hf_ave); shading flat;
-  subplot(3,1,2)
-  pcolor(Ydayw',-zzw2',DAGheat.wt_ave); shading flat;
-  subplot(3,1,3)
-  [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
-  pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
- else
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir "fig7a.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir "fig7b.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave'./DAGheat.trange^2,[outdir "fig7c.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir "fig7d.dat"]);
-  # invoke gnuplot
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig7.plt");
- end%if
 end%function
