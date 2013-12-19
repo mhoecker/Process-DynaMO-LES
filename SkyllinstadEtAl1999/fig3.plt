@@ -7,9 +7,6 @@ UVmin = -0.25
 UVmax = +1.0
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
-palcolors = 8
-cbmarks = palcolors
-set palette maxcolors palcolors
 set view map
 unset colorbox
 unset surface

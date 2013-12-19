@@ -31,8 +31,6 @@ unset table
 #
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig6".termsfx
-palcolors = 8
-set palette maxcolors palcolors
 unset colorbox
 set pm3d
 set multiplot
