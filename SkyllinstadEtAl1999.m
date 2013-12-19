@@ -37,6 +37,7 @@ end%if
  fig1(sfxnc,chmnc,outdir);
  fig2(chmnc,adcpnc,outdir);
  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
@@ -61,98 +62,6 @@ function removeSkyllingstad1999
  if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
   rmpath(testpath);
  end%if
-end%function
-
-
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange)
- % Extract Flux data
- field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
- field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"];
- % Some other things to extract
- % "Precip";
- sfx = surfluxvars(sfxnc,field,trange);
- tsfx = sfx.Yday;
- stress = sfx.stress;
- p = sfx.P;
- Jh = sfx.shf+sfx.lhf+sfx.rhf+sfx.Solarup+sfx.Solardn+sfx.IRup+sfx.IRdn;
- wdir = sfx.Wdir;
- sst = sfx.SST;
- SalTSG = sfx.SalTSG;
- SolarNet = sfx.Solarup+sfx.Solardn;
- cp = sfx.cp;
- sigH = sfx.sigH;
-end%function
-
-function [t,z,u,v] = ADCPprofiles(adcpnc,trange,zrange,vars)
- % Extract ADCP profiles
- if(nargin()<4)
-  vars = ['t';'z';'u';'v'];
- end%if
- adcp = netcdf(adcpnc,'r');
- t = squeeze(adcp{vars(1,:)}(:));
- z = squeeze(adcp{vars(2,:)}(:));
- if nargin()>1
-  adcptidx = inclusiverange(t,trange);
- else
-  adcptidx = 1:length(tadcp);
- end%if
- % restict depth range
- zadcp = squeeze(adcp{vars(2,:)}(:));
- if nargin()>2
-  adcpzidx = inclusiverange(z,zrange);
- else
-  adcpzidx = 1:length(z);
- end%if
- t = squeeze(adcp{vars(1,:)}(adcptidx));
- z = squeeze(adcp{vars(2,:)}(adcpzidx));
- u = squeeze(adcp{vars(3,:)}(adcptidx,adcpzidx));
- v = squeeze(adcp{vars(4,:)}(adcptidx,adcpzidx));
- ncclose(adcp);
-end%function
-
-function [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,trange,zrange)
- % Extract diagnostic profiles
- dag      = netcdf(dagnc,'r');
- tdag     = squeeze(dag{'time'}(:));
- if nargin()>1
-  dagtidx = inclusiverange(tdag,trange);
- else
-  dagtidx = 1:length(tdag);
- end%if
- % restict depth range
- zdag     = -squeeze(dag{'zzu'}(:));
- if nargin()>2
-  dagzidx = inclusiverange(zdag,zrange);
- else
-  dagzidx = 1:length(zdag);
- end%if
- tdag     = squeeze(dag{'time'}(dagtidx));
- zdag     = -squeeze(dag{'zzu'}(dagzidx));
- uavgdag  = squeeze(dag{'u_ave'}(dagtidx,dagzidx,1,1));
- vavgdag  = squeeze(dag{'v_ave'}(dagtidx,dagzidx,1,1));
- ncclose(dag);
-end%function
-
-function [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,trange,zrange)
- % Extract diagnostic profiles
- dag      = netcdf(dagnc,'r');
- tdag     = squeeze(dag{'time'}(:));
- if nargin()>1
-  dagtidx = inclusiverange(tdag,trange);
- else
-  dagtidx = 1:length(tdag);
- end%if
- % restict depth range
- zdag     = -squeeze(dag{'zzu'}(:));
- if nargin()>2
-  dagzidx = inclusiverange(zdag,zrange);
- else
-  dagzidx = 1:length(zdag);
- end%if
- tdag     = squeeze(dag{'time'}(dagtidx));
- zdag     = -squeeze(dag{'zzu'}(dagzidx));
- Tavgdag  = squeeze(dag{'t_ave'}(dagtidx,dagzidx,1,1));
- Savgdag  = squeeze(dag{'s_ave'}(dagtidx,dagzidx,1,1));
 end%function
 
 function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
@@ -185,34 +94,6 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,D
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
-
-function [DAGheat] = DAGheatprofiles(dagnc,trange,zrange)
- # Get variables with time and zzu as dimensions
- field1 = ['time';'zzu'];
- field1 = [field1;'t_ave';'t2_ave'];#
- DAGheat1 = dagvars(dagnc,field1,trange,zrange);
- for i=1:length(field1(:,1))
-  fieldname = deblank(field1(i,:));
-  DAGheat.(fieldname) = DAGheat1.(fieldname);
- end%for
- # Get variables with time and zzw as dimensions
- field2 = ['time';'zzw'];
- field2 = [field2;'hf_ave';'wt_ave'];
- DAGheat2 = dagvars(dagnc,field2,trange,zrange);
- for i=1:length(field2(:,1))
-  fieldname = deblank(field2(i,:));
-  DAGheat.(fieldname) = DAGheat2.(fieldname);
- end%for
- # Get variables with time and z as dimensions
- field3 = ['time';'z'];
- field3 = [field3;'q';];
- DAGheat3 = dagvars(dagnc,field3,trange,zrange);
- for i=1:length(field3(:,1))
-  fieldname = deblank(field3(i,:));
-  DAGheat.(fieldname) = DAGheat3.(fieldname);
- end%for
-end%function
-
 
 function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
