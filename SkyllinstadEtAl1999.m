@@ -178,7 +178,7 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,D
  tkeAdve  = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
  BuoyPr  = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
  tkeSGTr  = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
- ShPr  = squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
+ ShPr  = -squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
  StDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
  SGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
  PEAdv  = squeeze(dag{'dpea'}(dagtidx,dagzidx,1,1));
