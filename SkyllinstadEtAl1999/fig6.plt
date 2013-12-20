@@ -61,30 +61,28 @@ set logscale cb
 set cbrange [cblogmin:cblogmax]
 set ylabel "<tke>_{x,y}"
 plot datdir."fig6a.dat" binary matrix w image
-unset logscale cb
 #
 # Plot Pressure transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set format cb "%3.1lx10^{%L}s^{-1}"
-set colorbox user origin .85,dvmargin size .02,(rows-2)*dvmargin
-set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+#set format cb "%3.1lx10^{%L}s^{-1}"
+#set colorbox user origin .85,dvmargin size .02,(rows-2)*dvmargin
+#set cbrange [cbmin:cbmax]
+#set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set colorbox default
 set ylabel "<w'P'>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6b.dat" binary matrix  w image
-# , \
-#outdir."fig6b.tab" lc 0 notitle
-unset colorbox
+plot datdir."fig6b.dat" binary matrix  w image , \
+outdir."fig6b.tab" lc 0 notitle
+#unset colorbox
 #
 # Plot Advective transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set ylabel "<w'tke>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6c.dat" binary matrix w image
-#, \
-#outdir."fig6c.tab" lc 0 notitle
+plot datdir."fig6c.dat" binary matrix w image, \
+outdir."fig6c.tab" lc 0 notitle
 #
 # Plot sub-gridscale transport
 set tmargin at screen vmargin
