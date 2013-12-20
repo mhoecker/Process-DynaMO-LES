@@ -9,7 +9,7 @@ set view map
 unset colorbox
 unset surface
 set pm3d
-set multiplot
+set multiplot title "Observeation - Model"
 set lmargin at screen .15
 set rmargin at screen .85
 set style data lines
