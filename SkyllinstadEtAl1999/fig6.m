@@ -15,15 +15,25 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  tdag = t0sim+tdag/(24*3600);
  #Scale by tke
  #tkeavg,
+ notkeidx = find((tkeavg==0))
  tkePTraRate = tkePTra./tkeavg;
+ tkePTraRate(notkeidx) = 0;
  tkeAdveRate = tkeAdve./tkeavg;
+ tkeAdveRate(notkeidx) = 0;
  BuoyPrRate = BuoyPr./tkeavg;
+ BuoyPrRate(notkeidx)=0;
  tkeSGTrRate = tkeSGTr./tkeavg;
+ tkeSGTrRate(notkeidx)=0;
  ShPrRate = ShPr./tkeavg;
+ ShPrRate(notkeidx)=0;
  StDrRate = StDr./tkeavg;
+ StDrRate(notkeidx)=0;
  SGPERate = SGPE./tkeavg;
+ SGPERate(notkeidx) = 0;
  PEAdvRate = PEAdv./tkeavg;
+ PEAdvRate(notkeidx)=0;
  DissRate = Diss./tkeavg;
+ DissRate(notkeidx)=0;
  if(useoctplot==1)
   # Make co-ordinate 2-D arrays from lists
   [ttchm,zzchm] = meshgrid(tchm,zchm);
@@ -136,7 +146,11 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Diss',[outdir "fig6j.dat"]);
   binmatrix(tdag',zdag',DissRate',[outdir "fig6jR.dat"]);
   # invoke gnuplot
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6tab.plt");
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6linR.plt");
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6logabs.plt");
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6logabsR.plt");
  end%if
  %
 end%function
