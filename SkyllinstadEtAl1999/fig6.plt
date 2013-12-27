@@ -1,142 +1,128 @@
 reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-# Make table for countours
-unset pm3d
-unset surface
 set style data lines
-set contour
-set cntrparam levels discrete 0
-#set table outdir."fig6a".".tab"
-#splot datdir."fig6a.dat" binary matrix
-set table outdir."fig6b".".tab"
-splot datdir."fig6b.dat" binary matrix
-set table outdir."fig6c".".tab"
-splot datdir."fig6c.dat" binary matrix
-set table outdir."fig6d".".tab"
-splot datdir."fig6d.dat" binary matrix
-set table outdir."fig6e".".tab"
-splot datdir."fig6e.dat" binary matrix
-set table outdir."fig6f".".tab"
-splot datdir."fig6f.dat" binary matrix
-set table outdir."fig6g".".tab"
-splot datdir."fig6g.dat" binary matrix
-set table outdir."fig6h".".tab"
-splot datdir."fig6h.dat" binary matrix
-set table outdir."fig6i".".tab"
-splot datdir."fig6i.dat" binary matrix
-set table outdir."fig6j".".tab"
-splot datdir."fig6j.dat" binary matrix
-unset contour
-unset table
-#
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig6".termsfx
-unset colorbox
-set pm3d
-set multiplot
-set lmargin at screen .25
-set rmargin at screen .85
+set multiplot title "Vertical Energy Budget (Horizontal Averages)"
+# setup the spacing between plots
+# All share the same left and right margins
+rplot = .8
+lplot = .1
+set lmargin at screen lplot
+set rmargin at screen rplot
+# Vertical margins depend n the total number of plots
 rows = 9
+# dvmargin is the vertical size of a plot
 dvmargin = 1.0/(rows+1)
+# vmargin is the top of the next plot
 vmargin = 1.0-dvmargin/3
-cblogmax = 1e-2
-cblogmin = 1e-6
-cbmax = .01
-cbmin = -.01
-set xtics t0sim,.25,tfsim
-set mxtics 6
-set ylabel rotate by 30 offset -4,0
+# Note: the upper margin is 1/3 of a plot
+# and the lower margin is 2/3 of a plot.
+# This gives space for a comon x-axis label
+#
+tkemax = 5e-3
+tkemin = 0
+dtkemin = -2.5e-5
+dtkemax = +2.5e-5
+dxtic = .25
+unset xtics
+set ylabel rotate by 90 offset 0,0
+nullcolor = "grey20"
 #
 # Plot tke
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set colorbox user origin .85,vmargin-dvmargin/4 size .02,1.25*dvmargin
+set colorbox user origin rplot+.01,vmargin-4*dvmargin/3.0 size .02,7*dvmargin/3.0
 set format x ""
 set yrange [-dsim/2:0]
 set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
-set format cb "10^{%L}m^2/s^2"
+cbform = "%4.2te^{%+03T}"
+set format cb cbform."m^2s^{-2}"
 set cbtics offset -.5,0
-set logscale cb
-set cbrange [cblogmin:cblogmax]
-set ylabel "<tke>_{x,y}"
+set cbrange [tkemin:tkemax]
+set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
+set ylabel "tke"
 plot datdir."fig6a.dat" binary matrix w image
 #
 # Plot Pressure transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-#set format cb "%3.1lx10^{%L}s^{-1}"
-#set colorbox user origin .85,dvmargin size .02,(rows-2)*dvmargin
-#set cbrange [cbmin:cbmax]
-#set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox default
-set ylabel "<w'P'>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6b.dat" binary matrix  w image , \
-outdir."fig6b.tab" lc 0 notitle
-#unset colorbox
+set colorbox user origin rplot+.01,2*dvmargin/3.0 size .02,(rows-8/3.0)*dvmargin
+set cbrange [dtkemin:dtkemax]
+set format cb cbform."m^2s^{-3}"
+set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
+#set ylabel "w'P'/<tke"
+set ylabel "w'P'"
+plot datdir."fig6b.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6b.tab" lc rgbcolor nullcolor  lt 4 notitle
+unset colorbox
 #
 # Plot Advective transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<w'tke>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6c.dat" binary matrix w image, \
-outdir."fig6c.tab" lc 0 notitle
+#set ylabel "w'tke/<tke"
+set ylabel "w'tke"
+plot datdir."fig6c.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6c.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot sub-gridscale transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<w'_{sg}tke>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6d.dat" binary matrix w image
-#, \
-#outdir."fig6d.tab" lc 0 notitle
+#set ylabel "w'_{sg}tke/<tke"
+set ylabel "w'_{sg}tke"
+plot datdir."fig6d.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6d.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<b'w'>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6e.dat" binary matrix w image
-#, \
-#outdir."fig6e.tab" lc 0 notitle
+#set ylabel "b'w'/<tke"
+set ylabel "b'w'"
+plot datdir."fig6e.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6e.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<SP>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6f.dat" binary matrix w image
-#, \
-#outdir."fig6f.tab" lc 0 notitle
+set ylabel "SP/<tke"
+set ylabel "SP"
+plot datdir."fig6f.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6f.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<St>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6g.dat" binary matrix w image
-# , \
-#outdir."fig6g.tab" lc 0 notitle
+#set ylabel "St/<tke"
+set ylabel "St"
+plot datdir."fig6g.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6g.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
-set ylabel "<sgs B>_{x,y}/<tke>_{x,y}"
-plot datdir."fig6h.dat" binary matrix w image
-#, \
-#outdir."fig6h.tab" lc 0 notitle
+#set ylabel "sgs B/<tke"
+set ylabel "sgs B"
+plot datdir."fig6h.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6h.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
 set format x "%g"
 set xtics offset 0,.5
 set xlabel "2011 UTC yearday" offset 0,1
+set xtics t0sim,dxtic,tfsim
+set mxtics 6
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
-set ylabel "<{/Symbol e}>_{x,y}/<tke>_{x,y}"
+#set ylabel "{/Symbol e}/<tke"
+set ylabel "{/Symbol e}"
 set bmargin at screen vmargin
-plot datdir."fig6j.dat" binary matrix w image
-#, \
-#outdir."fig6i.tab" lc 0 notitle
+plot datdir."fig6j.dat" binary matrix u 1:2:3 w image, \
+outdir."fig6j.tab" lc rgbcolor nullcolor  lt 4 notitle
+unset multiplot
