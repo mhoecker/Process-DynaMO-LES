@@ -15,8 +15,32 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
- # Calulatwe the Driven Richarson number
+ # Calculate vertical derivative matrix
+ ddzdag = ddz(zdag);
+ #
+ # Calulate the Driven Richarson number
  [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
+ #
+ # Calculate Density
+ # need gsw
+ findgsw;
+ # Gravity
+ g = gsw_grav(0);
+ # Pressure
+ Pdag = gsw_p_from_z(zdag,0);
+ # Density
+ rhoavg = gsw_rho(Savgdag,Tavgdag,0);
+ # Mean Density
+ rho0 = mean(mean(rhoavg));
+ #
+ # Calculate Stratification
+ Nsqavg = -(g/rho0)*(ddzdag*rhoavg')';
+ #
+ # Calculate Shear
+ Ssqavg = ((ddzdag*uavgdag').^2+(ddzdag*vavgdag').^2)';
+ #
+ # Calculate Richardson #
+ Ricavg = Nsqavg./Ssqavg;
  #
  if(useoctplot==1)
   subplot(4,1,1)
@@ -40,6 +64,11 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir "fig4.png"],"-dpng")
  else
   binarray(tsfx',[4*Ri,Jb,stress]',[outdir "fig4a.dat"]);
+  binmatrix(tdag',zdag',Nsqavg',[outdir "fig4b.dat"]);
+  binmatrix(tdag',zdag',Ssqavg',[outdir "fig4c.dat"]);
+  binmatrix(tdag',zdag',Ricavg',[outdir "fig4d.dat"]);
+  binmatrix(tdag',zdag',rhoavg',[outdir "fig4e.dat"]);
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4tab.plt");
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt");
  end%if
  %
