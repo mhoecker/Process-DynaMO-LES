@@ -6,9 +6,11 @@ unset surface
 set style data lines
 set contour
 set cntrparam levels discrete 0
-#
+# tke
 set table outdir."fig6a".".tab"
 splot datdir."fig6a.dat" binary matrix
+set table outdir."fig6adt".".tab"
+splot datdir."fig6adt.dat" binary matrix
 #
 set table outdir."fig6b".".tab"
 splot datdir."fig6b.dat" binary matrix

@@ -27,32 +27,45 @@ dxtic = .25
 unset xtics
 set ylabel rotate by 90 offset 0,0
 nullcolor = "grey20"
+cbform = "%4.2te^{%+03T}"
+set yrange [-dsim/2:0]
+set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
+set cbtics offset 0,0
 #
 # Plot tke
+set ylabel "tke"
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set colorbox user origin rplot+.01,vmargin-4*dvmargin/3.0 size .02,7*dvmargin/3.0
 set format x ""
-set yrange [-dsim/2:0]
-set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
-cbform = "%4.2te^{%+03T}"
 set format cb cbform."m^2s^{-2}"
-set cbtics offset -.5,0
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
-set ylabel "tke"
 plot datdir."fig6a.dat" binary matrix w image
+#
+# Plot total d/dt of tke
+#set tmargin at screen vmargin
+#vmargin = vmargin-dvmargin
+#set bmargin at screen vmargin
+#set colorbox user origin rplot+.01,2*dvmargin/3.0 size .02,(rows)*dvmargin
+#set cbrange [dtkemin:dtkemax]
+#set format cb cbform."m^2s^{-3}"
+#set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
+#set ylabel "^{d}/_{dt}(tke)"
+#plot datdir."fig6adt.dat" binary matrix u 1:2:3 w image, \
+#outdir."fig6adt.tab" lc rgbcolor nullcolor  lt 4 notitle
+#unset colorbox
 #
 # Plot Pressure transport
 set tmargin at screen vmargin
 vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
+unset colorbox
 set colorbox user origin rplot+.01,2*dvmargin/3.0 size .02,(rows-8/3.0)*dvmargin
 set cbrange [dtkemin:dtkemax]
 set format cb cbform."m^2s^{-3}"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
-#set ylabel "w'P'/<tke"
 set ylabel "w'P'"
 plot datdir."fig6b.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6b.tab" lc rgbcolor nullcolor  lt 4 notitle

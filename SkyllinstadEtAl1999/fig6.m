@@ -13,9 +13,17 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
+ # calculate d/dt matrix in units of 1/sec
+ ddtM = ddz(tdag)/(24*3600);
+ size(ddtM)
+ size(tkeavg)
+ # calculate the rate of change of tke
+ dtkedt = ddtM*tkeavg;
  #Scale by tke
  #tkeavg,
- notkeidx = find((tkeavg==0))
+ notkeidx = find((tkeavg==0));
+ dtkedtRate = dtkedt./tkeavg;
+ dtkedtRate(notkeidx) = 0;
  tkePTraRate = tkePTra./tkeavg;
  tkePTraRate(notkeidx) = 0;
  tkeAdveRate = tkeAdve./tkeavg;
@@ -127,6 +135,8 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  else
   # save files for gnuplot
   binmatrix(tdag',zdag',tkeavg',[outdir "fig6a.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[outdir "fig6adt.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[outdir "fig6aR.dat"]);
   binmatrix(tdag',zdag',tkePTra',[outdir "fig6b.dat"]);
   binmatrix(tdag',zdag',tkePTraRate',[outdir "fig6bR.dat"]);
   binmatrix(tdag',zdag',tkeAdve',[outdir "fig6c.dat"]);
