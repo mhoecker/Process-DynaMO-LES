@@ -33,15 +33,15 @@ end%if
  end%if
 
  #testfig(outdir);
- figRi(sfxnc,outdir);
- fig1(sfxnc,chmnc,outdir);
- fig2(chmnc,adcpnc,outdir);
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #figRi(sfxnc,outdir);
+ #fig1(sfxnc,chmnc,outdir);
+ #fig2(chmnc,adcpnc,outdir);
+ #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
  fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
 end%function
@@ -64,67 +64,8 @@ function removeSkyllingstad1999
  end%if
 end%function
 
-
-function [tdag,zdag,uavgdag,vavgdag,Tavgdag,Savgdag,tkeavg,tkePTra,tkeAdve,tkeBuoy,tkeSGTr,tkeSPro,tkeStDr,tkeSGPE,tkeDiss] = DAGprofiles(dagnc,trange,zrange)
- % Extract diagnostic profiles
- field = ['time';'zzu'];
- field = [field;'u_ave';'v_ave';'t_ave'];
- field = [field;'tke_ave';'p_ave';'a_ave'];
- field = [field;'b_ave';'sg_ave';'sp_ave'];
- field = [field;'sd_ave';'dpesg','disp_ave'];
- dag=dagvars(dagnc,field,trange,zrange)
- % Parse the output
- tdag     = dag.time;
- zdag     = dag.zzu;
- uavgdag  = dag.u_ave;
- vavgdag  = dag.v_ave;
- Tavgdag  = dag.t_ave;
- Savgdag  = dag.s_ave;
- tkeavg   = dag.tke_ave;
- tkePTra  = dag.p_ave;
- tkeAdve  = dag.a_ave;
- tkeBuoy  = dag.b_ave;
- tkeSGTr  = dag.sg_ave;
- tkeSPro  = dag.sp_ave;
- tkeStDr  = dag.sd_ave;
- tkeSGPE  = dag.dpesg;
- tkeDiss  = dag.disp_ave;
-end%function
-
-function testfig(outdir)
- [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir);
- if(useoctplot!=1)
-  testfile = [outdir "test.plt"];
-  fid = fopen(testfile,"w");
-  fprintf(fid,"load '%slimits.plt'\n",outdir);
-  fprintf(fid,"set output outdir.'test'.termsfx\n");
-  fprintf(fid,"test\n",tfsim);
-  fclose(fid);
-  unix(["gnuplot " testfile]);
- end%if
-end%function
-
 %figure 5
 function fig5(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
-% figure Ri
-function figRi(sfxnc,outdir)
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
- trange = [t0sim-4,tfsim];
- zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
- # Calulatwe the Driven Richarson number
- [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
- figure(1)
- subplot(3,1,1)
- plot(tsfx,Jb)
- axis([trange,0,max(Jb)])
- subplot(3,1,2)
- semilogy(tsfx,.25*stress.^2)
- axis([trange])
- subplot(3,1,3)
- plot(tsfx,sign(4*Ri)+sign(4*Ri-1))
- axis([trange,-2.5,2.5])
-end%function
+
