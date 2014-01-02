@@ -2,7 +2,7 @@ reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig1".termsfx
 #
-# Setup vertical spacing
+# Setup spacing
 rows = 4
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
@@ -11,7 +11,7 @@ set autoscale y
 set ytics auto
 set xtics .5
 #
-set multiplot
+set multiplot title "Surface Forcing and Dissipation Observetions"
 set style data lines
 set ytics
 set xrange [t0sim-1:tfsim+1]
@@ -60,9 +60,6 @@ set yrange [-dsim:-20]
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
 unset surface
 set logscale cb
-set logscale z
 plot datdir."fig1d.dat" binary matrix w image not
 row = nextrow(row)
 unset multiplot
-#set term wxt
-#replot
