@@ -29,6 +29,7 @@ set ylabel rotate by 90 offset 0,0
 nullcolor = "grey20"
 cbform = "%4.2te^{%+03T}"
 set yrange [-dsim/2:0]
+set xrange[t0sim:tfsim]
 set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
 set cbtics offset 0,0
 #

@@ -34,6 +34,7 @@ vmargin = vmargin-dvmargin
 set bmargin at screen vmargin
 set colorbox user origin rplot+.01,vmargin-4*dvmargin/3.0 size .02,7*dvmargin/3.0
 set format x ""
+set xrange[t0sim:tfsim]
 set yrange [-dsim/2:0]
 set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
 cbform = "%4.2te^{%+03T}"
