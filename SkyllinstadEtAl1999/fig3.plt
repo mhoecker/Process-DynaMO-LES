@@ -12,7 +12,7 @@ unset colorbox
 unset surface
 set pm3d
 #
-# Setup vertical spacing
+# Setup spacing
 rows = 5
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
