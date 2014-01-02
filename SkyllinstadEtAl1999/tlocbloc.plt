@@ -1,5 +1,5 @@
 # given a number of figures calculate the vertical spacing
-tlocmax = .95
+tlocmax = .925
 blocmin = .075
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 bloc(r) = tloc(r+1)
