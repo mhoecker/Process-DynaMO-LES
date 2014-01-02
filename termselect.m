@@ -28,8 +28,8 @@ endif
 			termtxt = 'postscript eps enhanced color size 12in,12in font "Helvetica,48" blacktext dashed linewidth 2';
 			termsfx = '.eps';
 		case 'pngposter'
-			# if blown up to 12inx12in creates a 80dpi image
-			termtxt = 'png enhanced truecolor size 960,960 nocrop font "Helvetica,16" linewidth 2';
+			# if blown up to 12inx12in creates a 72dpi image
+			termtxt = 'png enhanced truecolor size 864,864 nocrop font "Helvetica,16" linewidth 2';
 			termsfx = '.png';
 		case 'epsarticle'
 			termtxt = 'postscript eps enhanced color size 9in,6in font "Helvetica,12" blacktext dashed linewidth 2';
