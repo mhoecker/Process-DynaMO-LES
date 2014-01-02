@@ -19,22 +19,20 @@ load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 set multiplot title "Profiles and Surface Forcings"
 set style data lines
-set ytics
 # Surface Observations
 set format x ""
 set format x2 ""
-set ylabel "J_h (W/m^2)"
+set ylabel "J_h (W/m^2)" offset yloff,0
 set lmargin at screen lloc
 set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set autoscale y
+set key l t
 set xrange  [t0sim:tfsim]
-set x2range [t0sim:tfsim]
-set x2tics t0sim+.25,.25,tfsim-.25
-set xtics t0sim+.25,.25,tfsim-.25
-set yrange [-1000:1000]
-set ytics nomirror -800,400,800
-plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 title "J_h" ls 1
+set xtics t0sim+.25,.25,tfsim-.25 mirror
+set ytics nomirror 300 rangelimited offset ytoff,0
+plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
 #, datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:3
 #
 unset ylabel
@@ -42,8 +40,8 @@ unset yrange
 unset ytics
 set format y ""
 set y2range [-.1:.8]
-set y2tics nomirror -0,.2,.6
-set y2label "{/Symbol t} (Pa)"
+set y2tics nomirror -0,.2,.6 offset -ytoff,0
+set y2label "{/Symbol t} (Pa)" offset -yloff,0
 set lmargin at screen mloc
 set rmargin at screen rloc
 set tmargin at screen tloc(row)
