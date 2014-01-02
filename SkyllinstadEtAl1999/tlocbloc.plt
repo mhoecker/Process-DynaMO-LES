@@ -17,13 +17,25 @@ set xrange[t0sim:tfsim]
 set yrange [-dsim/2:0]
 #
 # Common label offsets
-set ylabel offset 1.25,0
-set xlabel offset 0,1
+yloff = 1.25
+xloff = 1
+# How to use
+set ylabel offset yloff,0
+set xlabel offset 0,xloff
+set cblabel offset -yloff,0
+#set y2label offset -yloff,0
+#set x2label offset 0,-xloff
 #
 # Common tic offsets
-set xtic offset 0,.5
-set ytic offset .9,0
-set cbtics offset -.5,0
+xtoff = .5
+ytoff = .9
+# How to use
+set xtics offset 0,xtoff
+set ytics offset ytoff,0
+set cbtics offset -ytoff,0
+#set x2tics offset 0,-xtoff
+#set y2tics offset -ytoff,0
+#
 #
 # common tics
 set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8

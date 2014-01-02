@@ -24,8 +24,8 @@ set ytics
 set format x ""
 set format x2 ""
 set ylabel "J_h (W/m^2)"
-set lmargin at screen .15
-set rmargin at screen .5
+set lmargin at screen lloc
+set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set xrange  [t0sim:tfsim]
@@ -44,8 +44,8 @@ set format y ""
 set y2range [-.1:.8]
 set y2tics nomirror -0,.2,.6
 set y2label "{/Symbol t} (Pa)"
-set lmargin at screen .5
-set rmargin at screen .85
+set lmargin at screen mloc
+set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
@@ -73,20 +73,20 @@ set format cb "%4.1f"
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
-set lmargin at screen .15
-set rmargin at screen .5
+set lmargin at screen lloc
+set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir."fig3c.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
-set colorbox user origin .85,bloc(row)+.05*vskip size 0.01,0.9*vskip
 set format y ""
 set format x ""
-set lmargin at screen .5
-set rmargin at screen .85
+set lmargin at screen mloc
+set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
 plot datdir."fig3d.dat" binary matrix w image notitle
 unset colorbox
@@ -102,8 +102,8 @@ set format cb "%4.1f"
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
-set lmargin at screen .15
-set rmargin at screen .5
+set lmargin at screen lloc
+set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir."fig3e.dat" binary matrix w image notitle
@@ -111,12 +111,12 @@ plot datdir."fig3e.dat" binary matrix w image notitle
 unset ylabel
 set format y ""
 set format x ""
-set lmargin at screen .5
-set rmargin at screen .85
+set lmargin at screen mloc
+set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
-set colorbox user origin .85,.45 size .01,.14
 plot datdir."fig3f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
@@ -131,8 +131,8 @@ set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
-set lmargin at screen .15
-set rmargin at screen .5
+set lmargin at screen lloc
+set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "u"
@@ -141,8 +141,8 @@ plot datdir."fig3g.dat" binary matrix w image notitle
 unset ylabel
 set format y ""
 set format x ""
-set lmargin at screen .5
-set rmargin at screen .85
+set lmargin at screen mloc
+set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
@@ -152,8 +152,8 @@ plot datdir."fig3h.dat" binary matrix w image notitle
 set ylabel "Z (m)"
 set format y "%g"
 set format x "%g"
-set lmargin at screen .15
-set rmargin at screen .5
+set lmargin at screen lloc
+set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "v"
@@ -163,12 +163,12 @@ plot datdir."fig3i.dat" binary matrix w image notitle
 unset ylabel
 set format y ""
 set format x "%g"
-set lmargin at screen .5
-set rmargin at screen .85
+set lmargin at screen mloc
+set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
 row = nextrow(row)
-set colorbox user origin .85,.15 size .01,.28
 set xlabel "Simulated Fields"
 plot datdir."fig3j.dat" binary matrix w image notitle
 unset colorbox
