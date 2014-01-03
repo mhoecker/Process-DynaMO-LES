@@ -15,8 +15,8 @@ DTmax = +0.35
 DSmin = -0.24
 DSmax = +0.24
 #
-DUVmin = -0.8
-DUVmax = +0.8
+DUVmin = -0.75
+DUVmax = +0.75
 #
 set multiplot title "Observeation - Model"
 set lmargin at screen lloc
