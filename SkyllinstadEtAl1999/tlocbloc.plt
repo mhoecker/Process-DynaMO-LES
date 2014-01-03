@@ -6,9 +6,9 @@ bloc(r) = tloc(r+1)
 vskip = tloc(0)-bloc(0)
 nextrow(r) = (r+1)%rows
 # Common margin locations
-rloc = .825
+rloc = .8
 mloc = .5
-lloc = .125
+lloc = .2
 set rmargin at screen rloc
 set lmargin at screen lloc
 #
