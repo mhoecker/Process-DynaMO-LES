@@ -13,7 +13,7 @@ Nsqmax = 4e-4
 Nsqmin = -Nsqmax/(palcolors-1)
 Rimax = 1.0
 Rimin= -Rimax
-cbform = "%+04.2te^{%+02T}"
+cbform = "%+04.1te^{%+02T}"
 rhotitle = "{/Symbol Dr}=0.05 kg/m^3"
 rhocolor = "grey50"
 Rictitle = "Ri =+1/4"
@@ -34,7 +34,7 @@ row = nextrow(row)
 set format cb cbform."s^{-2}"
 set cbrange [Nsqmin:Nsqmax]
 set cbtics Nsqmin,(Nsqmax-Nsqmin)/palcolors,Nsqmax
-set colorbox user origin rloc,bloc(row)+.05*vskip size 0.05*(1.0-rloc),1.9*vskip
+set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),1.9*vskip
 plot datdir."fig4b.dat" binary matrix w image not, datdir."fig4e.tab"  lc rgbcolor rhocolor title rhotitle
 #
 # Ssq
@@ -49,7 +49,7 @@ plot datdir."fig4c.dat" binary matrix w image not, datdir."fig4e.tab" lc rgbcolo
 set ylabel "Ri=N^2/S^2"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.05*vskip size 0.05*(1.0-rloc),.9*(vskip)
+set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),.9*(vskip)
 row = nextrow(row)
 set format cb cbform
 set cbrange [Rimin:Rimax]
