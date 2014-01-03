@@ -7,16 +7,13 @@ UVmin = -0.25
 UVmax = +1.0
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
-set view map
-unset colorbox
-unset surface
-set pm3d
 #
 # Setup spacing
 rows = 5
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
+cbform = "%+04.2f"
 set multiplot title "Profiles and Surface Forcings"
 set style data lines
 # Surface Observations
@@ -31,7 +28,7 @@ set autoscale y
 set key l t
 set xrange  [t0sim:tfsim]
 set xtics t0sim+.25,.25,tfsim-.25 mirror
-set ytics nomirror 300 rangelimited offset ytoff,0
+set ytics nomirror -900,300,900 offset ytoff,0
 plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
 #, datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:3
 #
@@ -39,6 +36,8 @@ unset ylabel
 unset yrange
 unset ytics
 set format y ""
+set format x ""
+set format x2 ""
 set y2range [-.1:.8]
 set y2tics nomirror -0,.2,.6 offset -ytoff,0
 set y2label "{/Symbol t} (Pa)" offset -yloff,0
@@ -47,8 +46,8 @@ set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:4 axes x2y2 title "{/Symbol t}_x" ls 2,\
-datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:5 axes x2y2 title "{/Symbol t}_y" ls 3
+plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y2 title "{/Symbol t}_x" ls 2,\
+datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:5 axes x1y1 title "{/Symbol t}_y" ls 3
 unset x2tics
 unset y2tics
 unset y2range
@@ -66,11 +65,12 @@ cbmin = 26.5#Tmin
 cbmax = 30.5#Tmax
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set format cb "%4.1f"
+set format cb cbform
 # Observed
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
+unset colorbox
 set lmargin at screen lloc
 set rmargin at screen mloc
 set tmargin at screen tloc(row)
@@ -95,8 +95,9 @@ cbmin = 35.0#Smin
 cbmax = 35.8#Smax
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set format cb "%4.1f"
+set format cb cbform
 # Observed
+unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
@@ -119,13 +120,14 @@ plot datdir."fig3f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
 set cbrange [-.2:1.2]
-set format cb "%4.2f"
-set cblabel "u,v (m/s)"
+set format cb cbform
+set cblabel "u,v (m/s)" offset -yloff,0
 cbmin = -0.2#umin
 cbmax = 1.2#umax
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 # Observed
+unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
@@ -147,6 +149,7 @@ row = nextrow(row)
 plot datdir."fig3h.dat" binary matrix w image notitle
 # V velocity
 # Observed
+unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x "%g"
