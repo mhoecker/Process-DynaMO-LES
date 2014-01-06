@@ -1,20 +1,20 @@
 # given a number of figures calculate the vertical spacing
-tlocmax = .925
-blocmin = .075
+tlocmax = .94
+blocmin = .06
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 bloc(r) = tloc(r+1)
 vskip = tloc(0)-bloc(0)
 nextrow(r) = (r+1)%rows
 # Common margin locations
-rloc = .8
+rloc = .82
 mloc = .5
-lloc = .2
+lloc = .11
 set rmargin at screen rloc
 set lmargin at screen lloc
 #
 # Common Ranges
 set xrange[t0sim:tfsim]
-set yrange [-dsim/2:0]
+set yrange [-2*dsim/3.0:0]
 #
 # Common label offsets
 yloff = 1.25
@@ -38,6 +38,6 @@ set cbtics offset -ytoff,0
 #
 #
 # common tics
-set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
+set ytics -dsim*4.5/8,dsim/4.0,-.5*dsim/8
 dxtic = .25
 set xtics t0sim,dxtic,tfsim
