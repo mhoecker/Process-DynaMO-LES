@@ -3,10 +3,6 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
- # Calulatwe the Driven Richarson number
- [Ri,alpha,g,nu,kappaT]  = surfaceRi(stress,Jh,sst,sal);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
@@ -51,12 +47,6 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   plotcols = 1;
   plotnumb = 0;
   commoncaxis = [-.005,.005];
-  # Surface Ri#
-  %plotnumb = plotnumb+1;
-  %subplot(plotrows,plotcols,plotnumb)
-  %plot(tsfx,4*Ri,tsfx,ones(size(tsfx)),"k",tsfx,0*ones(size(tsfx)),"k-",tsfx,-ones(size(tsfx)),"k")
-  %ylabel("4Ri")
-  %axis([trange,-2,2])
   #  tke #
   plotnumb = plotnumb+1;
   subplot(plotrows,plotcols,plotnumb)
