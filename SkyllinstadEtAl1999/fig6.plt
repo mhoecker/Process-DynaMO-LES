@@ -17,13 +17,10 @@ dtkemin = -2.5e-5
 dtkemax = +2.5e-5
 dxtic = .25
 unset xtics
-set ylabel rotate by 90 offset 0,0
+set ylabel
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
-set yrange [-dsim/2:0]
 set xrange[t0sim:tfsim]
-set ytics -dsim*3.5/8,dsim/8.0,-.5*dsim/8
-set cbtics offset 0,0
 #
 # Plot tke
 set ylabel "tke"
@@ -35,7 +32,7 @@ set format cb cbform."m^2s^{-2}"
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
 plot datdir."fig6a.dat" binary matrix w image
-row = nextrow(row)
+unset colorbox
 #
 # Plot total d/dt of tke
 #set tmargin at screen vmargin
@@ -51,77 +48,74 @@ row = nextrow(row)
 #unset colorbox
 #
 # Plot Pressure transport
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-unset colorbox
 set cbrange [dtkemin:dtkemax]
 set format cb cbform."m^2s^{-3}"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
+set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
 set ylabel "w'P'"
 plot datdir."fig6b.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6b.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
+unset colorbox
 #
 # Plot Advective transport
-unset colorbox
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "w'tke"
 plot datdir."fig6c.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6c.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot sub-gridscale transport
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "w'_{sg}tke"
 plot datdir."fig6d.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6d.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "b'w'"
 plot datdir."fig6e.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6e.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 	set ylabel "SP"
 plot datdir."fig6f.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6f.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "St"
 plot datdir."fig6g.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6g.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-#set ylabel "sgs B/<tke"
 set ylabel "sgs B"
 plot datdir."fig6h.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6h.tab" lc rgbcolor nullcolor  lt 4 notitle
-row = nextrow(row)
 #
 # Plot
-set format x "%g"
-set xtics offset 0,.5
-set xlabel "2011 UTC yearday" offset 0,1
-set xtics t0sim,dxtic,tfsim
-set mxtics 6
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
-#set ylabel "{/Symbol e}/<tke"
+set format x "%g"
+set xlabel "2011 UTC yearday" offset 0,xloff
+set xtics t0sim,dxtic,tfsim offset 0,xtoff
+set mxtics 6
 set ylabel "{/Symbol e}"
 plot datdir."fig6j.dat" binary matrix u 1:2:3 w image, \
 outdir."fig6j.tab" lc rgbcolor nullcolor  lt 4 notitle
