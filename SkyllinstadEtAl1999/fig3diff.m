@@ -31,6 +31,25 @@ function  fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Sdiff = Schmi'-Savgdag;
  udiff = uadcpi'-uavgdag;
  vdiff = vadcpi'-vavgdag;
+ # calculate the dz
+ dz = trapdiff(zdag)';
+ # Fill NaN with zeros for summation
+ vdnonan = vdiff.*dz;
+ vdnonan(find(isnan(vdiff)))=0;
+# vdnonan = isnan(vdiff);
+ vdsum = backcumsum(vdnonan,2);
+ udnonan = udiff.*dz;
+ udnonan(find(isnan(udiff)))=0;
+# udnonan = isnan(udiff);
+ udsum = backcumsum(udnonan,2);
+ Tdnonan = Tdiff.*dz;
+ Tdnonan(find(isnan(Tdiff)))=0;
+# Tdnonan = isnan(Tdiff);
+ Tdsum = backcumsum(Tdnonan,2);
+ Sdnonan = Sdiff.*dz;
+ Sdnonan(find(isnan(Sdiff)))=0;
+# Sdnonan = isnan(Sdiff);
+ Sdsum = backcumsum(Sdnonan,2);
  if(useoctplot==1)
   # Picture time!
   figure(3)
@@ -53,9 +72,14 @@ function  fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   # Save T,S profiles
   binmatrix(tdag',zdag',Tdiff',[outdir "fig3Tdiff.dat"]);
   binmatrix(tdag',zdag',Sdiff',[outdir "fig3Sdiff.dat"]);
+  binmatrix(tdag',zdag',Tdsum',[outdir "fig3Tdsum.dat"]);
+  binmatrix(tdag',zdag',Sdsum',[outdir "fig3Sdsum.dat"]);
   # save U,V profiles
   binmatrix(tdag',zdag',udiff',[outdir "fig3udiff.dat"]);
   binmatrix(tdag',zdag',vdiff',[outdir "fig3vdiff.dat"]);
+  binmatrix(tdag',zdag',udsum',[outdir "fig3udsum.dat"]);
+  binmatrix(tdag',zdag',vdsum',[outdir "fig3vdsum.dat"]);
   unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3diff.plt");
+  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3dsum.plt");
  end%if
 end%function
