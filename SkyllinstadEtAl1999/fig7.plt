@@ -15,52 +15,64 @@ unset table
 #
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig7".termsfx
-unset surface
-set view map
-set pm3d
-set multiplot
-set ytics
-# set dates
+# Setup spacing
+rows = 4
+row = 0
+load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
+#
+cbform = "%+4.1te^{%+02T}"
+# heat flux
+hfxmax = 1e-4
+hfxmin = -hfxmax
+#
+cbpow = -12
+#
+Tmax = 30.0
+Tmin = 28.6
+#
+set multiplot title "Heat Budget"
+# Heat flux
 set xtics t0sim,.25,tfsim
 set mxtics 6
 set xrange [t0sim:tfsim]
-# heat flux
-set cbrange [-.0003:0.00005]
-set format cb "%1.1e"
+set cbrange [hfxmin:hfxmax]
+set cbtics hfxmin,(hfxmax-hfxmin)/palcolors,hfxmax
+set format cb cbform."W/m^3"
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
 unset colorbox
-set key at graph 1,1
 set format x ""
-set ytics -55,10,-5
-set rmargin at screen .85
-set lmargin at screen .15
-set tmargin at screen .9
-set bmargin at screen .7
-set ylabel "<J_{sgs}>_{x,y}"
+set ylabel "J_{sgs}"
 plot datdir."fig7a.dat" binary matrix w image notitle, \
 outdir."fig7a.tab" lc 0 notitle
 #
-set tmargin at screen .7
-set bmargin at screen .5
-set colorbox user origin  screen .875,.525 size .025,.375
-set ylabel "<w'T'>_{x,y}"
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),1.8*(vskip)
+set ylabel "w'T'"
 plot datdir."fig7b.dat" binary matrix w image notitle, \
 outdir."fig7a.tab" lc 0 notitle
 #
-set tmargin at screen .5
-set bmargin at screen .3
-set cbrange [2**(-18):2**(-8)]
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set cbrange [2**(cbpow-palcolors):2**(cbpow)]
 set logscale cb 2
 set format cb "2^{%L}"
-set colorbox user origin  screen .875,.325 size .025,.175
-set ylabel "<T^2>_{x,y}/{/Symbol D}T^2"
+set cbtics 2**(cbpow-palcolors),2,2**(cbpow)
+set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),0.8*(vskip)
+set ylabel "T^2/{/Symbol D}T^2"
 plot datdir."fig7c.dat" binary matrix w image notitle
 unset logscale
 #
-set autoscale cb
-set colorbox origin screen .875,.1 size .025,.2
-set tmargin at screen .3
-set bmargin at screen .1
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set cbrange [Tmin:Tmax]
+set cbtics Tmin,(Tmax-Tmin)/palcolors,Tmax
+set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),0.8*(vskip)
 set format x "%g"
-set format cb "%3.1f"
-set ylabel "<T>_{x,y}"
+set format cb "%2.2fC"
+set ylabel "T"
 plot datdir."fig7d.dat" binary matrix w image notitle
