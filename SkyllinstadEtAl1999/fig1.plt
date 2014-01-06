@@ -56,7 +56,8 @@ set cblabel "{/Symbol e} (W/kg)" offset -yloff,0
 unset object 1
 set object 1 rectangle from 328,graph 0 to 329,graph 1
 set cbrange [1e-10:1e-1]
-set yrange [-dsim:-20]
+set yrange [-dsim:0]
+set ytics mirror -70,20,-10 offset ytoff,0
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
 unset surface
 set logscale cb
