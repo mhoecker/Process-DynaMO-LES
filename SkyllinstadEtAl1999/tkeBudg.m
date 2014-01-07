@@ -1,5 +1,6 @@
 % figure 6
-function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ abrev = "tkeBudg";
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
@@ -121,36 +122,36 @@ function fig6(chmnc,adcpnc,sfxnc,dagnc,outdir)
   caxis(commoncaxis)
   colorbar
   # Print #
-  print([outdir "fig6.png"],"-dpng","-S1280,1536")
+  print([outdir abrev ".png"],"-dpng","-S1280,1536")
  else
   # save files for gnuplot
-  binmatrix(tdag',zdag',tkeavg',[outdir "fig6a.dat"]);
-  binmatrix(tdag',zdag',dtkedt',[outdir "fig6adt.dat"]);
-  binmatrix(tdag',zdag',dtkedt',[outdir "fig6aR.dat"]);
-  binmatrix(tdag',zdag',tkePTra',[outdir "fig6b.dat"]);
-  binmatrix(tdag',zdag',tkePTraRate',[outdir "fig6bR.dat"]);
-  binmatrix(tdag',zdag',tkeAdve',[outdir "fig6c.dat"]);
-  binmatrix(tdag',zdag',tkeAdveRate',[outdir "fig6cR.dat"]);
-  binmatrix(tdag',zdag',tkeSGTr',[outdir "fig6d.dat"]);
-  binmatrix(tdag',zdag',tkeSGTrRate',[outdir "fig6dR.dat"]);
-  binmatrix(tdag',zdag',BuoyPr',[outdir "fig6e.dat"]);
-  binmatrix(tdag',zdag',BuoyPrRate',[outdir "fig6eR.dat"]);
-  binmatrix(tdag',zdag',ShPr',[outdir "fig6f.dat"]);
-  binmatrix(tdag',zdag',ShPrRate',[outdir "fig6fR.dat"]);
-  binmatrix(tdag',zdag',StDr',[outdir "fig6g.dat"]);
-  binmatrix(tdag',zdag',StDrRate',[outdir "fig6gR.dat"]);
-  binmatrix(tdag',zdag',SGPE',[outdir "fig6h.dat"]);
-  binmatrix(tdag',zdag',SGPERate',[outdir "fig6hR.dat"]);
-  binmatrix(tdag',zdag',PEAdv',[outdir "fig6i.dat"]);
-  binmatrix(tdag',zdag',PEAdvRate',[outdir "fig6iR.dat"]);
-  binmatrix(tdag',zdag',Diss',[outdir "fig6j.dat"]);
-  binmatrix(tdag',zdag',DissRate',[outdir "fig6jR.dat"]);
+  binmatrix(tdag',zdag',tkeavg',[outdir abrev "a.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[outdir abrev "adt.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[outdir abrev "aR.dat"]);
+  binmatrix(tdag',zdag',tkePTra',[outdir abrev "b.dat"]);
+  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "bR.dat"]);
+  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "c.dat"]);
+  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "cR.dat"]);
+  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "d.dat"]);
+  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "dR.dat"]);
+  binmatrix(tdag',zdag',BuoyPr',[outdir abrev "e.dat"]);
+  binmatrix(tdag',zdag',BuoyPrRate',[outdir abrev "eR.dat"]);
+  binmatrix(tdag',zdag',ShPr',[outdir abrev "f.dat"]);
+  binmatrix(tdag',zdag',ShPrRate',[outdir abrev "fR.dat"]);
+  binmatrix(tdag',zdag',StDr',[outdir abrev "g.dat"]);
+  binmatrix(tdag',zdag',StDrRate',[outdir abrev "gR.dat"]);
+  binmatrix(tdag',zdag',SGPE',[outdir abrev "h.dat"]);
+  binmatrix(tdag',zdag',SGPERate',[outdir abrev "hR.dat"]);
+  binmatrix(tdag',zdag',PEAdv',[outdir abrev "i.dat"]);
+  binmatrix(tdag',zdag',PEAdvRate',[outdir abrev "iR.dat"]);
+  binmatrix(tdag',zdag',Diss',[outdir abrev "j.dat"]);
+  binmatrix(tdag',zdag',DissRate',[outdir abrev "jR.dat"]);
   # invoke gnuplot
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6tab.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6linR.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6logabs.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig6logabsR.plt");
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "linR.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabs.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabsR.plt"]);
  end%if
  %
 end%function

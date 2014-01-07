@@ -1,5 +1,6 @@
-function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
 % figure 7 Heat Profiles
+ abrev = "HeatBudg";
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
@@ -40,15 +41,16 @@ function fig7(chmnc,adcpnc,sfxnc,dagnc,outdir)
   [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
   pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
  else
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir "fig7a.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir "fig7b.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[outdir "fig7c.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir "fig7d.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dhfdz_ave',[outdir "fig7dhfdz.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dwtdz_ave',[outdir "fig7dwtdz.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[outdir "fig7dTdt.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[outdir "fig7T_dTdz.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir abrev "a.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir abrev "b.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[outdir abrev "c.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir abrev "d.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dhfdz_ave',[outdir abrev "dhfdz.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dwtdz_ave',[outdir abrev "dwtdz.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[outdir abrev "dTdt.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[outdir abrev "T_dTdz.dat"]);
   # invoke gnuplot
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig7.plt");
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if
 end%function

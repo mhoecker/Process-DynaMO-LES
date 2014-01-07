@@ -45,8 +45,10 @@ end%if
  #fig4
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig6
+ tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig7
+ HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
 end%function
