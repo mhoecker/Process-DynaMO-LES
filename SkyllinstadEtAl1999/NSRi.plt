@@ -25,7 +25,7 @@ Ri0title = "Ri = 0  "
 Ri0color = "grey30"
 Rimtitle = "Ri =-1/4"
 Rimcolor = "grey60"
-set key l b
+set key l t
 set format x ""
 set format y "%gm"
 #
@@ -59,6 +59,7 @@ set cbrange [Rimin:Rimax]
 set cbtics Rimin,(Rimax-Rimin)/palcolors,Rimax
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
+set key l b
 plot datdir.abrev."d.dat" binary matrix w image not,\
 datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
 datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
