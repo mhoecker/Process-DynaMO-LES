@@ -2,7 +2,7 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %figure 3
  % difference of Temperature, Salinity, and Velocity
  % between observations and model.
- abrev = "ObsSim"
+ abrev = "ObsSim";
  [useoctplot,t0sim,dsim] = plotparam(outdir);
  trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);

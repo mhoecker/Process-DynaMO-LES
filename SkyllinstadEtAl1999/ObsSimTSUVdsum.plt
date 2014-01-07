@@ -1,7 +1,7 @@
 reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 abrev  = "ObsSim"
-set output outdir.abrev."dsum".termsfx
+set output outdir.abrev."TSUVdsum".termsfx
 set view map
 unset colorbox
 unset surface
