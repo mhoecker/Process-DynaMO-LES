@@ -1,8 +1,9 @@
-function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function  ObsSimSideTSUVWSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %figure 3
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
+ abrev = "ObsSimSideTSUVWSurf";
  [useoctplot,t0sim,dsim]=plotparam(outdir);
  trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);
@@ -68,18 +69,18 @@ function  fig3(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir 'fig3.png'],'-dpng')
  else
   # Save T,S profiles
-  binmatrix(tchm',zchm',Tchm',[outdir "fig3c.dat"]);
-  binmatrix(tchm',zchm',Schm',[outdir "fig3e.dat"]);
+  binmatrix(tchm',zchm',Tchm',[outdir abrev "c.dat"]);
+  binmatrix(tchm',zchm',Schm',[outdir abrev "e.dat"]);
   # save U,V profiles
-  binmatrix(tadcp',zadcp',ulpadcp',[outdir "fig3g.dat"]);
-  binmatrix(tadcp',zadcp',vlpadcp',[outdir "fig3i.dat"]);
+  binmatrix(tadcp',zadcp',ulpadcp',[outdir abrev "g.dat"]);
+  binmatrix(tadcp',zadcp',vlpadcp',[outdir abrev "i.dat"]);
   # Save surface flux profiles
-  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir "fig3ab.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "ab.dat"]);
   # save Simulated profiles
-  binmatrix(tdag',zdag',Tavgdag',[outdir "fig3d.dat"]);
-  binmatrix(tdag',zdag',Savgdag',[outdir "fig3f.dat"]);
-  binmatrix(tdag',zdag',uavgdag',[outdir "fig3h.dat"]);
-  binmatrix(tdag',zdag',vavgdag',[outdir "fig3j.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3.plt");
+  binmatrix(tdag',zdag',Tavgdag',[outdir abrev "d.dat"]);
+  binmatrix(tdag',zdag',Savgdag',[outdir abrev "f.dat"]);
+  binmatrix(tdag',zdag',uavgdag',[outdir abrev "h.dat"]);
+  binmatrix(tdag',zdag',vavgdag',[outdir abrev "j.dat"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if
 end%function

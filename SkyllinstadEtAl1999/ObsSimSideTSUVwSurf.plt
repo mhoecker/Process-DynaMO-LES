@@ -1,4 +1,5 @@
 reset
+abrev = "ObsSimSideTSUVWSurf"
 Tmin = 26.5
 Tmax = 30.20
 Smin = 35.00
@@ -6,7 +7,7 @@ Smax = 35.54
 UVmin = -0.9
 UVmax = +0.9
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-set output outdir."fig3".termsfx
+set output outdir.abrev.termsfx
 #
 # Setup spacing
 rows = 5
@@ -29,8 +30,8 @@ set key l t
 set xrange  [t0sim:tfsim]
 set xtics t0sim+.25,.25,tfsim-.25 mirror
 set ytics nomirror -900,300,900 offset ytoff,0
-plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
-#, datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:3
+plot datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
+#, datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:3
 #
 unset ylabel
 unset yrange
@@ -46,8 +47,8 @@ set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-plot datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y2 title "{/Symbol t}_x" ls 2,\
-datdir."fig3ab.dat" binary format="%f%f%f%f%f"u 1:5 axes x1y1 title "{/Symbol t}_y" ls 3
+plot datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y2 title "{/Symbol t}_x" ls 2,\
+datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:5 axes x1y1 title "{/Symbol t}_y" ls 3
 unset x2tics
 unset y2tics
 unset y2range
@@ -76,7 +77,7 @@ set lmargin at screen lloc
 set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir."fig3c.dat" binary matrix w image notitle
+plot datdir.abrev."c.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -87,7 +88,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
-plot datdir."fig3d.dat" binary matrix w image notitle
+plot datdir.abrev."d.dat" binary matrix w image notitle
 unset colorbox
 # Salinity
 load outdir."negpal.plt"
@@ -106,7 +107,7 @@ set lmargin at screen lloc
 set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir."fig3e.dat" binary matrix w image notitle
+plot datdir.abrev."e.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -117,7 +118,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
-plot datdir."fig3f.dat" binary matrix w image notitle
+plot datdir.abrev."f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
 set format cb cbform
@@ -137,7 +138,7 @@ set rmargin at screen mloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "u"
-plot datdir."fig3g.dat" binary matrix w image notitle
+plot datdir.abrev."g.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -147,7 +148,7 @@ set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-plot datdir."fig3h.dat" binary matrix w image notitle
+plot datdir.abrev."h.dat" binary matrix w image notitle
 # V velocity
 # Observed
 unset colorbox
@@ -160,7 +161,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "v"
 set xlabel "Observed Fields"
-plot datdir."fig3i.dat" binary matrix w image notitle
+plot datdir.abrev."i.dat" binary matrix w image notitle
 # Simulated
 unset ylabel
 set format y ""
@@ -172,6 +173,6 @@ set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
 row = nextrow(row)
 set xlabel "Simulated Fields"
-plot datdir."fig3j.dat" binary matrix w image notitle
+plot datdir.abrev."j.dat" binary matrix w image notitle
 unset colorbox
 unset multiplot
