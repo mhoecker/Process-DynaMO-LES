@@ -38,7 +38,8 @@ end%if
  ObsSurfEps(sfxnc,chmnc,outdir);
  #fig2
  initialTSUV(chmnc,adcpnc,outdir);
- #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig3
+ ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
