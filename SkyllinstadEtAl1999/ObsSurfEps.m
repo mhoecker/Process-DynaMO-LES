@@ -1,4 +1,4 @@
-function fig1(sfxnc,chmnc,outdir)
+function ObsSurfEps(sfxnc,chmnc,outdir)
  %function fig1(sfxnc,chmnc,outdir)
  %
  % 4 plots stacked vertically with a common x-axis (yearday)
@@ -12,6 +12,7 @@ function fig1(sfxnc,chmnc,outdir)
  % The simulated time is highlighted on the line plots
  % line plots are filled
  % epsilon is plotted on a log10 scale
+ abrev = "ObsSurfEps";
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
@@ -42,9 +43,9 @@ function fig1(sfxnc,chmnc,outdir)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[stress,p,Jh]',[outdir "fig1abc.dat"]);
+  binarray(tsfx',[stress,p,Jh]',[outdir abrev "abc.dat"]);
   # Save epsilon profiles
-  binmatrix(tchm',zchm',epschm',[outdir "fig1d.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig1.plt");
+  binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if
 end%function
