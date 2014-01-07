@@ -1,6 +1,7 @@
 reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-set output outdir."fig3diff".termsfx
+abrev  = "ObsSim"
+set output outdir."TSUVdiff".termsfx
 set view map
 unset colorbox
 unset surface
@@ -40,7 +41,7 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
-plot datdir."fig3Tdiff.dat" binary matrix w image notitle
+plot datdir.abrev."Tdiff.dat" binary matrix w image notitle
 #
 set format x ""
 cbmin = DSmin
@@ -52,7 +53,7 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
 row = nextrow(row)
-plot datdir."fig3Sdiff.dat" binary matrix w image notitle
+plot datdir.abrev."Sdiff.dat" binary matrix w image notitle
 #
 set format x ""
 cbmin = DUVmin
@@ -63,7 +64,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 row = nextrow(row)
-plot datdir."fig3udiff.dat" binary matrix w image notitle
+plot datdir.abrev."udiff.dat" binary matrix w image notitle
 #
 set format x "%g"
 set xlabel "2011 UTC yearday"
@@ -74,6 +75,6 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
 row = nextrow(row)
-plot datdir."fig3vdiff.dat" binary matrix w image notitle
+plot datdir.abrev."vdiff.dat" binary matrix w image notitle
 #
 unset multiplot

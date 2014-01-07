@@ -1,7 +1,8 @@
-function  fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %figure 3
  % difference of Temperature, Salinity, and Velocity
  % between observations and model.
+ abrev = "ObsSim"
  [useoctplot,t0sim,dsim] = plotparam(outdir);
  trange = [t0sim,t0sim+1];
  zrange = sort([0,-dsim]);
@@ -70,16 +71,16 @@ function  fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir 'fig3diff.png'],'-dpng')
  else
   # Save T,S profiles
-  binmatrix(tdag',zdag',Tdiff',[outdir "fig3Tdiff.dat"]);
-  binmatrix(tdag',zdag',Sdiff',[outdir "fig3Sdiff.dat"]);
-  binmatrix(tdag',zdag',Tdsum',[outdir "fig3Tdsum.dat"]);
-  binmatrix(tdag',zdag',Sdsum',[outdir "fig3Sdsum.dat"]);
+  binmatrix(tdag',zdag',Tdiff',[outdir abrev "Tdiff.dat"]);
+  binmatrix(tdag',zdag',Sdiff',[outdir abrev "Sdiff.dat"]);
+  binmatrix(tdag',zdag',Tdsum',[outdir abrev "Tdsum.dat"]);
+  binmatrix(tdag',zdag',Sdsum',[outdir abrev "Sdsum.dat"]);
   # save U,V profiles
-  binmatrix(tdag',zdag',udiff',[outdir "fig3udiff.dat"]);
-  binmatrix(tdag',zdag',vdiff',[outdir "fig3vdiff.dat"]);
-  binmatrix(tdag',zdag',udsum',[outdir "fig3udsum.dat"]);
-  binmatrix(tdag',zdag',vdsum',[outdir "fig3vdsum.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3diff.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig3dsum.plt");
+  binmatrix(tdag',zdag',udiff',[outdir abrev "udiff.dat"]);
+  binmatrix(tdag',zdag',vdiff',[outdir abrev "vdiff.dat"]);
+  binmatrix(tdag',zdag',udsum',[outdir abrev "udsum.dat"]);
+  binmatrix(tdag',zdag',vdsum',[outdir abrev "vdsum.dat"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "TSUVdiff.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "TSUVdsum.plt"]);
  end%if
 end%function
