@@ -34,14 +34,16 @@ end%if
 
  #testfig(outdir);
  #figRi(sfxnc,outdir);
- fig1(sfxnc,chmnc,outdir);
- fig2(chmnc,adcpnc,outdir);
- fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
- fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig1
+ ObsSurfEps(sfxnc,chmnc,outdir);
+ #fig2
+ initialTSUV(chmnc,adcpnc,outdir);
+ #fig3(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig3diff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig4(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig6(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #fig7(chmnc,adcpnc,sfxnc,dagnc,outdir);
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
 end%function
