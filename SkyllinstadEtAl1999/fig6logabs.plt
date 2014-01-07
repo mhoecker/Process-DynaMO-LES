@@ -10,6 +10,7 @@ load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 set multiplot title "Vertical Energy Budget (Horizontal Averages)"
 set lmargin at screen lloc
 set rmargin at screen rloc
+load outdir."pospal.plt"
 tkemax = 5e-3
 tkemin = 1e-6
 dtkemin = 5e-9

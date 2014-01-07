@@ -1,10 +1,10 @@
 reset
-Tmin = 26.75
-Tmax = 30.25
-Smin = 34.75
-Smax = 35.75
-UVmin = -0.25
-UVmax = +1.0
+Tmin = 26.5
+Tmax = 30.20
+Smin = 35.00
+Smax = 35.54
+UVmin = -0.9
+UVmax = +0.9
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
 set output outdir."fig3".termsfx
 #
@@ -61,8 +61,9 @@ set ytics mirror -70,20,-10
 set yrange[-dsim:0]
 # Temperature
 set cblabel "T (^oC)"
-cbmin = 26.5#Tmin
-cbmax = 30.5#Tmax
+cbmin = Tmin
+cbmax = Tmax
+load outdir."pospal.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set format cb cbform
@@ -89,10 +90,10 @@ row = nextrow(row)
 plot datdir."fig3d.dat" binary matrix w image notitle
 unset colorbox
 # Salinity
-set cbrange [35.0:35.8]
+load outdir."negpal.plt"
 set cblabel "S (psu)"
-cbmin = 35.0#Smin
-cbmax = 35.8#Smax
+cbmin = Smin
+cbmax = Smax
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set format cb cbform
@@ -119,11 +120,11 @@ row = nextrow(row)
 plot datdir."fig3f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
-set cbrange [-.2:1.2]
 set format cb cbform
 set cblabel "u,v (m/s)" offset -yloff,0
-cbmin = -0.2#umin
-cbmax = 1.2#umax
+cbmin = UVmin
+cbmax = UVmax
+load outdir."sympal.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 # Observed

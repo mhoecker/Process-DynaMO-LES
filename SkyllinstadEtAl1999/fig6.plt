@@ -31,6 +31,7 @@ set format x ""
 set format cb cbform."m^2s^{-2}"
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
+load outdir."pospal.plt"
 plot datdir."fig6a.dat" binary matrix w image
 unset colorbox
 #
@@ -52,6 +53,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [dtkemin:dtkemax]
+load outdir."sympal.plt"
 set format cb cbform."m^2s^{-3}"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
 set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)

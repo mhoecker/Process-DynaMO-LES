@@ -12,6 +12,7 @@ set multiplot title "Vertical Energy Budget (Scaled Horizontal Averages)"
 set lmargin at screen lloc
 set rmargin at screen rloc
 #
+load outdir."pospal.plt"
 tkemax = 5e-3
 tkemin = 1e-6
 dtkemin = 2e-6
@@ -50,7 +51,7 @@ unset colorbox
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "w'tke"
+set ylabel "w'_{sg}tke"
 plot datdir."fig6cR.dat" binary matrix u 1:2:(abs($3)) w image, \
 outdir."fig6cR.tab" lc rgbcolor nullcolor  lt 4 notitle
 #

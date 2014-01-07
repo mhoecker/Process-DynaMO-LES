@@ -22,7 +22,23 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
   fprintf(fid,"set term %s\n",gnuplotterm);
   fprintf(fid,"cbmarks = (palcolors+1)/2\n");
   fprintf(fid,"set palette maxcolors palcolors\n");
-  fprintf(fid,"%s",paltext("hue"));
+  fprintf(fid,"%s",paltext("euh"));
+  fclose(fid);
+  palfile = [outdir "euhpal.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("euh"));
+  fclose(fid);
+  palfile = [outdir "sympal.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("pm"));
+  fclose(fid);
+  palfile = [outdir "pospal.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("pos"));
+  fclose(fid);
+  palfile = [outdir "negpal.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("neg"));
   fclose(fid);
  end%if
 end%function

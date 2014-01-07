@@ -7,21 +7,23 @@ rows = 3
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
+load outdir."sympal.plt"
+#
 set multiplot title "Instability Criterion"
 #
 Nsqmax = 4e-4
-Nsqmin = -Nsqmax/(palcolors-1)
+Nsqmin = -Nsqmax
 Rimax = 1.0
 Rimin= -Rimax
 cbform = "%+04.1te^{%+02T}"
 rhotitle = "{/Symbol Dr}=0.05 kg/m^3"
 rhocolor = "grey50"
 Rictitle = "Ri =+1/4"
-Riccolor = "grey20"
+Riccolor = "black"
 Ri0title = "Ri = 0  "
-Ri0color = "grey60"
+Ri0color = "grey30"
 Rimtitle = "Ri =-1/4"
-Rimcolor = "grey80"
+Rimcolor = "grey60"
 set key l b
 set format x ""
 set format y "%gm"

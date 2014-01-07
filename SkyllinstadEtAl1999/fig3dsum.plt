@@ -9,6 +9,8 @@ rows = 4
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
+load outdir."sympal.plt"
+#
 DTmin = -10
 DTmax = +10
 #
