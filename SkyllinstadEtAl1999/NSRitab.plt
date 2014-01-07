@@ -1,5 +1,6 @@
 reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
+abrev = "NSRi"
 # Make table for countours
 unset pm3d
 unset surface
@@ -7,8 +8,8 @@ set style data lines
 set contour
 set cntrparam levels discrete 0
 #
-outroot = outdir."fig4"
-datroot = datdir."fig4"
+outroot = outdir.abrev
+datroot = datdir.abrev
 # Surface Ri is a 2-D field so no contours for you!
 #
 # Nsq

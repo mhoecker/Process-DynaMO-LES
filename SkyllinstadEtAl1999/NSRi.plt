@@ -1,6 +1,7 @@
 reset
 load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-set output outdir."fig4".termsfx
+abrev = "NSRi"
+set output outdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing
 rows = 3
@@ -37,7 +38,7 @@ set format cb cbform."s^{-2}"
 set cbrange [Nsqmin:Nsqmax]
 set cbtics Nsqmin,(Nsqmax-Nsqmin)/palcolors,Nsqmax
 set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),1.9*vskip
-plot datdir."fig4b.dat" binary matrix w image not, datdir."fig4e.tab"  lc rgbcolor rhocolor title rhotitle
+plot datdir.abrev."b.dat" binary matrix w image not, datdir.abrev."e.tab"  lc rgbcolor rhocolor title rhotitle
 #
 # Ssq
 set ylabel "S^2"
@@ -45,7 +46,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 unset colorbox
-plot datdir."fig4c.dat" binary matrix w image not, datdir."fig4e.tab" lc rgbcolor rhocolor title rhotitle
+plot datdir.abrev."c.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
 #
 # Richardson Number
 set ylabel "Ri=N^2/S^2"
@@ -58,9 +59,9 @@ set cbrange [Rimin:Rimax]
 set cbtics Rimin,(Rimax-Rimin)/palcolors,Rimax
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
-plot datdir."fig4d.dat" binary matrix w image not,\
-datdir."fig4d.tab" lc rgbcolor Riccolor title Rictitle,\
-datdir."fig4d0.tab" lc rgbcolor Ri0color title Ri0title,\
-datdir."fig4dm.tab" lc rgbcolor Rimcolor title Rimtitle
+plot datdir.abrev."d.dat" binary matrix w image not,\
+datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
+datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
+datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
 #
 unset multiplot

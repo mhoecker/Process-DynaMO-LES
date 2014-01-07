@@ -4,7 +4,7 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
  tfsim = t0sim+1; % Simulated stop time 2011 yearday
- palcolors = 9; % number of colors in the color bar palette
+ palcolors = 8; % number of colors in the color bar palette
  if(nargin==1)
   datdir = outdir;
  end%if

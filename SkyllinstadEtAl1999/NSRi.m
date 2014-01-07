@@ -1,7 +1,8 @@
-function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %
  %figure 4
  % Plot time series of N^2 S^2 and Ri
+ abrev = "NSRi";
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  #useoctplot=1;
  trange = [t0sim-2,tfsim+2];
@@ -63,13 +64,13 @@ function fig4(chmnc,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
-  binarray(tsfx',[4*Ri,Jb,stress]',[outdir "fig4a.dat"]);
-  binmatrix(tdag',zdag',Nsqavg',[outdir "fig4b.dat"]);
-  binmatrix(tdag',zdag',Ssqavg',[outdir "fig4c.dat"]);
-  binmatrix(tdag',zdag',Ricavg',[outdir "fig4d.dat"]);
-  binmatrix(tdag',zdag',rhoavg',[outdir "fig4e.dat"]);
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4tab.plt");
-  unix("gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/fig4.plt");
+  binarray(tsfx',[4*Ri,Jb,stress]',[outdir abrev "a.dat"]);
+  binmatrix(tdag',zdag',Nsqavg',[outdir abrev "b.dat"]);
+  binmatrix(tdag',zdag',Ssqavg',[outdir abrev "c.dat"]);
+  binmatrix(tdag',zdag',Ricavg',[outdir abrev "d.dat"]);
+  binmatrix(tdag',zdag',rhoavg',[outdir abrev "e.dat"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if
  %
 end%function
