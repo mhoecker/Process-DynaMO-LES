@@ -52,7 +52,7 @@ unset colorbox
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "w'_{sg}tke"
+set ylabel "w'tke"
 plot datdir.abrev."cR.dat" binary matrix u 1:2:(abs($3)) w image, \
 outdir.abrev."cR.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
@@ -60,6 +60,7 @@ outdir.abrev."cR.tab" lc rgbcolor nullcolor  lt 4 notitle
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set ylabel "w'_{sg}tke"
 plot datdir.abrev."dR.dat" binary matrix u 1:2:(abs($3)) w image, \
 outdir.abrev."dR.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
