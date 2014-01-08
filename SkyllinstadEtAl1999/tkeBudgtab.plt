@@ -20,8 +20,8 @@ splot datdir.abrev."bR.dat" binary matrix
 #
 set table outdir.abrev."c".".tab"
 splot datdir.abrev."c.dat" binary matrix
-set table outdir.abrev."c".".tab"
-splot datdir.abrev."c.dat" binary matrix
+set table outdir.abrev."cR".".tab"
+splot datdir.abrev."cR.dat" binary matrix
 #
 set table outdir.abrev."d".".tab"
 splot datdir.abrev."d.dat" binary matrix
