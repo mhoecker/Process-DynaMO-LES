@@ -34,7 +34,8 @@ set ylabel "N^2"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-set format cb cbform."s^{-2}"
+set format cb cbform
+set cblabel "s^{-2}"
 set cbrange [Nsqmin:Nsqmax]
 set cbtics Nsqmin,(Nsqmax-Nsqmin)/palcolors,Nsqmax
 set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),1.9*vskip
@@ -55,6 +56,7 @@ set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),.9*(vskip)
 row = nextrow(row)
 set format cb cbform
+set cblabel ""
 set cbrange [Rimin:Rimax]
 set cbtics Rimin,(Rimax-Rimin)/palcolors,Rimax
 set format x "%g"

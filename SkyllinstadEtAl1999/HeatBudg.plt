@@ -26,7 +26,8 @@ set xrange [t0sim:tfsim]
 load outdir."sympal.plt"
 set cbrange [hfxmin:hfxmax]
 set cbtics hfxmin,(hfxmax-hfxmin)/palcolors,hfxmax
-set format cb cbform."W/m^3"
+set format cb cbform
+set cblabel "W/m^3"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
@@ -61,10 +62,12 @@ unset mcbtics
 set cbtics Tdispmin,(Tdispmax/Tdispmin)**(1.0/palcolors),Tdispmax
 # autoscale colors
 #set cbtics auto;set autoscale cb;unset logscale cb
-set format cb cbform."m"
+set format cb cbform
+set cblabel "m"
 set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),0.8*(vskip)
 set ylabel "T'_{rms}/|{/Symbol \266}_zT|"
 set format x "%g"
+set xlabel "2011 UTC yearday"
 plot datdir.abrev."T_dTdz.dat" binary matrix w image notitle
 unset logscale
 #

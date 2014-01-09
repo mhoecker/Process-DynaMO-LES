@@ -28,7 +28,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row+2)+.1*vskip size 0.1*(1.0-rloc),2.8*(vskip)
 set format x ""
-set format cb cbform."m^2s^{-2}"
+set format cb cbform
+set cblabel "J/kg"
 load outdir."pospal.plt"
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
@@ -41,7 +42,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 load outdir."sympal.plt"
 set cbrange [dtkemin:dtkemax]
-set format cb cbform."s^{-1}"
+set format cb cbform
+set cblabel "s^{-1}"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
 set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
 set ylabel "w'P'"

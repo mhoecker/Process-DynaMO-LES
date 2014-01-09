@@ -30,7 +30,7 @@ datdir.abrev."a.dat" binary format="%f%f%f" u 3:1 w lines axes x2y2 title "S" ls
 set lmargin at screen mloc
 set rmargin at screen rloc
 unset ytics
-unset ylabel
+set ylabel ""
 set y2label "Z (m)" offset -yloff,0
 set y2tics mirror -70,20,-10 offset -ytoff,0
 set xrange [-.6:.6]

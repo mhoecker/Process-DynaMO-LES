@@ -31,7 +31,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 unset ytics
-unset ylabel
+set ylabel ""
 #set y2label "Percipitation (mm/h)"
 set y2label "P (mm/h)" offset -yloff,0
 set y2tics mirror offset -ytoff,0
@@ -43,7 +43,7 @@ row = nextrow(row)
 unset y2tics
 set ytics mirror rangelimited offset ytoff,0
 unset y2label
-set ylabel "J_h (kW/m^2)" offset yloff,0
+set ylabel "J_h (kW/m^2)"
 plot datdir.abrev."abc.dat" binary format="%f%f%f%f" u 1:($4*.001) lc -1 not
 #
 set tmargin at screen tloc(row)
@@ -51,16 +51,17 @@ set bmargin at screen bloc(row)
 set format x "%g"
 set mxtics 12
 set ylabel "Z (m)" offset yloff,0
-set xlabel "2011 Yearday UTC" offset 0,xloff
+set xlabel "2011 UTC yearday" offset 0,xloff
 cbform = "%4.1te^{%+02T}"
 set format cb cbform
-set cblabel "{/Symbol e} (W/kg)" offset -yloff,0
+set cblabel "{/Symbol e} (W/kg)" offset 1-yloff,0
 unset object 1
 load outdir."pospal.plt"
 epsmax = 2.5e-5
 epsmin = 5e-9
 set cbrange [epsmin:epsmax]
 set cbtics epsmin,(epsmax/epsmin)**(1.0/palcolors),epsmax
+set cbtics offset -ytoff,0
 unset mcbtics
 set yrange [-dsim:0]
 set ytics mirror -70,20,-10 offset ytoff,0

@@ -33,7 +33,7 @@ set ytics nomirror -900,300,900 offset ytoff,0
 plot datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
 #, datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:3
 #
-unset ylabel
+set ylabel ""
 unset yrange
 unset ytics
 set format y ""
@@ -58,7 +58,7 @@ unset x2label
 # Profile Observations
 #
 set xtics mirror
-set ytics mirror -70,20,-10
+set ytics mirror -70,20,-10 offset ytoff,0
 set yrange[-dsim:0]
 # Temperature
 set cblabel "T (^oC)"
@@ -79,7 +79,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."c.dat" binary matrix w image notitle
 # Simulated
-unset ylabel
+set ylabel ""
 set format y ""
 set format x ""
 set lmargin at screen mloc
@@ -109,7 +109,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."e.dat" binary matrix w image notitle
 # Simulated
-unset ylabel
+set ylabel ""
 set format y ""
 set format x ""
 set lmargin at screen mloc
@@ -122,7 +122,7 @@ plot datdir.abrev."f.dat" binary matrix w image notitle
 unset colorbox
 # U Velocity
 set format cb cbform
-set cblabel "u,v (m/s)" offset -yloff,0
+set cblabel "u,v (m/s)"
 cbmin = UVmin
 cbmax = UVmax
 load outdir."sympal.plt"
@@ -140,7 +140,7 @@ set bmargin at screen bloc(row)
 set ylabel "u"
 plot datdir.abrev."g.dat" binary matrix w image notitle
 # Simulated
-unset ylabel
+set ylabel ""
 set format y ""
 set format x ""
 set lmargin at screen mloc
@@ -163,7 +163,7 @@ set ylabel "v"
 set xlabel "Observed Fields"
 plot datdir.abrev."i.dat" binary matrix w image notitle
 # Simulated
-unset ylabel
+set ylabel ""
 set format y ""
 set format x "%g"
 set lmargin at screen mloc

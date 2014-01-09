@@ -6,9 +6,9 @@ bloc(r) = tloc(r+1)
 vskip = tloc(0)-bloc(0)
 nextrow(r) = (r+1)%rows
 # Common margin locations
-rloc = .82
-mloc = .5
+rloc = .84
 lloc = .11
+mloc = (rloc+lloc)/2
 set rmargin at screen rloc
 set lmargin at screen lloc
 #
@@ -17,12 +17,12 @@ set xrange[t0sim:tfsim]
 set yrange [-2*dsim/3.0:0]
 #
 # Common label offsets
-yloff = 1.25
+yloff = 2
 xloff = 1
 # How to use
 set ylabel offset yloff,0
 set xlabel offset 0,xloff
-set cblabel offset -yloff,0
+set cblabel offset 0,0
 #set y2label offset -yloff,0
 #set x2label offset 0,-xloff
 #

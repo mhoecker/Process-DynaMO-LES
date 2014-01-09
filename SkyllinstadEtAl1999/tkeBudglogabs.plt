@@ -28,10 +28,12 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row+2)+.1*vskip size 0.1*(1.0-rloc),2.8*(vskip)
 set format x ""
-set format cb cbform."m^2s^{-2}"
+set format cb cbform
+set cblabel "J/kg"
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax/tkemin)**(1.0/palcolors),tkemax
 plot datdir.abrev."a.dat" binary matrix w image
+unset colorbox
 #
 # Plot total d/dt of tke
 #set tmargin at screen vmargin
@@ -42,7 +44,7 @@ plot datdir.abrev."a.dat" binary matrix w image
 #set format cb cbform."m^2s^{-3}"
 #set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
 #set ylabel "^{d}/_{dt}(tke)"
-#plot datdir.abrev."adt.dat" binary matrix u 1:2:(abs($3)) w image, \
+#plot datdir.abrev."adt.dat" binary matrix u 1:2:(abs($3)) w image not, \
 #outdir.abrev."adt.tab" lc rgbcolor nullcolor  lt 4 notitle
 #unset colorbox
 #
@@ -52,10 +54,12 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
 set cbrange [dtkemin:dtkemax]
-set format cb cbform."m^2s^{-3}"
+set format cb cbform
+set cblabel "W/kg"
 set cbtics dtkemin,(dtkemax/dtkemin)**(1.0/palcolors),dtkemax
 set ylabel "w'P'"
-plot datdir.abrev."b.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot \
+datdir.abrev."b.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."b.tab" lc rgbcolor nullcolor  lt 4 notitle
 unset colorbox
 #
@@ -64,7 +68,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "w'tke"
-plot datdir.abrev."c.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."c.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."c.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot sub-gridscale transport
@@ -72,7 +76,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "w'_{sg}tke"
-plot datdir.abrev."d.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."d.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."d.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
@@ -80,7 +84,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "b'w'"
-plot datdir.abrev."e.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."e.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."e.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
@@ -88,7 +92,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "SP"
-plot datdir.abrev."f.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."f.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."f.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
@@ -96,7 +100,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "St"
-plot datdir.abrev."g.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."g.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."g.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
@@ -104,7 +108,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "sgs B"
-plot datdir.abrev."h.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."h.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."h.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
 # Plot
@@ -116,6 +120,6 @@ set xlabel "2011 UTC yearday"
 set xtics t0sim,dxtic,tfsim
 set mxtics 6
 set ylabel "{/Symbol e}"
-plot datdir.abrev."j.dat" binary matrix u 1:2:(abs($3)) w image, \
+plot datdir.abrev."j.dat" binary matrix u 1:2:(abs($3)) w image not, \
 outdir.abrev."j.tab" lc rgbcolor nullcolor  lt 4 notitle
 unset multiplot

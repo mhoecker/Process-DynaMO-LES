@@ -17,7 +17,6 @@ tkemin = 0
 dtkemin = -2.5e-5
 dtkemax = +2.5e-5
 dxtic = .25
-unset xtics
 set ylabel
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
@@ -29,7 +28,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc,bloc(row+2)+.1*vskip size 0.1*(1.0-rloc),2.8*(vskip)
 set format x ""
-set format cb cbform."m^2s^{-2}"
+set format cb cbform
+set cblabel "J/kg"
 set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
 load outdir."pospal.plt"
@@ -55,7 +55,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [dtkemin:dtkemax]
 load outdir."sympal.plt"
-set format cb cbform."m^2s^{-3}"
+set format cb cbform
+set cblabel "W/kg"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
 set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
 set ylabel "w'P'"
@@ -91,7 +92,7 @@ outdir.abrev."e.tab" lc rgbcolor nullcolor  lt 4 notitle
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-	set ylabel "SP"
+set ylabel "SP"
 plot datdir.abrev."f.dat" binary matrix u 1:2:3 w image, \
 outdir.abrev."f.tab" lc rgbcolor nullcolor  lt 4 notitle
 #
