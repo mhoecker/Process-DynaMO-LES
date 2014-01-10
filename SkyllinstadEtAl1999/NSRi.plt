@@ -57,12 +57,17 @@ set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),.9*(vskip)
 row = nextrow(row)
 set format cb cbform
 set cblabel ""
-set cbrange [Rimin:Rimax]
+set cbrange [-1:1]
 set cbtics Rimin,(Rimax-Rimin)/palcolors,Rimax
+set cbtics add ("+1/4" .5, "-1/4" -.5, "0" 0, "+{/Symbol \245}" 1, "-{/Symbol \245}" -1, "-3/4" -.75, "+3/4" .75, "-1/12" -.25, "+1/12" .25)
+set format cb ""
+#set cblabel ""
+#set cbrange [Rimin:Rimax]
+#set cbtics Rimin,(Rimax-Rimin)/palcolors,Rimax
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
 set key l b
-plot datdir.abrev."d.dat" binary matrix w image not,\
+plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25))w image not,\
 datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
 datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
 datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
