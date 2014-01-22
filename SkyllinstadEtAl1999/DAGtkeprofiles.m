@@ -1,4 +1,4 @@
-function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
+function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag      = netcdf(dagnc,'r');
  tdag     = squeeze(dag{'time'}(:));
@@ -17,14 +17,24 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,D
  tdag     = squeeze(dag{'time'}(dagtidx));
  zdag     = -squeeze(dag{'zzu'}(dagzidx));
  tkeavg   = squeeze(dag{'tke_ave'}(dagtidx,dagzidx,1,1));
- tkePTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
  tkeAdve  = squeeze(dag{'a_ave'}(dagtidx,dagzidx,1,1));
  BuoyPr  = squeeze(dag{'b_ave'}(dagtidx,dagzidx,1,1));
  tkeSGTr  = squeeze(dag{'sg_ave'}(dagtidx,dagzidx,1,1));
  ShPr  = -squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
- StDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
- SGPE  = squeeze(dag{'dpesg'}(dagtidx,dagzidx,1,1));
- PEAdv  = squeeze(dag{'dpea'}(dagtidx,dagzidx,1,1));
+ #
+ tkePTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
+ badStDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
+ #
+ S0  = squeeze(dag{'S_0'}(dagtidx,1,1,1));
+ k  = 2*pi./squeeze(dag{'wave_l'}(dagtidx,1,1,1));
+ wave_a  = 2*pi*squeeze(dag{'w_angle'}(dagtidx,1,1,1))/180;
+ dUsdz = exp(2*k*zdag');
+ dUsdz = dUsdz.*(2*k.*S0);
+ uwave  = squeeze(dag{'uw_ave'}(dagtidx,dagzidx,1,1));
+ vwave  = squeeze(dag{'vw_ave'}(dagtidx,dagzidx,1,1));
+ StDr  = (uwave.*cos(wave_a)+vwave.*sin(wave_a)).*dUsdz;
+ #
+ tkePTra  = tkePTra-badStDr+StDr;
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  ncclose(dag);
 end%function
