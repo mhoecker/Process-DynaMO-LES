@@ -1,5 +1,5 @@
 reset
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
+load "/home/mhoecker/tmp/limits.plt"
 abrev  = "ObsSim"
 set output outdir.abrev."TSUVdsum".termsfx
 set view map

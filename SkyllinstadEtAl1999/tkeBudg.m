@@ -4,21 +4,33 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
+ # Extract surface fluxes
+ #[tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
- [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,SGPE,PEAdv,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  # calculate d/dt matrix in units of 1/sec
  ddtM = ddz(tdag)/(24*3600);
- size(ddtM)
- size(tkeavg)
+ # calculate dz for integrals
+ dz = trapdiff(zdag)';
+ # Find the zeros of tke
+ notkeidx = find((tkeavg==0));
  # calculate the rate of change of tke
  dtkedt = ddtM*tkeavg;
+ #Calculate Fluxes (integrate fluxes  )
+ wpi = backcumsum(tkePTra,2).*dz;
+ wpiR = wpi./tkeavg;
+ wpiR(notkeidx) = 0;
+ wtke = backcumsum(tkeAdve,2).*dz;
+ wtkeR = wtke./tkeavg;
+ wtkeR(notkeidx) = 0;
+ sgs = backcumsum(tkeSGTr,2).*dz;
+ sgsR = sgs./tkeavg;
+ sgsR(notkeidx) = 0;
  #Scale by tke
- #tkeavg,
- notkeidx = find((tkeavg==0));
  dtkedtRate = dtkedt./tkeavg;
  dtkedtRate(notkeidx) = 0;
  tkePTraRate = tkePTra./tkeavg;
@@ -33,10 +45,6 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  ShPrRate(notkeidx)=0;
  StDrRate = StDr./tkeavg;
  StDrRate(notkeidx)=0;
- SGPERate = SGPE./tkeavg;
- SGPERate(notkeidx) = 0;
- PEAdvRate = PEAdv./tkeavg;
- PEAdvRate(notkeidx)=0;
  DissRate = Diss./tkeavg;
  DissRate(notkeidx)=0;
  if(useoctplot==1)
@@ -125,33 +133,47 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir abrev ".png"],"-dpng","-S1280,1536")
  else
   # save files for gnuplot
-  binmatrix(tdag',zdag',tkeavg',[outdir abrev "a.dat"]);
-  binmatrix(tdag',zdag',dtkedt',[outdir abrev "adt.dat"]);
-  binmatrix(tdag',zdag',dtkedt',[outdir abrev "aR.dat"]);
-  binmatrix(tdag',zdag',tkePTra',[outdir abrev "b.dat"]);
-  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "bR.dat"]);
-  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "c.dat"]);
-  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "cR.dat"]);
-  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "d.dat"]);
-  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "dR.dat"]);
-  binmatrix(tdag',zdag',BuoyPr',[outdir abrev "e.dat"]);
-  binmatrix(tdag',zdag',BuoyPrRate',[outdir abrev "eR.dat"]);
-  binmatrix(tdag',zdag',ShPr',[outdir abrev "f.dat"]);
-  binmatrix(tdag',zdag',ShPrRate',[outdir abrev "fR.dat"]);
-  binmatrix(tdag',zdag',StDr',[outdir abrev "g.dat"]);
-  binmatrix(tdag',zdag',StDrRate',[outdir abrev "gR.dat"]);
-  binmatrix(tdag',zdag',SGPE',[outdir abrev "h.dat"]);
-  binmatrix(tdag',zdag',SGPERate',[outdir abrev "hR.dat"]);
-  binmatrix(tdag',zdag',PEAdv',[outdir abrev "i.dat"]);
-  binmatrix(tdag',zdag',PEAdvRate',[outdir abrev "iR.dat"]);
-  binmatrix(tdag',zdag',Diss',[outdir abrev "j.dat"]);
-  binmatrix(tdag',zdag',DissRate',[outdir abrev "jR.dat"]);
+  # tke
+  binmatrix(tdag',zdag',tkeavg',[outdir abrev "tke.dat"]);
+  # d tke d t
+  binmatrix(tdag',zdag',dtkedt',[outdir abrev "dtkedt.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[outdir abrev "dtkedtR.dat"]);
+  # d w' pi'd z
+  binmatrix(tdag',zdag',tkePTra',[outdir abrev "dwpidz.dat"]);
+  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "dwpidzR.dat"]);
+  # w' pi'
+  binmatrix(tdag',zdag',tkePTra',[outdir abrev "wpi.dat"]);
+  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "wpiR.dat"]);
+  # d w' tke d z
+  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "dwtkedz.dat"]);
+  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "dwtkedzR.dat"]);
+  # w' tke
+  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "wtke.dat"]);
+  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "wtkeR.dat"]);
+  # d sgs dz
+  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "dsgsdz.dat"]);
+  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "dsgsdzR.dat"]);
+  # sgs
+  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "sgs.dat"]);
+  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "sgsR.dat"]);
+  # b' w'
+  binmatrix(tdag',zdag',BuoyPr',[outdir abrev "bw.dat"]);
+  binmatrix(tdag',zdag',BuoyPrRate',[outdir abrev "bwR.dat"]);
+  # u' u' d U d z
+  binmatrix(tdag',zdag',ShPr',[outdir abrev "uudUdz.dat"]);
+  binmatrix(tdag',zdag',ShPrRate',[outdir abrev "uudUdzR.dat"]);
+  # u' u' d S d z
+  binmatrix(tdag',zdag',StDr',[outdir abrev "uudSdz.dat"]);
+  binmatrix(tdag',zdag',StDrRate',[outdir abrev "uudSdzR.dat"]);
+  # dissipation
+  binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
+  binmatrix(tdag',zdag',DissRate',[outdir abrev "dissR.dat"]);
   # invoke gnuplot
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "linR.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabs.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabsR.plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "linR.plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabs.plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabsR.plt"]);
  end%if
  %
 end%function

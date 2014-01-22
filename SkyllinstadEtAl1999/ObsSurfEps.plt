@@ -1,5 +1,5 @@
 reset
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
+load "/home/mhoecker/tmp/limits.plt"
 abrev = "ObsSurfEps"
 set output outdir.abrev.termsfx
 #
@@ -17,7 +17,7 @@ set style data lines
 set ytics
 set xrange [t0sim-.5:tfsim+.5]
 set x2range [t0sim-.5:tfsim+.5]
-set object 1 rectangle from t0sim,graph 0 to t0sim+1,graph 1 fc rgb "gray90" fs pattern 3
+set object 1 rectangle from t0sim,graph 0 to tfsim,graph 1 fc rgb "gray90" fs pattern 3
 set rmargin at screen rloc
 set lmargin at screen lloc
 set format x ""

@@ -3,14 +3,14 @@ function [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir,datdir)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
- tfsim = t0sim+1; % Simulated stop time 2011 yearday
+ tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 8; % number of colors in the color bar palette
  if(nargin==1)
   datdir = outdir;
  end%if
  if(useoctplot!=1)
   [gnuplotterm,termsfx] = termselect("pngposter");
-  limitsfile = [outdir "limits.plt"];
+  limitsfile = [ "/home/mhoecker/tmp/limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"t0sim=%f\n",t0sim);
   fprintf(fid,"tfsim=%f\n",tfsim);

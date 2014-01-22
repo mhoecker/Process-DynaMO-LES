@@ -1,11 +1,11 @@
-function  ObsSimSideTSUVWwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %ObsSimSideTSUVwSurf
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
  abrev = "ObsSimSideTSUVwSurf";
- [useoctplot,t0sim,dsim]=plotparam(outdir);
- trange = [t0sim,t0sim+1];
+ [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);

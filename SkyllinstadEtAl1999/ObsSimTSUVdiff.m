@@ -3,8 +3,8 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % difference of Temperature, Salinity, and Velocity
  % between observations and model.
  abrev = "ObsSim";
- [useoctplot,t0sim,dsim] = plotparam(outdir);
- trange = [t0sim,t0sim+1];
+ [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir);
+ trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);

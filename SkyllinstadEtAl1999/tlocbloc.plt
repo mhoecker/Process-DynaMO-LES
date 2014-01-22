@@ -38,6 +38,6 @@ set cbtics offset -ytoff,0
 #
 #
 # common tics
-set ytics -dsim*4.5/8,dsim/4.0,-.5*dsim/8
+set ytics -7*dsim/8,dsim/4.0,-1*dsim/8
 dxtic = .25
 set xtics t0sim,dxtic,tfsim

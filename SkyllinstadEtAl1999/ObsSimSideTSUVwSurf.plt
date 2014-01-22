@@ -6,7 +6,7 @@ Smin = 35.00
 Smax = 35.54
 UVmin = -0.9
 UVmax = +0.9
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
+load "/home/mhoecker/tmp/limits.plt"
 set output outdir.abrev.termsfx
 #
 # Setup spacing

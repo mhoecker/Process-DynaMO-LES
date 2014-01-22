@@ -1,5 +1,5 @@
 reset
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
+load "/home/mhoecker/tmp/limits.plt"
 set style data lines
 abrev = "tkeBudg"
 set output outdir.abrev."logabsR".termsfx
