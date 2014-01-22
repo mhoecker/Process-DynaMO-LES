@@ -24,33 +24,56 @@ end%if
   chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  adcpnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc'
-  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc";
+  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
+%  adcpnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc'
 %  adcpvarnames = ["t";"z";"u";"v"];
  end%if
  if nargin()<5
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
 
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ dagnc2 = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone4/o1024_2-e_dag.nc"
+ outdir2 = [outdir "alt/"]
+ allfigs(chmnc,adcpnc,sfxnc,dagnc2,outdir2)
+ # Test figure
  #testfig(outdir);
  #figRi(sfxnc,outdir);
  #fig1
- ObsSurfEps(sfxnc,chmnc,outdir);
+ #ObsSurfEps(sfxnc,chmnc,outdir);
  #fig2
- initialTSUV(chmnc,adcpnc,outdir);
+ #initialTSUV(chmnc,adcpnc,outdir);
  #fig3
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig3diff
- ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig4
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig5(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig6
- tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  #fig7
- HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
+end%function
+
+function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ # Richardson Number Defined by Surface Flux
+ #figRi(sfxnc,outdir);
+ # Surface and dissipation observations
+ #ObsSurfEps(sfxnc,chmnc,outdir);
+ # Initial Conditions
+ #initialTSUV(chmnc,adcpnc,outdir);
+ # Model Obersvation Comparison
+ #ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ # Model Observation Difference
+ #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ # Stability Criterion
+ #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ # Turbulent Kinetic energy Budget
+ tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ #Heat Budget
+ #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function ensureSkyllingstad1999
@@ -69,10 +92,6 @@ function removeSkyllingstad1999
  if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
   rmpath(testpath);
  end%if
-end%function
-
-%figure 5
-function fig5(chmnc,adcpnc,sfxnc,dagnc,outdir)
 end%function
 
 
