@@ -17,7 +17,10 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
  trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
+ # Decomplse Stress into components
+ stressm = -stress.*sin(wdir*pi/180);
+ stressz = -stress.*cos(wdir*pi/180);
  # Extract epsilon profiles
  [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
  # Plot using octave or Gnuplot
@@ -43,7 +46,7 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[stress,p,Jh]',[outdir abrev "abc.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "JhPrecipTxTy.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);

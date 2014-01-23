@@ -15,8 +15,9 @@ set xtics .5
 set multiplot title "Surface Forcing and Dissipation Observetions"
 set style data lines
 set ytics
-set xrange [t0sim-.5:tfsim+.5]
-set x2range [t0sim-.5:tfsim+.5]
+set key left
+set xrange [t0sim-.25:tfsim+.25]
+set x2range [t0sim-.25:tfsim+.25]
 set object 1 rectangle from t0sim,graph 0 to tfsim,graph 1 fc rgb "gray90" fs pattern 3
 set rmargin at screen rloc
 set lmargin at screen lloc
@@ -25,7 +26,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 set ylabel "{/Symbol t} (Pa)"
-plot datdir.abrev."abc.dat" binary format="%f%f%f%f" u 1:2 lc -1 not axis x2y1
+plot datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:4 lc -1 title "zonal" axis x2y1,\
+datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:5 lc 0 title "meridional" axis x2y1
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -35,7 +37,7 @@ set ylabel ""
 #set y2label "Percipitation (mm/h)"
 set y2label "P (mm/h)" offset -yloff,0
 set y2tics mirror offset -ytoff,0
-plot datdir.abrev."abc.dat" binary format="%f%f%f%f" u 1:3 lc -1 axes x1y2 not
+plot datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:3 lc -1 axes x1y2 not
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -44,7 +46,7 @@ unset y2tics
 set ytics mirror rangelimited offset ytoff,0
 unset y2label
 set ylabel "J_h (kW/m^2)"
-plot datdir.abrev."abc.dat" binary format="%f%f%f%f" u 1:($4*.001) lc -1 not
+plot datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:($2*.001) lc -1 not
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
