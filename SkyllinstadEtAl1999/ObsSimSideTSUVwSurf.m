@@ -4,6 +4,8 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % and model.  The surface heat and momentum forcings are also shown
  %
  abrev = "ObsSimSideTSUVwSurf";
+ abrev1 = "ObsSimTSwSurf"
+ abrev2 = "ObsSimUVwSurf"
  [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
@@ -82,5 +84,7 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',uavgdag',[outdir abrev "h.dat"]);
   binmatrix(tdag',zdag',vavgdag',[outdir abrev "j.dat"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev1 ".plt"]);
+  %unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev2 ".plt"]);
  end%if
 end%function
