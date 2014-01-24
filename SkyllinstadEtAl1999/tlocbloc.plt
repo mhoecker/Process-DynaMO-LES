@@ -1,16 +1,20 @@
-# given a number of figures calculate the vertical spacing
+# given a number of figures calculate spacing for flush plots
+# vertical spacing
 tlocmax = .94
 blocmin = .06
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 bloc(r) = tloc(r+1)
 vskip = tloc(0)-bloc(0)
 nextrow(r) = (r+1)%rows
-# Common margin locations
-rloc = .84
-lloc = .11
-mloc = (rloc+lloc)/2
-set rmargin at screen rloc
-set lmargin at screen lloc
+# Horizontal Spacing
+rlocmax = .84
+llocmin = .11
+lloc(c) = llocmin+(rlocmax-llocmin)*(c+0.0)/(cols)
+rloc(c) = lloc(c+1)
+hskip = rloc(0)-lloc(0)
+nextcol(c) = (c+1)%cols
+set rmargin at screen rloc(0)
+set lmargin at screen lloc(0)
 #
 # Common Ranges
 set xrange[t0sim:tfsim]

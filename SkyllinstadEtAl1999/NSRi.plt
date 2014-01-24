@@ -6,6 +6,8 @@ set style data lines
 # Setup vertical spacing
 rows = 3
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 load outdir."sympal.plt"
@@ -38,7 +40,7 @@ set format cb cbform
 set cblabel "s^{-2}"
 set cbrange [Nsqmin:Nsqmax]
 set cbtics Nsqmin,(Nsqmax-Nsqmin)/palcolors,Nsqmax
-set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),1.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.1*vskip size 0.1*(1.0-rloc(col)),1.8*vskip
 plot datdir.abrev."b.dat" binary matrix w image not, datdir.abrev."e.tab"  lc rgbcolor rhocolor title rhotitle
 #
 # Ssq
@@ -53,7 +55,7 @@ plot datdir.abrev."c.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgb
 set ylabel "Ri=N^2/S^2"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.05*vskip size 0.1*(1.0-rloc),.9*(vskip)
+set colorbox user origin rloc(col),bloc(row)+.1*vskip size 0.1*(1.0-rloc(col)),.8*(vskip)
 row = nextrow(row)
 set format cb cbform
 set cblabel ""

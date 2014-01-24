@@ -6,9 +6,13 @@ set multiplot
 # Setup spacing
 rows = 1
 row = 0
+cols = 2
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 #
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set xtics nomirror offset 0,xtoff
@@ -18,8 +22,8 @@ set ytics mirror -70,20,-10 offset ytoff,0
 set y2range [-dsim:0]
 set xlabel "T (^oC)" offset 0,xloff
 set x2label "S (psu)" offset 0,-0.9*xloff
-set lmargin at screen lloc
-set rmargin at screen mloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set ylabel "Z (m)" offset yloff,0
 set autoscale x
 set xtics 1 rangelimited
@@ -27,8 +31,9 @@ set x2tics .1 rangelimited
 plot \
 datdir.abrev."a.dat" binary format="%f%f%f" u 2:1 w lines axes x1y2 title "T" ls 1,\
 datdir.abrev."a.dat" binary format="%f%f%f" u 3:1 w lines axes x2y2 title "S" ls 2
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 unset ytics
 set ylabel ""
 set y2label "Z (m)" offset -yloff,0

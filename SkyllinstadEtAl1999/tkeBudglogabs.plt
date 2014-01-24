@@ -6,6 +6,8 @@ set output outdir.abrev."logabs".termsfx
 # Setup spacing
 rows = 9
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 set multiplot title "Vertical Energy Budget (Horizontal Averages)"

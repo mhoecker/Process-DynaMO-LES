@@ -18,6 +18,8 @@ set output outdir.abrev1.termsfx
 #
 # Setup spacing
 rows = 5
+cols = 1
+col = 0
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
@@ -27,8 +29,8 @@ set style data lines
 # Surface Observations
 set format x ""
 set format x2 ""
-set lmargin at screen lloc
-set rmargin at screen rloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set autoscale y
@@ -39,8 +41,8 @@ set ylabel "J_h (W/m^2)" offset yloff,0
 set ytics nomirror -900,300,900 offset ytoff,0
 set y2label "P (mm/hr)" offset -yloff,0
 set y2tics nomirror 0,20,90 offset -ytoff,0
-plot datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x1y1 title "J_h" ls 1,\
-datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:3 axis x1y2 title "P" ls 3
+plot datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:2 axis x1y1 title "J_h" lc rgbcolor "red",\
+datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:3 axis x1y2 title "P" lc rgbcolor "blue"
 unset y2tics
 #
 #
@@ -49,7 +51,6 @@ unset y2tics
 set xtics mirror
 set ytics mirror -70,20,-10 offset ytoff,0
 set yrange[-dsim:0]
-set ylabel "Z (m)"
 set format y "%g"
 # Temperature
 set cblabel "T (^oC)"
@@ -60,22 +61,20 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set format cb cbform
 # Observed
+set ylabel "T_{obs},Z (m)"
 set format x ""
 unset colorbox
 row = nextrow(row)
-set lmargin at screen lloc
-set rmargin at screen rloc
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."c.dat" binary matrix w image notitle
 # Simulated
+set ylabel "T_{sim},Z (m)"
 set format x ""
-set lmargin at screen lloc
-set rmargin at screen rloc
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.1*vskip size .1*(1-rloc),1.8*vskip
+set colorbox user origin rloc(col),bloc(row)+.1*vskip size .1*(1-rloc(col)),1.8*vskip
 plot datdir.abrev."d.dat" binary matrix w image notitle
 unset colorbox
 # Salinity
@@ -87,22 +86,21 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
 set format cb cbform
 # Observed
+set ylabel "S_{obs},Z (m)"
 unset colorbox
 set format x ""
-set lmargin at screen lloc
-set rmargin at screen rloc
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."e.dat" binary matrix w image notitle
 # Simulated
+set ylabel "S_{sim},Z (m)"
 set format x "%g"
-set lmargin at screen lloc
-set rmargin at screen rloc
+set xlabel "2011 UTC yearday"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.1*vskip size .1*(1-rloc),1.8*vskip
+set colorbox user origin rloc(col),bloc(row)+.1*vskip size .1*(1-rloc(col)),1.8*vskip
 plot datdir.abrev."f.dat" binary matrix w image notitle
 unset colorbox
 unset multiplot

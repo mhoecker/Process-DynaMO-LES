@@ -12,6 +12,8 @@ set output outdir.abrev.termsfx
 # Setup spacing
 rows = 5
 row = 0
+cols = 2
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 cbform = "%+04.2f"
@@ -21,8 +23,8 @@ set style data lines
 set format x ""
 set format x2 ""
 set ylabel "J_h (W/m^2)" offset yloff,0
-set lmargin at screen lloc
-set rmargin at screen mloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set autoscale y
@@ -42,8 +44,9 @@ set format x2 ""
 set y2range [-.1:.8]
 set y2tics nomirror -0,.2,.6 offset -ytoff,0
 set y2label "{/Symbol t} (Pa)" offset -yloff,0
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
@@ -73,8 +76,9 @@ set ylabel "Z (m)"
 set format y "%g"
 set format x ""
 unset colorbox
-set lmargin at screen lloc
-set rmargin at screen mloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."c.dat" binary matrix w image notitle
@@ -82,11 +86,12 @@ plot datdir.abrev."c.dat" binary matrix w image notitle
 set ylabel ""
 set format y ""
 set format x ""
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),0.9*vskip
 row = nextrow(row)
 plot datdir.abrev."d.dat" binary matrix w image notitle
 unset colorbox
@@ -103,8 +108,9 @@ unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
-set lmargin at screen lloc
-set rmargin at screen mloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 plot datdir.abrev."e.dat" binary matrix w image notitle
@@ -112,11 +118,12 @@ plot datdir.abrev."e.dat" binary matrix w image notitle
 set ylabel ""
 set format y ""
 set format x ""
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),0.9*vskip
 row = nextrow(row)
 plot datdir.abrev."f.dat" binary matrix w image notitle
 unset colorbox
@@ -133,8 +140,9 @@ unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x ""
-set lmargin at screen lloc
-set rmargin at screen mloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "u"
@@ -143,8 +151,9 @@ plot datdir.abrev."g.dat" binary matrix w image notitle
 set ylabel ""
 set format y ""
 set format x ""
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
@@ -155,8 +164,9 @@ unset colorbox
 set ylabel "Z (m)"
 set format y "%g"
 set format x "%g"
-set lmargin at screen lloc
-set rmargin at screen mloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "v"
@@ -166,11 +176,12 @@ plot datdir.abrev."i.dat" binary matrix w image notitle
 set ylabel ""
 set format y ""
 set format x "%g"
-set lmargin at screen mloc
-set rmargin at screen rloc
+col = nextcol(col)
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),1.9*vskip
 row = nextrow(row)
 set xlabel "Simulated Fields"
 plot datdir.abrev."j.dat" binary matrix w image notitle

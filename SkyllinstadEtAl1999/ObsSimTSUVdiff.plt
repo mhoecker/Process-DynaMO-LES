@@ -8,6 +8,8 @@ unset surface
 # Setup spacing
 rows = 4
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 load outdir."sympal.plt"
@@ -22,8 +24,8 @@ DUVmin = -0.75
 DUVmax = +0.75
 #
 set multiplot title "Observeation - Model"
-set lmargin at screen lloc
-set rmargin at screen rloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 set style data lines
 set ylabel "Z (m)"
 set format y "%g"
@@ -39,7 +41,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),0.9*vskip
 row = nextrow(row)
 plot datdir.abrev."Tdiff.dat" binary matrix w image notitle
 #
@@ -51,7 +53,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),0.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),0.9*vskip
 row = nextrow(row)
 plot datdir.abrev."Sdiff.dat" binary matrix w image notitle
 #
@@ -73,7 +75,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),1.9*vskip
 row = nextrow(row)
 plot datdir.abrev."vdiff.dat" binary matrix w image notitle
 #

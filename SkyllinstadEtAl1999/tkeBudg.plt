@@ -6,18 +6,20 @@ set output outdir.abrev.termsfx
 # Setup spacing
 rows = 5
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 set multiplot title "Kinetic Energy Sources/Sinks (Horizontal Averages)"
 # all share the same left/right margins
-set lmargin at screen lloc
-set rmargin at screen rloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 tkemax = 5e-3
 tkemin = 0
-dtkemin = -2e-6
-dtkemax = +2e-6
-Ftkemin = -2e-6
-Ftkemax = +2e-6
+dtkemin = -4e-6
+dtkemax = +4e-6
+Ftkemin = -4e-6
+Ftkemax = +4e-6
 dxtic = .25
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
@@ -27,7 +29,7 @@ set xrange[t0sim:tfsim]
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc),(rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows/2-.2)*(vskip)
 set format x ""
 set xlabel ""
 set format cb cbform
@@ -45,13 +47,13 @@ load outdir."sympal.plt"
 set format cb cbform
 set cblabel "W/kg"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
-set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),(rows-rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.2)*(vskip)
 #
 # Plot total d/dt of tke
 #set tmargin at screen vmargin
 #vmargin = vmargin-vskip
 #set bmargin at screen vmargin
-#set colorbox user origin rloc+.01,2*vskip/3.0 size .02,(rows)*vskip
+#set colorbox user origin rloc(col)+.01,2*vskip/3.0 size .02,(rows)*vskip
 #set cbrange [dtkemin:dtkemax]
 #set format cb cbform."m^2s^{-3}"
 #set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
@@ -107,18 +109,20 @@ set output outdir.abrev."flx".termsfx
 # Setup spacing
 rows = 4
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 set multiplot title "Vertical Energy Transport (Horizontal Averages)"
 # all share the same left/right margins
-set lmargin at screen lloc
-set rmargin at screen rloc
+set lmargin at screen lloc(col)
+set rmargin at screen rloc(col)
 #
 # Plot tke
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc),(rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows/2-.2)*(vskip)
 set format x ""
 set xlabel ""
 set format cb cbform
@@ -136,7 +140,7 @@ load outdir."sympal.plt"
 set format cb cbform
 set cblabel "Wm/kg"
 set cbtics Ftkemin,(Ftkemax-Ftkemin)/palcolors,Ftkemax
-set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),(rows-rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.2)*(vskip)
 #
 # Plot Pressure transport
 row = nextrow(row)
@@ -171,3 +175,6 @@ plot datdir.abrev.field.".dat" binary matrix w image not,\
 outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot
+#
+load datdir.abrev."profiles.plt"
+#

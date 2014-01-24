@@ -5,6 +5,8 @@ set output outdir.abrev.termsfx
 # Setup spacing
 rows = 4
 row = 0
+cols = 1
+col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
 cbform = "%+4.1te^{%+02T}"
@@ -32,7 +34,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
 set ylabel "-{/Symbol \266}_zJ_{sgs}"
-set colorbox user origin rloc,bloc(row+2)+.1*vskip size 0.1*(1.0-rloc),2.8*(vskip)
+set colorbox user origin rloc(col),bloc(row+2)+.1*vskip size 0.1*(1.0-rloc(col)),2.8*(vskip)
 plot datdir.abrev."dhfdz.dat" binary matrix w image notitle
 #, \
 #outdir.abrev."a.tab" lc 0 notitle
@@ -64,7 +66,7 @@ set cbtics Tdispmin,(Tdispmax/Tdispmin)**(1.0/palcolors),Tdispmax
 #set cbtics auto;set autoscale cb;unset logscale cb
 set format cb cbform
 set cblabel "m"
-set colorbox user origin rloc,bloc(row)+.1*vskip size 0.1*(1.0-rloc),0.8*(vskip)
+set colorbox user origin rloc(col),bloc(row)+.1*vskip size 0.1*(1.0-rloc(col)),0.8*(vskip)
 set ylabel "T'_{rms}/|{/Symbol \266}_zT|"
 set format x "%g"
 set xlabel "2011 UTC yearday"

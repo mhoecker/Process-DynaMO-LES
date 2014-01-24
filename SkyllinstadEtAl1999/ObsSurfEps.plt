@@ -5,6 +5,8 @@ set output outdir.abrev.termsfx
 #
 # Setup spacing
 rows = 4
+cols = 1
+col = 0
 row = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
@@ -19,8 +21,8 @@ set key left
 set xrange [t0sim-.25:tfsim+.25]
 set x2range [t0sim-.25:tfsim+.25]
 set object 1 rectangle from t0sim,graph 0 to tfsim,graph 1 fc rgb "gray90" fs pattern 3
-set rmargin at screen rloc
-set lmargin at screen lloc
+set rmargin at screen rloc(col)
+set lmargin at screen lloc(col)
 set format x ""
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -67,7 +69,7 @@ set cbtics offset -ytoff,0
 unset mcbtics
 set yrange [-dsim:0]
 set ytics mirror -70,20,-10 offset ytoff,0
-set colorbox user origin rloc,bloc(row)+.05*vskip size .1*(1-rloc),1.9*vskip
+set colorbox user origin rloc(col),bloc(row)+.05*vskip size .1*(1-rloc(col)),1.9*vskip
 unset surface
 set logscale cb
 plot datdir.abrev."d.dat" binary matrix w image not
