@@ -16,37 +16,25 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  ddtM = ddz(tdag)/(24*3600);
  # calculate dz for integrals
  dz = trapdiff(zdag)';
- # Find the zeros of tke
- notkeidx = find((tkeavg==0));
- # calculate the rate of change of tke
+ # Calculate the time rate of change of tke
  dtkedt = ddtM*tkeavg;
- #Calculate Fluxes (integrate fluxes  )
+ # Calculate Integrated Fluxes
  wpi = backcumsum(tkePTra,2).*dz;
- wpiR = wpi./tkeavg;
- wpiR(notkeidx) = 0;
  wtke = backcumsum(tkeAdve,2).*dz;
- wtkeR = wtke./tkeavg;
- wtkeR(notkeidx) = 0;
  sgs = backcumsum(tkeSGTr,2).*dz;
- sgsR = sgs./tkeavg;
- sgsR(notkeidx) = 0;
- #Scale by tke
- dtkedtRate = dtkedt./tkeavg;
- dtkedtRate(notkeidx) = 0;
- tkePTraRate = tkePTra./tkeavg;
- tkePTraRate(notkeidx) = 0;
- tkeAdveRate = tkeAdve./tkeavg;
- tkeAdveRate(notkeidx) = 0;
- BuoyPrRate = BuoyPr./tkeavg;
- BuoyPrRate(notkeidx)=0;
- tkeSGTrRate = tkeSGTr./tkeavg;
- tkeSGTrRate(notkeidx)=0;
- ShPrRate = ShPr./tkeavg;
- ShPrRate(notkeidx)=0;
- StDrRate = StDr./tkeavg;
- StDrRate(notkeidx)=0;
- DissRate = Diss./tkeavg;
- DissRate(notkeidx)=0;
+ # Scale by tke
+ # Find the zeros of tke
+ #notkeidx = find((tkeavg==0));
+ #wtkeR = noNaNdiv(wtke,tke,notkeidx);
+ #sgsR = noNaNdiv(sgs,tke,notkeidx);
+ #dtkedtRate = noNaNdiv(dtkedt,tke,notkeidx);
+ #tkePTraRate = = noNaNdiv(tkePTra,tke,notkeidx);
+ #tkeAdveRate = noNaNdiv(tkeAdve,tke,notkeidx);
+ #BuoyPrRate = noNaNdiv(BuoyPr,tke,notkeidx);
+ #tkeSGTrRate = noNaNdiv(tkeSGTr,tke,notkeidx);
+ #ShPrRate = noNaNdiv(ShPr,tke,notkeidx);
+ #StDrRate = noNaNdiv(StDr,tke,notkeidx);
+ #DissRate = noNaNdiv(Diss,tke,notkeidx);
  if(useoctplot==1)
   # Make co-ordinate 2-D arrays from lists
   [ttchm,zzchm] = meshgrid(tchm,zchm);
@@ -137,43 +125,203 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',tkeavg',[outdir abrev "tke.dat"]);
   # d tke d t
   binmatrix(tdag',zdag',dtkedt',[outdir abrev "dtkedt.dat"]);
-  binmatrix(tdag',zdag',dtkedt',[outdir abrev "dtkedtR.dat"]);
+  binmatrix(zdag',tdag',dtkedt,[outdir abrev "dtkedtT.dat"]);
   # d w' pi'd z
   binmatrix(tdag',zdag',tkePTra',[outdir abrev "dwpidz.dat"]);
-  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "dwpidzR.dat"]);
+  binmatrix(zdag',tdag',tkePTra,[outdir abrev "dwpidzT.dat"]);
   # w' pi'
   binmatrix(tdag',zdag',tkePTra',[outdir abrev "wpi.dat"]);
-  binmatrix(tdag',zdag',tkePTraRate',[outdir abrev "wpiR.dat"]);
+  binmatrix(zdag',tdag',tkePTra,[outdir abrev "wpiT.dat"]);
   # d w' tke d z
   binmatrix(tdag',zdag',tkeAdve',[outdir abrev "dwtkedz.dat"]);
-  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "dwtkedzR.dat"]);
+  binmatrix(zdag',tdag',tkeAdve,[outdir abrev "dwtkedzT.dat"]);
   # w' tke
   binmatrix(tdag',zdag',tkeAdve',[outdir abrev "wtke.dat"]);
-  binmatrix(tdag',zdag',tkeAdveRate',[outdir abrev "wtkeR.dat"]);
+  binmatrix(zdag',tdag',tkeAdve,[outdir abrev "wtkeT.dat"]);
   # d sgs dz
   binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "dsgsdz.dat"]);
-  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "dsgsdzR.dat"]);
+  binmatrix(zdag',tdag',tkeSGTr,[outdir abrev "dsgsdzT.dat"]);
   # sgs
   binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "sgs.dat"]);
-  binmatrix(tdag',zdag',tkeSGTrRate',[outdir abrev "sgsR.dat"]);
+  binmatrix(zdag',tdag',tkeSGTr,[outdir abrev "sgsT.dat"]);
   # b' w'
   binmatrix(tdag',zdag',BuoyPr',[outdir abrev "bw.dat"]);
-  binmatrix(tdag',zdag',BuoyPrRate',[outdir abrev "bwR.dat"]);
+  binmatrix(zdag',tdag',BuoyPr,[outdir abrev "bwT.dat"]);
   # u' u' d U d z
   binmatrix(tdag',zdag',ShPr',[outdir abrev "uudUdz.dat"]);
-  binmatrix(tdag',zdag',ShPrRate',[outdir abrev "uudUdzR.dat"]);
+  binmatrix(zdag',tdag',ShPr,[outdir abrev "uudUdzT.dat"]);
   # u' u' d S d z
   binmatrix(tdag',zdag',StDr',[outdir abrev "uudSdz.dat"]);
-  binmatrix(tdag',zdag',StDrRate',[outdir abrev "uudSdzR.dat"]);
+  binmatrix(zdag',tdag',StDr,[outdir abrev "uudSdzT.dat"]);
   # dissipation
   binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
-  binmatrix(tdag',zdag',DissRate',[outdir abrev "dissR.dat"]);
+  binmatrix(zdag',tdag',Diss,[outdir abrev "dissT.dat"]);
+  # write out profile plots
+  fid = fopen([outdir abrev "profiles.plt"],"w");
+  # Setup spacing
+  plt = "rows = 1";
+  fprintf(fid,"%s\n",plt);
+  plt = "row = 0";
+  fprintf(fid,"%s\n",plt);
+  plt = "cols = 1";
+  fprintf(fid,"%s\n",plt);
+  plt = "col = 0";
+  fprintf(fid,"%s\n",plt);
+  plt = ["load " '"/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"'];
+  fprintf(fid,"%s\n",plt);
+  plt = "set clip one";
+  fprintf(fid,"%s\n",plt);
+  plt = "set ylabel 'Z(m)'";
+  fprintf(fid,"%s\n",plt);
+  plt = "set tmargin at screen tloc(row)";
+  fprintf(fid,"%s\n",plt);
+  plt = "set bmargin at screen bloc(row)";
+  fprintf(fid,"%s\n",plt);
+  plt = "set xlabel 'Turbulent Kinetic Energy Production/Dissipation (W/kg)'";
+  fprintf(fid,"%s\n",plt);
+  plt = "unset mxtics";
+  fprintf(fid,"%s\n",plt);
+  plt = "set style data filledcurves x1=0";
+  fprintf(fid,"%s\n",plt);
+  plt = "set style fill transparent solid .125";
+  fprintf(fid,"%s\n",plt);
+  plt = "set key b r";
+  fprintf(fid,"%s\n",plt);
+  plt = "field1 = 'uudUdzT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field2 = 'uudSdzT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field3 = 'bwT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field4 = 'dissT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field5 = 'dwtkedzT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field6 = 'dwpidzT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field7 = 'dsgsdzT'";
+  fprintf(fid,"%s\n",plt);
+  %
+  % Choose scaling by x/(1e-6+abs(x))
+  scaled = true;
+  % or none
+  %scaled = false;
+  %
+  if(scaled)
+   plt = "phi(x) = x/(10e-6+abs(x))";
+   fprintf(fid,"%s\n",plt);
+   plt = "set xrange[-1:1]";
+   fprintf(fid,"%s\n",plt);
+   plt = 'set xtics ( "-3e^{-6}" -3./4 , "-1e^{-6}" -1./2, "-3e^{-7}" -1./4, "0" 0, "+3e^{-7}" 1./4, "+1e^{-6}" 1./2, "+3e^{-6}" 3./4 ) offset 0,xtoff/2';
+   fprintf(fid,"%s\n",plt);
+  else
+   plt = "phi(x) = x";
+   fprintf(fid,"%s\n",plt);
+   plt = "set xrange[dtkemin:dtkemax]";
+   fprintf(fid,"%s\n",plt);
+   plt = "set xtics auto";
+   fprintf(fid,"%s\n",plt);
+  end%if
+  %
+  %
+  %
+  pltSP = 'datdir.abrev.field1.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "SP"';
+  pltSt = 'datdir.abrev.field2.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "St"';
+  pltbw = ['datdir.abrev.field3.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "' "b'w'" '"'];
+  pltep = 'datdir.abrev.field4.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol e}"';
+  pltwtke = ['datdir.abrev.field5.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'tke" '"'];
+  pltwp = ['datdir.abrev.field6.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'P'" '"'];
+  pltsgs = ['datdir.abrev.field7.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "sgs" '"'];
+  %
+  %
+  for i=1:length(tdag)
+   days = floor(tdag(i));
+   hours = floor((tdag(i)-days)*24);
+   minutes = floor(60*(((tdag(i)-days)*24)-hours));
+   seconds = floor(60*(60*(((tdag(i)-days)*24)-hours)-minutes));
+   # Set save file
+   plt = ["tidx = " int2str(i)];
+   fprintf(fid,"%s\n",plt);
+   plt = ["tval = " num2str(tdag(i))];
+   fprintf(fid,"%s\n",plt);
+   plt = ["ttxt = " '"' num2str(days,"%03i") '-' num2str(hours,"%02i") '-' num2str(minutes,"%02i") '-' num2str(seconds,"%02i") '"'];
+   fprintf(fid,"%s\n",plt);
+   %
+   plt = ["set output outdir.'profiles/'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
+   fprintf(fid,"%s\n",plt);
+   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   fprintf(fid,"%s\n",plt);
+   plt = 'plot \';
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSP ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSt ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltbw ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltep ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwtke ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwp ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltsgs];
+   fprintf(fid,"%s\n",plt);
+   plt = 'unset multiplot';
+   fprintf(fid,"%s\n",plt);
+   %
+   plt = ["set output outdir.'profiles/ProDis'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
+   fprintf(fid,"%s\n",plt);
+   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   fprintf(fid,"%s\n",plt);
+   plt = 'plot \';
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSP ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSt ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltbw ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltep];
+   fprintf(fid,"%s\n",plt);
+   plt = 'unset multiplot';
+   fprintf(fid,"%s\n",plt);
+   %
+   plt = ["set output outdir.'profiles/FlxDiv'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
+   fprintf(fid,"%s\n",plt);
+   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   fprintf(fid,"%s\n",plt);
+   plt = 'plot \';
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwtke ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwp ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltsgs];
+   fprintf(fid,"%s\n",plt);
+   plt = 'unset multiplot';
+   fprintf(fid,"%s\n",plt);
+   %
+  end%for
+   fclose(fid);
   # invoke gnuplot
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "linR.plt"]);
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabs.plt"]);
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "logabsR.plt"]);
+  unix(["pngmovie.sh -l " outdir "profiles/tkeBudg -n " outdir "profiles/tkeBudg -f 30"]);
+  unix(["pngmovie.sh -l " outdir "profiles/ProDistkeBudg -n " outdir "profiles/ProDistkeBudg -f 30"]);
+  unix(["pngmovie.sh -l " outdir "profiles/FlxDivtkeBudg -n " outdir "profiles/FlxDivtkeBudg -f 30"]);
  end%if
  %
+end%function
+
+function [quotient,idxBzero] =  noNaNdiv(A,B,idxBzero)
+# divide A by B and replace division by zero in quotient with zero
+ if (nargin()<2)
+  B=A
+ end%if
+ if (nargin()<3)
+  idxBzero = find((B==0));
+ end%if
+ quotient = A./B;
+ quotient(idxBzero) = 0;
 end%function
