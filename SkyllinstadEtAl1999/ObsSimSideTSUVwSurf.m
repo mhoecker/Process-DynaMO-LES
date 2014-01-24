@@ -85,6 +85,6 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',vavgdag',[outdir abrev "j.dat"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev1 ".plt"]);
-  %unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev2 ".plt"]);
+  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev2 ".plt"]);
  end%if
 end%function
