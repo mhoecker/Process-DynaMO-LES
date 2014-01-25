@@ -181,9 +181,9 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   plt = "unset mxtics";
   fprintf(fid,"%s\n",plt);
-  plt = "set style data filledcurves x1=0";
+  plt = "set style data lines";
   fprintf(fid,"%s\n",plt);
-  plt = "set style fill transparent solid .125";
+  plt = "set yzeroaxis lc rgbcolor 'grey'";
   fprintf(fid,"%s\n",plt);
   plt = "set key b r";
   fprintf(fid,"%s\n",plt);
@@ -225,16 +225,17 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   %
   %
   %
-  pltSP = 'datdir.abrev.field1.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "SP"';
-  pltSt = 'datdir.abrev.field2.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "St"';
-  pltbw = ['datdir.abrev.field3.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "' "b'w'" '"'];
-  pltep = 'datdir.abrev.field4.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol e}"';
-  pltwtke = ['datdir.abrev.field5.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'tke" '"'];
-  pltwp = ['datdir.abrev.field6.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'P'" '"'];
-  pltsgs = ['datdir.abrev.field7.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "sgs" '"'];
+  pltSP = 'datdir.abrev.field1.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "SP" lc rgbcolor "red"';
+  pltSt = 'datdir.abrev.field2.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "St" lc rgbcolor "green"';
+  pltbw = ['datdir.abrev.field3.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "' "b'w'" '" lc rgbcolor "blue"'];
+  pltep = 'datdir.abrev.field4.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol e}" lc rgbcolor "grey20"';
+  pltwtke = ['datdir.abrev.field5.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'tke" '" lc rgbcolor "cyan"'];
+  pltwp = ['datdir.abrev.field6.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'P'" '" lc rgbcolor "orange"'];
+  pltsgs = ['datdir.abrev.field7.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "sgs" '" lc rgbcolor "magenta"'];
   %
   %
-  for i=1:length(tdag)
+%  for i=1:length(tdag)
+  for i=1:length(tdag)-1
    days = floor(tdag(i));
    hours = floor((tdag(i)-days)*24);
    minutes = floor(60*(((tdag(i)-days)*24)-hours));
@@ -249,7 +250,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    %
    plt = ["set output outdir.'profiles/'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
    fprintf(fid,"%s\n",plt);
-   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   plt = "set multiplot title 'tke budget profile 2011 UTC yearday '.ttxt";
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -272,7 +273,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    %
    plt = ["set output outdir.'profiles/ProDis'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
    fprintf(fid,"%s\n",plt);
-   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   plt = "set multiplot title 'tke budget profile 2011 UTC yearday '.ttxt";
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -289,7 +290,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    %
    plt = ["set output outdir.'profiles/FlxDiv'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
    fprintf(fid,"%s\n",plt);
-   plt = "set multiplot title 'tke budget profile 2011 yearday '.ttxt";
+   plt = "set multiplot title 'tke budget profile 2011 UTC yearday '.ttxt";
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -305,7 +306,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   end%for
    fclose(fid);
   # invoke gnuplot
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
   unix(["pngmovie.sh -l " outdir "profiles/tkeBudg -n " outdir "profiles/tkeBudg -f 30"]);
   unix(["pngmovie.sh -l " outdir "profiles/ProDistkeBudg -n " outdir "profiles/ProDistkeBudg -f 30"]);
