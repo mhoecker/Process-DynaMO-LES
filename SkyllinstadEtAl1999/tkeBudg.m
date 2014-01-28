@@ -201,6 +201,12 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   plt = "field7 = 'dsgsdzT'";
   fprintf(fid,"%s\n",plt);
+  plt = "field8 = 'wtkeT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field9 = 'wpiT'";
+  fprintf(fid,"%s\n",plt);
+  plt = "field10 = 'sgsT'";
+  fprintf(fid,"%s\n",plt);
   %
   % Choose scaling by x/(1e-6+abs(x))
   scaled = true;
@@ -232,15 +238,15 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   pltwtke = ['datdir.abrev.field5.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'tke" '" lc rgbcolor "cyan"'];
   pltwp = ['datdir.abrev.field6.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "w'P'" '" lc rgbcolor "orange"'];
   pltsgs = ['datdir.abrev.field7.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "{/Symbol \266}_{z}' "sgs" '" lc rgbcolor "magenta"'];
+  pltwtkefx = ['datdir.abrev.field8.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "' "w'tke" '" lc rgbcolor "cyan"'];
+  pltwpfx = ['datdir.abrev.field9.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "' "w'P'" '" lc rgbcolor "orange"'];
+  pltsgsfx = ['datdir.abrev.field10.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "sgs" lc rgbcolor "magenta"'];
   %
   %
-%  for i=1:length(tdag)
-  for i=1:length(tdag)-1
-   days = floor(tdag(i));
-   hours = floor((tdag(i)-days)*24);
-   minutes = floor(60*(((tdag(i)-days)*24)-hours));
-   seconds = floor(60*(60*(((tdag(i)-days)*24)-hours)-minutes));
+ % for i=1:length(tdag)-1
+  for i=1:100
    # Set save file
+   [days,hours,minutes,seconds] = tag2dhms(tdag(i));
    plt = ["tidx = " int2str(i)];
    fprintf(fid,"%s\n",plt);
    plt = ["tval = " num2str(tdag(i))];
@@ -304,13 +310,47 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    fprintf(fid,"%s\n",plt);
    %
   end%for
-   fclose(fid);
+  plt = "set xlabel 'Turbulent Kinetic Energy Flux (W)'";
+  fprintf(fid,"%s\n",plt);
+  for i=1:length(tdag)-1
+%  for i=1:100
+   [days,hours,minutes,seconds] = tag2dhms(tdag(i));
+   plt = ["ttxt = " '"' num2str(days,"%03i") '-' num2str(hours,"%02i") '-' num2str(minutes,"%02i") '-' num2str(seconds,"%02i") '"'];
+   fprintf(fid,"%s\n",plt);
+   plt = ["tidx = " int2str(i)];
+   fprintf(fid,"%s\n",plt);
+   plt = ["tval = " num2str(tdag(i))];
+   fprintf(fid,"%s\n",plt);
+   plt = ["set output outdir.'profiles/Flx'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
+   fprintf(fid,"%s\n",plt);
+   plt = "set multiplot title 'tke flux profile 2011 UTC yearday '.ttxt";
+   fprintf(fid,"%s\n",plt);
+   plt = 'plot \';
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwtkefx ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltwpfx ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltsgsfx];
+   fprintf(fid,"%s\n",plt);
+   plt = 'unset multiplot';
+   fprintf(fid,"%s\n",plt);
+  end%for
+  fclose(fid);
   # invoke gnuplot
   #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
   unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
-  unix(["pngmovie.sh -l " outdir "profiles/tkeBudg -n " outdir "profiles/tkeBudg -f 30"]);
-  unix(["pngmovie.sh -l " outdir "profiles/ProDistkeBudg -n " outdir "profiles/ProDistkeBudg -f 30"]);
-  unix(["pngmovie.sh -l " outdir "profiles/FlxDivtkeBudg -n " outdir "profiles/FlxDivtkeBudg -f 30"]);
+  # Make movies
+  makemovies = "pngmovie.sh -t avi ";
+  profiledir = [outdir "profiles/"];
+  frameloc = [profiledir abrev];
+  unix(moviemaker(frameloc,frameloc,"30","avi"));
+  frameloc = [profiledir "ProDis" abrev];
+  unix(moviemaker(frameloc,frameloc,"30","avi"));
+  frameloc = [profiledir "FlxDiv" abrev];
+  unix(moviemaker(frameloc,frameloc,"30","avi"));
+  frameloc = [profiledir "Flx" abrev];
+  unix(moviemaker(frameloc,frameloc,"30","avi"));
  end%if
  %
 end%function
@@ -325,4 +365,27 @@ function [quotient,idxBzero] =  noNaNdiv(A,B,idxBzero)
  end%if
  quotient = A./B;
  quotient(idxBzero) = 0;
+end%function
+
+function [days,hours,minutes,seconds] = tag2dhms(tdag)
+   days = floor(tdag);
+   hours = floor((tdag-days)*24);
+   minutes = floor(60*(((tdag-days)*24)-hours));
+   seconds = floor(60*(60*(((tdag-days)*24)-hours)-minutes));
+end%function
+
+function callmovie = moviemaker(frameloc,movieloc,framerate,type)
+ callmovie = "pngmovie.sh";
+ if(nargin()>0)
+  callmovie = [callmovie " -l " frameloc];
+ end%if
+ if(nargin()>1)
+  callmovie = [callmovie " -n " movieloc];
+ end%if
+ if(nargin()>2)
+  callmovie = [callmovie " -f " framerate];
+ end%if
+ if(nargin()>3)
+  callmovie = [callmovie " -t " type];
+ end%if
 end%function
