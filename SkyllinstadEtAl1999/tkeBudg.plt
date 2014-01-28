@@ -1,7 +1,5 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-set style data lines
 abrev = "tkeBudg"
+set style data lines
 set output outdir.abrev.termsfx
 # Setup spacing
 rows = 5
@@ -176,5 +174,5 @@ outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot
 #
-load datdir.abrev."profiles.plt"
+#load datdir.abrev."profiles.plt"
 #

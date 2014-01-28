@@ -1,7 +1,7 @@
 % figure 6
 function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  abrev = "tkeBudg";
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -157,7 +157,12 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
   binmatrix(zdag',tdag',Diss,[outdir abrev "dissT.dat"]);
   # write out profile plots
-  fid = fopen([outdir abrev "profiles.plt"],"w");
+  fid = fopen([outdir "profiles/" abrev ".plt"],"w");
+  #
+  plt = 'set style data lines';
+  fprintf(fid,"%s\n",plt);
+  plt = 'abrev = "tkeBudg"';
+  fprintf(fid,"%s\n",plt);
   # Setup spacing
   plt = "rows = 1";
   fprintf(fid,"%s\n",plt);
@@ -185,7 +190,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   plt = "set yzeroaxis lc rgbcolor 'grey'";
   fprintf(fid,"%s\n",plt);
-  plt = "set key b r";
+  plt = "set key b r opaque sample 1";
   fprintf(fid,"%s\n",plt);
   plt = "field1 = 'uudUdzT'";
   fprintf(fid,"%s\n",plt);
@@ -209,25 +214,17 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   %
   % Choose scaling by x/(1e-6+abs(x))
-  scaled = true;
-  % or none
-  %scaled = false;
   %
-  if(scaled)
-   plt = "phi(x) = x/(10e-6+abs(x))";
-   fprintf(fid,"%s\n",plt);
-   plt = "set xrange[-1:1]";
-   fprintf(fid,"%s\n",plt);
-   plt = 'set xtics ( "-3e^{-6}" -3./4 , "-1e^{-6}" -1./2, "-3e^{-7}" -1./4, "0" 0, "+3e^{-7}" 1./4, "+1e^{-6}" 1./2, "+3e^{-6}" 3./4 ) offset 0,xtoff/2';
-   fprintf(fid,"%s\n",plt);
-  else
-   plt = "phi(x) = x";
-   fprintf(fid,"%s\n",plt);
-   plt = "set xrange[dtkemin:dtkemax]";
-   fprintf(fid,"%s\n",plt);
-   plt = "set xtics auto";
-   fprintf(fid,"%s\n",plt);
-  end%if
+  plt = "scale = 1e-6";
+  fprintf(fid,"%s\n",plt);
+  plt = "spow = -6";
+  fprintf(fid,"%s\n",plt);
+  plt = "phi(x) = x/(scale+abs(x))";
+  fprintf(fid,"%s\n",plt);
+  plt = "set xrange[-1:1]";
+  fprintf(fid,"%s\n",plt);
+  plt = 'set xtics ( "-3e^{".spow."}" -3./4 , "-1e^{".spow."}" -1./2, "-3e^{".(spow-1)."}" -1./4 , "0" 0, "+3e^{".(spow-1)."}" 1./4 , "+1e^{".spow."}" 1./2, "+3e^{".spow."}" 3./4 ) offset 0,xtoff/2';
+  fprintf(fid,"%s\n",plt);
   %
   %
   %
@@ -244,7 +241,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   %
   %
  % for i=1:length(tdag)-1
-  for i=1:100
+  for i=1:2
    # Set save file
    [days,hours,minutes,seconds] = tag2dhms(tdag(i));
    plt = ["tidx = " int2str(i)];
@@ -310,10 +307,20 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    fprintf(fid,"%s\n",plt);
    %
   end%for
-  plt = "set xlabel 'Turbulent Kinetic Energy Flux (W)'";
+  # Setup two collumn spacing
+  plt = "rows = 1";
+  fprintf(fid,"%s\n",plt);
+  plt = "row = 0";
+  fprintf(fid,"%s\n",plt);
+  plt = "cols = 2";
+  fprintf(fid,"%s\n",plt);
+  plt = "col = -1";
+  fprintf(fid,"%s\n",plt);
+  plt = 'set xtics ( "-3e^{".spow."}" -3./4 , "-3e^{".(spow-1)."}" -1./4 , "0" 0, "+3e^{".(spow-1)."}" 1./4 , "+3e^{".spow."}" 3./4 ) offset 0,xtoff/2';
   fprintf(fid,"%s\n",plt);
   for i=1:length(tdag)-1
-%  for i=1:100
+%  for i=1:2
+   # Set time labels
    [days,hours,minutes,seconds] = tag2dhms(tdag(i));
    plt = ["ttxt = " '"' num2str(days,"%03i") '-' num2str(hours,"%02i") '-' num2str(minutes,"%02i") '-' num2str(seconds,"%02i") '"'];
    fprintf(fid,"%s\n",plt);
@@ -321,9 +328,47 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    fprintf(fid,"%s\n",plt);
    plt = ["tval = " num2str(tdag(i))];
    fprintf(fid,"%s\n",plt);
+   # Set filename
    plt = ["set output outdir.'profiles/Flx'.abrev." '"' num2str(i,"%06i") '"' ".termsfx" ];
    fprintf(fid,"%s\n",plt);
-   plt = "set multiplot title 'tke flux profile 2011 UTC yearday '.ttxt";
+   # Set overalll title
+   plt = "set multiplot title 'Turbulent Kinetic Energy 2011 UTC yearday '.ttxt";
+   fprintf(fid,"%s\n",plt);
+   #
+   plt = "set ylabel 'Z(m)'";
+   fprintf(fid,"%s\n",plt);
+   plt = "set format y '%g'";
+   fprintf(fid,"%s\n",plt);
+   plt = "col = nextcol(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set lmargin at screen lloc(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set rmargin at screen rloc(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set xlabel 'Production/Dissipation (W/kg)'";
+   fprintf(fid,"%s\n",plt);
+   plt = 'plot \';
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSP ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltSt ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltbw ',\'];
+   fprintf(fid,"%s\n",plt);
+   plt = [pltep];
+   fprintf(fid,"%s\n",plt);
+   #
+   plt = "set ylabel ''";
+   fprintf(fid,"%s\n",plt);
+   plt = "set format y ''";
+   fprintf(fid,"%s\n",plt);
+   plt = "col = nextcol(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set lmargin at screen lloc(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set rmargin at screen rloc(col)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set xlabel 'Transport (W)'";
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -338,8 +383,11 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   end%for
   fclose(fid);
   # invoke gnuplot
+  outdir
   #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
   # Make movies
   makemovies = "pngmovie.sh -t avi ";
   profiledir = [outdir "profiles/"];
