@@ -15,3 +15,5 @@ gitdot.svg
 *.pdf
 # ignore ziped files
 *.zip
+# ignore divixlogfiles
+divx2pass.log
