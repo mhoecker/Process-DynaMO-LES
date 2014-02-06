@@ -182,8 +182,6 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   plt = "set bmargin at screen bloc(row)";
   fprintf(fid,"%s\n",plt);
-  plt = "set xlabel 'Turbulent Kinetic Energy Production/Dissipation (W/kg)'";
-  fprintf(fid,"%s\n",plt);
   plt = "unset mxtics";
   fprintf(fid,"%s\n",plt);
   plt = "set style data lines";
@@ -215,15 +213,35 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   %
   % Choose scaling by x/(1e-6+abs(x))
   %
-  plt = "scale = 1e-6";
-  fprintf(fid,"%s\n",plt);
   plt = "spow = -6";
   fprintf(fid,"%s\n",plt);
-  plt = "phi(x) = x/(scale+abs(x))";
+  plt = "sman = 4";
+  fprintf(fid,"%s\n",plt);
+  plt = "scale = 10**spow";
+  fprintf(fid,"%s\n",plt);
+  plt = "phi(x) = x/(sman*scale+abs(x))";
   fprintf(fid,"%s\n",plt);
   plt = "set xrange[-1:1]";
   fprintf(fid,"%s\n",plt);
-  plt = 'set xtics ( "-3e^{".spow."}" -3./4 , "-1e^{".spow."}" -1./2, "-3e^{".(spow-1)."}" -1./4 , "0" 0, "+3e^{".(spow-1)."}" 1./4 , "+1e^{".spow."}" 1./2, "+3e^{".spow."}" 3./4 ) offset 0,xtoff/2';
+  zeroticlab = ' "0" 0 ';
+  oneticlabs = ' "1" phi(scale), "-1" phi(-scale) ';
+  twoninetics = ' "" phi(-2*scale), "" phi(2*scale), "" phi(-3*scale), "" phi(3*scale), "" phi(4*scale), "" phi(-4*scale), "" phi(5*scale), "" phi(-5*scale), "" phi(6*scale), "" phi(-6*scale), "" phi(7*scale), "" phi(-7*scale), "" phi(8*scale), "" phi(-8*scale), "" phi(9*scale), "" phi(-9*scale) ';
+  tenticlabs = ' "10" phi(10*scale), "-10" phi(-10*scale) ';
+  twentyninetytics = '"" phi(20*scale), "" phi(-20*scale), "" phi(30*scale), "" phi(-30*scale), "" phi(40*scale), "" phi(-40*scale), "" phi(50*scale), "" phi(-50*scale), "" phi(60*scale), "" phi(-60*scale), "" phi(70*scale), "" phi(-70*scale), "" phi(80*scale), "" phi(-80*scale), "" phi(90*scale), "" phi(-90*scale)';
+  hundredticlabs = ' "100" phi(100*scale), "-100" phi(-100*scale) ';
+  hundredtics = ' "" phi(100*scale), "" phi(-100*scale) ';
+  twoninehundredtics = ' "" phi(-200*scale), "" phi(200*scale), "" phi(-300*scale), "" phi(300*scale), "" phi(-400*scale), "" phi(400*scale), "" phi(-500*scale), "" phi(500*scale), "" phi(-600*scale), "" phi(600*scale), "" phi(-700*scale), "" phi(700*scale), "" phi(-800*scale), "" phi(800*scale), "" phi(-900*scale), "" phi(900*scale) ';
+  thousandticlabs = ' "1000" phi(1000*scale), "-1000" phi(-1000*scale) ';
+  plt = 'set xtics offset 0,xtoff';
+  fprintf(fid,"%s\n",plt);
+  fprintf(fid,"set xtics (%s)\n",zeroticlab);
+  fprintf(fid,"set xtics add (%s)\n",oneticlabs);
+  fprintf(fid,"set xtics add (%s)\n",twoninetics);
+  fprintf(fid,"set xtics add (%s)\n",tenticlabs);
+  fprintf(fid,"set xtics add (%s)\n",twentyninetytics);
+  fprintf(fid,"set xtics add (%s)\n",hundredticlabs);
+  fprintf(fid,"set xtics add (%s)\n",twoninehundredtics);
+  plt = ["set xlabel 'Turbulent Kinetic Energy Production/Dissipation (10^{'.spow.'}W/kg)'"];
   fprintf(fid,"%s\n",plt);
   %
   %
@@ -240,8 +258,9 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   pltsgsfx = ['datdir.abrev.field10.".dat" binary matrix u (phi($3)):1 every :::tidx::tidx title "sgs" lc rgbcolor "magenta"'];
   %
   %
- % for i=1:length(tdag)-1
-  for i=1:2
+  Nsteps = length(tdag)-1;
+  Nskip = 1;
+  for i=1:Nskip:Nsteps
    # Set save file
    [days,hours,minutes,seconds] = tag2dhms(tdag(i));
    plt = ["tidx = " int2str(i)];
@@ -316,10 +335,16 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fprintf(fid,"%s\n",plt);
   plt = "col = -1";
   fprintf(fid,"%s\n",plt);
-  plt = 'set xtics ( "-3e^{".spow."}" -3./4 , "-3e^{".(spow-1)."}" -1./4 , "0" 0, "+3e^{".(spow-1)."}" 1./4 , "+3e^{".spow."}" 3./4 ) offset 0,xtoff/2';
+  plt = 'set xtics offset 0,xtoff';
   fprintf(fid,"%s\n",plt);
-  for i=1:length(tdag)-1
-%  for i=1:2
+  fprintf(fid,"set xtics (%s)\n",zeroticlab);
+  fprintf(fid,"set xtics add (%s)\n",oneticlabs);
+  fprintf(fid,"set xtics add (%s)\n",twoninetics);
+  fprintf(fid,"set xtics add (%s)\n",tenticlabs);
+  fprintf(fid,"set xtics add (%s)\n",twentyninetytics);
+  fprintf(fid,"set xtics add (%s)\n",hundredtics);
+  fprintf(fid,"set xtics add (%s)\n",twoninehundredtics);
+  for i=1:Nskip:Nsteps
    # Set time labels
    [days,hours,minutes,seconds] = tag2dhms(tdag(i));
    plt = ["ttxt = " '"' num2str(days,"%03i") '-' num2str(hours,"%02i") '-' num2str(minutes,"%02i") '-' num2str(seconds,"%02i") '"'];
@@ -345,7 +370,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    fprintf(fid,"%s\n",plt);
    plt = "set rmargin at screen rloc(col)";
    fprintf(fid,"%s\n",plt);
-   plt = "set xlabel 'Production/Dissipation (W/kg)'";
+   plt = ["set xlabel 'Production/Dissipation (10^{'.spow.'}W/kg)'"];
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -368,7 +393,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
    fprintf(fid,"%s\n",plt);
    plt = "set rmargin at screen rloc(col)";
    fprintf(fid,"%s\n",plt);
-   plt = "set xlabel 'Transport (W)'";
+   plt = "set xlabel 'Transport (10^{'.spow.'}Wm/kg)'";
    fprintf(fid,"%s\n",plt);
    plt = 'plot \';
    fprintf(fid,"%s\n",plt);
@@ -383,22 +408,22 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   end%for
   fclose(fid);
   # invoke gnuplot
-  outdir
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
   unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
   # Make movies
-  makemovies = "pngmovie.sh -t avi ";
-  profiledir = [outdir "profiles/"];
-  frameloc = [profiledir abrev];
-  unix(moviemaker(frameloc,frameloc,"30","avi"));
-  frameloc = [profiledir "ProDis" abrev];
-  unix(moviemaker(frameloc,frameloc,"30","avi"));
-  frameloc = [profiledir "FlxDiv" abrev];
-  unix(moviemaker(frameloc,frameloc,"30","avi"));
-  frameloc = [profiledir "Flx" abrev];
-  unix(moviemaker(frameloc,frameloc,"30","avi"));
+  movies = 1;
+  if(movies)
+   profiledir = [outdir "profiles/"];
+   frameloc = [profiledir abrev];
+   unix(moviemaker(frameloc,frameloc,"30","avi"));
+   frameloc = [profiledir "ProDis" abrev];
+   unix(moviemaker(frameloc,frameloc,"30","avi"));
+   frameloc = [profiledir "FlxDiv" abrev];
+   unix(moviemaker(frameloc,frameloc,"30","avi"));
+   frameloc = [profiledir "Flx" abrev];
+   unix(moviemaker(frameloc,frameloc,"30","avi"));
+  end%if
  end%if
  %
 end%function
@@ -436,4 +461,5 @@ function callmovie = moviemaker(frameloc,movieloc,framerate,type)
  if(nargin()>3)
   callmovie = [callmovie " -t " type];
  end%if
+  callmovie = [callmovie " >> " movieloc ".log" ];
 end%function

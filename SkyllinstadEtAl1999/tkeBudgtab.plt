@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev = "tkeBudg"
 # Make table for countours
 unset pm3d
 unset surface
