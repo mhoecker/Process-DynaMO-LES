@@ -80,7 +80,7 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',vdiff',[outdir abrev "vdiff.dat"]);
   binmatrix(tdag',zdag',udsum',[outdir abrev "udsum.dat"]);
   binmatrix(tdag',zdag',vdsum',[outdir abrev "vdsum.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "diff.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "dsum.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdiff.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdsum.plt"]);
  end%if
 end%function
