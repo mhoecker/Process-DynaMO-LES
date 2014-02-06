@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev  = "ObsSim"
 set output outdir.abrev."TSUVdiff".termsfx
 set view map
 unset colorbox

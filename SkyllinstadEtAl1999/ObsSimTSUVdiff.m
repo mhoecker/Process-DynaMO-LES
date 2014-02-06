@@ -3,7 +3,7 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % difference of Temperature, Salinity, and Velocity
  % between observations and model.
  abrev = "ObsSim";
- [useoctplot,t0sim,dsim,tfsim] = plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract Chameleon data
@@ -80,7 +80,7 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',vdiff',[outdir abrev "vdiff.dat"]);
   binmatrix(tdag',zdag',udsum',[outdir abrev "udsum.dat"]);
   binmatrix(tdag',zdag',vdsum',[outdir abrev "vdsum.dat"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "TSUVdiff.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "TSUVdsum.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "diff.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "dsum.plt"]);
  end%if
 end%function

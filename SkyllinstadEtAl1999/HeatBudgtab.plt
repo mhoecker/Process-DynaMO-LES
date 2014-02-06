@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev = "HeatBudg"
 unset pm3d
 unset surface
 set style data lines

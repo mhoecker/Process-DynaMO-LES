@@ -20,6 +20,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fprintf(fid,"tfsim=%f\n",tfsim);
   fprintf(fid,"dsim=%f\n",dsim);
   fprintf(fid,"palcolors=%f\n",palcolors);
+  fprintf(fid,"abrev = '%s'\n",abrev);
   fprintf(fid,"outdir = '%s'\n",outdir);
   fprintf(fid,"datdir = '%s'\n",datdir);
   fprintf(fid,"scriptdir = '%s'\n",scriptdir);

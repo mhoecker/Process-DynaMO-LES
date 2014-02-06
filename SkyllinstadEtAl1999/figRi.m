@@ -1,6 +1,7 @@
 % figure Ri
 function figRi(sfxnc,outdir)
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ abrev = "figRi";
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim-4,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes

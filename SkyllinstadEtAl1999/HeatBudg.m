@@ -1,7 +1,7 @@
 function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
 % figure 7 Heat Profiles
  abrev = "HeatBudg";
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -50,7 +50,8 @@ function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[outdir abrev "dTdt.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[outdir abrev "T_dTdz.dat"]);
   # invoke gnuplot
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if
 end%function

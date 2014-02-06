@@ -3,7 +3,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %figure 4
  % Plot time series of N^2 S^2 and Ri
  abrev = "NSRi";
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  #useoctplot=1;
  trange = [t0sim-2,tfsim+2];
  zrange = sort([0,-dsim]);
@@ -69,8 +69,8 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Ssqavg',[outdir abrev "c.dat"]);
   binmatrix(tdag',zdag',Ricavg',[outdir abrev "d.dat"]);
   binmatrix(tdag',zdag',rhoavg',[outdir abrev "e.dat"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev "tab.plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
  end%if
  %
 end%function

@@ -1,6 +1,4 @@
-reset
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-abrev = "NSRi"
+#abrev = "NSRi"
 # Make table for countours
 unset pm3d
 unset surface

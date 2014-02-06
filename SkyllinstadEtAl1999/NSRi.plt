@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/limits.plt"
-abrev = "NSRi"
 set output outdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing

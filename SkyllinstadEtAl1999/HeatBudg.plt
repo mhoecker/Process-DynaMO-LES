@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev = "HeatBudg"
 set output outdir.abrev.termsfx
 # Setup spacing
 rows = 4
