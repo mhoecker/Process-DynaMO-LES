@@ -6,7 +6,7 @@ function vars = dagvars(dagnc,field,trange,zrange)
  % if feilds is not given "time";"zzu" are used
  dag = netcdf(dagnc,'r');
  if(nargin<2)
-  field = ["time","zzu"];
+  field = ["time";"zzu"];
  end%if
  % get and restrict the time variable
  dim = squeeze(dag{deblank(field(1,:))}(:));
