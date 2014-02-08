@@ -13,7 +13,7 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
  % line plots are filled
  % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
  % Extract Flux data
@@ -49,6 +49,6 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
   binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "JhPrecipTxTy.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
  end%if
 end%function

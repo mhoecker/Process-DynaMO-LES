@@ -6,7 +6,7 @@ function  initialTSUV(chmnc,adcpnc,outdir)
  % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
  % 2nd plot E/W (u) and N/S (v) velocity at simulation start
  abrev = "initialTSUV";
- [useoctplot,t0sim,dsim]=plotparam(outdir);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
  # Extract Legendre coefficients and fit velocity profiles from adcp file
@@ -29,6 +29,6 @@ function  initialTSUV(chmnc,adcpnc,outdir)
   binarray(zadcp,[U;V;Ufit;Vfit],[outdir abrev "b.dat"]);
   # Save T,S profiles
   binarray(zchm',[Tchm;Schm],[outdir abrev "a.dat"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
  end%if
 end%function

@@ -1,12 +1,9 @@
-reset
-abrev = "ObsSimSideTSUVwSurf"
 Tmin = 26.5
 Tmax = 30.20
 Smin = 35.00
 Smax = 35.54
 UVmin = -0.9
 UVmax = +0.9
-load "/home/mhoecker/tmp/limits.plt"
 set output outdir.abrev.termsfx
 #
 # Setup spacing
@@ -113,7 +110,7 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir.abrev."e.dat" binary matrix w image notitle
+plot datdir.abrev."So.dat" binary matrix w image notitle
 # Simulated
 set ylabel ""
 set format y ""

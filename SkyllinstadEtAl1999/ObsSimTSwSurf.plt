@@ -6,15 +6,11 @@
 #  Observed Salinity
 #  Modeled Sainity
 #
-reset
-abrev = "ObsSimSideTSUVwSurf"
-abrev1 = "ObsSimTSwSurf"
 Tmin = 26.5
 Tmax = 30.20
 Smin = 35.00
 Smax = 35.54
-load "/home/mhoecker/tmp/limits.plt"
-set output outdir.abrev1.termsfx
+set output outdir.abrev."TSwSurf".termsfx
 #
 # Setup spacing
 rows = 5
@@ -92,7 +88,7 @@ set format x ""
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir.abrev."e.dat" binary matrix w image notitle
+plot datdir.abrev."So.dat" binary matrix w image notitle
 # Simulated
 set ylabel "S_{sim},Z (m)"
 set format x "%g"

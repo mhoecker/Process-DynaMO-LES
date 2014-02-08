@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev = "initialTSUV"
 set output outdir.abrev.termsfx
 set multiplot
 # Setup spacing

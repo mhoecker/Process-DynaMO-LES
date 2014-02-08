@@ -1,6 +1,3 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
-abrev = "ObsSurfEps"
 set output outdir.abrev.termsfx
 #
 # Setup spacing

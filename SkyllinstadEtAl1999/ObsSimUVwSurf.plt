@@ -1,11 +1,7 @@
-reset
-abrev = "ObsSimSideTSUVwSurf"
-abrev2 = "ObsSimUVwSurf"
 UVmin = -0.9
 UVmax = +0.9
 cbform = "%+04.2f"
-load "/home/mhoecker/tmp/limits.plt"
-set output outdir.abrev2.termsfx
+set output outdir.abrev."UVwSurf".termsfx
 #
 # Setup spacing
 rows = 5

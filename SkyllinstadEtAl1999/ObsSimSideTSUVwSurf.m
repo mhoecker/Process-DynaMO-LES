@@ -3,10 +3,10 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Comparison of Temperature, Salinity, and Velocity in observations
  % and model.  The surface heat and momentum forcings are also shown
  %
- abrev = "ObsSimSideTSUVwSurf";
- abrev1 = "ObsSimTSwSurf"
- abrev2 = "ObsSimUVwSurf"
- [useoctplot,t0sim,dsim,tfsim]=plotparam(outdir);
+ abrev = "ObsSim";
+ abrev1 = "ObsSimTS"
+ abrev2 = "ObsSimUV"
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -71,20 +71,20 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir 'fig3.png'],'-dpng')
  else
   # Save T,S profiles
-  binmatrix(tchm',zchm',Tchm',[outdir abrev "c.dat"]);
-  binmatrix(tchm',zchm',Schm',[outdir abrev "e.dat"]);
+  binmatrix(tchm',zchm',Tchm',[outdir abrev "To.dat"]);# was c
+  binmatrix(tchm',zchm',Schm',[outdir abrev "So.dat"]);#was e
   # save U,V profiles
-  binmatrix(tadcp',zadcp',ulpadcp',[outdir abrev "g.dat"]);
-  binmatrix(tadcp',zadcp',vlpadcp',[outdir abrev "i.dat"]);
+  binmatrix(tadcp',zadcp',ulpadcp',[outdir abrev "Uo.dat"]);#was g
+  binmatrix(tadcp',zadcp',vlpadcp',[outdir abrev "Vo.dat"]);#was i
   # Save surface flux profiles
-  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "ab.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "JPtau.dat"]);#was ab
   # save Simulated profiles
-  binmatrix(tdag',zdag',Tavgdag',[outdir abrev "d.dat"]);
-  binmatrix(tdag',zdag',Savgdag',[outdir abrev "f.dat"]);
-  binmatrix(tdag',zdag',uavgdag',[outdir abrev "h.dat"]);
-  binmatrix(tdag',zdag',vavgdag',[outdir abrev "j.dat"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev1 ".plt"]);
-  unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev2 ".plt"]);
+  binmatrix(tdag',zdag',Tavgdag',[outdir abrev "Ts.dat"]);#was d
+  binmatrix(tdag',zdag',Savgdag',[outdir abrev "Ss.dat"]);#was f
+  binmatrix(tdag',zdag',uavgdag',[outdir abrev "Us.dat"]);#was h
+  binmatrix(tdag',zdag',vavgdag',[outdir abrev "Vs.dat"]);#was j
+  unix(["gnuplot " limitsfile " " scriptdir abrev "SideTSUVwSurf.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "TSwSurf.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "UVwSurf.plt"]);
  end%if
 end%function
