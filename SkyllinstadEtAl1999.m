@@ -4,9 +4,10 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 % sfxnc - surface flux file (netCDF)
 % chmnc - Chameleon data file (netCDF)
 %
-% Recreate the figures in
+% inspired by analysis in
 % Skyllingstad, E. D.; Smyth, W. D.; Moum, J. N. & Wijesekera, H.
-% Upper-ocean turbulence during a westerly wind burst: A comparison of large-eddy simulation results and microstructure measurements
+% Upper-ocean turbulence during a westerly wind burst:
+% A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
 %
  ensureSkyllingstad1999;
@@ -31,7 +32,9 @@ end%if
  if nargin()<5
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
-
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
+ dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Test figure
  #testfig(outdir);
@@ -60,17 +63,19 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Surface and dissipation observations
  ObsSurfEps(sfxnc,chmnc,outdir);
  # Initial Conditions
- #initialTSUV(chmnc,adcpnc,outdir);
+ initialTSUV(chmnc,adcpnc,outdir);
  # Model Obersvation Comparison
  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Model Observation Difference
- #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Stability Criterion
- #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Turbulent Kinetic energy Budget
- #tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ # Heat flux comparison
+ Heatfluxcompare(dagnc,outdir);
  #Heat Budget
- #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function ensureSkyllingstad1999
