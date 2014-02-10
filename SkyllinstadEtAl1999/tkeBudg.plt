@@ -1,4 +1,3 @@
-abrev = "tkeBudg"
 set style data lines
 set output outdir.abrev.termsfx
 # Setup spacing
@@ -6,7 +5,7 @@ rows = 5
 row = 0
 cols = 1
 col = 0
-load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
+load scriptdir."tlocbloc.plt"
 #
 set multiplot title "Kinetic Energy Sources/Sinks (Horizontal Averages)"
 # all share the same left/right margins
