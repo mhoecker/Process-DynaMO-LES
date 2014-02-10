@@ -1,4 +1,4 @@
-function [zj] = Heatfluxcompare(dagfile,outdir)
+function Heatfluxcompare(dagfile,outdir)
 #
 #
 # function Heatfluxcompare(dagfile,z,outfile)
@@ -7,7 +7,7 @@ function [zj] = Heatfluxcompare(dagfile,outdir)
 # z = array of depths desired
  findgsw;
  g = gsw_grav(0);
- abrev = "Jflxcomp";
+ abrev = "jflxcomp";
  outfile = [outdir abrev];
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
@@ -29,15 +29,8 @@ function [zj] = Heatfluxcompare(dagfile,outdir)
  # calculate time in days
  t = t0sim+surfacevars.time./(24*3600);
  #
- # Calculate the scale of Surface Buoyancy Flux
- # from  Langmuir Turbulence
- SBusq = surfacevars.u_star.^2;
- SBusq = surfacevars.S_0.*SBusq;
- SBusq = 2.*pi.*SBusq./surfacevars.wave_l;
- #
  # Save Surface forcing
  Jhf0 = surfacevars.hf_top+surfacevars.lhf_top;
- binarray(t',[surfacevars.hf_top,surfacevars.lhf_top,Jhf0]',[outfile "surf.dat"])
  #
  internalfields = ['time';'zzw';'hf_ave';'wt_ave'];
  TSfields       = ['time';'zzu';'s_ave';'t_ave'];
@@ -45,13 +38,14 @@ function [zj] = Heatfluxcompare(dagfile,outdir)
  TSvars = dagvars(dagfile,TSfields,trange,zrange);
  Z = -internalvars.zzw';
  ZTS = -TSvars.zzu';
+ # Calculate the scale of Surface Buoyancy Flux
+ # from  Langmuir Turbulence
+ SBusq = surfacevars.u_star.^2;
+ Sz = StokesAtDepth(surfacevars.S_0,surfacevars.wave_l,Z);
+ SBusq = Sz.*SBusq;
+ SBusq = 2.*pi.*SBusq./surfacevars.wave_l;
+ #
  # interpolate T and S onto zzu
- #
- zz = Z.*ones(size(t));
- zzTS = ZTS.*ones(size(t));
- tt = t.*ones(size(Z));
- ttTS = t.*ones(size(ZTS));
- #
  S = -ones(size(Z)).*ones(size(t));
  T = S;
  for i=1:length(t)
@@ -68,11 +62,27 @@ function [zj] = Heatfluxcompare(dagfile,outdir)
  JswA = [(1-Tr).*surfacevars.swf_top];
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
- Ho = -alpha.*g.*(Jhf0+JswA)./(rho.*Cp.*SBusq);
- binmatrix(t',Z',Jsgs',[outfile "Jsgs.dat"])
- binmatrix(t',Z',Jwt',[outfile "Jwt.dat"])
- binmatrix(t',Z',JswA',[outfile "JswA.dat"])
- binmatrix(t',Z',JswT',[outfile "JswT.dat"])
- binmatrix(t',Z',Ho',[outfile "Ho.dat"])
+ Ho = (-alpha.*g.*(Jhf0+JswA)./(rho.*Cp.*SBusq));
+ #useoctplot = 1;
+ if(useoctplot==1)
+  #grids for octave pcolor plotting
+  zz = Z.*ones(size(t));
+  tt = t.*ones(size(Z));
+  #
+  figure(1)
+  pcolor(tt,zz,Ho)
+  caxis([-2,2]);
+  title("Honecker Number")
+  colorbar
+  shading flat
+  print([outdir abrev "Ho.png"],"-dpng")
+ else
+  binarray(t',[surfacevars.hf_top,surfacevars.lhf_top,Jhf0]',[outfile "surf.dat"]);
+  binmatrix(t',Z',Jsgs',[outfile "Jsgs.dat"])
+  binmatrix(t',Z',Jwt',[outfile "Jwt.dat"])
+  binmatrix(t',Z',JswA',[outfile "JswA.dat"])
+  binmatrix(t',Z',JswT',[outfile "JswT.dat"])
+  binmatrix(t',Z',Ho',[outfile "Ho.dat"])
+end%if
 end%function
 
