@@ -18,15 +18,23 @@ row = nextrow(row)
 Jmax = 800
 Jmin = -400
 set yrange [Jmin:Jmax]
-set ytics auto
+set ytics auto nomirror
+set y2tics auto nomirror
+set autoscale y2
+set ylabel "W/m^2"
+set y2label "mm/hr"
 cbform = "%+03.0f"
 set autoscale cb
 set format x ""
-plot datdir.abrev."surf.dat" binary format="%float%float%float%float%float" u 1:2 lw 2 title "hf_{top}",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float" u 1:3 title "lhf_{top}",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float" u 1:4 title "q",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float" u 1:5 title "swf_{top}"
+plot \
+datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:2 lw 2 t "hf_{top}",\
+datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:3 t "lhf_{top}",\
+datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:4 t "q",\
+datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:5 t "swf_{top}",\
+datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:6 axes x1y2 t "rain"
 #
+unset y2tics
+unset y2label
 load scriptdir."tlocbloc.plt"
 #
 set tmargin at screen tloc(row)

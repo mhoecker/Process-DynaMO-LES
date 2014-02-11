@@ -17,7 +17,7 @@ function Heatfluxcompare(dagfile,outdir)
  # get surface fields
  surfacefields  = ['time';'z'];
  #co-ordinates
- surfacefields  = [surfacefields ; 'hf_top';'lhf_top';'q'];
+ surfacefields  = [surfacefields ; 'hf_top';'lhf_top';'q';'rain'];
  #Surface Heat Flux
  surfacefields  = [surfacefields ; 'swf_top'];
  # Penatrating Heat flux
@@ -78,7 +78,7 @@ function Heatfluxcompare(dagfile,outdir)
   shading flat
   print([outdir abrev "Ho.png"],"-dpng")
  else
-  binarray(t',[surfacevars.hf_top,surfacevars.lhf_top,surfacevars.q,surfacevars.swf_top]',[outfile "surf.dat"]);
+  binarray(t',[surfacevars.hf_top,surfacevars.lhf_top,surfacevars.q,surfacevars.swf_top,surfacevars.rain]',[outfile "surf.dat"]);
   binmatrix(t',Z',Jsgs',[outfile "Jsgs.dat"])
   binmatrix(t',Z',Jwt',[outfile "Jwt.dat"])
   binmatrix(t',Z',JswA',[outfile "JswA.dat"])
