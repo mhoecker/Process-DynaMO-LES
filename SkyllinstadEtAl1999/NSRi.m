@@ -31,7 +31,6 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Pdag = gsw_p_from_z(zdag,0);
  # Density
  rhoavg = gsw_rho(Savgdag,Tavgdag,0);
- drhozs = rhoavg.-rhoavg(:,end);
  # Mean Density
  rho0 = mean(mean(rhoavg));
  #
@@ -70,7 +69,6 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Ssqavg',[outdir abrev "c.dat"]);
   binmatrix(tdag',zdag',Ricavg',[outdir abrev "d.dat"]);
   binmatrix(tdag',zdag',rhoavg',[outdir abrev "e.dat"]);
-  binmatrix(tdag',zdag',drhozs',[outdir abrev "rmrs.dat"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
  end%if

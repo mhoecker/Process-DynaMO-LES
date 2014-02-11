@@ -1,4 +1,3 @@
-#abrev = "NSRi"
 # Make table for countours
 unset pm3d
 unset surface
@@ -33,7 +32,8 @@ set table outroot."dm.tab"
 splot datroot."d.dat" binary matrix
 #
 # Density
-set cntrparam levels incremental 1000,.05,1040
+set cntrparam levels incremental 1000,.02,1040
 set table outroot."e.tab"
 splot datroot."e.dat" binary matrix
+#
 #

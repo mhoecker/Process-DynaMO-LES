@@ -57,6 +57,7 @@ function Heatfluxcompare(dagfile,outdir)
  alpha = gsw_alpha(S,T,P);
  Cp = gsw_cp_t_exact(S,T,P);
  rho = gsw_rho(S,T,P);
+ drhozs = 1000.*(rho.-rho(:,end));
  Tr = swradflux(Z);
  JswT = [Tr.*surfacevars.swf_top];
  JswA = [(1-Tr).*surfacevars.swf_top];
@@ -83,6 +84,9 @@ function Heatfluxcompare(dagfile,outdir)
   binmatrix(t',Z',JswA',[outfile "JswA.dat"])
   binmatrix(t',Z',JswT',[outfile "JswT.dat"])
   binmatrix(t',Z',Ho',[outfile "Ho.dat"])
+  binmatrix(t',Z',drhozs',[outfile "drhosz.dat"])
+  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
 end%if
 end%function
 

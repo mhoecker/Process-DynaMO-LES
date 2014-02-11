@@ -5,7 +5,7 @@ rows = 3
 row = 0
 cols = 1
 col = 0
-load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
+load scriptdir."tlocbloc.plt"
 #
 load outdir."sympal.plt"
 #
@@ -16,7 +16,7 @@ Nsqmin = -Nsqmax
 Rimax = 1.0
 Rimin= -Rimax
 cbform = "%+04.1te^{%+02T}"
-rhotitle = "{/Symbol Dr}=0.05 kg/m^3"
+rhotitle = "{/Symbol Dr}=20 g/m^3"
 rhocolor = "grey50"
 Rictitle = "Ri =+1/4"
 Riccolor = "black"
@@ -66,7 +66,7 @@ set format cb ""
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
 set key l b
-plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25))w image not,\
+plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not,\
 datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
 datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
 datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
