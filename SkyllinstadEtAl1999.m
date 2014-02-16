@@ -33,9 +33,15 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
+  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1-a_dag.nc'
+ outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
  # Test figure
  #testfig(outdir);
  #figRi(sfxnc,outdir);
@@ -70,12 +76,12 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Stability Criterion
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- # Turbulent Kinetic energy Budget
- tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Heat flux comparison
- Heatfluxcompare(dagnc,outdir);
+ Heatfluxcompare(dagnc,sfxnc,outdir);
  #Heat Budget
  HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ # Turbulent Kinetic energy Budget
+ #tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function ensureSkyllingstad1999
