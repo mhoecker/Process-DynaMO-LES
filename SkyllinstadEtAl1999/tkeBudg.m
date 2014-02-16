@@ -156,6 +156,9 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   # dissipation
   binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
   binmatrix(zdag',tdag',Diss,[outdir abrev "dissT.dat"]);
+  # Invoke gnuplot for main plots
+  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
   # write out profile plots
   fid = fopen([outdir "profiles/" abrev ".plt"],"w");
   #
@@ -408,8 +411,6 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   end%for
   fclose(fid);
   # invoke gnuplot
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
   unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
   # Make movies
   movies = 1;

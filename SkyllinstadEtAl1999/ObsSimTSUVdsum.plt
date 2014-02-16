@@ -40,7 +40,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc(col),bloc(row)+.1*vskip size .1*(1-rloc(col)),0.8*vskip
+set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),0.85*vskip
 row = nextrow(row)
 plot datdir.abrev."Tdsum.dat" binary matrix w image notitle
 #
@@ -52,7 +52,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc(col),bloc(row)+.1*vskip size .1*(1-rloc(col)),0.8*vskip
+set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),0.85*vskip
 row = nextrow(row)
 plot datdir.abrev."Sdsum.dat" binary matrix w image notitle
 #
@@ -74,7 +74,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
-set colorbox user origin rloc(col),bloc(row)+.1*vskip size .1*(1-rloc(col)),1.8*vskip
+set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),1.85*vskip
 row = nextrow(row)
 plot datdir.abrev."vdsum.dat" binary matrix w image notitle
 #

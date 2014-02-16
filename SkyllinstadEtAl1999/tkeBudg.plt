@@ -26,13 +26,13 @@ set xrange[t0sim:tfsim]
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows/2-1)+0.075*vskip size 0.1*(1.0-rloc(col)),(rows/2-.15)*(vskip)
 set format x ""
 set xlabel ""
 set format cb cbform
 set cblabel "J/kg"
 set cbrange [tkemin:tkemax]
-set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
+set cbtics tkemin,(tkemax-tkemin)/2,tkemax;set cbtics add ("0" 0)
 load outdir."pospal.plt"
 field = "tke"
 plot datdir.abrev.field.".dat" binary matrix w image not
@@ -43,8 +43,8 @@ set cbrange [dtkemin:dtkemax]
 load outdir."sympal.plt"
 set format cb cbform
 set cblabel "W/kg"
-set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
-set colorbox user origin rloc(col),bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.2)*(vskip)
+set cbtics dtkemin,(dtkemax-dtkemin),dtkemax;set cbtics add ("0" 0)
+set colorbox user origin rloc(col),bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.15)*(vskip)
 #
 # Plot total d/dt of tke
 #set tmargin at screen vmargin
@@ -53,7 +53,7 @@ set colorbox user origin rloc(col),bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc(col)
 #set colorbox user origin rloc(col)+.01,2*vskip/3.0 size .02,(rows)*vskip
 #set cbrange [dtkemin:dtkemax]
 #set format cb cbform."m^2s^{-3}"
-#set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
+#set cbtics dtkemin,(dtkemax-dtkemin),dtkemax;set cbtics add ("0" 0)
 #set ylabel "^{d}/_{dt}(tke)"
 #field = "dtkedt"
 #plot datdir.abrev.field.".dat" binary matrix w image not,\
@@ -119,13 +119,13 @@ set rmargin at screen rloc(col)
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(rows/2-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows/2-.2)*(vskip)
+set colorbox user origin rloc(col),bloc(rows/2-1)+0.075*vskip size 0.1*(1.0-rloc(col)),(rows/2-.15)*(vskip)
 set format x ""
 set xlabel ""
 set format cb cbform
 set cblabel "J/kg"
 set cbrange [tkemin:tkemax]
-set cbtics tkemin,(tkemax-tkemin)/palcolors,tkemax
+set cbtics tkemin,(tkemax-tkemin)/2,tkemax;set cbtics add ("0" 0)
 load outdir."pospal.plt"
 field = "tke"
 plot datdir.abrev.field.".dat" binary matrix w image not
@@ -136,8 +136,8 @@ set cbrange [Ftkemin:Ftkemax]
 load outdir."sympal.plt"
 set format cb cbform
 set cblabel "Wm/kg"
-set cbtics Ftkemin,(Ftkemax-Ftkemin)/palcolors,Ftkemax
-set colorbox user origin rloc(col),bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.2)*(vskip)
+set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
+set colorbox user origin rloc(col),bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc(col)),(rows-rows/2-.15)*(vskip)
 #
 # Plot Pressure transport
 row = nextrow(row)

@@ -8,7 +8,7 @@ outroot = outdir.abrev
 datroot = datdir.abrev
 #
 # Density deviation
-set cntrparam levels incremental 20,20,1000
+set cntrparam levels incremental 10,20,1000
 set table outroot."drhosz.tab"
 splot datroot."drhosz.dat" binary matrix
 #

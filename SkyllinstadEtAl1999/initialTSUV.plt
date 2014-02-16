@@ -5,7 +5,7 @@ rows = 1
 row = 0
 cols = 2
 col = 0
-load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
+load scriptdir."tlocbloc.plt"
 #
 #
 set lmargin at screen lloc(col)

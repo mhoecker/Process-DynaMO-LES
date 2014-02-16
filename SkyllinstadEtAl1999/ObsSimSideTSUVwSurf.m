@@ -4,8 +4,8 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % and model.  The surface heat and momentum forcings are also shown
  %
  abrev = "ObsSim";
- abrev1 = "ObsSimTS"
- abrev2 = "ObsSimUV"
+ abrev1 = "ObsSimTS";
+ abrev2 = "ObsSimUV";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);

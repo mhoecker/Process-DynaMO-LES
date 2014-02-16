@@ -1,7 +1,7 @@
 set output outdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing
-rows = 3
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -15,23 +15,25 @@ set multiplot title "Surface Flux Comparison"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-Jmax = 800
-Jmin = -400
+Jmax = 900
+Jmin = -900
 set yrange [Jmin:Jmax]
-set ytics auto nomirror
-set y2tics auto nomirror
+set ytics nomirror
+set ytics -800,400,800
+set y2tics nomirror
+set y2tics 0,25,100
 set autoscale y2
 set ylabel "W/m^2"
 set y2label "mm/hr"
 cbform = "%+03.0f"
 set autoscale cb
 set format x ""
+set key horizontal
+set key left top
+set key samplen 1
 plot \
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:2 lw 2 t "hf_{top}",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:3 t "lhf_{top}",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:4 t "q",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:5 t "swf_{top}",\
-datdir.abrev."surf.dat" binary format="%float%float%float%float%float%float" u 1:6 axes x1y2 t "rain"
+datdir.abrev."surf.dat" binary format="%float%float%float" u 1:2 t "Heat Flux",\
+datdir.abrev."surf.dat" binary format="%float%float%float" u 1:3 axes x1y2 t "Rain Rate"
 #
 unset y2tics
 unset y2label
@@ -39,29 +41,41 @@ load scriptdir."tlocbloc.plt"
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+.1*vskip size 0.1*(1.0-rloc(col)),.8*(vskip)
 row = nextrow(row)
-drhomax = 800
-cbform = "%+03.0f"
-#set autoscale cb
-set ylabel "Z (m)"
-set cbrange [0:drhomax]
-set cbtics 0,(drhomax)/palcolors,drhomax
-set format cb cbform
-set cblabel "{/Symbol Dr} (g/m^3)"
+set y2label "Buoyancy\n Flux (m/s^2/s)"
 set format x ""
-plot datdir.abrev."drhosz.tab" lc pal notitle
+#phi(x) = x/(1+abs(x))
+phi(x) = x
+set format y "%+4.1te^{%+02T}"
+set ytics -6e-6,3e-6,6e-6 mirror
+set yrange [-7e-6:5e-6]
+plot \
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) t "Thermal", \
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) t "Saline"
+#
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+row = nextrow(row)
+set format y "%+4.1te^{%+02T}"
+set ytics 4e-4,4e-4,1.2e-3 mirror
+set ytics add ("0" 0)
+set yrange [0:1.5e-3]
+plot \
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) t "Langmuir"
 #
 set format x "%g"
-set ylabel "Z (m)"
+set xlabel "2011 UTC yearday" offset 0,xloff
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format cb cbform
-set cblabel "Honecker Number"
-set cbrange [-1:1]
-set cbtics -1,(2.0)/palcolors,1
-set cbtics add ("+1" .5, "-1" -.5, "0" 0, "+{/Symbol \245}" 1, "-{/Symbol \245}" -1, "-3" -.75, "+3" .75, "-1/3" -.25, "+1/3" .25)
-set colorbox user origin rloc(col),bloc(row)+.1*vskip size 0.1*(1.0-rloc(col)),0.8*vskip
-plot datdir.abrev."Ho.dat" binary matrix u 1:2:($3/(abs($3)+1)) w image not, datdir.abrev."MLD.tab" lc -1 notitle
-#
+set y2label "Hoenikker\n Number"
+set yrange [-.12:.09]
+set ytics .05
+unset colorbox
+#phi(x) = x/(1+abs(x))
+phi(x) = x
+plot \
+datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 3 lw 2 t " Ho",\
+datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 1 t " Ho_T",\
+datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t " Ho_S"
 unset multiplot

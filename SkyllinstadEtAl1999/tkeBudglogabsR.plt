@@ -29,7 +29,7 @@ unset mcbtics
 # Plot tke
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row+2)+.1*vskip size 0.1*(1.0-rloc),2.8*(vskip)
+set colorbox user origin rloc,bloc(row+2)+0.075*vskip size 0.1*(1.0-rloc),2.85*vskip
 set format x ""
 set format cb cbform
 set cblabel "J/kg"
@@ -42,7 +42,7 @@ plot datdir.abrev."a.dat" binary matrix w image
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(rows-1)+.1*vskip size 0.1*(1.0-rloc),5.8*(vskip)
+set colorbox user origin rloc,bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc),5.85*vskip
 set cbrange [dtkemin:dtkemax]
 set format cb cbform
 set cblabel "s^{-1}"

@@ -1,7 +1,7 @@
 # given a number of figures calculate spacing for flush plots
 # vertical spacing
 tlocmax = .94
-blocmin = .06
+blocmin = .07
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 bloc(r) = tloc(r+1)
 vskip = tloc(0)-bloc(0)
