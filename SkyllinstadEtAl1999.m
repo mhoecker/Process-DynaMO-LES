@@ -81,7 +81,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #Heat Budget
  HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  # Turbulent Kinetic energy Budget
- #tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
 end%function
 
 function ensureSkyllingstad1999
