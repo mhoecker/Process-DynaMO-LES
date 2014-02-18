@@ -6,6 +6,7 @@ row = 0
 cols = 2
 col = 0
 load scriptdir."tlocbloc.plt"
+unset mxtics
 #
 #
 set lmargin at screen lloc(col)
@@ -17,8 +18,8 @@ set x2tics nomirror offset 0,-xtoff
 set yrange [-dsim:0]
 set ytics mirror -70,20,-10 offset ytoff,0
 set y2range [-dsim:0]
-set xlabel "T (^oC)" offset 0,xloff
-set x2label "S (psu)" offset 0,-0.9*xloff
+set xlabel  "T (^oC)"  offset graph 0, char +xloff
+set x2label "S (psu)" offset  graph -.5, char -xloff
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set ylabel "Z (m)" offset yloff,0
@@ -34,11 +35,11 @@ set rmargin at screen rloc(col)
 unset ytics
 set ylabel ""
 set y2label "Z (m)" offset -yloff,0
-set y2tics mirror -70,20,-10 offset -ytoff,0
+set y2tics mirror -70,20,-10
 set xrange [-.6:.6]
 set x2range [-.6:.6]
-set xlabel "U (m/s)"
-set x2label "V (m/s)" offset 0,-.9*xloff
+set xlabel  "U (m/s)" offset graph 0, char +xloff
+set x2label "V (m/s)" offset graph +.5, char -xloff
 set xtics .2 rangelimited
 set x2tics .2 rangelimited
 set yzeroaxis

@@ -30,10 +30,6 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fprintf(fid,"set palette maxcolors palcolors\n");
   fprintf(fid,"%s",paltext("euh"));
   fclose(fid);
-  palfile = [outdir "euhpal.plt"];
-  fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("euh"));
-  fclose(fid);
   palfile = [outdir "sympal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pm"));
@@ -45,6 +41,18 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   palfile = [outdir "negpal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("neg"));
+  fclose(fid);
+  palfile = [outdir "sympalnan.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("pmnan"));
+  fclose(fid);
+  palfile = [outdir "pospalnan.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("posnan"));
+  fclose(fid);
+  palfile = [outdir "negpalnan.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("negnan"));
   fclose(fid);
  end%if
 end%function

@@ -48,10 +48,11 @@ set format x ""
 phi(x) = x
 set format y "%+4.1te^{%+02T}"
 set ytics -6e-6,3e-6,6e-6 mirror
+set ytics add ("0" 0)
 set yrange [-7e-6:5e-6]
 plot \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) t "Thermal", \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) t "Saline"
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) t "Saline (g{/Symbol b}S(E-P))"
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -61,16 +62,17 @@ set ytics 4e-4,4e-4,1.2e-3 mirror
 set ytics add ("0" 0)
 set yrange [0:1.5e-3]
 plot \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) t "Langmuir"
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) t "Langmuir buoyancy flux scale (Uk{/Symbol t}/{/Symbol r})"
 #
+set key top center
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set format cb cbform
 set y2label "Hoenikker\n Number"
 set yrange [-.12:.09]
 set ytics .05
+set ytics add ("0" 0)
 unset colorbox
 #phi(x) = x/(1+abs(x))
 phi(x) = x

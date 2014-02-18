@@ -32,14 +32,16 @@ end%if
  if nargin()<5
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
  end%if
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
- dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
-  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1-a_dag.nc'
+ #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
+ #dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
+  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
@@ -64,24 +66,45 @@ end%if
 end%function
 
 function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ Nfigs = 8;
+ Ncur = 0;
+ waithandle = waitbar(Ncur./Nfigs,["Generating figures in " outdir]);
+ Ncur = Ncur+1;
  # Richardson Number Defined by Surface Flux
  #figRi(sfxnc,outdir);
  # Surface and dissipation observations
  ObsSurfEps(sfxnc,chmnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Initial Conditions
  initialTSUV(chmnc,adcpnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Model Obersvation Comparison
  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Model Observation Difference
  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Stability Criterion
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Heat flux comparison
  Heatfluxcompare(dagnc,sfxnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  #Heat Budget
  HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
  # Turbulent Kinetic energy Budget
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ close(waithandle);
 end%function
 
 function ensureSkyllingstad1999

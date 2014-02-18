@@ -1,7 +1,7 @@
 plotdir = "/home/mhoecker/work/Dynamo/plots/";
 datsdir = "/home/mhoecker/work/Dynamo/output/";
 % run 7
-%Hspectra([ datsdir "run7/dyno_328Rev_4-a_7200_rst.nc"],[ plotdir "run7/dissipation/7200"]);
+Hspectra([ datsdir "run7/dyno_328Rev_4-a_7200_rst.nc"],[ plotdir "run7/dissipation/7200"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_14400_rst.nc"],[ plotdir "run7/dissipation/14400"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_21600_rst.nc"],[ plotdir "run7/dissipation/21600"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_28800_rst.nc"],[ plotdir "run7/dissipation/28800"]);
@@ -38,23 +38,23 @@ datsdir = "/home/mhoecker/work/Dynamo/output/";
 % yellowstone 3
 plotdir = [plotdir "/yellowstone3/dissipation/"];
 datsdir = [datsdir "/yellowstone3/"];
-#Hspectra([ datsdir "o1024_1-a_7200_rst.nc" ], [ plotdir "07200a"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "07200aHspectra- -n " plotdir "07200aHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-a_21600_rst.nc" ],[ plotdir "21600a"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "21600aHspectra- -n " plotdir "21600aHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-b_14400_rst.nc" ],[ plotdir "14400b"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "14400bHspectra- -n " plotdir "14400bHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-b_21600_rst.nc" ],[ plotdir "21600b"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "21600bHspectra- -n " plotdir "21600bHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-b_43200_rst.nc" ],[ plotdir "43200b"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "43200bHspectra- -n " plotdir "43200bHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-c_14400_rst.nc" ],[ plotdir "14400c"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "14400cHspectra- -n " plotdir "14400cHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-c_28800_rst.nc" ],[ plotdir "28800c"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "28800cHspectra- -n " plotdir "28800cHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-c_64800_rst.nc" ],[ plotdir "64800c"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "64800Hspectra- -n " plotdir "64800Hspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-d_86400_rst.nc" ],[ plotdir "86400d"]);
-#unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "86400dHspectra- -n " plotdir "86400dHspectra -t mov"])
-#Hspectra([ datsdir "o1024_1-e_108000_rst.nc" ],[ plotdir "108000e"]);
-unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "108000eHspectra- -n " plotdir "108000eHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-a_7200_rst.nc" ], [ plotdir "07200a"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "07200aSpectra-tke -n " plotdir "07200aHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-a_21600_rst.nc" ],[ plotdir "21600a"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "21600aSpectra-tke -n " plotdir "21600aHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-b_14400_rst.nc" ],[ plotdir "14400b"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "14400bSpectra-tke -n " plotdir "14400bHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-b_21600_rst.nc" ],[ plotdir "21600b"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "21600bSpectra-tke -n " plotdir "21600bHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-b_43200_rst.nc" ],[ plotdir "43200b"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "43200bSpectra-tke -n " plotdir "43200bHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-c_14400_rst.nc" ],[ plotdir "14400c"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "14400cSpectra-tke -n " plotdir "14400cHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-c_28800_rst.nc" ],[ plotdir "28800c"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "28800cSpectra-tke -n " plotdir "28800cHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-c_64800_rst.nc" ],[ plotdir "64800c"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "64800Spectra-tke -n " plotdir "64800Hspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-d_86400_rst.nc" ],[ plotdir "86400d"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "86400dSpectra-tke -n " plotdir "86400dHspectra -t mov"])
+%Hspectra([ datsdir "o1024_1-e_108000_rst.nc" ],[ plotdir "108000e"]);
+%unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "108000eSpectra-tke -n " plotdir "108000eHspectra -t mov"])

@@ -10,7 +10,7 @@ function  initialTSUV(chmnc,adcpnc,outdir)
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
  # Extract Legendre coefficients and fit velocity profiles from adcp file
- [Ucoef,Vcoef,Ufit,Vfit,zadcp,U,V] = uvLegendre(adcpnc,t0sim,dsim,0.25/24,5,["t";"z";"u";"v"]);
+ [Ucoef,Vcoef,Ufit,Vfit,zadcp,U,V] = uvLegendre(adcpnc,t0sim,dsim,1/24,5,["t";"z";"u";"v"]);
  #plot(U,zadcp,Ufit,zadcp)
  # read Chameleon file
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);

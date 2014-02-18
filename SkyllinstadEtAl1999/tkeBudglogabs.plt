@@ -28,7 +28,7 @@ unset mcbtics
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row+2)+0.075*vskip size 0.1*(1.0-rloc),2.85*vskip
+set colorbox user origin rloc,bloc(row+2)+0.075*vskip size 0.1*(1.0-rloc),2*vskip+cbhig
 set format x ""
 set format cb cbform
 set cblabel "J/kg"
@@ -54,7 +54,7 @@ unset colorbox
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc),5.85*vskip
+set colorbox user origin rloc,bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc),5*vskip+cbhig
 set cbrange [dtkemin:dtkemax]
 set format cb cbform
 set cblabel "W/kg"

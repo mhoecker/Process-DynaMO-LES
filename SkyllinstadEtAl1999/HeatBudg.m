@@ -67,7 +67,7 @@ function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[outdir abrev "dTdt.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[outdir abrev "T_dTdz.dat"]);
   # invoke gnuplot
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  #unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
   #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
  end%if

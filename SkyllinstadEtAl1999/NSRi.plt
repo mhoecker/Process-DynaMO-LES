@@ -1,13 +1,12 @@
 set output outdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing
-rows = 3
+rows = 2
 row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
 #
-load outdir."sympal.plt"
 #
 set multiplot title "Instability Criterion"
 #
@@ -28,32 +27,37 @@ set key l t
 set format x ""
 set format y "%gm"
 #
-# Nsq
-set ylabel "N^2"
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-row = nextrow(row)
+# Common colorbar for Nsq and Ssq
+load outdir."pospal.plt"
 set format cb cbform
 set cblabel "s^{-2}"
-set cbrange [Nsqmin:Nsqmax]
-set cbtics Nsqmin,(Nsqmax-Nsqmin)/2,Nsqmax; set cbtics add ("0" 0)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size 0.1*(1.0-rloc(col)),1.85*vskip
-plot datdir.abrev."b.dat" binary matrix w image not, datdir.abrev."e.tab"  lc rgbcolor rhocolor title rhotitle
+set cbrange [0:Nsqmax]
+set cbtics 0,(Nsqmax)/2,Nsqmax; set cbtics add ("0" 0)
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+#
+# Nsq
+#set ylabel "N^2"
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#row = nextrow(row)
+#plot datdir.abrev."b.dat" binary matrix w image not, datdir.abrev."e.tab"  lc rgbcolor rhocolor title rhotitle
+#unset colorbox
 #
 # Ssq
-set ylabel "S^2"
+#row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-row = nextrow(row)
-unset colorbox
+set ylabel "S^2"
 plot datdir.abrev."c.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
+unset colorbox
 #
 # Richardson Number
+load outdir."sympal.plt"
 set ylabel "Ri=N^2/S^2"
+row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size 0.1*(1.0-rloc(col)),.85*vskip
-row = nextrow(row)
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set format cb cbform
 set cblabel ""
 set cbrange [-1:1]
@@ -66,9 +70,10 @@ set format cb ""
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
 set key l b
-plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not,\
-datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
-datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
-datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
+plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
+#,\
+#datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
+#datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
+#datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
 #
 unset multiplot

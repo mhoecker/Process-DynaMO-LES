@@ -26,8 +26,6 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set autoscale y
 set key l t
-set xrange  [t0sim:tfsim]
-set xtics t0sim+.25,.25,tfsim-.25 mirror
 set ytics nomirror -900,300,900 offset ytoff,0
 plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:2 axis x2y1 notitle ls 1
 #, datdir.abrev."ab.dat" binary format="%f%f%f%f%f"u 1:3
@@ -56,15 +54,13 @@ unset y2label
 unset x2label
 #
 # Profile Observations
+load scriptdir."tlocbloc.plt"
 #
-set xtics mirror
-set ytics mirror -70,20,-10 offset ytoff,0
-set yrange[-dsim:0]
 # Temperature
 set cblabel "T (^oC)"
 cbmin = Tmin
 cbmax = Tmax
-load outdir."pospal.plt"
+load outdir."pospalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin),cbmax
 set format cb cbform
@@ -88,12 +84,12 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),0.85*vskip
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Ts.dat" binary matrix w image notitle
 unset colorbox
 # Salinity
-load outdir."negpal.plt"
+load outdir."negpalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax
@@ -120,7 +116,7 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),0.85*vskip
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Ss.dat" binary matrix w image notitle
 unset colorbox
@@ -129,7 +125,7 @@ set format cb cbform
 set cblabel "u,v (m/s)"
 cbmin = UVmin
 cbmax = UVmax
-load outdir."sympal.plt"
+load outdir."sympalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax; set cbtics add ("0" 0)
 # Observed
@@ -178,7 +174,7 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),1.85*vskip
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 row = nextrow(row)
 set xlabel "Simulated Fields"
 plot datdir.abrev."Vs.dat" binary matrix w image notitle

@@ -6,10 +6,10 @@
 #  Observed Salinity
 #  Modeled Sainity
 #
-Tmin = 26.5
+Tmin = 28.2
 Tmax = 30.20
 Smin = 35.00
-Smax = 35.54
+Smax = 35.5
 set output outdir.abrev."TSwSurf".termsfx
 #
 # Setup spacing
@@ -17,7 +17,7 @@ rows = 5
 cols = 1
 col = 0
 row = 0
-load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
+load scriptdir."tlocbloc.plt"
 #
 cbform = "%04.2f"
 set multiplot title "T,S Profiles and Surface Forcings"
@@ -31,8 +31,6 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set autoscale y
 set key l t
-set xrange  [t0sim:tfsim]
-set xtics t0sim,.25,tfsim mirror
 set ylabel "J_h (W/m^2)" offset yloff,0
 set ytics nomirror -900,300,900 offset ytoff,0
 set y2label "P (mm/hr)" offset -yloff,0
@@ -45,37 +43,35 @@ unset y2label
 #
 # Profile Observations
 #
-set xtics mirror
-set ytics mirror -70,20,-10 offset ytoff,0
-set yrange[-dsim:0]
+load scriptdir."tlocbloc.plt"
+set key opaque inside top left
 set format y "%g"
+set ylabel "Z (m)"
 # Temperature
 set cblabel "T (^oC)" offset -yloff/2
 cbmin = Tmin
 cbmax = Tmax
-load outdir."pospal.plt"
+load outdir."pospalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set format cb cbform
 # Observed
-set ylabel "T_{obs},Z (m)"
 set format x ""
 unset colorbox
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir.abrev."To.dat" binary matrix w image notitle
+plot datdir.abrev."To.dat" binary matrix w image title "Observed"
 # Simulated
-set ylabel "T_{sim},Z (m)"
 set format x ""
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),1.85*vskip
-plot datdir.abrev."Ts.dat" binary matrix w image notitle
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
+plot datdir.abrev."Ts.dat" binary matrix w image title "Simulated"
 unset colorbox
 # Salinity
-load outdir."negpal.plt"
+load outdir."negpalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax
@@ -83,21 +79,19 @@ set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set format cb cbform
 # Observed
-set ylabel "S_{obs},Z (m)"
 unset colorbox
 set format x ""
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-plot datdir.abrev."So.dat" binary matrix w image notitle
+plot datdir.abrev."So.dat" binary matrix w image title "Observed"
 # Simulated
-set ylabel "S_{sim},Z (m)"
 set format x "%g"
 set xlabel "2011 UTC yearday"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc(col),bloc(row)+0.075*vskip size .1*(1-rloc(col)),1.85*vskip
-plot datdir.abrev."Ss.dat" binary matrix w image notitle
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
+plot datdir.abrev."Ss.dat" binary matrix w image title "Simulated"
 unset colorbox
 unset multiplot

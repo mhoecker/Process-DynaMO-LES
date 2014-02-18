@@ -28,7 +28,7 @@ nullcolor = "grey20"
 set ylabel "tke"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set colorbox user origin rloc,bloc(row+2)+0.075*vskip size 0.1*(1.0-rloc),2.85*vskip
+set colorbox user origin rloc,bloc(row+2)+0.075*vskip size 0.1*(1.0-rloc),2*vskip+cbhig
 set format x ""
 set format cb cbform
 set cblabel "J/kg"
@@ -47,7 +47,7 @@ set cbrange [dtkemin:dtkemax]
 set format cb cbform
 set cblabel "s^{-1}"
 set cbtics dtkemin,(dtkemax-dtkemin)/palcolors,dtkemax
-set colorbox user origin rloc,bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc),5.85*vskip
+set colorbox user origin rloc,bloc(rows-1)+0.075*vskip size 0.1*(1.0-rloc),5*vskip+cbhig
 set ylabel "w'P'"
 plot datdir.abrev."bR.dat" binary matrix u 1:2:3 w image, \
 outdir.abrev."bR.tab" lc rgbcolor nullcolor  lt 4 notitle

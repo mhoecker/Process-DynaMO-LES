@@ -17,10 +17,16 @@ function palette = paltext(paltype,cmin,cmax)
   case {"backrainbow" "euh"}
    palette = ["set palette mode HSV\nset palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n"];
   case { "plusminus" "pm" "minusplus" "mp" "bluered" "br" }
-   palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'grey80', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'white', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n"];
   case { "pos" "positive" "red"}
-   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'yellow', 1 'red')\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'white', .5 'yellow', 1 'red')\n"];
   case { "neg" "negative" "blue"}
+   palette = ["set palette mode RGB\nset palette defined (0 'white', .5 'cyan', 1 'blue')\n"];
+  case { "plusminusnan" "pmnan" "minusplusnan" "mpnan" "bluerednan" "brnan" }
+   palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'grey80', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n"];
+  case { "posnan" "positivenan" "rednan"}
+   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'yellow', 1 'red')\n"];
+  case { "negnan" "negativenan" "bluenan"}
    palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'cyan', 1 'blue')\n"];
   otherwise
    palette =  "set palette grey"

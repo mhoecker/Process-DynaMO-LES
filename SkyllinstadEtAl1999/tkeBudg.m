@@ -157,44 +157,47 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
   binmatrix(zdag',tdag',Diss,[outdir abrev "dissT.dat"]);
   # Invoke gnuplot for main plots
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
+  #unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
-  # write out profile plots
-  fid = fopen([outdir "profiles/" abrev ".plt"],"w");
-  #
-  plt = 'set style data lines';
-  fprintf(fid,"%s\n",plt);
-  plt = 'abrev = "tkeBudg"';
-  fprintf(fid,"%s\n",plt);
-  # Setup spacing
-  plt = "rows = 1";
-  fprintf(fid,"%s\n",plt);
-  plt = "row = 0";
-  fprintf(fid,"%s\n",plt);
-  plt = "cols = 1";
-  fprintf(fid,"%s\n",plt);
-  plt = "col = 0";
-  fprintf(fid,"%s\n",plt);
-  plt = ["load " '"/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"'];
-  fprintf(fid,"%s\n",plt);
-  plt = "set clip one";
-  fprintf(fid,"%s\n",plt);
-  plt = "set ylabel 'Z(m)'";
-  fprintf(fid,"%s\n",plt);
-  plt = "set tmargin at screen tloc(row)";
-  fprintf(fid,"%s\n",plt);
-  plt = "set bmargin at screen bloc(row)";
-  fprintf(fid,"%s\n",plt);
-  plt = "unset mxtics";
-  fprintf(fid,"%s\n",plt);
-  plt = "set style data lines";
-  fprintf(fid,"%s\n",plt);
-  plt = "set yzeroaxis lc rgbcolor 'grey'";
-  fprintf(fid,"%s\n",plt);
-  plt = "set key b r opaque sample 1";
-  fprintf(fid,"%s\n",plt);
-  plt = "field1 = 'uudUdzT'";
-  fprintf(fid,"%s\n",plt);
+  # Make profile movies
+  movies = 0;
+  if(movies)
+   # write out profile plots
+   fid = fopen([outdir "profiles/" abrev ".plt"],"w");
+   #
+   plt = 'set style data lines';
+   fprintf(fid,"%s\n",plt);
+   plt = 'abrev = "tkeBudg"';
+   fprintf(fid,"%s\n",plt);
+   # Setup spacing
+   plt = "rows = 1";
+   fprintf(fid,"%s\n",plt);
+   plt = "row = 0";
+   fprintf(fid,"%s\n",plt);
+   plt = "cols = 1";
+   fprintf(fid,"%s\n",plt);
+   plt = "col = 0";
+   fprintf(fid,"%s\n",plt);
+   plt = ["load " '"/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"'];
+   fprintf(fid,"%s\n",plt);
+   plt = "set clip one";
+   fprintf(fid,"%s\n",plt);
+   plt = "set ylabel 'Z(m)'";
+   fprintf(fid,"%s\n",plt);
+   plt = "set tmargin at screen tloc(row)";
+   fprintf(fid,"%s\n",plt);
+   plt = "set bmargin at screen bloc(row)";
+   fprintf(fid,"%s\n",plt);
+   plt = "unset mxtics";
+   fprintf(fid,"%s\n",plt);
+   plt = "set style data lines";
+   fprintf(fid,"%s\n",plt);
+   plt = "set yzeroaxis lc rgbcolor 'grey'";
+   fprintf(fid,"%s\n",plt);
+   plt = "set key b r opaque sample 1";
+   fprintf(fid,"%s\n",plt);
+   plt = "field1 = 'uudUdzT'";
+   fprintf(fid,"%s\n",plt);
   plt = "field2 = 'uudSdzT'";
   fprintf(fid,"%s\n",plt);
   plt = "field3 = 'bwT'";
@@ -411,10 +414,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   end%for
   fclose(fid);
   # invoke gnuplot
-  unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
-  # Make movies
-  movies = 1;
-  if(movies)
+   unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
    profiledir = [outdir "profiles/"];
    frameloc = [profiledir abrev];
    unix(moviemaker(frameloc,frameloc,"30","avi"));
