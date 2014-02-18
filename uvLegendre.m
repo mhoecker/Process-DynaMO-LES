@@ -6,7 +6,7 @@ function [Ucoef,Vcoef,Ufit,Vfit,z,U,V] = uvLegendre(adcpfile,wantdate,max_depth,
  nc = netcdf(adcpfile,"r");
  t = nc{deblank(varnames(1,:))}(:);
  dateidx = find(abs(t-wantdate)<avgtime,1);
- dateused  = mean(t(dateidx));
+ dateused  = median(t(dateidx));
  clear t;
  z = abs(nc{deblank(varnames(2,:))}(:));
  U = nanmean(nc{deblank(varnames(3,:))}(dateidx,:),1);

@@ -1,6 +1,7 @@
 function plotspecVvar(roots,datdir,plotdir,term,tmp)
 if nargin()<1
- roots = {'run8/dissipation/108000','run8/dissipation/86400','run8/dissipation/64800','run8/dissipation/43200','run8/dissipation/21600','run7/dissipation/14400','run7/dissipation/7200'};
+ roots = {'yellowstone3/dissipation/7200'};
+ %{'run8/dissipation/108000','run8/dissipation/86400','run8/dissipation/64800','run8/dissipation/43200','run8/dissipation/21600','run7/dissipation/14400','run7/dissipation/7200'};
  end%if
  if nargin()<2
   datdir = '/home/mhoecker/work/Dynamo/plots/';

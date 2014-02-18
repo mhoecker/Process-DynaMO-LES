@@ -1,5 +1,5 @@
 function [y] = csqfil(x,t,s,T)
-% [y,fil] = csqfil(x,t,T)
+% [y,fil] = csqfil(x,t,s,T)
 % Filter the time series x with a weighting function
 %
 % weight(t,s) = (1+cos(2*pi*(s-t)/T))^2 for |s-t| < T/2
