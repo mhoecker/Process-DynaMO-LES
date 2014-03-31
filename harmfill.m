@@ -16,11 +16,14 @@ function [y] = harmfill(x,t,s,T,order,demoname)
  if(nargin==0)
  % plot the filter frequency response
  % compare a moving average of same width
-  N = 2^16;
+  N = 2^18;
   harmfilldemo(N,1,"harmfill1")
   harmfilldemo(N,2,"harmfill2")
   harmfilldemo(N,3,"harmfill3")
   harmfilldemo(N,4,"harmfill4")
+  harmfilldemo(N,5,"harmfill5")
+  harmfilldemo(N,6,"harmfill6")
+  harmfilldemo(N,7,"harmfill7")
  elseif(nargin==6)
  % plot the filter frequency response
  % compare a moving average of same width
