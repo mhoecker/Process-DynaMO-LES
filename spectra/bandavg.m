@@ -1,4 +1,10 @@
 function [Pavg,favg,DOF]=bandavg(P,f,M)
+%function [Pavg,favg,DOF]=bandavg(P,f,M)
+% Band average a power spectra P
+% over frequencies f
+% use aproximately M frequencies to average
+% Assumes one sided spectra
+%
  N = length(f);
  m = floor((M-1)/2);
  w = 2*m+1;
