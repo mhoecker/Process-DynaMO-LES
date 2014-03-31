@@ -1,7 +1,8 @@
+ensureSkyllingstad1999;
 plotdir = "/home/mhoecker/work/Dynamo/plots/";
 datsdir = "/home/mhoecker/work/Dynamo/output/";
 % run 7
-Hspectra([ datsdir "run7/dyno_328Rev_4-a_7200_rst.nc"],[ plotdir "run7/dissipation/7200"]);
+%Hspectra([ datsdir "run7/dyno_328Rev_4-a_7200_rst.nc"],[ plotdir "run7/dissipation/7200"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_14400_rst.nc"],[ plotdir "run7/dissipation/14400"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_21600_rst.nc"],[ plotdir "run7/dissipation/21600"]);
 %Hspectra([ datsdir "run7/dyno_328Rev_4-a_28800_rst.nc"],[ plotdir "run7/dissipation/28800"]);
@@ -36,8 +37,8 @@ Hspectra([ datsdir "run7/dyno_328Rev_4-a_7200_rst.nc"],[ plotdir "run7/dissipati
 %Hspectra([ datsdir "o512_1-g_50400_rst.nc"],[ plotdir "50400"]);
 %
 % yellowstone 3
-plotdir = [plotdir "/yellowstone3/dissipation/"];
-datsdir = [datsdir "/yellowstone3/"];
+%plotdir = [plotdir "/yellowstone3/dissipation/"];
+%datsdir = [datsdir "/yellowstone3/"];
 %Hspectra([ datsdir "o1024_1-a_7200_rst.nc" ], [ plotdir "07200a"]);
 %unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "07200aSpectra-tke -n " plotdir "07200aHspectra -t mov"])
 %Hspectra([ datsdir "o1024_1-a_21600_rst.nc" ],[ plotdir "21600a"]);
@@ -58,3 +59,19 @@ datsdir = [datsdir "/yellowstone3/"];
 %unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "86400dSpectra-tke -n " plotdir "86400dHspectra -t mov"])
 %Hspectra([ datsdir "o1024_1-e_108000_rst.nc" ],[ plotdir "108000e"]);
 %unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "108000eSpectra-tke -n " plotdir "108000eHspectra -t mov"])
+% yellowstone 6
+plotdir = [plotdir "/yellowstone6/dissipation/"];
+datsdir = [datsdir "/yellowstone6/"];
+%Hspectra([ datsdir "d1024_1-a_21600_rst.nc" ], [ plotdir "21600a"]);
+%
+%Hspectra([ datsdir "d1024_1-a_43200_rst.nc" ], [ plotdir "43200a"]);
+%
+%Hspectra([ datsdir "d1024_1-b_64800_rst.nc" ], [ plotdir "64800b"]);
+%
+%Hspectra([ datsdir "d1024_1-b_86400_rst.nc" ], [ plotdir "86400b"]);
+%
+Hspectra([ datsdir "d1024_1-c_86400_rst.nc" ], [ plotdir "86400c"]);
+%
+%
+%
+removeSkyllingstad1999;
