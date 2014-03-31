@@ -28,6 +28,10 @@ function palette = paltext(paltype,cmin,cmax)
    palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'yellow', 1 'red')\n"];
   case { "negnan" "negativenan" "bluenan"}
    palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'cyan', 1 'blue')\n"];
+  case { "zissou" }
+   palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\n set palette maxcolors 5"];
+  case { "zissoublocks" }
+   palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\n set palette maxcolors 5"];
   otherwise
    palette =  "set palette grey"
  end%switch
