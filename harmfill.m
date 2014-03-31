@@ -69,7 +69,7 @@ function harmfilldemo(N,order,outname)
 %
 % Pass band
   subplot(2,2,1);
-  plot(f,Pw,"b;filter  ;",f,Pwa,["r;T/" int2str(1+.5*order) " moving avg.  ;"]);
+  plot(f,Pw,"b;filter  ;",f,Pwa,["r;T/" num2str(1+.5*order) " moving avg.  ;"]);
   grid on;
   axis([0,.95/T,.1,1]);
 %  title(["cosq filter 1/T=" num2str(1/T)]);
@@ -77,7 +77,7 @@ function harmfilldemo(N,order,outname)
   ylabel("Filter");
 % Filtered band
   subplot(2,2,2);
-  loglog(f,Pw,"b;filter  ;",f,(T*f).^(-2-2*order),["k;fT^{" int2str(-2-2*order) "};"],f,Pwa,["r;T/" int2str(order) " moving avg.  ;"],f,(T*f).^-2,"k;fT^{-2};");
+  loglog(f,Pw,"b;filter  ;",f,(T*f).^(-2-2*order),["k;fT^{" int2str(-2-2*order) "};"],f,Pwa,["r;T/" num2str(1+.5*order) " moving avg.  ;"],f,(T*f).^-2,"k;fT^{-2};");
   axis([1/T,64/T,64^(-6),1]);
 %  title(["cosq filter 1/T=" num2str(1/T)]);
   xlabel("freq.");
