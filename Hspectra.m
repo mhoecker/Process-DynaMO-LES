@@ -3,7 +3,7 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   term = 'png';
  end%if
  waithandle = waitbar(0,["loading file " rstnc]);
- useoctplot = 1;
+ useoctplot = 0;
  nc = netcdf(rstnc,'r');
  x = nc{'xu'}(:);
  y = nc{'yv'}(:);
@@ -53,7 +53,9 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
  N(i) = length(khidx{i});
  waitbar(0,waithandle,"Calculating horizontal spectra at each depth")
  Ptkegrid = [];
+ Ptkesgrid = [];
  Pwgrid = [];
+ Pwsgrid = [];
  for i=1:Nz
   waitbar(0.5+i*0.5/Nz,waithandle,["Calculating spectra for z=" num2str(z(i))]);
   uz = squeeze(nc{'um'}(1,i,:,:));
@@ -71,19 +73,24 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   binmatrix(k,l,Ptke,[outname "Spectra-tke-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(k,l,Pw,[outname "Spectra-w-2D-" num2str(i,"%06i") ".dat"]);
   # Calculate Raw and smoothed 1-D Spectra
+  waitbar(0.5+i*0.5/Nz,waithandle,["Calculating anular spectra for z=" num2str(z(i))]);
   Ptkeb = anularavg(Ptke(khsort),khlist,khun,khidx,N,1);
   Ptkegrid = [Ptkegrid;Ptkeb];
-  Ptkesb = csqfil(Ptke(khsort),khlist,khsmooth,3*dkh)
-  Ptkesgrid = [Ptkesgrid;Ptkesb];
   Pwb   = anularavg(Pw(khsort)  ,khlist,khun,khidx,N,1);
   Pwgrid = [Pwgrid;Pwb];
-  Pwsb = csqfil(Pw(khsort),khlist,khsmooth,3*dkh)
-  Pwsgrid = [Pwsgrid;Pwsb];
   # Save 1-D spectra for gnuplot to ingest
   binarray(khun,Ptkeb,[outname "Spectra-tke-1D-" num2str(i,"%06i") ".dat"]);
   binarray(khun,Pwb,  [outname "Spectra-w-1D-"   num2str(i,"%06i") ".dat"]);
-  binarray(khsmooth,Ptkesb,[outname "Spectra-Smooth-tke-1D-" num2str(i,"%06i") ".dat"]);
-  binarray(khsmooth,Pwsb,  [outname "Spectra-Smooth-w-1D-"   num2str(i,"%06i") ".dat"]);
+  smoothspecs=0;
+  if(smoothspecs==1)
+   waitbar(0.5+i*0.5/Nz,waithandle,["Calculating smoothed anular spectra for z=" num2str(z(i))]);
+   Ptkesb = csqfil(Ptke(khsort),khlist,khsmooth,3*dkh)
+   Ptkesgrid = [Ptkesgrid;Ptkesb];
+   Pwsb = csqfil(Pw(khsort),khlist,khsmooth,3*dkh)
+   Pwsgrid = [Pwsgrid;Pwsb];
+   binarray(khsmooth,Ptkesb,[outname "Spectra-Smooth-tke-1D-" num2str(i,"%06i") ".dat"]);
+   binarray(khsmooth,Pwsb,  [outname "Spectra-Smooth-w-1D-"   num2str(i,"%06i") ".dat"]);
+  end%if
   #
   if(useoctplot)
    figure(1)
@@ -117,8 +124,10 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
 % print([outname "Hspectra-all.png"],"-dpng")
  binmatrix(khun,z,Ptkegrid,[outname "Spectra-tke.dat"]);
  binmatrix(khun,z,Pwgrid,[outname "Spectra-w.dat"]);
+ if(smoothspecs==1)
  binmatrix(khsmooth,z,Ptkesgrid,[outname "Spectra-Smooth-tke.dat"]);
  binmatrix(khsmooth,z,Pwsgrid,[outname "Spectra-Smooth-tke.dat"]);
+ end%if
  ncclose(nc);
 end%function
 
