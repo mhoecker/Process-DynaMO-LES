@@ -1,7 +1,7 @@
 set output outdir.abrev.termsfx
 #
 # Setup spacing
-rows = 2
+rows = 3
 cols = 1
 col = 0
 row = 0
@@ -13,7 +13,7 @@ load scriptdir."tlocbloc.plt"
 #
 set autoscale y
 #
-set multiplot title "Surface Forcing and Dissipation Observetions"
+set multiplot title "Surface Forcing Observetions"
 set style data lines
 set ytics .2
 set key left
@@ -23,8 +23,8 @@ set format x ""
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "{/Symbol t} (Pa)"
-plot datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:4 lc -1 title "zonal",\
-datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:5 lc rgbcolor "grey50" title "meridional"
+plot datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:4 lc -1 title "zonal",\
+datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:5 lc rgbcolor "grey50" title "meridional"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -34,11 +34,24 @@ set ylabel "J_h (kW/m^2)"
 set y2label "P (mm/h)" offset -yloff,0
 set y2tics out 15
 set y2tics nomirror offset -ytoff,0
+plot \
+datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:($2*.001) title "J_h" ,\
+datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:3 axes x1y2 title "P"
+#
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set key b r
+set ytics 1 nomirror offset ytoff,0
+set ylabel "c_p (m/s)"
+set y2label "H_s (m)" offset -yloff,0
+set y2tics out .5
+set y2tics nomirror offset -ytoff,0
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 plot \
-datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:($2*.001) title "J_h" ,\
-datdir.abrev."JhPrecipTxTy.dat" binary format="%f%f%f%f%f" u 1:3 axes x1y2 title "P"
+datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:6 title "c_p" ,\
+datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "H_s"
 unset y2tics
 unset y2label
 #
