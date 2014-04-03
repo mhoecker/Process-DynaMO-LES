@@ -11,6 +11,7 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
  Pugrid = [];
  Pvgrid = [];
  Pwgrid = [];
+ Ptgrid = [];
  Ptkegrid = [];
  Nx = length(x);
  Ny = length(y);
@@ -25,9 +26,13 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   wz = squeeze(nc{'wm'}(1,i,:,:))';
   wz = wz-mean(mean(wz));
   wz = window2d(wz,0);
+  tz = squeeze(nc{'t'}(1,i,:,:))';
+  tz = tz-mean(mean(tz));
+  tz = window2d(tz,0);
   [Pu,k,l,Pua,ka,la,Pub,khun]=twodpsd(x,y,uz,N,['/home/mhoecker/tmp/u' num2str(i,"%06i")]);
   [Pv,k,l,Pva,ka,la,Pvb,khun]=twodpsd(x,y,vz,N,['/home/mhoecker/tmp/v' num2str(i,"%06i")]);
   [Pw,k,l,Pwa,ka,la,Pwb,khun]=twodpsd(x,y,wz,N,['/home/mhoecker/tmp/w' num2str(i,"%06i")]);
+  [Pt,k,l,Pta,ka,la,Ptb,khun]=twodpsd(x,y,tz,N,['/home/mhoecker/tmp/t' num2str(i,"%06i")]);
   Ptke = Pu+Pv+Pw;
   Ptkea = Pua+Pva+Pwa;
   Ptkeb = Pub+Pvb+Pwb;
@@ -35,21 +40,25 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   Pugrid = [Pugrid;Pub];
   Pvgrid = [Pvgrid;Pvb];
   Pwgrid = [Pwgrid;Pwb];
+  Ptgrid = [Ptgrid;Ptb];
   Ptkegrid = [Ptkegrid;Ptkeb];
   # Save 2-D Spectra
   binmatrix(k,l,Pu,[outname "Spectra-u-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(k,l,Pv,[outname "Spectra-v-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(k,l,Pw,[outname "Spectra-w-2D-" num2str(i,"%06i") ".dat"]);
+  binmatrix(k,l,Pt,[outname "Spectra-t-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(k,l,Ptke,[outname "Spectra-tke-2D-" num2str(i,"%06i") ".dat"]);
   # Save Band Averaged 2-D Spectra
   binmatrix(ka,la,Pua,[outname "Average-Spectra-u-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(ka,la,Pva,[outname "Average-Spectra-v-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(ka,la,Pwa,[outname "Average-Spectra-w-2D-" num2str(i,"%06i") ".dat"]);
+  binmatrix(ka,la,Pta,[outname "Average-Spectra-t-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(ka,la,Ptkea,[outname "Average-Spectra-tke-2D-" num2str(i,"%06i") ".dat"]);
   # Save 1-D spectra for gnuplot to ingest
   binarray(khun,Pub,  [outname "Average-Spectra-u-1D-"   num2str(i,"%06i") ".dat"]);
   binarray(khun,Pvb,  [outname "Average-Spectra-v-1D-"   num2str(i,"%06i") ".dat"]);
   binarray(khun,Pwb,  [outname "Average-Spectra-w-1D-"   num2str(i,"%06i") ".dat"]);
+  binarray(khun,Ptb,  [outname "Average-Spectra-t-1D-"   num2str(i,"%06i") ".dat"]);
   binarray(khun,Ptkeb,[outname "Average-Spectra-tke-1D-" num2str(i,"%06i") ".dat"]);
   if(useoctplot)
    figure(1)
@@ -73,6 +82,7 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
  binmatrix(khun,z,Pugrid,[outname "Spectra-u.dat"]);
  binmatrix(khun,z,Pvgrid,[outname "Spectra-v.dat"]);
  binmatrix(khun,z,Pwgrid,[outname "Spectra-w.dat"]);
+ binmatrix(khun,z,Ptgrid,[outname "Spectra-t.dat"]);
  binmatrix(khun,z,Ptkegrid,[outname "Spectra-tke.dat"]);
  ncclose(nc);
 end%function
