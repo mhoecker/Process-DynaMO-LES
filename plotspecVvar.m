@@ -1,6 +1,6 @@
 function plotspecVvar(roots,datdir,plotdir,term,tmp)
 if nargin()<1
- roots = {'yellowstone6/dissipation/86400cSpectra-tke'};
+ roots = {'yellowstone6/dissipation/86400cSpectra-tke','yellowstone6/dissipation/86400cSpectra-u','yellowstone6/dissipation/86400cSpectra-v','yellowstone6/dissipation/86400cSpectra-w','yellowstone6/dissipation/86400cSpectra-t'};
  %{'run8/dissipation/108000','run8/dissipation/86400','run8/dissipation/64800','run8/dissipation/43200','run8/dissipation/21600','run7/dissipation/14400','run7/dissipation/7200'};
  end%if
  if nargin()<2
@@ -36,7 +36,7 @@ if nargin()<1
   fprintf(pltid,"unset key\n")
   fprintf(pltid,"set pm3d\n")
   fprintf(pltid,"set palette mode HSV\n")
-  fprintf(pltid,"%s",paltext("pm"))
+  fprintf(pltid,"%s",paltext("zissou"))
   fprintf(pltid,"set format x %s\n",logform)
   fprintf(pltid,"set format cb %s\n",logform)
   fprintf(pltid,"set cbrange [1e0:*]\n")
