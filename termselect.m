@@ -63,7 +63,7 @@ function [termtxt,termsfx] = termselect(termtype,font)
 			termtxt = ['pdf enhanced mono size 4.5in,3in ' font '10" dashed linewidth 2'];
 			termsfx = '.eps';
 		otherwise
-			termtxt = "png enhanced size 1536,1024" font '"' " truecolor nocrop linewidth 2";
+			termtxt = ["png enhanced size 1536,1024" font '"' " truecolor nocrop linewidth 2"];
 			termsfx = '.png';
 	end
 end
