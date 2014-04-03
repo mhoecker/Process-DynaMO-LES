@@ -1,4 +1,5 @@
 ensureSkyllingstad1999;
+addpath spectra
 plotdir = "/home/mhoecker/work/Dynamo/plots/";
 datsdir = "/home/mhoecker/work/Dynamo/output/";
 % run 7
