@@ -151,7 +151,7 @@ function [Pb,N,khidx,khl,khun,khsort]= anularavg(P,kh,khun,khidx,N,nosort)
   khidx = {};
   for i=1:length(khun)
    khidx = {khidx{:},find(kh==khun(i))};
-   N(i) = length(khidx{i});
+   N(i) = length(khidx{1,i});
   end%for
  end%if
  # Calculate the number of points
@@ -159,11 +159,11 @@ function [Pb,N,khidx,khl,khun,khsort]= anularavg(P,kh,khun,khidx,N,nosort)
  if(nargin()==4)
   N = zeros(size(khun));
   for i=1:length(khun)
-   N(i) = length(khidx{i});
+   N(i) = length(khidx{1,i});
   end%for
  end%if
  Pb = zeros(size(khun));
   for j=1:length(khun)
    Pb(j) = 2*pi*khun(j)*sum(Pl(khidx{j}))/N(j);
   end%for
-endfunction
+end%function
