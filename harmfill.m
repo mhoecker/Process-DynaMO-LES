@@ -1,4 +1,4 @@
-function [y] = harmfill(x,t,s,T,order,demoname)
+function [y,wmatrix] = harmfill(x,t,s,T,order,demoname)
 % [y,fil] = harmfill(x,t,s,T,order)
 % Filter the time series x with a weighting function
 %
@@ -30,11 +30,13 @@ function [y] = harmfill(x,t,s,T,order,demoname)
   N = 2^16;
   harmfilldemo(N,order,demoname)
 
- if(nargin<4)
+ else
+  if(nargin<4)
    T = (.5*order+1)*mean(diff(s));
   end%if
   N = length(t);
   M = length(s);
+  wmatrix = [];
 % ensure there is nothing to alias into the new sampling
   y = zeros(1,M);
   for i=1:M
@@ -42,15 +44,18 @@ function [y] = harmfill(x,t,s,T,order,demoname)
    for j=1:N
     if((abs(s(i)-t(j))<T/2)*(1-isnan(x(j))))
      w(j) = harmwt(s(i)-t(j),T,order);
-     y(i) = y(i)+x(j)*w(j);
+     y(i) = y(i)+x(j).*w(j);
     end%if
    end%for
     wsum = sum(w);
     if(wsum==0)
      y(i) = NaN;
+     w = w.*0
     else
+     w = w./wsum;
      y(i) = y(i)/wsum;
     end%if
+    wmatrix = [wmatrix,w'];
   end%for
  end%if
 end%function

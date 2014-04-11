@@ -42,7 +42,7 @@ load scriptdir."tlocbloc.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-set y2label "Buoyancy\n Flux (m/s^2/s)"
+set y2label "Buoyancy\n Flux (m^2/s^2/s)"
 set format x ""
 #phi(x) = x/(1+abs(x))
 phi(x) = x

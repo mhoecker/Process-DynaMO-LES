@@ -37,7 +37,7 @@ function [P,k,w] = simeqwaves(krange,wrange,outdir)
    end%for
   end%for
  end%for
- #Magically turn the number of modes into a dpectral density
+ #Magically turn the number of modes into a spectral density
  binmatrix(k,w,Pin,[outdir 'eqwaves.dat']);
  meanidx = find((kk==0).*(ww==0));
  Pin(meanidx) = 0;
