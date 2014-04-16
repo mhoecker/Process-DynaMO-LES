@@ -1,8 +1,13 @@
-function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
- if(nargin()<3)
-  term = 'png';
- end%if
+function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
  useoctplot = 0;
+ % Get time
+ [tdims,tvar] = myncread(rstnc,{'time'},{'time'});
+ if(nargin>2)
+  % Get wind direction
+  [taudims,tauvars] = myncread(dagnc,{'time','z','y','x'},{'ustr_t','vstr_t'},{[1,1]*tvar{1}(1),[1,1],[1,1],[1,1]});
+  theta = atan2(tauvars{2}(:),tauvars{1}(:));
+ end%if
+ %
  nc = netcdf(rstnc,'r');
  x = nc{'xu'}(:);
  y = nc{'yv'}(:);
@@ -15,7 +20,7 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
  Ptkegrid = [];
  Nx = length(x);
  Ny = length(y);
- N = floor(sqrt(min([Nx,Ny])/2));
+ N = floor(sqrt(min([Nx,Ny])/16));
  for i=1:length(z)
   uz = squeeze(nc{'um'}(1,i,:,:))';
   uz = uz-mean(mean(uz));
@@ -29,14 +34,22 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   tz = squeeze(nc{'t'}(1,i,:,:))';
   tz = tz-mean(mean(tz));
   tz = window2d(tz,0);
-  [Pu,k,l,Pua,ka,la,Pub,khun]=twodpsd(x,y,uz,N,['/home/mhoecker/tmp/u' num2str(i,"%06i")]);
-  [Pv,k,l,Pva,ka,la,Pvb,khun]=twodpsd(x,y,vz,N,['/home/mhoecker/tmp/v' num2str(i,"%06i")]);
-  [Pw,k,l,Pwa,ka,la,Pwb,khun]=twodpsd(x,y,wz,N,['/home/mhoecker/tmp/w' num2str(i,"%06i")]);
-  [Pt,k,l,Pta,ka,la,Ptb,khun]=twodpsd(x,y,tz,N,['/home/mhoecker/tmp/t' num2str(i,"%06i")]);
+  if(useoctplot==1)
+   [Pu,k,l,Pua,ka,la,Pub,khun]=twodpsd(x,y,uz,N,['/home/mhoecker/tmp/u' num2str(i,"%06i")]);
+   [Pv,k,l,Pva,ka,la,Pvb,khun]=twodpsd(x,y,vz,N,['/home/mhoecker/tmp/v' num2str(i,"%06i")]);
+   [Pw,k,l,Pwa,ka,la,Pwb,khun]=twodpsd(x,y,wz,N,['/home/mhoecker/tmp/w' num2str(i,"%06i")]);
+   [Pt,k,l,Pta,ka,la,Ptb,khun]=twodpsd(x,y,tz,N,['/home/mhoecker/tmp/t' num2str(i,"%06i")]);
+  else
+   [Pu,k,l,Pua,ka,la,Pub,khun]=twodpsd(x,y,uz,N);
+   [Pv,k,l,Pva,ka,la,Pvb,khun]=twodpsd(x,y,vz,N);
+   [Pw,k,l,Pwa,ka,la,Pwb,khun]=twodpsd(x,y,wz,N);
+   [Pt,k,l,Pta,ka,la,Ptb,khun]=twodpsd(x,y,tz,N);
+  end%if
+  # Calculate tke specrta
   Ptke = Pu+Pv+Pw;
   Ptkea = Pua+Pva+Pwa;
   Ptkeb = Pub+Pvb+Pwb;
-  # Append radial spectra
+  # Append isotropic spectra
   Pugrid = [Pugrid;Pub];
   Pvgrid = [Pvgrid;Pvb];
   Pwgrid = [Pwgrid;Pwb];
@@ -55,11 +68,26 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,term)
   binmatrix(ka,la,Pta,[outname "Average-Spectra-t-2D-" num2str(i,"%06i") ".dat"]);
   binmatrix(ka,la,Ptkea,[outname "Average-Spectra-tke-2D-" num2str(i,"%06i") ".dat"]);
   # Save 1-D spectra for gnuplot to ingest
-  binarray(khun,Pub,  [outname "Average-Spectra-u-1D-"   num2str(i,"%06i") ".dat"]);
-  binarray(khun,Pvb,  [outname "Average-Spectra-v-1D-"   num2str(i,"%06i") ".dat"]);
-  binarray(khun,Pwb,  [outname "Average-Spectra-w-1D-"   num2str(i,"%06i") ".dat"]);
-  binarray(khun,Ptb,  [outname "Average-Spectra-t-1D-"   num2str(i,"%06i") ".dat"]);
-  binarray(khun,Ptkeb,[outname "Average-Spectra-tke-1D-" num2str(i,"%06i") ".dat"]);
+  binarray(khun,Pub,  [outname "Average-Spectra-u-isotropic-1D-"   num2str(i,"%06i") ".dat"]);
+  binarray(khun,Pvb,  [outname "Average-Spectra-v-isotropic-1D-"   num2str(i,"%06i") ".dat"]);
+  binarray(khun,Pwb,  [outname "Average-Spectra-w-isotropic-1D-"   num2str(i,"%06i") ".dat"]);
+  binarray(khun,Ptb,  [outname "Average-Spectra-t-isotropic-1D-"   num2str(i,"%06i") ".dat"]);
+  binarray(khun,Ptkeb,[outname "Average-Spectra-tke-isotropic-1D-" num2str(i,"%06i") ".dat"]);
+  if(nargin>2)
+   # Calculate Radial spectra Paraelell to wind
+   [kr,Pur]=directionalSpec(theta,k,l,Pu);
+   [kr,Pvr]=directionalSpec(theta,k,l,Pv);
+   [kr,Pwr]=directionalSpec(theta,k,l,Pw);
+   [kr,Ptr]=directionalSpec(theta,k,l,Pt);
+   Ptker = Pur+Pvr+Pwr;
+   # Save radial spectra
+   binarray(kr,Pur,  [outname "Average-Spectra-u-windward-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pvr,  [outname "Average-Spectra-v-windward-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pwr,  [outname "Average-Spectra-w-windward-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Ptr,  [outname "Average-Spectra-t-windward-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Ptker,  [outname "Average-Spectra-tke-windward-1D-"   num2str(i,"%06i") ".dat"]);
+  end%if
+  #
   if(useoctplot)
    figure(1)
    subplot(1,2,1)
