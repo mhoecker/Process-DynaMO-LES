@@ -61,17 +61,61 @@ datsdir = "/home/mhoecker/work/Dynamo/output/";
 %Hspectra([ datsdir "o1024_1-e_108000_rst.nc" ],[ plotdir "108000e"]);
 %unix(["/home/mhoecker/bin/pngmovie.sh -l " plotdir "108000eSpectra-tke -n " plotdir "108000eHspectra -t mov"])
 % yellowstone 6
-plotdir = [plotdir "/yellowstone6/dissipation/"];
-datsdir = [datsdir "/yellowstone6/"];
-%Hspectra([ datsdir "d1024_1-a_21600_rst.nc" ], [ plotdir "21600a"]);
+plotdir = [plotdir "yellowstone6/dissipation/"];
+datsdir = [datsdir "yellowstone6/"];
+dagfile = 'd1024_1_dag.nc';
+commonroot = 'yellowstone6/dissipation/';
+commonsfxs = {'Spectra-tke','Spectra-u','Spectra-v','Spectra-w','Spectra-t'};
 %
-%Hspectra([ datsdir "d1024_1-a_43200_rst.nc" ], [ plotdir "43200a"]);
+newtime = 21600;
+newroot = [num2str(newtime,"%i") "a"];
 %
-%Hspectra([ datsdir "d1024_1-b_64800_rst.nc" ], [ plotdir "64800b"]);
+Hspectra([ datsdir "d1024_1-a_21600_rst.nc" ], [ plotdir newroot],[datsdir dagfile]);
+roots = {};
+for i=1:length(commonsfxs)
+ roots = {roots{:},[newroot commonsfxs{i}]};
+end%for
+plotspecVvar(roots,plotdir,plotdir);
 %
-%Hspectra([ datsdir "d1024_1-b_86400_rst.nc" ], [ plotdir "86400b"]);
+newtime = 43200;
+newroot = [num2str(newtime,"%i") "a"];
+Hspectra([ datsdir "d1024_1-a_43200_rst.nc" ], [ plotdir newroot],[datsdir dagfile]);
 %
-Hspectra([ datsdir "d1024_1-c_86400_rst.nc" ], [ plotdir "86400c"]);
+roots = {};
+for i=1:length(commonsfxs)
+ roots = {roots{:},[newroot commonsfxs{i}]};
+end%for
+plotspecVvar(roots,plotdir,plotdir)
+%
+newtime = 64800;
+newroot = [num2str(newtime,"%i") "b"];
+Hspectra([ datsdir "d1024_1-b_64800_rst.nc" ], [ plotdir newroot],[datsdir dagfile]);
+%
+roots = {};
+for i=1:length(commonsfxs)
+ roots = {roots{:},[newroot commonsfxs{i}]};
+end%for
+plotspecVvar(roots,plotdir,plotdir)
+%
+newtime = 86400;
+newroot = [num2str(newtime,"%i") "b"];
+Hspectra([ datsdir "d1024_1-b_86400_rst.nc" ], [ plotdir newroot],[datsdir dagfile]);
+%
+roots = {};
+for i=1:length(commonsfxs)
+ roots = {roots{:},[newroot commonsfxs{i}]};
+end%for
+plotspecVvar(roots,plotdir,plotdir)
+%
+newtime = 86400;
+newroot = [num2str(newtime,"%i") "c"];
+Hspectra([ datsdir "d1024_1-c_86400_rst.nc" ], [ plotdir newroot],[datsdir dagfile]);
+%
+roots = {};
+for i=1:length(commonsfxs)
+ roots = {roots{:},[newroot commonsfxs{i}]};
+end%for
+plotspecVvar(roots,plotdir,plotdir)
 %
 %
 %
