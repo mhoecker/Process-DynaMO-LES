@@ -1,4 +1,7 @@
 function [P,k,l,Pa,ka,la,Pb,khun]=twodpsd(x,y,z,N,outloc)
+%function [P,k,l,Pa,ka,la,Pb,khun]=twodpsd(x,y,z,N,outloc)
+%
+%
  if(nargin==0)
   x = 1:2048;
   x = 2*pi*(x-.5)/length(x);
