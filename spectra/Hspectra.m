@@ -20,7 +20,7 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
  Ptkegrid = [];
  Nx = length(x);
  Ny = length(y);
- N = floor(sqrt(min([Nx,Ny])/16));
+ N = floor(sqrt(min([Nx,Ny])/32));
  for i=1:length(z)
   uz = squeeze(nc{'um'}(1,i,:,:))';
   uz = uz-mean(mean(uz));
@@ -80,12 +80,22 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
    [kr,Pwr]=directionalSpec(theta,k,l,Pw);
    [kr,Ptr]=directionalSpec(theta,k,l,Pt);
    Ptker = Pur+Pvr+Pwr;
+   [kr,Pus]=directionalSpec(theta+pi/2,k,l,Pu);
+   [kr,Pvs]=directionalSpec(theta+pi/2,k,l,Pv);
+   [kr,Pws]=directionalSpec(theta+pi/2,k,l,Pw);
+   [kr,Pts]=directionalSpec(theta+pi/2,k,l,Pt);
+   Ptkes = Pus+Pvs+Pws;
    # Save radial spectra
    binarray(kr,Pur,  [outname "Average-Spectra-u-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Pvr,  [outname "Average-Spectra-v-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Pwr,  [outname "Average-Spectra-w-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Ptr,  [outname "Average-Spectra-t-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Ptker,  [outname "Average-Spectra-tke-windward-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pus,  [outname "Average-Spectra-u-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pvs,  [outname "Average-Spectra-v-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pws,  [outname "Average-Spectra-w-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Pts,  [outname "Average-Spectra-t-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(kr,Ptkes,  [outname "Average-Spectra-tke-Xward-1D-"   num2str(i,"%06i") ".dat"]);
   end%if
   #
   if(useoctplot)
