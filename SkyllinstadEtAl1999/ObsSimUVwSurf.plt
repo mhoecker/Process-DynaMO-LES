@@ -20,17 +20,18 @@ set xrange  [t0sim:tfsim]
 set format x ""
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key l t
-set yrange [-.1:.8]
-set ytics nomirror -0,.2,.6 offset ytoff,0
+set key t l
+set yrange [-.1:.9]
+set ytics mirror -0,.4,.8 offset ytoff,0
 set ylabel "{/Symbol t} (Pa)" offset yloff,0
-plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y2 title "{/Symbol t}_x" lc rgbcolor "black",\
-datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:5 axes x1y1 title "{/Symbol t}_y" lc rgbcolor "grey50"
+plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y1 title "{/Symbol t}_x" lc rgbcolor "black"
+#,\
+#datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:5 axes x1y1 title "{/Symbol t}_y" lc rgbcolor "grey50"
 #
 # Profile Observations
 #
 load scriptdir."tlocbloc.plt"
-set key opaque top left
+set key opaque b l
 set ylabel "Z (m)"
 set format y "%g"
 # U Velocity

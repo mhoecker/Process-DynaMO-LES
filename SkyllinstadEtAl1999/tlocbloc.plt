@@ -1,18 +1,18 @@
 # given a number of figures calculate spacing for flush plots
 # vertical spacing
-tlocmax = .95
-blocmin = .05
+tlocmax = .93
+blocmin = .07
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 vskip = tloc(0)-tloc(1)
-vgap = .025
+vgap = .04
 bloc(r) = tloc(r+1)+vgap
 cbhig = vskip-vgap
 nextrow(r) = (r+1)%rows
 # Horizontal Spacing
-rlocmax = .84
+rlocmax = .79
 cbwid = .1*(1-rlocmax)
 cbgap = .5*cbwid
-llocmin = .11
+llocmin = .15
 lloc(c) = llocmin+(rlocmax-llocmin)*(c+0.0)/(cols)
 rloc(c) = lloc(c+1)
 hskip = rloc(0)-lloc(0)

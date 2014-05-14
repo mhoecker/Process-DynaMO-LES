@@ -79,7 +79,7 @@ unset multiplot
 #
 set output outdir.abrev."flx".termsfx
 # Setup spacing
-rows = 3
+rows = 2
 row = 0
 cols = 1
 col = 0
@@ -92,7 +92,7 @@ set cbtics auto
 # heat flux
 hdimax = hfxmax
 hdimin = -hfxmax
-hfxmax = 8e2
+hfxmax = 1000
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -104,16 +104,15 @@ load outdir."sympal.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
-set y2range [0:1.5]
-set yrange [-900:900]
-set ytics -800,400
-set ylabel "W/m^s"
+set yrange [-1:1]
+set ytics -1,.5,1
+set ylabel "kW/m^2"
 unset xlabel
 set key horizontal
 set key left top
 plot \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:2 w lines title "J_0", \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:3 w lines title " J_{ML}",\
+datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) w lines title "J_0", \
+datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) w lines title " J_{ML}",\
 #, \
 #outdir.abrev."a.tab" lc 0 notitle
 unset y2tics
@@ -126,9 +125,10 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key left bottom
 set cbrange [hfxmin:hfxmax]
-set cbtics hfxmin,(hfxmax-hfxmin)/2,hfxmax; set cbtics add ("0" 0)
-set format cb cbform
-set cblabel "W/m^2"
+unset cbtics
+set cbtics add ("-1" -1000 ,"0" 0, "+1" 1000)
+set format cb ""
+set cblabel "kW/m^2"
 set xlabel ""
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "{/Symbol r}c_pw'T'"
@@ -137,18 +137,18 @@ datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 w lines lc -1 title
 #outdir.abrev."a.tab" lc 0 notitle
 unset colorbox
 #
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set yrange [-1.4:1.4]
-set ytics .5
-set ylabel "J_{ML}/J_0"
-set format x "%g"
-set xlabel "2011 UTC yearday"
-plot +1 lc rgbcolor "red" not, -1 lc rgbcolor "blue" not, \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:($3/$2) w lines lc -1 not
-unset colorbox
-load scriptdir."tlocbloc.plt"
+#row = nextrow(row)
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set yrange [-1.4:1.4]
+#set ytics .5
+#set ylabel "J_{ML}/J_0"
+#set format x "%g"
+#set xlabel "2011 UTC yearday"
+#plot +1 lc rgbcolor "red" not, -1 lc rgbcolor "blue" not, \
+#datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:($3/$2) w lines lc -1 not
+#unset colorbox
+#load scriptdir."tlocbloc.plt"
 #
 #row = nextrow(row)
 #set tmargin at screen tloc(row)

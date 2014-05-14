@@ -24,8 +24,9 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 set ylabel "Z (m)" offset yloff,0
 set autoscale x
-set xtics 1 rangelimited
-set x2tics .1 rangelimited
+set xtics 1.5
+set x2range [35.1:35.8]
+set x2tics 35.3,.2,35.7
 plot \
 datdir.abrev."a.dat" binary format="%f%f%f" u 2:1 w lines axes x1y2 title "T" ls 1,\
 datdir.abrev."a.dat" binary format="%f%f%f" u 3:1 w lines axes x2y2 title "S" ls 2
@@ -33,6 +34,7 @@ col = nextcol(col)
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 unset ytics
+set key t l
 set ylabel ""
 set y2label "Z (m)" offset -yloff,0
 set y2tics mirror -70,20,-10
@@ -40,8 +42,8 @@ set xrange [-.6:.6]
 set x2range [-.6:.6]
 set xlabel  "U (m/s)" offset graph 0, char +xloff
 set x2label "V (m/s)" offset graph +.5, char -xloff
-set xtics .2 rangelimited
-set x2tics .2 rangelimited
+set xtics -.2,.2,.4
+set x2tics -.2,.2,.2
 set yzeroaxis
 plot \
 datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 2:(-$1) w lines axes x1y2 title "U "   ls 1 ,\

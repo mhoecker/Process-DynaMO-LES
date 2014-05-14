@@ -15,8 +15,9 @@ set autoscale y
 #
 set multiplot title "Surface Forcing Observetions"
 set style data lines
-set ytics .2
-set key left
+set ytics .5
+set yrange [-.2:1.2]
+set key t c horizontal
 set rmargin at screen rloc(col)
 set lmargin at screen lloc(col)
 set format x ""
@@ -29,10 +30,12 @@ datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:5 lc rgbc
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ytics .3 nomirror offset ytoff,0
+set key t l horizontal
+set ytics .5 nomirror offset ytoff,0
+set yrange [-1:1]
 set ylabel "J_h (kW/m^2)"
 set y2label "P (mm/h)" offset -yloff,0
-set y2tics out 15
+set y2tics out 30
 set y2tics nomirror offset -ytoff,0
 plot \
 datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:($2*.001) title "J_h" ,\
@@ -41,17 +44,23 @@ datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:3 axes x1
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key b r
-set ytics 1 nomirror offset ytoff,0
-set ylabel "c_p (m/s)"
-set y2label "H_s (m)" offset -yloff,0
+set key t r
+set autoscale y
+set autoscale y2
+set ytics 6 nomirror offset ytoff,0
+set yrange [0:*]
+set ylabel "U^s (m/s)"
+set y2label "k (rad/m)" offset -yloff,0
 set y2tics out .5
 set y2tics nomirror offset -ytoff,0
+set y2range [0:*]
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 plot \
-datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:6 title "c_p" ,\
-datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "H_s"
+datdir.abrev."JhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:6 axes x1y1 title "U^s" lc 3,\
+datdir.abrev."JhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "k" lc 4
+#datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:6 title "c_p" ,\
+#datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "H_s"
 unset y2tics
 unset y2label
 #
