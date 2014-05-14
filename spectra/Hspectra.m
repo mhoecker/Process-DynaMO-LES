@@ -13,11 +13,25 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
  y = nc{'yv'}(:);
  z = nc{'zu'}(:);
  z = z-max(z);
+ # arrays for iotropic spectra
  Pugrid = [];
  Pvgrid = [];
  Pwgrid = [];
  Ptgrid = [];
  Ptkegrid = [];
+ # arrays for windward spectra
+ PuWgrid = [];
+ PvWgrid = [];
+ PwWgrid = [];
+ PtWgrid = [];
+ PtkeWgrid = [];
+ # arrays for cross wind spectra
+ PuXgrid = [];
+ PvXgrid = [];
+ PwXgrid = [];
+ PtXgrid = [];
+ PtkeXgrid = [];
+ #
  Nx = length(x);
  Ny = length(y);
  N = floor(sqrt(min([Nx,Ny])/32));
@@ -80,22 +94,36 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
    [kr,Pwr]=directionalSpec(theta,k,l,Pw);
    [kr,Ptr]=directionalSpec(theta,k,l,Pt);
    Ptker = Pur+Pvr+Pwr;
-   [kr,Pus]=directionalSpec(theta+pi/2,k,l,Pu);
-   [kr,Pvs]=directionalSpec(theta+pi/2,k,l,Pv);
-   [kr,Pws]=directionalSpec(theta+pi/2,k,l,Pw);
-   [kr,Pts]=directionalSpec(theta+pi/2,k,l,Pt);
-   Ptkes = Pus+Pvs+Pws;
-   # Save radial spectra
+   # Append windward spectra
+   PuWgrid = [PuWgrid;Pur];
+   PvWgrid = [PvWgrid;Pvr];
+   PwWgrid = [PwWgrid;Pwr];
+   PtWgrid = [PtWgrid;Ptr];
+   PtkeWgrid = [PtkeWgrid;Ptker];
+   # Save windward spectra
    binarray(kr,Pur,  [outname "Average-Spectra-u-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Pvr,  [outname "Average-Spectra-v-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Pwr,  [outname "Average-Spectra-w-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Ptr,  [outname "Average-Spectra-t-windward-1D-"   num2str(i,"%06i") ".dat"]);
    binarray(kr,Ptker,  [outname "Average-Spectra-tke-windward-1D-"   num2str(i,"%06i") ".dat"]);
-   binarray(kr,Pus,  [outname "Average-Spectra-u-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
-   binarray(kr,Pvs,  [outname "Average-Spectra-v-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
-   binarray(kr,Pws,  [outname "Average-Spectra-w-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
-   binarray(kr,Pts,  [outname "Average-Spectra-t-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
-   binarray(kr,Ptkes,  [outname "Average-Spectra-tke-Xward-1D-"   num2str(i,"%06i") ".dat"]);
+   # Calculate spectra perpendicular to wind
+   [ks,Pus]=directionalSpec(theta+pi/2,k,l,Pu);
+   [ks,Pvs]=directionalSpec(theta+pi/2,k,l,Pv);
+   [ks,Pws]=directionalSpec(theta+pi/2,k,l,Pw);
+   [ks,Pts]=directionalSpec(theta+pi/2,k,l,Pt);
+   Ptkes = Pus+Pvs+Pws;
+   # Append cross wind spectra
+   PuXgrid = [PuXgrid;Pus];
+   PvXgrid = [PvXgrid;Pvs];
+   PwXgrid = [PwXgrid;Pws];
+   PtXgrid = [PtXgrid;Pts];
+   PtkeXgrid = [PtkeXgrid;Ptkes];
+   # Save cross wind spectra
+   binarray(ks,Pus,  [outname "Average-Spectra-u-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(ks,Pvs,  [outname "Average-Spectra-v-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(ks,Pws,  [outname "Average-Spectra-w-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(ks,Pts,  [outname "Average-Spectra-t-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
+   binarray(ks,Ptkes,  [outname "Average-Spectra-tke-Xwind-1D-"   num2str(i,"%06i") ".dat"]);
   end%if
   #
   if(useoctplot)
@@ -117,10 +145,26 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
    print([outname "Spectra-tke" num2str(i,"%06i") ".png"],"-dpng")
   end%if
  end%for
+ # isotropic spectra
  binmatrix(khun,z,Pugrid,[outname "Spectra-u.dat"]);
  binmatrix(khun,z,Pvgrid,[outname "Spectra-v.dat"]);
  binmatrix(khun,z,Pwgrid,[outname "Spectra-w.dat"]);
  binmatrix(khun,z,Ptgrid,[outname "Spectra-t.dat"]);
  binmatrix(khun,z,Ptkegrid,[outname "Spectra-tke.dat"]);
+ if(nargin>2)
+  # windward
+  binmatrix(kr,z,PuWgrid,[outname "Spectra-u-wind.dat"]);
+  binmatrix(kr,z,PvWgrid,[outname "Spectra-v-wind.dat"]);
+  binmatrix(kr,z,PwWgrid,[outname "Spectra-w-wind.dat"]);
+  binmatrix(kr,z,PtWgrid,[outname "Spectra-t-wind.dat"]);
+  binmatrix(kr,z,PtkeWgrid,[outname "Spectra-tke-wind.dat"]);
+  # cross wind
+  binmatrix(ks,z,PuXgrid,[outname "Spectra-u-Xwind.dat"]);
+  binmatrix(ks,z,PvXgrid,[outname "Spectra-v-Xwind.dat"]);
+  binmatrix(ks,z,PwXgrid,[outname "Spectra-w-Xwind.dat"]);
+  binmatrix(ks,z,PtXgrid,[outname "Spectra-t-Xwind.dat"]);
+  binmatrix(ks,z,PtkeXgrid,[outname "Spectra-tke-Xwind.dat"]);
+ end%if
+ #
  ncclose(nc);
 end%function
