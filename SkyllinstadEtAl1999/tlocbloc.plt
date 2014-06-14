@@ -9,7 +9,7 @@ bloc(r) = tloc(r+1)+vgap
 cbhig = vskip-vgap
 nextrow(r) = (r+1)%rows
 # Horizontal Spacing
-rlocmax = .79
+rlocmax = .78
 cbwid = .1*(1-rlocmax)
 cbgap = .5*cbwid
 llocmin = .15
