@@ -13,10 +13,10 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 tkemax = 5e-3
 tkemin = 0
-dtkemin = -4e-6
-dtkemax = +4e-6
-Ftkemin = -4e-6
-Ftkemax = +4e-6
+dtkemin = -10e-6
+dtkemax = +10e-6
+Ftkemin = -10e-6
+Ftkemax = +10e-6
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
 set xrange[t0sim:tfsim]
