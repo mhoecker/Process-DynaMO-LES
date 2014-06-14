@@ -25,15 +25,17 @@ function palette = paltext(paltype,N,clims)
   case { "plusminus" "pm" "minusplus" "mp" "bluered" "br" }
    palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'white', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "pos" "positive" "red"}
-   palette = ["set palette mode RGB\nset palette defined (0 'white', .5 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n set palette maxcolors " num2str(N,"%i") "\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'white', .3 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "neg" "negative" "blue"}
-   palette = ["set palette mode RGB\nset palette defined (0 'white', .5 'cyan', 1 'blue')\n set palette maxcolors " num2str(N,"%i") "\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'white', .3 'cyan', 1 'blue')\n set palette maxcolors " num2str(N,"%i") "\n"];
+  case { "plusminusnan" "pmnan" "minusplusnan" "mpnan" "bluerednan" "brnan" }
+   palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.3*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'grey80', " num2str((.7*cmax-cmin)/crange) " 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "plusminusnan" "pmnan" "minusplusnan" "mpnan" "bluerednan" "brnan" }
    palette = ["set palette mode RGB\nset palette defined (0 'blue', " num2str(-.5*cmin/crange) " 'cyan', " num2str(-cmin/crange) " 'grey80', " num2str((.5*cmax-cmin)/crange) " 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "posnan" "positivenan" "rednan"}
-   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .3 'yellow', 1 'red')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "negnan" "negativenan" "bluenan"}
-   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .5 'cyan', 1 'blue')\n set palette maxcolors " num2str(N,"%i") "\n"];
+   palette = ["set palette mode RGB\nset palette defined (0 'grey80', .3 'cyan', 1 'blue')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "zissou" }
    palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\n set palette maxcolors " num2str(N,"%i") "\n"];
   case { "zissoublocks" }
