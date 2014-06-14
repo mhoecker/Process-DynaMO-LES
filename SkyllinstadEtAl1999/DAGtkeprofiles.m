@@ -33,7 +33,10 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGt
  vwave  = squeeze(dag{'vw_ave'}(dagtidx,dagzidx,1,1));
  StDr  = (uwave.*cos(wave_a)+vwave.*sin(wave_a)).*dUsdz;
  #
- tkePTra  = tkePTra-badStDr+StDr;
+ tkePTra  = tkePTra+badStDr-StDr;
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
+ # Correct for convolved terms
+ tkeAdve = tkeAdve-ShPr;
+ tkeSGTr = tkeSGTr-Diss;
  ncclose(dag);
 end%function

@@ -42,7 +42,17 @@ end%if
   dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
   adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #[tkenc,tkezavgnc,tkeAVGnc] = tkeBudget(dagnc)
+ [dagpath,dagname,dagext] = fileparts(dagnc);
+ if(nargin<2)
+  tkenc = [dagpath '/' dagname "tke" dagext];
+ end%if
+ [tkepath,tkename,tkeext] = fileparts(tkenc);
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
+ tkeAVGnc =  [tkepath '/' tkename 'AVG' tkeext]
+ tkebzavg(tkezavgnc,outdir);
+
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
  #testfig(outdir);
@@ -77,7 +87,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  # Initial Conditions
- initialTSUV(chmnc,adcpnc,outdir);
+ #initialTSUV(chmnc,adcpnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  # Model Obersvation Comparison
