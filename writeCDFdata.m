@@ -1,5 +1,5 @@
 function writeCDFdata(fileid,data,vars)
-% writeCDFdata(fileid,data)
+% writeCDFdata(fileid,data,vars)
 % data is a cell array of data in each variable
 % vars is a cell aray with the variable names
 fprintf(fileid,'data:\n')
