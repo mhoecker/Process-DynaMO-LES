@@ -29,7 +29,8 @@ set autoscale y
 set key l t
 set ylabel "P (mm/hr)" offset yloff,0
 set ytics mirror 0,30,90 offset ytoff,0
-plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbcolor "blue"
+set label 1 "a" at graph 0, 1 left front textcolor rgbcolor "grey30" nopoint offset character 0, .3
+plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbcolor "black"
 #
 #
 # Profile Observations
@@ -39,7 +40,7 @@ set key opaque inside top left
 set format y "%g"
 set ylabel "Z (m)"
 # Salinity
-load outdir."negpalnan.plt"
+load outdir."sympalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax
@@ -52,6 +53,7 @@ set format x ""
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+set label 1 "b"
 plot datdir.abrev."So.dat" binary matrix w image title "Observed"
 # Simulated
 set format x "%g"
@@ -60,6 +62,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
+set label 1 "c"
 plot datdir.abrev."Ss.dat" binary matrix w image title "Simulated"
 unset colorbox
 unset multiplot
