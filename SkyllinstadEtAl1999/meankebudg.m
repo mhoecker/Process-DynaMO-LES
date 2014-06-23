@@ -8,35 +8,38 @@ function meankebudg(dagnc,outdir)
  zvars = dagvars(dagnc,zfield);
  zzuvars = dagvars(dagnc,zzufield);
  zzwvars = dagvars(dagnc,zzwfield);
- zout = zzwvars.zzw;
+ zout = -zzwvars.zzw;
  t = zzwvars.time;
  dzout = ddz(zout);
  dtmatrix = ddz(t);
- zzu = zzuvars.zzu;
+ zzu = -zzuvars.zzu;
  mke = interp1(zzu,zzuvars.KE_ave',zout,"extrap");
  uav = interp1(zzu,zzuvars.u_ave',zout,"extrap");
  vav = interp1(zzu,zzuvars.v_ave',zout,"extrap");
- SPu = interp1(zzu,zzuvars.uwdu_ave',zout,"extrap");
- SPv = interp1(zzu,zzuvars.vwdv_ave',zout,"extrap");
- SP = SPu+SPv;
+ SP = zzwvars.uw_ave'.*(dzout*uav)+zzwvars.vw_ave'.*(dzout*vav);
  uw = zzwvars.uw_ave;
  vw = zzwvars.vw_ave;
  mkeflux = (uav.*uw'+vav.*vw');
- mkefdiv = dzout*mkeflux;
+ mkefdiv = -dzout*mkeflux;
  dmkedt = (dtmatrix*mke')';
  sfcidx = find(zout==0);
  work = uav(sfcidx,:).*zvars.ustr_t'+vav(sfcidx,:).*zvars.vstr_t';
- ranges = [0,24*3600,-.005,.005];
+ [tt,zz] = meshgrid(t/(24*3600),zout);
+ ranges = [0,1,-.005,.005];
+ pcranges = [ranges(1:2),-80,0];
+ crange = [-.00001,.00001];
  subplot(4,1,1)
- plot(t,sum(dmkedt))
- axis(ranges)
+ pcolor(tt,zz,dmkedt); shading flat
+ axis(pcranges); caxis([crange])
  subplot(4,1,2)
- plot(t,sum(SP))
- axis(ranges)
+ mean(mean(SP))
+ pcolor(tt,zz,SP); shading flat
+ axis(pcranges); caxis([crange])
  subplot(4,1,3)
- plot(t,work)
+ pcolor(tt,zz,mkefdiv); shading flat
+ axis(pcranges); caxis([crange])
  %axis(ranges)
  subplot(4,1,4)
- plot(t,sum(dmkedt)-work)
+ plot(t/(24*3600),work)
  %axis(ranges)
 end%function
