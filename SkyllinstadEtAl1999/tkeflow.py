@@ -1,5 +1,6 @@
 """ tke Flow diagram using the sankey object
 """
+import sys, getopt
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -8,7 +9,14 @@ from matplotlib.sankey import Sankey
 fig = plt.figure(figsize=(8, 9))
 ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[])
 #
-tkedatfile =  '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dagtkeAVG.dat'
+if(len(sys.argv)>0);
+ tkedatfile = sysargv[1]
+ if(len(sys.argv)>1));
+    rootname = sys.argv[2]
+ else
+  rootname = "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Article/figs/tkeflow"
+else
+ tkedatfile =  '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dagtkeAVG.dat'
 print(tkedatfile)
 # Read values from data file
 tkeflows = 1e6*np.loadtxt(tkedatfile)
@@ -100,7 +108,6 @@ Buoycol = '#989898'
 
 plt.legend(loc='upper right')
 suffixes = ['eps','ps','eps','pdf']
-rootname = "/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Article/figs/tkeflow"
 smallfig = 2*[9/2.2,6/2.2]
 for suffix in suffixes:
  fig.savefig(rootname+"."+suffix,bbox=smallfig,pad_inches=0.0,format=suffix)
