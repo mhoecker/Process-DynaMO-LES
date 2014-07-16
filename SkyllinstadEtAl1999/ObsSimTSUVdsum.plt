@@ -35,11 +35,11 @@ set autoscale cb
 set format x ""
 cbmin = DTmin
 cbmax = DTmax
-set cblabel "{/Symbol \362 D}T dz (m^oC)"
+set cblabel "{/Symbol \362D}Tdz(m^oC)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Tdsum.dat" binary matrix w image notitle
@@ -47,11 +47,11 @@ plot datdir.abrev."Tdsum.dat" binary matrix w image notitle
 set format x ""
 cbmin = DSmin
 cbmax = DSmax
-set cblabel "{/Symbol \362 D}S dz (m psu)"
+set cblabel "{/Symbol \362D}Sdz(m psu)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Sdsum.dat" binary matrix w image notitle
@@ -60,7 +60,7 @@ set format x ""
 cbmin = DUVmin
 cbmax = DUVmax
 unset colorbox
-set cblabel "{/Symbol \362 D}u (m^2/s)"
+set cblabel "{/Symbol \362D}u(m^2/s)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
@@ -69,11 +69,11 @@ plot datdir.abrev."udsum.dat" binary matrix w image notitle
 #
 set format x "%g"
 set xlabel "2011 UTC yearday"
-set cblabel "{/Symbol \362 D}v dz, {/Symbol \362 D}u dz (m^2/s)"
+set cblabel "{/Symbol \362D}v, {/Symbol D}u dz(m^2/s)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 row = nextrow(row)
 plot datdir.abrev."vdsum.dat" binary matrix w image notitle

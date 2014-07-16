@@ -145,6 +145,8 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
    print([outname "Spectra-tke" num2str(i,"%06i") ".png"],"-dpng")
   end%if
  end%for
+ #
+ ncclose(nc);
  # isotropic spectra
  binmatrix(khun,z,Pugrid,[outname "Spectra-u.dat"]);
  binmatrix(khun,z,Pvgrid,[outname "Spectra-v.dat"]);
@@ -165,6 +167,4 @@ function [Ptkegrid,khun,z] = Hspectra(rstnc,outname,dagnc)
   binmatrix(ks,z,PtXgrid,[outname "Spectra-t-Xwind.dat"]);
   binmatrix(ks,z,PtkeXgrid,[outname "Spectra-tke-Xwind.dat"]);
  end%if
- #
- ncclose(nc);
 end%function

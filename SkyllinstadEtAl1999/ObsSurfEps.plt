@@ -10,6 +10,8 @@ row = 0
 #t0sim=t0sim-.25
 #tfsim=tfsim+.25
 load scriptdir."tlocbloc.plt"
+datfile = datdir.abrev."JhPrecipTxTyUk.dat"
+datform = "%f%f%f%f%f%f%f"
 #
 set autoscale y
 #
@@ -25,8 +27,9 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "{/Symbol t} (Pa)"
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
-plot datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:4 lc -1 title "zonal",\
-datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:5 lc rgbcolor "grey50" title "meridional"
+plot \
+datfile binary format=datform u 1:4 lc -1 title "zonal",\
+datfile binary format=datform u 1:5 lc rgbcolor "grey50" title "meridional"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -40,8 +43,9 @@ set y2tics out 30
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
 plot \
-datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:($2*.001) title "J_h" ,\
-datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:3 axes x1y2 title "P"
+datfile binary format=datform u 1:($2*.001) title "J_h" \
+,\
+datfile binary format=datform u 1:3 axes x1y2 title "P"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -60,10 +64,10 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 set label 1 "c"
 plot \
-datdir.abrev."JhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:6 axes x1y1 title "U^s" lc 3,\
-datdir.abrev."JhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "k" lc 4
-#datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:6 title "c_p" ,\
-#datdir.abrev."JhPrecipTxTycpHs.dat" binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "H_s"
+datfile binary format="%f%f%f%f%f%f%f" u 1:6 axes x1y1 title "U^s" lc 3,\
+datfile binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "k" lc 4
+#datdir binary format="%f%f%f%f%f%f%f" u 1:6 title "c_p" ,\
+#datdir binary format="%f%f%f%f%f%f%f" u 1:7 axes x1y2 title "H_s"
 unset y2tics
 unset y2label
 #

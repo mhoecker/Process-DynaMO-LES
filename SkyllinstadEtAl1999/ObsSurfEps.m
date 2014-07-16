@@ -55,6 +55,6 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
   binarray(tsfx',[Jh,p,stressm,stressz,U,k]',[outdir abrev "JhPrecipTxTyUk.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
  end%if
 end%function

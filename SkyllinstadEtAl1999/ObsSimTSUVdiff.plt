@@ -37,7 +37,7 @@ set cblabel "{/Symbol D}T (^oC)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Tdiff.dat" binary matrix w image notitle
@@ -49,7 +49,7 @@ set cblabel "{/Symbol D}S (psu)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 row = nextrow(row)
 plot datdir.abrev."Sdiff.dat" binary matrix w image notitle
@@ -71,7 +71,7 @@ set cblabel "{/Symbol D}v, {/Symbol D}u (m/s)"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set cbrange [cbmin:cbmax]
-set cbtics cbmin,(cbmax-cbmin)/palcolors,cbmax
+set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 row = nextrow(row)
 plot datdir.abrev."vdiff.dat" binary matrix w image notitle

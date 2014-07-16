@@ -100,6 +100,3 @@ function harmfilldemo(N,order,outname)
   print([outname ".png"],"-dpng","-S1280,1024","-F:8")
 end%function
 
-function w = harmwt(dt,T,order)
- w=(1+sign(1-abs(2*dt/T))).*(cos(pi.*(dt./T))).^(order);
-end%function

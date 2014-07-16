@@ -17,7 +17,7 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
   %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone2/o512_1_dag.nc'
   %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone3/o1024_1_dag.nc'
   %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
-  dagnc ='/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone7/dyntest-a_dag.nc'
+  dagnc ='/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
  end%if
  if nargin()<2
   sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
@@ -35,23 +35,23 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y7/';
  end%if
  #
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
  #dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
  #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- [tkenc,tkezavgnc,tkeAVGnc] = tkeBudget(dagnc)
- [dagpath,dagname,dagext] = fileparts(dagnc);
- if(nargin<2)
-  tkenc = [dagpath '/' dagname "tke" dagext];
- end%if
- [tkepath,tkename,tkeext] = fileparts(tkenc);
- tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
- tkeAVGnc =  [tkepath '/' tkename 'AVG' tkeext]
- tkebzavg(tkezavgnc,outdir);
-
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #[tkenc,tkezavgnc,tkeAVGnc] = tkeBudget(dagnc)
+ #if(nargin<2)
+ # tkenc = [dagpath '/' dagname "tke" dagext];
+ #end%if
+ #[tkepath,tkename,tkeext] = fileparts(tkenc);
+ #tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
+ #tkeAVGnc =  [tkepath '/' tkename 'AVG' tkeext]
+ #tkebzavg(tkezavgnc,outdir);
+ outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+ dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
  #testfig(outdir);
@@ -77,40 +77,47 @@ end%function
 function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Nfigs = 8;
  Ncur = 0;
- waithandle = waitbar(Ncur./Nfigs,["Generating figures in " outdir]);
+ waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
  Ncur = Ncur+1;
  # Richardson Number Defined by Surface Flux
  #figRi(sfxnc,outdir);
  # Surface and dissipation observations
- ObsSurfEps(sfxnc,chmnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #ObsSurfEps(sfxnc,chmnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
  Ncur = Ncur+1;
  # Initial Conditions
  #initialTSUV(chmnc,adcpnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
  Ncur = Ncur+1;
  # Model Obersvation Comparison
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
  Ncur = Ncur+1;
  # Model Observation Difference
- ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
  Ncur = Ncur+1;
  # Stability Criterion
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
  Ncur = Ncur+1;
  # Heat flux comparison
- Heatfluxcompare(dagnc,sfxnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #Heatfluxcompare(dagnc,sfxnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  #Heat Budget
- HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
  Ncur = Ncur+1;
- # Turbulent Kinetic energy Budget
+ # Turbulent Kinetic energy Budget plots
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ [dagpath,dagname,dagext] = fileparts(dagnc);
+ tkenc = [dagpath '/' dagname "tke" dagext];
+ [tkepath,tkename,tkeext] = fileparts(tkenc);
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
+ tkebzavg(tkezavgnc,outdir);
+ [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
+ unix(["mv " outpypath ".* " outdir]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);

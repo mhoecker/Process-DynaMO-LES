@@ -1,4 +1,4 @@
-function [outtke,outzavg,outAVG] = tkeBudget(dagnc,outnc,trange,zrange)
+function [outtke,outzavg,outAVG,outpypath] = tkeBudget(dagnc,outnc,trange,zrange)
 # output is a ascii file with the mean terms in the tke budget
 # Toatal Stokes Production
 # Total Shear Production
@@ -165,4 +165,7 @@ for i=1:Nvar
   fprintf(AVGdat,'%20.20f ',tkeflow(i))
  end%for
  fclose(AVGdat)
+ pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
+ outpypath = [outpath "/" outname];
+ unix(["python " pyflowscript " " outAVGdat " " outpypath])
 end%function

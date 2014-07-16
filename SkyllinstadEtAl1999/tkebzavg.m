@@ -43,6 +43,6 @@ function tkebzavg(zavgnc,outdir)
   plot(t,dtke,"k;dtke/dt;")
   axis(plotrange)
  end%if
- binarray(t',[tke,dtke,wtke,sgs,wp,St,SP,wb,eps]',[outdir "/" abrev ".dat"])
+ binarray(t',[tke,dtke,wtke,sgs,wp,St,SP,wb,eps]',[outdir "/" abrev ".dat"]);
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
 end%function

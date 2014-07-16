@@ -15,6 +15,8 @@ if nargin()<1
  if nargin()<5
   tmp  = '/home/mhoecker/tmp/';
  end%if
+ abrev ="plotspecVvar";
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(plotdir,datdir,abrev);
  for i=1:length(roots)
   datname = [datdir roots{i} '.dat'];
   outname = [plotdir roots{i} ];
@@ -23,25 +25,25 @@ if nargin()<1
   [termtxt,termsfx] = termselect(term);
   pltname = [tmp num2str(floor((now-floor(now))*24*60*60*1000),"%011i") ".plt"];pause(.0006);
   pltid = fopen(pltname,'w');
-  fprintf(pltid,"set term %s\n",termtxt)
-  fprintf(pltid,"set output '%s%s'\n",outname,termsfx)
+  fprintf(pltid,"load '%s'\n",limitsfile)
+  fprintf(pltid,"load '%spospal.plt'\n",plotdir)
+  fprintf(pltid,"set output '%s'.termsfx\n",outname)
   fprintf(pltid,"unset surface\n")
   fprintf(pltid,"set view map\n")
-  fprintf(pltid,"set xlabel 'Horizontal Wavenumber (rad/m)'\n")
-  fprintf(pltid,"set ylabel 'time (s)'\n")
-  fprintf(pltid,"set cblabel 'Spectral Energy Density (m^2/s^2/rad/m) ' offset 2\n")
+  fprintf(pltid,"set xlabel 'Horizontal Wavenumber (rad/m)' offset 0,.5\n")
+  fprintf(pltid,"set ylabel 'Depth (m)'\n")
+  fprintf(pltid,"set cblabel 'Spectral Energy Density (m^2/s^2) ' offset 0.5\n")
+  fprintf(pltid,"set cbtics offset -1\n")
   fprintf(pltid,"unset key\n")
   fprintf(pltid,"set pm3d\n")
-  fprintf(pltid,"set palette mode HSV\n")
-  fprintf(pltid,"%s",paltext("zissou",9))
   fprintf(pltid,"set format x %s\n",logform)
   fprintf(pltid,"set format cb %s\n",logform)
   fprintf(pltid,"stats '%s' binary matrix u 3\n",datname)
   fprintf(pltid,"set logscale x\n")
   fprintf(pltid,"set logscale cb\n")
   fprintf(pltid,"set logscale z\n")
-  fprintf(pltid,"set cbrange [STATS_mean:STATS_max]\n")
-  fprintf(pltid,"splot '%s' binary matrix\n",datname)
+  fprintf(pltid,"set cbrange [STATS_mean/4:STATS_max/4]\n")
+  fprintf(pltid,"splot '%s' binary matrix u 1:2:($1*$3)\n",datname)
   fclose(pltid)
   unix(["gnuplot " pltname ])
  end%for

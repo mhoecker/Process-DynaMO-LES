@@ -7,10 +7,12 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
-dtke = 7e-6
-dtketic  =5e-6
+dtke = 8e-6
+dtketic  = 5e-6
 set yrange [-dtke:dtke]
 set ytics dtketic
+#set autoscale y
+#set ytics auto
 set multiplot title "Spatial mean of tke flux divergences"
 set xtics format ""
 set key t l
@@ -50,6 +52,8 @@ load scriptdir."tlocbloc.plt"
 set multiplot title "Spatial mean of tke sources/sinks"
 set yrange [-dtke:dtke]
 set ytics dtketic
+#set autoscale y
+#set ytics auto
 set xtics format ""
 #
 set tmargin at screen tloc(row)
