@@ -8,13 +8,13 @@ function [outtke,outzavg,outAVG,outpypath] = tkeBudget(dagnc,outnc,trange,zrange
 #vars = cell array of corresponding variable names
 #fileid = identifier of file to use as cdf file
  if(nargin<3)
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc);
  elseif(nargin<4)
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,trange);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc,trange);
  else
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,trange,zrange);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc,trange,zrange);
  end%if
- val = {zdag(:),tdag(:),tkeavg(:),tkePTra(:),tkeAdve(:),BuoyPr(:),tkeSGTr(:),ShPr(:),StDr(:),Diss(:)};
+ val = {zdag(:),tdag(:),tkeavg(:),tkePTra(:),tkeAdve(:),BuoyPr(:),tkeSGTr(:),ShPr(:),StDr(:),Diss(:),badSt(:),badwP(:)};
  Nvar = length(val);
  Ndim = 2;
 # Initialize cell arrays
@@ -113,6 +113,22 @@ if(k<Nvar) # Dissipation
  longname{k} = 'Dissipation';
  formulae{k} = 'disp_ave';
 end%if
+if(k<Nvar) # Model Stokes
+ k = k+1;
+ vars{k} = 'sd_ave';
+ units{k} = 'W/kg';
+ dims{k} = [ vars{1} "," vars{2} ];
+ longname{k} = 'Stokes Production';
+ formulae{k} = 'sd_ave';
+end%if
+if(k<Nvar) # Model wP
+ k = k+1;
+ vars{k} = 'p_ave';
+ units{k} = 'W/kg';
+ dims{k} = [ vars{1} "," vars{2} ];
+ longname{k} = 'Pressure Transport';
+ formulae{k} = 'p_ave';
+end%if
 
  [inpath,inname,inext] = fileparts(dagnc)
  if(nargin<2)
@@ -158,7 +174,7 @@ for i=1:Nvar
  unix(['ncwa -O -a z ' outnc ' ' outzavg])
  unix(['ncwa -O -a z,t ' outnc ' ' outAVG])
  AVG = netcdf(outAVG,'r');
- tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:)]
+ tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:)];
  ncclose(AVG)
  AVGdat = fopen(outAVGdat,'w')
  for i=1:length(tkeflow)

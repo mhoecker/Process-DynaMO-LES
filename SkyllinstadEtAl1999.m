@@ -117,7 +117,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
  tkebzavg(tkezavgnc,outdir);
  [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
- unix(["mv " outpypath ".* " outdir]);
+ #unix(["mv " outpypath ".* " outdir]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);

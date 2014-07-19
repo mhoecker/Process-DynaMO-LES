@@ -21,7 +21,8 @@ else:
  tkedatfile =  '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dagtkeAVG.dat'
 print(tkedatfile)
 # Read values from data file
-tkeflows = 1e6*np.loadtxt(tkedatfile)
+tkein = 1e6*np.loadtxt(tkedatfile)
+tkeflows = [tkein[4],tkein[1],tkein[2],tkein[3]]
 # Hard coded values
 #tkeflows = [1.25,.335,-.169,-1.7]
 #tkeflows = Stokes, Shear, Buoyancy, Dissipation

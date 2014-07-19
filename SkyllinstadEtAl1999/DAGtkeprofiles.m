@@ -1,4 +1,4 @@
-function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr,badPTra] = DAGtkeprofiles(dagnc,trange,zrange)
+function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr,badPTra,Szdag] = DAGtkeprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag      = netcdf(dagnc,'r');
  tdag     = squeeze(dag{'time'}(:));
@@ -36,6 +36,7 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr
  StDr  = (uwave.*cos(wave_a)+vwave.*sin(wave_a)).*dUsdz;
  zidx = find(zdag==0,1);
  StDr = interp1(zwdag,StDr',zdag,"extrap")';
+ [Szdag,dUsdzdag] = StokesAtDepth(S0,waveL,zdag');
  if(length(zidx)>0)
   StDr(:,zidx)=0;
  end%if
