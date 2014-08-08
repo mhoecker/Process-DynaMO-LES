@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 # uses nco to match variable and dimension names in a MIMOC v 2.2 file
 USAGE="renamevars MIMOCV2.2file.nc"
 
@@ -19,7 +19,15 @@ if [[ $SFX == "nc" ]]; then
 	echo "Renaming dimensions in $1"
 # ncrename Syntax used is
 # ncrename -d oldname,newname oldfile newfile
-	ncrename -d LAT,LATITUDE -d LONG,LONGITUDE $1 $NEWFILE
+# Test if
+	if ncdump -h -v PRESSURE $1 ;then
+	 echo "$HASPRESS means LAT,LON,PRES in $1"
+		ncrename -d LAT,LATITUDE -d LONG,LONGITUDE -d PRES,PRESSURE $1 $NEWFILE
+	else
+	 echo "Renaming LAT,LON in $1"
+		ncrename -d LAT,LATITUDE -d LONG,LONGITUDE $1 $NEWFILE
+	fi
+ ncdump -h $NEWFILE
 #	uncomment to just replace the file
 #	mv $NEWFILE $1
 	else
