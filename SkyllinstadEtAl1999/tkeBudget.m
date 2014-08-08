@@ -174,8 +174,11 @@ for i=1:Nvar
  unix(['ncwa -O -a z ' outnc ' ' outzavg])
  unix(['ncwa -O -a z,t ' outnc ' ' outAVG])
  AVG = netcdf(outAVG,'r');
- tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:)];
+ ZVG = netcdf(outzavg,'r');
+ netdtke = -ZVG{'tke'}(end)/ZVG{'t'}(end);
+ tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:),netdtke];
  ncclose(AVG)
+ ncclose(ZVG)
  AVGdat = fopen(outAVGdat,'w')
  for i=1:length(tkeflow)
   fprintf(AVGdat,'%20.20f ',tkeflow(i))

@@ -21,8 +21,9 @@ else:
  tkedatfile =  '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dagtkeAVG.dat'
 print(tkedatfile)
 # Read values from data file
-tkein = 1e6*np.loadtxt(tkedatfile)
-tkeflows = [tkein[4],tkein[1],tkein[2],tkein[3]]
+tkein = 1e9*np.loadtxt(tkedatfile)
+#tkeflows = [tkein[4],tkein[1],tkein[2],tkein[3],-tkein[4]-tkein[1]-tkein[2]-tkein[3]]
+tkeflows = [tkein[4],tkein[1],tkein[2],tkein[3],tkein[6]]
 # Hard coded values
 #tkeflows = [1.25,.335,-.169,-1.7]
 #tkeflows = Stokes, Shear, Buoyancy, Dissipation
@@ -32,8 +33,9 @@ tkelabs = ["Stokes\nProduction\n"+r"$\left<u'w'\right>\partial_zu_s$"]
 tkelabs.append("Shear\nProduction\n"+r"$\left<u'w'\right>\partial_z\bar{u}$")
 tkelabs.append("Buoyancy\nProduction\n"+r"$\left<b'w'\right>$")
 tkelabs.append("Dissipation\n"+r"$\epsilon$")
-tkelen = [1,1,1,1]
-tkeori = [-1,0,1,0]
+tkelabs.append("Kinetic Energy Accumulation\n"+r"$\mathrm{d} tke/\mathrm{d}t}$")
+tkelen = [1,.5,1,.5,1]
+tkeori = [1,0,1,0,-1]
 tketrun=2*sum(tkelen)/len(tkelen)
 # Energy input into Stokes drift
 Stflows = [tkeflows[0],-tkeflows[0]]
@@ -72,11 +74,11 @@ meantrun = Sttrun+1
 meancon = (0,0)
 meanpre = 2
 # Common Snake properties
-rot=-90
-tlen=1
+rot=0
+tlen=.5
 fcol="#DDDDDD"
 #snakey = Sankey(ax=ax,format='%3.1f',unit=r'J/m$^2$',gap=0.5,scale=abs(1.0/diss),head_angle=120)
-snakey = Sankey(ax=ax,format='%4.2f',unit=r'$\mu\mathrm{W/kg}$',margin=2,offset=1,gap=.5,scale=abs(1.0/tkeflows[3]),head_angle=90)
+snakey = Sankey(ax=ax,format='%4.2f',unit=r'$\mathrm{nW/kg}$',margin=2,offset=1,gap=.5,scale=1.0/(max(tkeflows)-min(tkeflows)),head_angle=90)
 snakey.add(flows=tkeflows,orientations=tkeori,pathlengths=tkelen,labels=tkelabs,rotation=rot,trunklength=tketrun,facecolor=fcol,label="Stratified Turbulence")
 # Stokes 1
 #snakey.add(flows=Stflows,orientations=Stori,pathlengths=Stlen,labels=Stlabs,trunklength=Sttrun,prior=0,connect=(0,1),rotation=rot,facecolor=fcol,label="Langmuir Turbulence")
@@ -114,4 +116,4 @@ suffixes = ['eps','ps','png','pdf']
 smallfig = 2*[9/2.2,6/2.2]
 for suffix in suffixes:
  fig.savefig(rootname+"."+suffix,bbox=smallfig,pad_inches=0.0,format=suffix)
-plt.show()
+#plt.show()
