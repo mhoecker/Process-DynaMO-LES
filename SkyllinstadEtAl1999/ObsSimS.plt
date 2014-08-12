@@ -36,11 +36,11 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbco
 # Profile Observations
 #
 load scriptdir."tlocbloc.plt"
-set key opaque inside top left
+set key l b opaque samplen -1 width -.5
 set format y "%g"
 set ylabel "Z (m)"
 # Salinity
-load outdir."sympalnan.plt"
+load outdir."negpalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax

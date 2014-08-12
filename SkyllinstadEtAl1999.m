@@ -82,31 +82,31 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Richardson Number Defined by Surface Flux
  #figRi(sfxnc,outdir);
  # Surface and dissipation observations
- #ObsSurfEps(sfxnc,chmnc,outdir);
+ ObsSurfEps(sfxnc,chmnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
  Ncur = Ncur+1;
  # Initial Conditions
- #initialTSUV(chmnc,adcpnc,outdir);
+ initialTSUV(chmnc,adcpnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
  Ncur = Ncur+1;
  # Model Obersvation Comparison
- #ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
  Ncur = Ncur+1;
  # Model Observation Difference
- #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
  Ncur = Ncur+1;
  # Stability Criterion
- #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
  Ncur = Ncur+1;
  # Heat flux comparison
- #Heatfluxcompare(dagnc,sfxnc,outdir);
+ Heatfluxcompare(dagnc,sfxnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  #Heat Budget
- #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  # Turbulent Kinetic energy Budget plots
@@ -117,7 +117,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
  tkebzavg(tkezavgnc,outdir);
  [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
- #unix(["mv " outpypath ".* " outdir]);
+ unix(["mv " outpypath ".* " outdir]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);

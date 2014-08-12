@@ -32,7 +32,7 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y1 title "{
 # Profile Observations
 #
 load scriptdir."tlocbloc.plt"
-set key opaque b l
+set key b l opaque samplen -1 width -.5
 set ylabel "Z (m)"
 set format y "%g"
 # U Velocity

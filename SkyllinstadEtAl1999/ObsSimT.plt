@@ -37,14 +37,14 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_
 # Profile Observations
 #
 load scriptdir."tlocbloc.plt"
-set key opaque inside b l
+set key inside b l opaque samplen -1 width -.5
 set format y "%g"
 set ylabel "Z (m)"
 # Temperature
 set cblabel "T (^oC)" offset -yloff/2
 cbmin = Tmin
 cbmax = Tmax
-load outdir."sympalnan.plt"
+load outdir."pospalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set format cb cbform
