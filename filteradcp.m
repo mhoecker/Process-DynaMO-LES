@@ -1,9 +1,14 @@
-%function filteradcp(filename,fileloc)
+function filteradcp(filename,fileloc)
 tmpdir   = "/home/mhoecker/tmp/";
-fileloc = '/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/';
-filename = 'adcp150_filled_with_140';
-cdffile  = [tmpdir filename "_filtered_1hr_3day.cdf"];
-ncfile   = [fileloc filename "_filtered_1hr_3day.nc"];
+filtersuffix = "_filtered_1hr_3day";
+if nargin()<2
+ fileloc = '/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/';
+end%if
+if nargin()<1
+ filename = 'adcp150_filled_with_140';
+endif
+cdffile  = [tmpdir filename filtersuffix ".cdf"];
+ncfile   = [fileloc filename filtersuffix ".nc"];
 maxdpos = .2;
 nc = netcdf([fileloc filename '.nc'],'r');
 t = nc{'t'}(:);
@@ -17,9 +22,7 @@ dt = diff(t);
 % Distance from nominal station
 dpos = sqrt(lat.^2+(lon-80.5).^2);
 % indecies of points near station
-dnumstart = datenum([2011,11,11,0,0,0]);
-dnumstop = datenum([2011,12,3,0,0,0]);
-idxclose = find((dpos<maxdpos).*(t>dnumstart).*(t<dnumstop));
+idxclose = find((dpos<maxdpos));
 % depths
 z = nc{'z'}(:);
 % choose times near station
@@ -71,7 +74,7 @@ end%for
 #	01 time
 vars{1} = 't';
 units{1} = 'd';
-longname{1} = 'time since 1999 Dec 31 00:00:00';
+longname{1} = '2011 yearday';
 dims{1} = [vars{1}];
 #	02 depth
 vars{2} = 'z';
@@ -159,24 +162,25 @@ readme = "In all summary files depth is relative to sea surface.\
   After that it should be combined with RDI150, HDSS50 should be navigated, cleaned and combined with RDI75";
 fprintf(cdlid,':readme = "%s";\n',readme);
 # Declare Data
-fprintf(cdlid,'data:\n')
-for i=1:Nvar
- y = val{i}(:);
- fprintf(cdlid,'%s =\n',vars{i});
- for j=1:length(y)
-  if(isnan(y(j))==1)
-   fprintf(cdlid,'NaN');
-  else
-   fprintf(cdlid,'%f',y(j));
-  endif
-  if(j<length(y))
-   fprintf(cdlid,', ');
-  else
-   fprintf(cdlid,';\n');
-  endif
- endfor
-endfor
-fprintf(cdlid,'}\n')
-fclose(cdlid)
+writeCDFdata(cdlid,val,vars)
+#fprintf(cdlid,'data:\n')
+#for i=1:Nvar
+# y = val{i}(:);
+# fprintf(cdlid,'%s =\n',vars{i});
+# for j=1:length(y)
+#  if(isnan(y(j))==1)
+#   fprintf(cdlid,'NaN');
+#  else
+#   fprintf(cdlid,'%f',y(j));
+#  endif
+#  if(j<length(y))
+#   fprintf(cdlid,', ');
+#  else
+#   fprintf(cdlid,';\n');
+#  endif
+# endfor
+#endfor
+#fprintf(cdlid,'}\n')
+#fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' ncfile '&& rm ' cdffile])
-%end%function
+end%function

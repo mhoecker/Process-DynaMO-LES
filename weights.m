@@ -1,5 +1,6 @@
 function [w1,w2] = weights(t,t1,t2)
-
+%function [w1,w2] = weights(t,t1,t2)
+% linear interpolation weights
  if(t1<t2)
   x = (t-t1)/(t2-t1);
   w1 = 1-x;
@@ -11,10 +12,6 @@ function [w1,w2] = weights(t,t1,t2)
  else
   w1=.5;
   w2=.5;
-  x = NaN;
- endif
-endfunction
+ end%if
+end%function
 
-function y = H(x)
- y = (sign(x)+1)/2;
-endfunction

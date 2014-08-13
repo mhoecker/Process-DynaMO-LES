@@ -1,43 +1,37 @@
-function [Ulpcoef,Vlpcoef,Uhcoef,Vhcoef] = uvLegendre(fileloc,adcpfile,wantdate,max_depth,order)
- ncfile = [fileloc adcpfile ".nc"]
- nc = netcdf(ncfile,"r");
- t = nc{'t'}(:);
- dateidx = find(abs(t-wantdate)==min(abs(t-wantdate)),1);
- dateused  = t(dateidx);
+function [Ucoef,Vcoef,Ufit,Vfit,z,U,V] = uvLegendre(adcpfile,wantdate,max_depth,avgtime,order,varnames)
+ % Set Default values for dimnames and varnames
+ if nargin()<5
+  varnames = ["t";"z";"u";"v"];
+ end%if
+ nc = netcdf(adcpfile,"r");
+ t = nc{deblank(varnames(1,:))}(:);
+ dateidx = find(abs(t-wantdate)<avgtime,1);
+ dateused  = median(t(dateidx));
  clear t;
- U = nc{'ulp'}(dateidx,:);
- V = nc{'vlp'}(dateidx,:);
- z = abs(nc{'z'}(:));
- if(nargin<4)
+ z = abs(nc{deblank(varnames(2,:))}(:));
+ U = nanmean(nc{deblank(varnames(3,:))}(dateidx,:),1);
+ V = nanmean(nc{deblank(varnames(4,:))}(dateidx,:),1);
+ if(nargin<3)
   max_depth = max(abs(z));
  end%if
- good = (isnan(U)==0)&(isnan(V)==0)&(abs(z')<=max_depth);
+ good = (isnan(U)==0)&(isnan(V)==0)&(abs(z')<=abs(max_depth));
  idxgood = find(good);
- clear U V z
- z = abs(nc{'z'}(idxgood));
- Ulp = nc{'ulp'}(dateidx,idxgood);
- Vlp = nc{'vlp'}(dateidx,idxgood);
- Uh = nc{'uhp'}(dateidx,idxgood);
- Vh = nc{'vhp'}(dateidx,idxgood);
+ z = z(idxgood);
+ U = U(idxgood);
+ V = V(idxgood);
  ncclose(nc);
  [z,reidx] = sort(z,'ascend');
- Ulp = Ulp(reidx);
- Vlp = Vlp(reidx);
- Uh = Ulp(reidx);
- Vh = Vlp(reidx);
+ U = U(reidx);
+ V = V(reidx);
  if(min(z)>0)
   imin = find(z==min(z));
   z = [0,z'];
-  Ulp = [Ulp(imin),Ulp];
-  Vlp = [Vlp(imin),Vlp];
-  Uh = [Uh(imin),Uh];
-  Vh = [Vh(imin),Vh];
+  U = [U(imin),U];
+  V = [V(imin),V];
  end%if
- if(nargin<5)
+ if(nargin<4)
   order = 9;
  end%if
- Ulpcoef = fitLegendre(z,Ulp,order);
- Vlpcoef = fitLegendre(z,Vlp,order);
- Uhcoef = fitLegendre(z,Uh,order);
- Vhcoef = fitLegendre(z,Vh,order);
+ [Ucoef,Ufit] = fitLegendre(z,U,order);
+ [Vcoef,Vfit] = fitLegendre(z,V,order);
 end%function

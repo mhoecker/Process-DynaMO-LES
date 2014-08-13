@@ -11,7 +11,7 @@ if iprofs==1
     % read temp
     X=load('..\..\input\temp_1hr_4m.asc');X(X==999.)=nan;
     time=X(:,1);
-    ipk=time>=tstart & time<=tend; 
+    ipk=time>=tstart & time<=tend;
     T_obs=X(ipk,2:end);
     % read sali
     X=load('..\..\input\sali_1hr_4m.asc');X(X==999.)=nan;
@@ -28,7 +28,7 @@ if iprofs==1
     t_cham=time(ipk);
     t_adcp=time(ipk);
     clear X
-    
+
     % pick the first profile after t=tstart
     it=sum(time<tstart)+1;
     T_in=T_obs(1,:);
@@ -37,31 +37,31 @@ if iprofs==1
     V_in=V_obs(1,:);
     E_in=E_obs(1,:);
     time_in=time(ipk(1));
-    
+
 elseif iprofs==2
-    
+
     load('input/adcp150_1m');    % specify input file for velocities
     adcp150av=adcp;
     z_U=-adcp150av.depth;z_V=z_U;
-    
+
     % pick the first profile after t=tstart
     time=adcp150av.time-datenum(2011,1,1,0,0,0)+1;
-    ipk=time>=tstart & time<=tend; 
+    ipk=time>=tstart & time<=tend;
     t_adcp=time(ipk);
-    
+
     U_obs=adcp150av.u(:,ipk);
     U_in=U_obs(:,1);
     V_obs=adcp150av.v(:,ipk);
     V_in=V_obs(:,1);
     time_in=tstart;
     U_obs=U_obs';V_obs=V_obs';
-    
+
     load('input/dn11b_sum2'); % specify input file for temperature and salinity (and epsilon)
 %     it=sum(cham.time-datenum(2011,1,1,0,0,0)<tstart)+1;
     time=cham.time-datenum(2011,1,1,0,0,0)+1;
-    ipk=time>=tstart & time<=tend; 
+    ipk=time>=tstart & time<=tend;
     t_cham=time(ipk);
-    
+
     z_T=-cham.depth;z_S=z_T;z_E=z_T;
     T_obs=cham.THETA(:,ipk);T_obs(z_T>-10)=T_obs(find(z_T<=-10,1,'first'));
     T_in=T_obs(:,1);
@@ -69,12 +69,12 @@ elseif iprofs==2
     S_in=S_obs(:,1);
     E_obs=cham.EPSILON1(:,ipk);E_obs(z_E>-10)=E_obs(find(z_E<=-10,1,'first'));
     E_in=E_obs(:,1);
-    
+
     T_obs=T_obs';S_obs=S_obs';E_obs=E_obs';
-   
+
 %     figure;contourf((t_adcp-tstart)*24,z_V,V_obs');title('V1');;colorbar
-    
-    
+
+
 elseif iprofs==3
     % analytical model
     z_T=-[0:10:100]';
@@ -97,7 +97,7 @@ V_o=spline(z_V,V_in,z);V_o(z>-20)=V_o(find(z<=-20,1,'first'));
 E_o=spline(z_E,E_in,z);E_o(E_o<1e-10)=1e-10;
 
 return
-%% plot (comment out the receding statement if you want to make these plots)
+%% plot (comment out the preceding statement if you want to make these plots)
 figure(21);clf
 lw=1.5;
 subplot(1,3,1)
