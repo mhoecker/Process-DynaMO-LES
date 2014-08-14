@@ -25,13 +25,17 @@ function palette = paltext(paltype,N,clims)
   case {"backrainbow" "euh"}
    palette = ["set palette mode HSV\nset palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\nset palette maxcolors " n "\n"];
   case { "plusminusnan" "pmnan" "minusplusnan" "mpnan" "bluerednan" "brnan"}
-   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>xmid ?  .5+.5*(1-x)/(1-xmid) : .5*x/xmid)\nb(x) = (x<xmid ? .5+.5*x/xmid : .5*(1-x)/(1-xmid))\ng(x) = (x>xmid ? 2*b(x) : (x<xmid ? 2*r(x) : .5))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
+   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>xmid ?  .5+.5*(1-x)/(1-xmid) : .5*x/xmid)\nb(x) = (x<xmid ? .5+.5*x/xmid : .5*(1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : .5))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
   case { "plusminus" "pm" "minusplus" "mp" "bluered" "br" }
-   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>=xmid ?  .5+.5*(1-x)/(1-xmid) : x/xmid)\nb(x) = (x<=xmid ? .5+.5*x/xmid : (1-x)/(1-xmid))\ng(x) = (x>xmid ? 2*b(x) : (x<xmid ? 2*r(x) : 1))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
-  case { "pos" "positive" "red" "posnan" "positivenan" "rednan"}
+   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>=xmid ?  .5+.5*(1-x)/(1-xmid) : x/xmid)\nb(x) = (x<=xmid ? .5+.5*x/xmid : (1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : 1))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
+  case { "posnan" "positivenan" "rednan"}
    palette = ["set palette mode RGB\nset palette function 1-.5*gray,(1-gray),.5-.5*gray\nset palette maxcolors " n "\n"];
-  case { "neg" "negative" "blue" "negnan" "negativenan" "bluenan"}
+  case { "negnan" "negativenan" "bluenan"}
    palette = ["set palette mode RGB\nset palette function .5-.5*gray,(1-gray),1-.5*gray\nset palette maxcolors " n "\n"];
+  case { "pos" "positive" "red"}
+   palette = ["set palette mode RGB\nset palette function 1-.5*gray,(1-gray),1-gray\nset palette maxcolors " n "\n"];
+  case { "neg" "negative" "blue"}
+   palette = ["set palette mode RGB\nset palette function 1-gray,(1-gray),1-.5*gray\nset palette maxcolors " n "\n"];
   case { "zissou" }
    palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\nset palette maxcolors " n "\n"];
   case { "zissoublocks" }

@@ -10,7 +10,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
- palcolors = 8; % number of colors in the color bar palette
+ palcolors = 15; % number of colors in the color bar palette
  scriptdir = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
  if(useoctplot!=1)
   [gnuplotterm,termsfx] = termselect("pngposter");
@@ -32,27 +32,27 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fclose(fid);
   palfile = [outdir "sympal.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("pm"));
+  fprintf(fid,"%s",paltext("pm",palcolors));
   fclose(fid);
   palfile = [outdir "pospal.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("pos"));
+  fprintf(fid,"%s",paltext("pos",palcolors));
   fclose(fid);
   palfile = [outdir "negpal.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("neg"));
+  fprintf(fid,"%s",paltext("neg",palcolors));
   fclose(fid);
   palfile = [outdir "sympalnan.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("pmnan"));
+  fprintf(fid,"%s",paltext("pmnan",palcolors));
   fclose(fid);
   palfile = [outdir "pospalnan.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("posnan"));
+  fprintf(fid,"%s",paltext("posnan",palcolors));
   fclose(fid);
   palfile = [outdir "negpalnan.plt"];
   fid = fopen(palfile,"w");
-  fprintf(fid,"%s",paltext("negnan"));
+  fprintf(fid,"%s",paltext("negnan",palcolors));
   fclose(fid);
  end%if
 end%function
