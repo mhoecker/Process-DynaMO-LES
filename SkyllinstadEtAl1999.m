@@ -12,33 +12,33 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 %
  ensureSkyllingstad1999;
  if nargin()<1
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone2/o512_1_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone3/o1024_1_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
-  dagnc ='/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone2/o512_1_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone3/o1024_1_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+  dagnc ='/home/mhoecker/work/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
  end%if
  if nargin()<2
-  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
-  %sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
+  sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
+  %sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
 end%if
  if nargin()<3
-  chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
+  chmnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  %adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
-  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
+  %adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
+  adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
  end%if
  if nargin()<5
   %outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
-  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y7/';
+  outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
  end%if
  #
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
- #dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
+ #dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
  #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  #[tkenc,tkezavgnc,tkeAVGnc] = tkeBudget(dagnc)
@@ -49,9 +49,14 @@ end%if
  #tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
  #tkeAVGnc =  [tkepath '/' tkename 'AVG' tkeext]
  #tkebzavg(tkezavgnc,outdir);
- outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
- dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+ #
+ outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
+ dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
+ #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+ #dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
  #testfig(outdir);
@@ -111,13 +116,14 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Ncur = Ncur+1;
  # Turbulent Kinetic energy Budget plots
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- [dagpath,dagname,dagext] = fileparts(dagnc);
- tkenc = [dagpath '/' dagname "tke" dagext];
- [tkepath,tkename,tkeext] = fileparts(tkenc);
- tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
+ tkeBudget(dagnc);
+ [dagpath,dagname,dagext] = fileparts(dagnc)
+ tkenc = [dagpath '/' dagname "tke" dagext]
+ [tkepath,tkename,tkeext] = fileparts(tkenc)
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
  tkebzavg(tkezavgnc,outdir);
  [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
- unix(["mv " outpypath ".* " outdir]);
+ unix(["mv " outpypath ".p* " outdir]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);
