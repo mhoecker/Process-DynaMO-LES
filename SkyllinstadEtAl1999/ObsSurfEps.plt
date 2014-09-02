@@ -53,7 +53,7 @@ set bmargin at screen bloc(row)
 set key t r
 set autoscale y
 set autoscale y2
-set ytics 6 nomirror offset ytoff,0
+set ytics 1 nomirror offset ytoff,0
 set yrange [0:*]
 set ylabel "U^s (m/s)"
 set y2label "k (rad/m)" offset -yloff,0
