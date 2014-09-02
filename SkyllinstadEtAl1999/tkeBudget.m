@@ -8,13 +8,13 @@ function [outtke,outzavg,outAVG,outpypath] = tkeBudget(dagnc,outnc,trange,zrange
 #vars = cell array of corresponding variable names
 #fileid = identifier of file to use as cdf file
  if(nargin<3)
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP,Szdag,fave] = DAGtkeprofiles(dagnc);
  elseif(nargin<4)
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc,trange);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP,Szdag,fave] = DAGtkeprofiles(dagnc,trange);
  else
-  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP] = DAGtkeprofiles(dagnc,trange,zrange);
+  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP,Szdag,fave] = DAGtkeprofiles(dagnc,trange,zrange);
  end%if
- val = {zdag(:),tdag(:),tkeavg(:),tkePTra(:),tkeAdve(:),BuoyPr(:),tkeSGTr(:),ShPr(:),StDr(:),Diss(:),badSt(:),badwP(:)};
+ val = {zdag(:),tdag(:),tkeavg(:),tkePTra(:),tkeAdve(:),BuoyPr(:),tkeSGTr(:),ShPr(:),StDr(:),Diss(:),badSt(:),badwP(:),fave(:)};
  Nvar = length(val);
  Ndim = 2;
 # Initialize cell arrays
@@ -129,18 +129,26 @@ if(k<Nvar) # Model wP
  longname{k} = 'Pressure Transport';
  formulae{k} = 'p_ave';
 end%if
+if(k<Nvar)
+ k=k+1
+ vars{k} = 'f_ave';
+ units{k} = 'W/kg';
+ dims{k} = [ vars{1} "," vars{2} ];
+ longname{k} = 'Filter Dissipation';
+ formulae{k} = 'f_ave=uf_ave+vf_ave+wf_ave';
+end%if
 
  [inpath,inname,inext] = fileparts(dagnc)
  if(nargin<2)
-  outnc = [inpath '/' inname "tke" inext];
+  outnc = [inpath '/' inname "tke" inext]
  end%if
- [outpath,outname,outext] = fileparts(outnc)
+ [outpath,outname,outext] = fileparts(outnc);
  outtke = outnc
- outzavg = [outpath '/' outname 'zavg' outext]
- outAVG =  [outpath '/' outname 'AVG' outext]
- outAVGdat = [outpath '/' outname 'AVG' '.dat']
- cdffile = [tempname("/home/mhoecker/tmp/")  ".cdf"]
- cdlid = fopen(cdffile,'w')
+ outzavg = [outpath '/' outname 'zavg' outext];
+ outAVG =  [outpath '/' outname 'AVG' outext];
+ outAVGdat = [outpath '/' outname 'AVG' '.dat';]
+ cdffile = [tempname("/home/mhoecker/tmp/")  ".cdf"];
+ cdlid = fopen(cdffile,'w');
 # Write header
  fprintf(cdlid,'netcdf %s.nc {\n', outname);
 # Declare Dimensions
@@ -168,7 +176,7 @@ for i=1:Nvar
 
 
  %fclose(cdlid)
- writeCDFdata(cdlid,val,vars)
+ writeCDFdata(cdlid,val,vars);
  "wrote CDF file"
  unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile])
  unix(['ncwa -O -a z ' outnc ' ' outzavg])
@@ -176,7 +184,7 @@ for i=1:Nvar
  AVG = netcdf(outAVG,'r');
  ZVG = netcdf(outzavg,'r');
  netdtke = -ZVG{'tke'}(end)/ZVG{'t'}(end);
- tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:),netdtke];
+ tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:),netdtke,AVG{'f_ave'}(:)];
  ncclose(AVG)
  ncclose(ZVG)
  AVGdat = fopen(outAVGdat,'w')
