@@ -80,7 +80,8 @@ end%if
 end%function
 
 function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- Nfigs = 8;
+ [dagpath,dagname,dagext] = fileparts(dagnc)
+ Nfigs = 10;
  Ncur = 0;
  waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
  Ncur = Ncur+1;
@@ -116,14 +117,19 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Ncur = Ncur+1;
  # Turbulent Kinetic energy Budget plots
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- tkeBudget(dagnc);
- [dagpath,dagname,dagext] = fileparts(dagnc)
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ #
+ [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
  tkenc = [dagpath '/' dagname "tke" dagext]
  [tkepath,tkename,tkeext] = fileparts(tkenc)
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
  tkebzavg(tkezavgnc,outdir);
- [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
- unix(["mv " outpypath ".p* " outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ #
+ pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
+ unix(["python " pyflowscript " " dagpath "/tkeflow.dat " outdir])
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);
