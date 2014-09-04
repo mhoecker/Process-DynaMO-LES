@@ -48,6 +48,7 @@ set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "S^2"
+set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot datdir.abrev."c.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
 unset colorbox
 #
@@ -70,6 +71,7 @@ set format cb ""
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
 set key l b
+set label 1 "b"
 plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
 #,\
 #datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\

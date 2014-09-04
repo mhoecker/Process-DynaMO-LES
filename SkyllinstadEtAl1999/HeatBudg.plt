@@ -29,6 +29,7 @@ set bmargin at screen bloc(row)
 set format x ""
 set ylabel "-{/Symbol \266}_zJ_{sgs}"
 set colorbox user origin rloc(col)+cbgap,bloc(row+2)+0.075*vskip size cbwid,2*vskip+cbhig
+set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot datdir.abrev."dhfdz.dat" binary matrix w image notitle
 #, \
 #outdir.abrev."a.tab" lc 0 notitle
@@ -38,6 +39,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "-{/Symbol r}c_p{/Symbol \266}_zw'T'"
+set label 1 "b"
 plot datdir.abrev."dwtdz.dat" binary matrix w image notitle
 #, \
 #outdir.abrev."a.tab" lc 0 notitle
@@ -46,6 +48,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "{/Symbol r}c_p{/Symbol \266}_tT"
+set label 1 "c"
 plot datdir.abrev."dTdt.dat" binary matrix w image notitle
 #
 row = nextrow(row)
@@ -64,6 +67,7 @@ set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "T'_{rms}/|{/Symbol \266}_zT|"
 set format x "%g"
 set xlabel "2011 UTC yearday"
+set label 1 "d"
 plot datdir.abrev."T_dTdz.dat" binary matrix w image notitle
 unset logscale
 #
@@ -110,6 +114,7 @@ set ylabel "kW/m^2"
 unset xlabel
 set key horizontal
 set key left top
+set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) w lines title "J_0", \
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) w lines title " J_{ML}",\
@@ -132,6 +137,7 @@ set cblabel "kW/m^2"
 set xlabel ""
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "{/Symbol r}c_pw'T'"
+set label 1 "b"
 plot datdir.abrev."wt.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 w lines lc -1 title "Mixed Layer"
 #outdir.abrev."a.tab" lc 0 notitle
