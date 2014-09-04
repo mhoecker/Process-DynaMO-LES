@@ -35,28 +35,16 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
  end%if
  #
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
- #dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- #
- #[tkenc,tkezavgnc,tkeAVGnc] = tkeBudget(dagnc)
- #if(nargin<2)
- # tkenc = [dagpath '/' dagname "tke" dagext];
- #end%if
- #[tkepath,tkename,tkeext] = fileparts(tkenc);
- #tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
- #tkeAVGnc =  [tkepath '/' tkename 'AVG' tkeext]
- #tkebzavg(tkezavgnc,outdir);
  #
  outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
- #dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+ dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
  #testfig(outdir);
@@ -120,16 +108,16 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  #
- [outtke,outzavg,outAVG,outpypath]=tkeBudget(dagnc);
- tkenc = [dagpath '/' dagname "tke" dagext]
- [tkepath,tkename,tkeext] = fileparts(tkenc)
- tkezavgnc = [tkepath '/' tkename 'zavg' tkeext]
+ [outtke,outzavg,outAVG] = tkeBudget(dagnc);
+ tkenc = [dagpath '/' dagname "tke" dagext];
+ [tkepath,tkename,tkeext] = fileparts(tkenc);
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
  tkebzavg(tkezavgnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  #
  pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
- unix(["python " pyflowscript " " dagpath "/tkeflow.dat " outdir])
+ unix(["python " pyflowscript " " dagpath "/tkeflow.dat " outdir]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  close(waithandle);

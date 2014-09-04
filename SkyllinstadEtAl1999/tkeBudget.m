@@ -187,7 +187,7 @@ for i=1:Nvar
  tkeflow = [AVG{'St'}(:),AVG{'SP'}(:),AVG{'wb'}(:), AVG{'eps'}(:),AVG{'sd_ave'}(:),AVG{'p_ave'}(:),netdtke,AVG{'f_ave'}(:)];
  ncclose(AVG)
  ncclose(ZVG)
- AVGdat = fopen(outAVGdat,'w')
+ AVGdat = fopen(outAVGdat,'w');
  for i=1:length(tkeflow)
   fprintf(AVGdat,'%20.20f ',tkeflow(i))
  end%for
