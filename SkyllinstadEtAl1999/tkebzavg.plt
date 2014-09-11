@@ -16,7 +16,7 @@ set ytics dtketic
 set multiplot title "Spatial mean of tke flux divergences"
 set xtics format ""
 set key t l
-set style line 1 lc -1 lw 2
+set style line 1 lc -1 lw 1
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -44,7 +44,7 @@ unset multiplot
 #
 set output outdir.abrev."src".termsfx
 # Setup spacing
-rows = 4
+rows = 1
 row = 0
 cols = 1
 col = 0
@@ -55,30 +55,15 @@ set ytics dtketic
 #set autoscale y
 #set ytics auto
 set xtics format ""
-#
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-
-plot outdir."tkebzavg.dat" binary format=form u 1:7 title "<St>" ls 1
-#
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-
-plot outdir."tkebzavg.dat" binary format=form u 1:8 title "<SP>" ls 1
-#
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-
-plot outdir."tkebzavg.dat" binary format=form u 1:9 title "<w'b>'" ls 1
-#
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-
 set xtics format "%g"
-plot outdir."tkebzavg.dat" binary format=form u 1:10 title "<{/Symbol e}>" ls 1
+#
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+
+plot outdir."tkebzavg.dat" binary format=form u 1:7 title "<St>" ls 1 ,\
+ outdir."tkebzavg.dat" binary format=form u 1:8 title "<SP>" ls 2 ,\
+ outdir."tkebzavg.dat" binary format=form u 1:9 title "<w'b'>" ls 3 ,\
+ outdir."tkebzavg.dat" binary format=form u 1:10 title "<{/Symbol e}>" ls 4
 #
 unset multiplot
 #

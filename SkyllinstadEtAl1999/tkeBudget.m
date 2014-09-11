@@ -1,4 +1,4 @@
-function [outtke,outzavg,outAVG] = tkeBudget(dagnc,outnc,trange,zrange)
+function [outtke,outzavg,outAVG,outAVGdat] = tkeBudget(dagnc,outnc,trange,zrange)
 # output is a ascii file with the mean terms in the tke budget
 # Toatal Stokes Production
 # Total Shear Production
@@ -138,15 +138,15 @@ if(k<Nvar)
  formulae{k} = 'f_ave=uf_ave+vf_ave+wf_ave';
 end%if
 
- [inpath,inname,inext] = fileparts(dagnc)
+ [inpath,inname,inext] = fileparts(dagnc);
  if(nargin<2)
-  outnc = [inpath '/' inname "tke" inext]
+  outnc = [inpath '/' inname "tke" inext];
  end%if
  [outpath,outname,outext] = fileparts(outnc);
  outtke = outnc
  outzavg = [outpath '/' outname 'zavg' outext];
  outAVG =  [outpath '/' outname 'AVG' outext];
- outAVGdat = [outpath '/tkeflow.dat';]
+ outAVGdat = [outpath '/' outname '.dat';]
  cdffile = [tempname("/home/mhoecker/tmp/")  ".cdf"];
  cdlid = fopen(cdffile,'w');
 # Write header
@@ -178,9 +178,9 @@ for i=1:Nvar
  %fclose(cdlid)
  writeCDFdata(cdlid,val,vars);
  "wrote CDF file"
- unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile])
- unix(['ncwa -O -a z ' outnc ' ' outzavg])
- unix(['ncwa -O -a z,t ' outnc ' ' outAVG])
+ unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile]);
+ unix(['ncwa -O -a z ' outnc ' ' outzavg]);
+ unix(['ncwa -O -a z,t ' outnc ' ' outAVG]);
  AVG = netcdf(outAVG,'r');
  ZVG = netcdf(outzavg,'r');
  netdtke = -ZVG{'tke'}(end)/ZVG{'t'}(end);
