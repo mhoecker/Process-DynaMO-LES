@@ -35,14 +35,14 @@ end%if
   outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
  end%if
  #
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  #
  outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
+ outdir = '/home/mhoecker/work/Dynamo/plots/y6/';
  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
@@ -107,18 +107,57 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
+ # tke Budget
+ pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
+ # Hourly tke Budget
+ dt = .5*3600
+ imax = ceil(30*3600/dt);
+ for i=1:imax
+  trange = [-dt,0]+dt*i;
+  namesfx = ["hourlytke" num2str(i,"%02i")];
+  outnc = [dagpath '/' dagname namesfx dagext];
+  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
  #
- [outtke,outzavg,outAVG] = tkeBudget(dagnc);
+ #
+  [tscale,tunit] = timeunits(trange);
+  ti = num2str(trange(1)/tscale,"%03.1f");
+  tf = num2str(trange(2)/tscale,"%03.1f");
+  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+  unix(["python " pyflowscript ' ' outdat ' ' outdir namesfx " " plotlab]);
+ end%for
+ # Overall tke Budget
+ trange = [0,dt*imax];
  tkenc = [dagpath '/' dagname "tke" dagext];
+ [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
  [tkepath,tkename,tkeext] = fileparts(tkenc);
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
  tkebzavg(tkezavgnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  #
- pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
- unix(["python " pyflowscript " " dagpath "/tkeflow.dat " outdir]);
+ [tscale,tunit] = timeunits(trange)
+ ti = num2str(trange(1)/tscale,"%03.1f");
+ tf = num2str(trange(2)/tscale,"%03.1f");
+ plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+ unix(["python " pyflowscript " " outdat " " outdir "full " plotlab]);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
+ #
  close(waithandle);
+end%function
+
+function [tscale,tunit] = timeunits(trange)
+  if(diff(trange)<6)
+   tscale = 1;
+   tunit = "sec";
+  elseif(diff(trange)<360)
+   tscale = 60;
+   tunit = "min";
+  elseif(diff(trange)<8640)
+   tscale = 3600;
+   tunit = "hr";
+  else
+   tscale = 86400;
+   tunit = "day";
+  end%if
 end%function
