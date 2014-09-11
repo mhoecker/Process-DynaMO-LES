@@ -13,8 +13,9 @@ function vars = dagvars(dagnc,field,trange,zrange)
  if nargin()>2
   dagtidx = inclusiverange(dim,trange);
  else
-  dagtidx = 1:length(tsfx);
+  dagtidx = 1:length(dim);
  end%if
+ deblank(field(1,:))
  vars.(deblank(field(1,:))) = squeeze(dag{deblank(field(1,:))}(dagtidx));
  % get and restict depth range
  dim = -squeeze(dag{deblank(field(2,:))}(:));

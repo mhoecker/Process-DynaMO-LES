@@ -1,4 +1,7 @@
 /csqfilldemo.png
+/csqfil*.png
+/harmfill*.png
+/twodpsdtest.png
 #Files ignored by git
 # gedit backup files
 *.*~

@@ -17,10 +17,16 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
  trange = [t0sim-1,tfsim+1];
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange);
  # Decomplse Stress into components
  stressm = -stress.*sin(wdir*pi/180);
  stressz = -stress.*cos(wdir*pi/180);
+ #Calculate Stokes Drift and wavenumber
+ findgsw;
+ g = gsw_grav(0);
+ k = g./cp.^2;
+ U = cp.*(sigH.*k/2).^2;
+ l = 2*pi./k;
  # Extract epsilon profiles
  [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
  # Plot using octave or Gnuplot
@@ -46,9 +52,9 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[Jh,p,stressm,stressz]',[outdir abrev "JhPrecipTxTy.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz,U,k]',[outdir abrev "JhPrecipTxTyUk.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
  end%if
 end%function

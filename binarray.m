@@ -1,4 +1,5 @@
 function [form,S] = binarray(x,y,filename)
+% function [form,S] = binarray(x,y,filename)
 % write a binary array readble by gnuplot
 % returns the format which needs to be given to gnuplot to read the file
 	xy = [x;y];

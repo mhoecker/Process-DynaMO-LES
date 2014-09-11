@@ -12,36 +12,38 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
 %
  ensureSkyllingstad1999;
  if nargin()<1
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
-  %dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone2/o512_1_dag.nc'
-  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone3/o1024_1_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone2/o512_1_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone3/o1024_1_dag.nc'
+  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
+  dagnc ='/home/mhoecker/work/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
  end%if
  if nargin()<2
-  sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
-  %sfxnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
+  sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
+  %sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
 end%if
  if nargin()<3
-  chmnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
+  chmnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
-%  adcpnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc'
-%  adcpvarnames = ["t";"z";"u";"v"];
+  %adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
+  adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
  end%if
  if nargin()<5
-  outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
+  %outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
+  outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
  end%if
  #
  #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
- #outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/NWW/';
- #dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone5/o1024_nww-a_dag.nc';
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
-  dagnc = '/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/yellowstone6/d1024_1_dag.nc'
- outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
-  adcpnc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
+ outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
+ dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ #
+ outdir = '/home/mhoecker/work/Dynamo/plots/y6/';
+ dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  #
  # Test figure
@@ -66,63 +68,96 @@ end%if
 end%function
 
 function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- Nfigs = 8;
+ [dagpath,dagname,dagext] = fileparts(dagnc)
+ Nfigs = 10;
  Ncur = 0;
- waithandle = waitbar(Ncur./Nfigs,["Generating figures in " outdir]);
+ waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
  Ncur = Ncur+1;
  # Richardson Number Defined by Surface Flux
  #figRi(sfxnc,outdir);
  # Surface and dissipation observations
  ObsSurfEps(sfxnc,chmnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
  Ncur = Ncur+1;
  # Initial Conditions
  initialTSUV(chmnc,adcpnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
  Ncur = Ncur+1;
  # Model Obersvation Comparison
  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
  Ncur = Ncur+1;
  # Model Observation Difference
  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
  Ncur = Ncur+1;
  # Stability Criterion
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
  Ncur = Ncur+1;
  # Heat flux comparison
  Heatfluxcompare(dagnc,sfxnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  #Heat Budget
  HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
  Ncur = Ncur+1;
- # Turbulent Kinetic energy Budget
+ # Turbulent Kinetic energy Budget plots
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
+ # tke Budget
+ pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
+ # Hourly tke Budget
+ dt = .5*3600
+ imax = ceil(30*3600/dt);
+ for i=1:imax
+  trange = [-dt,0]+dt*i;
+  namesfx = ["hourlytke" num2str(i,"%02i")];
+  outnc = [dagpath '/' dagname namesfx dagext];
+  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
+ #
+ #
+  [tscale,tunit] = timeunits(trange);
+  ti = num2str(trange(1)/tscale,"%03.1f");
+  tf = num2str(trange(2)/tscale,"%03.1f");
+  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+  unix(["python " pyflowscript ' ' outdat ' ' outdir namesfx " " plotlab]);
+ end%for
+ # Overall tke Budget
+ trange = [0,dt*imax];
+ tkenc = [dagpath '/' dagname "tke" dagext];
+ [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
+ [tkepath,tkename,tkeext] = fileparts(tkenc);
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
+ tkebzavg(tkezavgnc,outdir);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ #
+ [tscale,tunit] = timeunits(trange)
+ ti = num2str(trange(1)/tscale,"%03.1f");
+ tf = num2str(trange(2)/tscale,"%03.1f");
+ plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+ unix(["python " pyflowscript " " outdat " " outdir "full " plotlab]);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ #
  close(waithandle);
 end%function
 
-function ensureSkyllingstad1999
- % Ensure Skyllingstad1999 is in the path,
- % return the version number and date
- testpath = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
- if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
-  addpath(testpath);
- end%if
+function [tscale,tunit] = timeunits(trange)
+  if(diff(trange)<6)
+   tscale = 1;
+   tunit = "sec";
+  elseif(diff(trange)<360)
+   tscale = 60;
+   tunit = "min";
+  elseif(diff(trange)<8640)
+   tscale = 3600;
+   tunit = "hr";
+  else
+   tscale = 86400;
+   tunit = "day";
+  end%if
 end%function
-
-function removeSkyllingstad1999
- % Ensure Skyllingstad1999 is in the path,
- % return the version number and date
- testpath = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
- if((exist(testpath,"dir")==7).*(length(findstr(path,testpath))==0))
-  rmpath(testpath);
- end%if
-end%function
-
-

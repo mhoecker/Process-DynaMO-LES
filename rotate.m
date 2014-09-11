@@ -22,9 +22,9 @@ ya = [y(Ny-Nypad:Ny)-Ly,y,y(1:Nypad)+Ly]-ym;
 
 [xxa,yya] = meshgrid(xa,ya);
 
-zza = flipud([		zz(1:Nypad,	Nx-Nxpad:Nx),	zz(1:Nypad,	1:Nx),	zz(1:Nypad,	1:Nxpad)]);
-zza = 	[zza;		zz(1:Ny,	Nx-Nxpad:Nx),	zz(1:Ny,	1:Nx),	zz(1:Ny,	1:Nxpad)];
-zza = 	[zza;flipud([	zz(Ny-Nypad:Ny,	Nx-Nxpad:Nx),	zz(Ny-Nypad:Ny,	1:Nx),	zz(Ny-Nypad:Ny,	1:Nxpad)])];
+zza = flipud([zz(1:Nypad,	Nx-Nxpad:Nx),zz(1:Nypad,1:Nx),zz(1:Nypad,1:Nxpad)]);
+zza = [zza;zz(1:Ny,Nx-Nxpad:Nx),zz(1:Ny,1:Nx),zz(1:Ny,1:Nxpad)];
+zza = [zza;flipud([zz(Ny-Nypad:Ny,	Nx-Nxpad:Nx),zz(Ny-Nypad:Ny,1:Nx),zz(Ny-Nypad:Ny,1:Nxpad)])];
 
 pcolor(xxa,yya,zza); shading flat; colorbar; axis([[-0.5,0.5]*Lx*(1+Nxpad/Nx),[-0.5,0.5]*Ly*(1+Nypad/Ny)]); title("Augmaneted Field")
 

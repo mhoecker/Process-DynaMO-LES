@@ -84,7 +84,8 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',uavgdag',[outdir abrev "Us.dat"]);#was h
   binmatrix(tdag',zdag',vavgdag',[outdir abrev "Vs.dat"]);#was j
   unix(["gnuplot " limitsfile " " scriptdir abrev "SideTSUVwSurf.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "TSwSurf.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "T.plt"]);
+  unix(["gnuplot " limitsfile " " scriptdir abrev "S.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "UVwSurf.plt"]);
  end%if
 end%function
