@@ -49,7 +49,7 @@ function tkebzavg(zavgnc,outdir)
  scale = sum(abs(src),2)/2;
  data = [tke,dtke,flx,src];
  binarray(t',data',[outdir "/" abrev ".dat"]);
- binarray(t',(data./tke)',[outdir "/tkescale" abrev ".dat"]);
+ binarray(t',abs(data./tke)',[outdir "/tkescale" abrev ".dat"]);
  binarray(t',(data./scale)',[outdir "/scaled" abrev ".dat"]);
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
 end%function
