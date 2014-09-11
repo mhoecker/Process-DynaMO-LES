@@ -49,8 +49,8 @@ set x2tics -.2,.2,.2
 set yzeroaxis
 set label 1 "b"
 plot \
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 2:(-$1) w lines axes x1y2 title "U "   ls 1 ,\
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 3:(-$1) w lines axes x2y2 title "V "   ls 2 ,\
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 4:(-$1) w lines axes x1y2 title "U_{L5}" ls 3,\
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 5:(-$1) w lines axes x2y2 title "V_{L5}" ls 5
+datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 2:(-$1) w lines axes x1y2 title "U "   ls 3 ,\
+datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 3:(-$1) w lines axes x2y2 title "V "   ls 4 ,\
+datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 4:(-$1) w lines axes x1y2 title "U_{L5}" ls 5,\
+datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 5:(-$1) w lines axes x2y2 title "V_{L5}" ls 6
 unset multiplot

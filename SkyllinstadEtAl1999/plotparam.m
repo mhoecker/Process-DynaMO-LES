@@ -26,9 +26,20 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fprintf(fid,"scriptdir = '%s'\n",scriptdir);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
   fprintf(fid,"set term %s\n",gnuplotterm);
+  fprintf(fid,"set style data lines\n");
+  fprintf(fid,"set style line 1 lc pal frac 0 lw 1\n");
+  fprintf(fid,"set style line 2 lc pal frac 1 lw 1\n");
+  fprintf(fid,"set style line 3 lc pal frac .5 lw 1\n");
+  fprintf(fid,"set style line 4 lc pal frac .25 lw 1\n");
+  fprintf(fid,"set style line 5 lc pal frac .75 lw 1\n");
+  fprintf(fid,"set style line 6 lc pal frac .125 lw 1\n");
+  fprintf(fid,"set style line 7 lc pal frac .625 lw 1\n");
+  fprintf(fid,"set style line 8 lc pal frac .375 lw 1\n");
+  fprintf(fid,"set style line 9 lc pal frac .875 lw 1\n");
+  fprintf(fid,"unset colorbox\n");
   fprintf(fid,"cbmarks = (palcolors+1)/2\n");
   fprintf(fid,"set palette maxcolors palcolors\n");
-  fprintf(fid,"%s",paltext("euh"));
+  fprintf(fid,"%s",paltext("pmnan"));
   fclose(fid);
   palfile = [outdir "sympal.plt"];
   fid = fopen(palfile,"w");
@@ -53,6 +64,10 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   palfile = [outdir "negpalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("negnan",palcolors));
+  fclose(fid);
+  palfile = [outdir "zissou.plt"];
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("zissou",4*palcolors));
   fclose(fid);
  end%if
 end%function
