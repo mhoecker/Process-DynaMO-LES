@@ -12,6 +12,7 @@ function tkebzavg(zavgnc,outdir)
  SP   = squeeze(zavg{"SP"}(:));
  St   = squeeze(zavg{"St"}(:));
  eps  = squeeze(zavg{"eps"}(:));
+ fil  = squeeze(zavg{"f_ave"}(:));
  ncclose(zavg);
  dtmatrix = ddz(t)./(60*60*24);
  dtke = dtmatrix*tke;
@@ -43,6 +44,12 @@ function tkebzavg(zavgnc,outdir)
   plot(t,dtke,"k;dtke/dt;")
   axis(plotrange)
  end%if
- binarray(t',[tke,dtke,wtke,sgs,wp,St,SP,wb,eps]',[outdir "/" abrev ".dat"]);
+ flx = [wtke,sgs,wp];
+ src = [St,SP,wb,eps,fil];
+ scale = sum(abs(src),2)/2;
+ data = [tke,dtke,flx,src];
+ binarray(t',data',[outdir "/" abrev ".dat"]);
+ binarray(t',(data./tke)',[outdir "/tkescale" abrev ".dat"]);
+ binarray(t',(data./scale)',[outdir "/scaled" abrev ".dat"]);
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
 end%function
