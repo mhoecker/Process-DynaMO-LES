@@ -70,6 +70,7 @@ set xlabel "2011 UTC yearday"
 set label 1 "d"
 plot datdir.abrev."T_dTdz.dat" binary matrix w image notitle
 unset logscale
+unset colorbox
 #
 unset multiplot
 #
@@ -117,9 +118,7 @@ set key left top
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) ls 1 title "J_0", \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) ls 2 title " J_{ML}",\
-#, \
-#outdir.abrev."a.tab" lc 0 notitle
+datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) ls 2 title " J_{ML}"
 unset y2tics
 unset y2label
 load scriptdir."tlocbloc.plt"
@@ -131,7 +130,7 @@ set bmargin at screen bloc(row)
 set key left bottom
 set cbrange [hfxmin:hfxmax]
 unset cbtics
-set cbtics add ("-1" -1000 ,"0" 0, "+1" 1000)
+set cbtics ("-1" -1000 ,"0" 0, "+1" 1000)
 set format cb ""
 set cblabel "kW/m^2"
 set xlabel ""
@@ -140,40 +139,5 @@ set ylabel "{/Symbol r}c_pw'T'"
 set label 1 "b"
 plot datdir.abrev."wt.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
-#outdir.abrev."a.tab" lc 0 notitle
-unset colorbox
-#
-#row = nextrow(row)
-#set tmargin at screen tloc(row)
-#set bmargin at screen bloc(row)
-#set yrange [-1.4:1.4]
-#set ytics .5
-#set ylabel "J_{ML}/J_0"
-#set format x "%g"
-#set xlabel "2011 UTC yearday"
-#plot +1 lc rgbcolor "red" not, -1 lc rgbcolor "blue" not, \
-#datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:($3/$2) w lines lc -1 not
-#unset colorbox
-#load scriptdir."tlocbloc.plt"
-#
-#row = nextrow(row)
-#set tmargin at screen tloc(row)
-#set bmargin at screen bloc(row)
-#set logscale cb
-#load outdir."pospal.plt"
-#set cbrange [Tdispmin:Tdispmax]
-#unset mcbtics
-#set cbtics Tdispmin,(Tdispmax/Tdispmin)**(1.0/2),Tdispmax
-# autoscale colors
-#set cbtics auto;set autoscale cb;unset logscale cb
-#set format cb cbform
-#set cblabel "m"
-#set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,vskip+cbhig
-#set ylabel "T'_{rms}/|{/Symbol \266}_zT|"
-#set format x "%g"
-#set xlabel "2011 UTC yearday"
-#plot datdir.abrev."T_dTdz.dat" binary matrix w image notitle, \
-#datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 w lines lc -1 title "Mixed Layer"
-#unset logscale
 #
 unset multiplot
