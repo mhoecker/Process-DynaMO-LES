@@ -31,12 +31,12 @@ switch nargin()
   win = 'sinw';
 end
 N = length(t);
-Period = (max(t)-min(t))*(N/(N+1));
-df = 1/(Period);
+Period = N*mean(diff(t));
+df = 1.0/(Period);
 idxgood = find(~isnan(x));
 Ngood = length(idxgood);
 if(nargin()<4)
- Nf = floor((Ngood-1)/2);
+ Nf = floor((N-1)/2);
  f = (1:Nf)*df;
 else
  f = ftest;
@@ -47,7 +47,7 @@ end
 Fx = f*NaN;
 dFx = f*NaN;
 xfit = x*NaN;
-errratio = 1;
+errratio = 100;
 # Initialize empty arrays for fitting frequencies
 fgood = [];
 relerr = [];
@@ -59,7 +59,7 @@ for i=1:length(f)
  relerr = [relerr,abs((dA(2)-I*dA(1))/(A(2)-I*A(1)))];
 end
 [relerr,sortidx] = sort(relerr);
-Nstop = min([Nf,find(relerr>errratio,1)]);
+Nstop = min([(Ngood-1)/4,find(relerr>errratio,1)]);
 ftest =  f(sortidx);
 xfit = 0*x;
 for i=1:Nstop
@@ -86,5 +86,5 @@ for i=1:Nfgood
  Fx(idxfill) = Fxgood(i);
  dFx(idxfill) = dFxgood(i);
 end
-Px = 2*abs(Fx.*conj(Fx))/df;
-dPx = 4*abs(Fx).*abs(dFx)/df;
+Px = 2*abs(Fx.*conj(Fx))./df;
+dPx = 4*abs(Fx).*abs(dFx)./df;

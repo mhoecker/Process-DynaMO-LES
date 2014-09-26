@@ -1,4 +1,4 @@
-function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
+function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  # function LESsurfBC(fileloc,ncfile,wantdates,outloc)
  # filename - name of the data file
  # wantdates - [start date, end date] in 2011 yearday
@@ -40,11 +40,15 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
  Tauy   = -nc{'stress'}(dateidx).*cos(nc{'Wdir'}(dateidx)*pi/180);
  Tauy = meanfil(Tauy,t,s,avgtime);
  %
- wave_height = nc{'sigH'}(dateidx);
- wave_height = meanfil(wave_height,t,s,avgtime);
+ %wave_height = nc{'sigH'}(dateidx);
+ %wave_height = meanfil(wave_height,t,s,avgtime);
  %
- wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
- wave_length = meanfil(wave_length,t,s,avgtime);
+ %wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
+ %wave_length = meanfil(wave_length,t,s,avgtime);
+ %
+ load(wavespecHL)
+ wave_height = meanfil(Hs,tHL,s,avgtime);
+ wave_length = meanfil(Lam,tHL,s,avgtime);
  %
  wave_direct = exp(nc{'Wdir'}(dateidx)*I*pi/180);
  wave_direct = meanfil(wave_direct,t,s,avgtime);

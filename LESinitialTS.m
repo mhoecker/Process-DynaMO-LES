@@ -29,7 +29,7 @@ function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  ncclose(nc);
  #
  outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"  int2str(round(dateused))]
- fileout = [outname".ic"];
+ fileout = [outname ".ic"];
  outid = fopen(fileout,"w");
  fprintf(outid,'-z|Tc|Sp/%s\n',filename);
  if(max(z)<0)
