@@ -1,3 +1,4 @@
+load termfile
 set style data lines
 form = "%float%float%float%float%float%float%float%float%float%float%float"
 set output outdir.abrev."flx".termsfx

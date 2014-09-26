@@ -1,4 +1,4 @@
-function ObsSurfEps(sfxnc,chmnc,outdir)
+function ObsSurfEps(sfxnc,chmnc,outdir,trange)
  %function fig1(sfxnc,chmnc,outdir)
  %
  % 4 plots stacked vertically with a common x-axis (yearday)
@@ -14,7 +14,9 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
  % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
- trange = [t0sim-1,tfsim+1];
+ if(nargin<4)
+  trange = [t0sim-1,tfsim+1];
+ end%if
  zrange = sort([0,-dsim]);
  % Extract Flux data
  [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange);
@@ -55,6 +57,26 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
   binarray(tsfx',[Jh,p,stressm,stressz,U,k]',[outdir abrev "JhPrecipTxTyUk.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
+  if(nargin>3)
+   dtplot = diff(trange);
+   T = max(trange)-min(trange);
+   if(T<1)
+    dttic = 1.0/24.0;
+    dtmtic = 4;
+   elseif(T<3)
+    dttic = 1;
+    dtmtic = 4;
+   else
+    dttic = ceil(T/3);
+    dtmtic = dttic;
+   end%if
+   trangetext = ['t0sim = ' num2str(trange(1),"%12.10f") '; tfsim=' num2str(trange(2),"%12.10f") ';set xrange [t0sim:tfsim]']
+   xtictext = ['set xtic t0sim,' num2str(dttic,"%12.10f")]
+   mxtictext = ['set mxtic ' num2str(dtmtic,"%2i")]
+   unix(['echo "' trangetext '">>' limitsfile]);
+   unix(['echo "' xtictext '">>' limitsfile]);
+   unix(['echo "' mxtictext '">>' limitsfile]);
+  end%if
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
  end%if
 end%function

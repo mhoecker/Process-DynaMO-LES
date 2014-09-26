@@ -6,6 +6,7 @@
 #  Observed Salinity
 #  Modeled Sainity
 #
+load termfile
 Tmin = 28.3
 Tmax = 30.10
 set output outdir.abrev."T".termsfx

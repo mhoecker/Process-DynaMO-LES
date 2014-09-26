@@ -1,3 +1,4 @@
+load termfile
 Tmin = 26.5
 Tmax = 30.20
 Smin = 35.00

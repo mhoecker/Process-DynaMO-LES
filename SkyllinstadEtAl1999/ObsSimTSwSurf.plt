@@ -11,6 +11,7 @@ Tmax = 30.20
 Smin = 35.00
 Smax = 35.5
 set output outdir.abrev."TSwSurf".termsfx
+load termfile
 #
 # Setup spacing
 rows = 5

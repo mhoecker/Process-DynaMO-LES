@@ -6,6 +6,7 @@
 #
 Smin = 35.00
 Smax = 35.5
+load termfile
 set output outdir.abrev."S".termsfx
 #
 # Setup spacing

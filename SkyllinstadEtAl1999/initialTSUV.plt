@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev.termsfx
 set multiplot
 # Setup spacing

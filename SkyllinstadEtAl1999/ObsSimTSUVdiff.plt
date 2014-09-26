@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev."TSUVdiff".termsfx
 set view map
 unset colorbox

@@ -1,3 +1,4 @@
+load termfile
 set style data lines
 set output outdir.abrev.termsfx
 # Setup spacing

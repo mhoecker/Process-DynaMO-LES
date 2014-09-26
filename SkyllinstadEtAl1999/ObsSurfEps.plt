@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev.termsfx
 #
 # Setup spacing
@@ -64,32 +65,11 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 set label 1 "c"
 plot \
-datfile binary format="%f%f%f%f%f%f%f" u 1:6 ls 5 axes x1y1 title "U^s" ,\
-datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 6 axes x1y2 title "k"
+datfile binary format="%f%f%f%f%f%f%f" u 1:6 ls 6 lw 2 axes x1y1 title "U^s"\
+,\
+datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 5 axes x1y2 title "k"\
+
 unset y2tics
 unset y2label
 #
-#
-#load scriptdir."tlocbloc.plt"
-#row = nextrow(row)
-#set tmargin at screen tloc(row)
-#set bmargin at screen bloc(row)
-#set format x "%g"
-#set ylabel "Z (m)" offset yloff,0
-#set xlabel "2011 UTC yearday" offset 0,xloff
-#cbform = "%4.1te^{%+02T}"
-#set format cb cbform
-#set cblabel "{/Symbol e} (W/kg)" offset 1-yloff,0
-#unset object 1
-#load outdir."pospalnan.plt"
-#epsmax = 5e-5
-#epsmin = 5e-9
-#set cbrange [epsmin:epsmax]
-#set cbtics epsmin,(epsmax/epsmin)**(1.0/2),epsmax
-#set cbtics offset -ytoff,0
-#unset mcbtics
-#set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-#unset surface
-#set logscale cb
-#plot datdir.abrev."d.dat" binary matrix w image not
 unset multiplot

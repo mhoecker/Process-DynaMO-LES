@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev.termsfx
 # Setup vertical spacing
 rows = 3

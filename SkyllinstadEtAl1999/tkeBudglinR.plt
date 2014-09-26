@@ -1,5 +1,5 @@
-reset
-load "/home/mhoecker/tmp/limits.plt"
+load termfile
+load limitsfile
 set style data lines
 abrev = "tkeBudg"
 set output outdir.abrev."linR".termsfx

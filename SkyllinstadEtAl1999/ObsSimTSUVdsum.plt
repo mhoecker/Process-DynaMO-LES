@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev."TSUVdsum".termsfx
 set view map
 unset colorbox

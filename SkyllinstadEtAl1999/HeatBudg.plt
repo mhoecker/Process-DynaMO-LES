@@ -1,3 +1,4 @@
+load termfile
 set output outdir.abrev.termsfx
 # Setup spacing
 rows = 4
@@ -5,6 +6,7 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
+load termfile
 #
 cbform = "%+4.1te^{%+02T}"
 #
@@ -121,7 +123,8 @@ datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) ls 1 title
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) ls 2 title " J_{ML}"
 unset y2tics
 unset y2label
-load scriptdir."tlocbloc.plt"
+load limfile
+load outdir."sympal.plt"
 unset colorbox
 #
 row = nextrow(row)
@@ -137,6 +140,8 @@ set xlabel ""
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "{/Symbol r}c_pw'T'"
 set label 1 "b"
+set format x "%g"
+set xlabel "2011 UTC yearday"
 plot datdir.abrev."wt.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
 #
