@@ -16,6 +16,9 @@ function palette = paltext(paltype,N,clims)
  if(nargin<2)
   N=9;
  end%if
+ if(nargin<1)
+  paltype = "";
+ end%if
  n = num2str(N,"%i");
  crange = cmax-cmin;
  cmid = num2str(-cmin/(crange));
@@ -25,7 +28,7 @@ function palette = paltext(paltype,N,clims)
   case {"backrainbow" "euh"}
    palette = ["set palette mode HSV\nset palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\nset palette maxcolors " n "\n"];
   case { "plusminusnan" "pmnan" "minusplusnan" "mpnan" "bluerednan" "brnan"}
-   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>xmid ?  .5+.5*(1-x)/(1-xmid) : .5*x/xmid)\nb(x) = (x<xmid ? .5+.5*x/xmid : .5*(1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : .5))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
+   palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>xmid ?  .5+.5*(1-x)/(1-xmid) : .75*x/xmid)\nb(x) = (x<xmid ? .5+.5*x/xmid : .75*(1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : .75))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
   case { "plusminus" "pm" "minusplus" "mp" "bluered" "br" }
    palette = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>=xmid ?  .5+.5*(1-x)/(1-xmid) : x/xmid)\nb(x) = (x<=xmid ? .5+.5*x/xmid : (1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : 1))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
   case { "posnan" "positivenan" "rednan"}
@@ -41,6 +44,7 @@ function palette = paltext(paltype,N,clims)
   case { "zissoublocks" }
    palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\nset palette maxcolors 5\n"];
   otherwise
-   palette =  "set palette grey"
+   palette =  "set palette grey";
  end%switch
 end%function
+

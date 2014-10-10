@@ -1,4 +1,4 @@
-function Heatfluxcompare(dagfile,sfxfile,outdir)
+function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
 #
 #
 # function Heatfluxcompare(dagfile,z,outfile)
@@ -56,7 +56,7 @@ function Heatfluxcompare(dagfile,sfxfile,outdir)
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
  # Get Honikker # from Observations
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxfile,trange);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxfile,trange,wavespecHL);
  Hosfx = HoT+HoS;
  Ho = interp1(Hosfx,tsfx,t);
  if(useoctplot==1)

@@ -56,6 +56,7 @@ unset x2label
 #
 # Profile Observations
 load scriptdir."tlocbloc.plt"
+load limfile
 #
 # Temperature
 set cblabel "T (^oC)"

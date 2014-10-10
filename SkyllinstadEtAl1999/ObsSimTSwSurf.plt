@@ -44,6 +44,7 @@ unset y2label
 #
 # Profile Observations
 #
+load limfile
 load scriptdir."tlocbloc.plt"
 set key opaque inside top left
 set format y "%g"

@@ -1,4 +1,4 @@
-function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
+function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir,wavespecHL)
 % function skyllinstad1999(dagnc,sfxnc,chmnc,outdir)
 % dagnc - dag file from LES (netCDF)
 % sfxnc - surface flux file (netCDF)
@@ -34,17 +34,27 @@ end%if
   %outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
   outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
  end%if
+ if nargin()<6
+   wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
+ end%if
  #
- #allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ longt = [315,336];
+ ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
+ ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
  #
  outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
+ ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
  outdir = '/home/mhoecker/work/Dynamo/plots/y6/';
  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
+ ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
  # Test figure
  #testfig(outdir);
@@ -67,8 +77,10 @@ end%if
  removeSkyllingstad1999;
 end%function
 
-function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
  [dagpath,dagname,dagext] = fileparts(dagnc)
+ pyflowscript = [scriptdir "tkeflow.py"];
  Nfigs = 10;
  Ncur = 0;
  waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
@@ -76,15 +88,15 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Richardson Number Defined by Surface Flux
  #figRi(sfxnc,outdir);
  # Surface and dissipation observations
- ObsSurfEps(sfxnc,chmnc,outdir);
+ ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
  Ncur = Ncur+1;
- # Initial Conditions
+ %# Initial Conditions
  initialTSUV(chmnc,adcpnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
  Ncur = Ncur+1;
  # Model Obersvation Comparison
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
  Ncur = Ncur+1;
  # Model Observation Difference
@@ -92,15 +104,15 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
  Ncur = Ncur+1;
  # Stability Criterion
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
  Ncur = Ncur+1;
  # Heat flux comparison
- Heatfluxcompare(dagnc,sfxnc,outdir);
+ Heatfluxcompare(dagnc,sfxnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  #Heat Budget
- HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
  Ncur = Ncur+1;
  # Turbulent Kinetic energy Budget plots
@@ -108,17 +120,26 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
  Ncur = Ncur+1;
  # tke Budget
- pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
  # Hourly tke Budget
- dt = .5*3600
+ dt = 3600
  imax = ceil(30*3600/dt);
+ tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript,wavespecHL);
+ waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
+ Ncur = Ncur+1;
+ #
+ close(waithandle);
+end%function
+
+function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript,wavespecHL)
+ [dagpath,dagname,dagext] = fileparts(dagnc)
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
  for i=1:imax
   trange = [-dt,0]+dt*i;
+  obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
   namesfx = ["hourlytke" num2str(i,"%02i")];
+  ObsSurfEps(sfxnc,chmnc,[outdir namesfx],wavespecHL,obtrange);
   outnc = [dagpath '/' dagname namesfx dagext];
   [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
- #
- #
   [tscale,tunit] = timeunits(trange);
   ti = num2str(trange(1)/tscale,"%03.1f");
   tf = num2str(trange(2)/tscale,"%03.1f");
@@ -129,21 +150,15 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  trange = [0,dt*imax];
  tkenc = [dagpath '/' dagname "tke" dagext];
  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
- [tkepath,tkename,tkeext] = fileparts(tkenc);
- tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
- tkebzavg(tkezavgnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- #
  [tscale,tunit] = timeunits(trange)
  ti = num2str(trange(1)/tscale,"%03.1f");
  tf = num2str(trange(2)/tscale,"%03.1f");
+ [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
+ [tkepath,tkename,tkeext] = fileparts(tkenc);
+ tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
+ tkebzavg(tkezavgnc,outdir);
  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
  unix(["python " pyflowscript " " outdat " " outdir "full " plotlab]);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- #
- close(waithandle);
 end%function
 
 function [tscale,tunit] = timeunits(trange)

@@ -3,7 +3,7 @@ function [Hs,lam,t] = HsLfromspec(basename,dayrange)
   basename="/home/mhoecker/work/Dynamo/output/surfspectra/wavespectra";
  end#if
  if(nargin<2)
-  dayrange = [328,329.375];
+  dayrange = [328,329.99999999999];
  end#if
  tseries = [];
  Aseries = [];

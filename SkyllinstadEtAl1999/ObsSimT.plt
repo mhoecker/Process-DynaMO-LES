@@ -37,6 +37,7 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_
 #
 # Profile Observations
 #
+load limfile
 load scriptdir."tlocbloc.plt"
 set key inside b l opaque samplen -1 width -.5
 set format y "%g"

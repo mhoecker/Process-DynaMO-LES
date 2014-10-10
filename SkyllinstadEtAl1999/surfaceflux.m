@@ -1,4 +1,4 @@
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxnc,trange)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxnc,trange,wavespecHL)
  % Extract Flux data
  field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
  field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"];
@@ -13,8 +13,14 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  sst = sfx.SST;
  SalTSG = sfx.SalTSG;
  SolarNet = sfx.Solarup+sfx.Solardn;
- cp = sfx.cp;
- sigH = sfx.sigH;
+ # Get wave charachterisics
+ load(wavespecHL)
+ avgtime = 0.25/24;
+# wave_height = meanfil(Hs,tHL,tsfx,avgtime);
+# wave_length = meanfil(Lam,tHL,tsfx,avgtime);
+ sigH = interp1(tHL,Hs,tsfx);
+ wave_length = interp1(tHL,Lam,tsfx);
+
  # Honikker numbers
  # Requires some thermodynamic constants
  findgsw;
@@ -30,11 +36,12 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  LH = gsw_latentheat_evap_t(SalTSG,sst);
  # density
  rho = gsw_rho(SalTSG,sst,0);
- # Convert Cp into omega and k
- k = g./cp.^2;
+ # Convert Hs & L into omega and k
+ k = 2*pi./wave_length;
  omega = sqrt(g.*k);
+ cp = omega./k;
  # Calculate Stokes drift velocity
- St = omega.*k.*(sigH.^2);
+ St = omega.*k.*((sigH./2).^2);
  # Calculate u*
  ustarsq = stress./rho;
  # Calculate evaporation rate

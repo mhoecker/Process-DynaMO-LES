@@ -1,4 +1,4 @@
-function ObsSurfEps(sfxnc,chmnc,outdir,trange)
+function ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL,trange)
  %function fig1(sfxnc,chmnc,outdir)
  %
  % 4 plots stacked vertically with a common x-axis (yearday)
@@ -14,19 +14,19 @@ function ObsSurfEps(sfxnc,chmnc,outdir,trange)
  % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
- if(nargin<4)
-  trange = [t0sim-1,tfsim+1];
+ if(nargin<5)
+  trange = [t0sim,tfsim];
  end%if
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange,wavespecHL);
  # Decomplse Stress into components
  stressm = -stress.*sin(wdir*pi/180);
  stressz = -stress.*cos(wdir*pi/180);
  #Calculate Stokes Drift and wavenumber
  findgsw;
  g = gsw_grav(0);
- k = g./cp.^2;
+ k = g./(cp.*cp);
  U = cp.*(sigH.*k/2).^2;
  l = 2*pi./k;
  # Extract epsilon profiles
@@ -54,7 +54,7 @@ function ObsSurfEps(sfxnc,chmnc,outdir,trange)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[Jh,p,stressm,stressz,U,k]',[outdir abrev "JhPrecipTxTyUk.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',[outdir abrev "JhPrecipTxTyUk.dat"]);
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
   if(nargin>3)

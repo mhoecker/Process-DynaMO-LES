@@ -51,23 +51,33 @@ datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key t r
-set autoscale y
-set autoscale y2
-set ytics 1 nomirror offset ytoff,0
-set yrange [0:*]
-set ylabel "U^s (m/s)"
-set y2label "k (rad/m)" offset -yloff,0
-set y2tics out .5
+set key t l opaque
+set ytics 4 nomirror offset ytoff,0
+set mytics 4
+set yrange [0:10]
+set ylabel "U_s (cm/s)"
+set y2label "{/Symbol l} (m)" offset -yloff,0
+set y2tics out 150
+set my2tics 3
 set y2tics nomirror offset -ytoff,0
-set y2range [0:*]
+set y2range [0:400]
 set format x "%g"
+#
+#set autoscale y
+#set autoscale y2
+#
 set xlabel "2011 UTC yearday" offset 0,xloff
 set label 1 "c"
+#w filledcurves y1=0 fs transparent solid .5 noborder
+#w filledcurves y1=0 fs transparent solid .25 noborder
 plot \
-datfile binary format="%f%f%f%f%f%f%f" u 1:6 ls 6 lw 2 axes x1y1 title "U^s"\
+datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 5 axes x1y1 title "U_s"\
 ,\
-datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 5 axes x1y2 title "k"\
+datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 6 axes x1y2 title "{/Symbol l}"\
+,\
+#datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6):(.01) w circles lc pal fraction .75 fs transparent solid .0625 noborder axes x1y1 notitle\
+#,\
+#datfile binary format="%f%f%f%f%f%f%f" u 1:7:(.01) w circles lc pal fraction .125 fs transparent solid .0625 noborder axes x1y2 notitle\
 
 unset y2tics
 unset y2label

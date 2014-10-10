@@ -1,11 +1,11 @@
-function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
 % figure 7 Heat Profiles
  abrev = "HeatBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange,wavespecHL);
  # Calulatwe the Driven Richarson number
  [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
  # Extract Chameleon data

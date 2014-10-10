@@ -1,4 +1,4 @@
-function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  %
  %figure 4
  % Plot time series of N^2 S^2 and Ri
@@ -8,7 +8,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  trange = [t0sim-2,tfsim+2];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange,wavespecHL);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
