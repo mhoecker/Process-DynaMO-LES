@@ -32,7 +32,6 @@ for k=34:48
   tin = (tin-min(tin))*24*60*60;
   dt = mean(diff(tin));
   df = 1./(dN*dt);
-  ftest = [floor(.01/df)*df:df:1];
   win = '';
   [Px,dPx,f,xfit,err] = gappypsd(hin,tin,win);
   df = mean(diff(f));
@@ -69,7 +68,7 @@ for k=34:48
   Us = num2str(Usval);
 #
   binarray(tin',[hin,xfit,xfmax]',[plot_dir basename "SSH" datestring '.dat']);
-  binarray(f,Px,[plot_dir basename "freq" datestring '.dat']);
+  binarray(tin',[f,Px],[plot_dir basename "freq" datestring '.dat']);
 #
   time()-tic
   save("-V7",[output_dir basename datestring ".mat"],"tin","hin","xfit","f","Px");
