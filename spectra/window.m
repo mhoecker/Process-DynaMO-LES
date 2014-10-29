@@ -17,7 +17,7 @@ function winy = window(y,order,NoBoost)
  wsq = var(winy,1);
  if(NoBoost==0)
   if(wsq>0)
-   winy = winy*sqrt(ysq/wsq);
+   winy = winy.*sqrt(ysq./wsq);
   end%if
  end%if
 end%function
