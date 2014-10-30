@@ -12,27 +12,19 @@ function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir,wavespecHL)
 %
  ensureSkyllingstad1999;
  if nargin()<1
-  %dagnc = '/home/mhoecker/work/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone2/o512_1_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone3/o1024_1_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
-  dagnc ='/home/mhoecker/work/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
+  dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone10/dyn1024flx_s_dag.nc'
  end%if
  if nargin()<2
   sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
-  %sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
 end%if
  if nargin()<3
   chmnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
  end%if
  if nargin()<4
-  %adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
   adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
  end%if
  if nargin()<5
-  %outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
-  outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
+  outdir = '/home/mhoecker/work/Dynamo/plots/y10/';
  end%if
  if nargin()<6
    wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
@@ -40,21 +32,8 @@ end%if
  #
  longt = [315,336];
  ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
- ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
- #
- outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
- dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
- ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
- ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
- #
- outdir = '/home/mhoecker/work/Dynamo/plots/y6/';
- dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
- ObsSurfEps(sfxnc,chmnc,[outdir 'long'],wavespecHL,longt);
- ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL);
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
  # Test figure
  #testfig(outdir);
@@ -115,6 +94,8 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
  waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
  Ncur = Ncur+1;
+ # Momentum Budget
+ momflux(dagnc,sfxnc,outdir,wavespecHL)
  # Turbulent Kinetic energy Budget plots
  tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
  waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
