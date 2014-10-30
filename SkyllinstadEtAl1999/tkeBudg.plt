@@ -21,6 +21,7 @@ Ftkemax = +10e-7
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
 set xrange[t0sim:tfsim]
+set yrange [-40:0]
 #
 # Plot tke
 #set ylabel "tke"
