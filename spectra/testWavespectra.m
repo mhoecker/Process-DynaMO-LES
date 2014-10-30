@@ -6,6 +6,7 @@ for k=34:48
  time()-tic
  win = '';
  day = floor(min(t));
+ hour = floor((t(1)-day)*24);
  Nt = length(t);
  dN = 500;
  close all
@@ -22,7 +23,6 @@ for k=34:48
   hin = h(i:i+dN);
   hin = hin-nanmean(hin);
   j = ceil((i+dN)/(dN+1));
-  hour = floor((t(i)-day)*24);
   minute = floor(((t(i)-day)*24-hour)*60);
   second = floor((((t(i)-day)*24-hour)*60-minute)*60);
   dayhourstring = [padint2str(day,3) padint2str(hour,2)];
