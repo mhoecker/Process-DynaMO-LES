@@ -9,12 +9,13 @@ UWND="uwnd.10m.gauss."
 HWND="uvwnd.10m.gauss."
 YEARS="2011
 2012
-2013"
+2013
+2014"
 
 for year in $YEARS
 do
- wget -nc --limit-rate=128k -P $DATDIR $NCEPURL$VWND$year.nc
- wget -nc --limit-rate=128k -P $DATDIR $NCEPURL$UWND$year.nc
+ wget -nc --limit-rate=256k -P $DATDIR $NCEPURL$VWND$year.nc
+ wget -nc --limit-rate=256k -P $DATDIR $NCEPURL$UWND$year.nc
  ncks -A $DATDIR$UWND$year.nc $DATDIR$HWND$year.nc
  ncks -A $DATDIR$VWND$year.nc $DATDIR$HWND$year.nc
  ncrcat $DATDIR$HWND.$year.nc $DATDIR$HWND.nc
