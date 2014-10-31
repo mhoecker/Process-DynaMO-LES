@@ -46,9 +46,16 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  %wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
  %wave_length = meanfil(wave_length,t,s,avgtime);
  %
- load(wavespecHL)
- wave_height = meanfil(Hs,tHL,s,avgtime);
- wave_length = meanfil(Lam,tHL,s,avgtime);
+ if(nargin==5)
+  load(wavespecHL)
+  wave_height = meanfil(Hs,tHL,s,avgtime);
+  wave_length = meanfil(Lam,tHL,s,avgtime);
+ else
+  PMwaves = PiersonMoskowitz(nc{'U10'}(dateidx),t);
+  wave_height = meanfil(2*PMwaves.A,PMwaves.t,s,avgtime);
+  wave_length = meanfil(PMwaves.L,PMwaves.t,s,avgtime);
+  clear waves
+ end
  %
  wave_direct = exp(nc{'Wdir'}(dateidx)*I*pi/180);
  wave_direct = meanfil(wave_direct,t,s,avgtime);

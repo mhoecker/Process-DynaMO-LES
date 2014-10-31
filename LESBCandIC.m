@@ -39,7 +39,8 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
   wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
  end%if
  yeardates = wantdates-datenum(2010,12,31)
- flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime,wavespecHL)
+ #flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime,wavespecHL)
+ flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime)
  figure(5)
  TSout = LESinitialTS(TSfile,min(yeardates),outloc,avgtime,maxdepth);
  figure(6)
