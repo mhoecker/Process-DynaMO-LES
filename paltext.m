@@ -43,6 +43,8 @@ function palette = paltext(paltype,N,clims)
    palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\nset palette maxcolors " n "\n"];
   case { "zissoublocks" }
    palette = ["set palette mode RGB\nset palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\nset palette maxcolors 5\n"];
+  case { "circle" "angle" "phase"}
+   palette = ["set palette mode HSV\nset palette function .3+.3*sgn(sin(2*pi*gray+pi/2)),(.5-.5*cos(4*pi*gray+pi))**.5,.3+.7*(.5-.5*cos(2*pi*gray+pi/2))**.5\nset palette maxcolors " n "\n"];
   otherwise
    palette =  "set palette grey";
  end%switch
