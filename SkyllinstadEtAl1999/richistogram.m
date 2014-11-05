@@ -2,7 +2,7 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  nargin
  if(nargin<1)
  filename = "/home/mhoecker/work/Dynamo/output/yellowstone10/dyn1024flx_s_dag.nc"
- filename = "/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc"
+# filename = "/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc"
  filetype = "dag"
  end#if
  # load gibbs sea water
@@ -36,7 +36,8 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
    Zw = -squeeze(nc{'zzw'}(:));
    uw = interp1(Zw,squeeze(nc{'uw_ave'}(:))',Z)';
    vw = interp1(Zw,squeeze(nc{'vw_ave'}(:))',Z)';
-
+   uw(:,end)=0;
+   vw(:,end)=0;
   case{"slb"}
    # slb version
    # calculate statistics for each slab in the horizontal dimension(s)
@@ -46,7 +47,7 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  end#switch
  ncclose(nc);
  # Calculate derivative matrix
- dzmat = ddz(Z);
+ dzmat = ddz(Z,3);
  # Calculate pressure
  P = gsw_p_from_z(Z,0);
  # Calculate Absolute Salinity
@@ -61,24 +62,47 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  # Calculate Shear and Shear Production
  Uz = U*dzmat';
  Vz = V*dzmat';
- SP = uw.*Uz+vw.*Vz;
+ SP = abs(uw.*Uz)+abs(vw.*Vz);
  [SPrank,SPidx] = sort(SP,1);
+ [SPflat,SPflatidx] = sort(SP(:));
  Ssq = Uz.^2+Vz.^2;
  Ssqrank = sort(Ssq,1);
+ Ssqflat = sort(Ssq(:));
  # Calculate Richardson number
  Ri = Nsq./Ssq;
  Rirank = sort(Ri,1);
+ Riflat = sort(Ri(:));
  frac = (1:length(Rirank(:,1)))./length(Rirank(:,1));
+ Nflat = length(Riflat(:,1));
+ flatfrac = (1:Nflat)./Nflat;
  phirank = Rirank./(.25+abs(Rirank));
+ phiflat = Riflat./(.25+abs(Riflat));
+ RiSPrank = Ri(SPidx);
+ phiSPrank = RiSPrank./(.25+abs(RiSPrank));
+ RiSPflat = Ri(SPflatidx);
+ # Histogram cutoff
+ NH = floor(.9*Nflat)
+ Nh = ceil(sqrt(NH));
+ Rirange = 2.^linspace(-4,6,Nh);
+ HRi = histc(RiSPflat(NH:end),Rirange);
+ HRi = HRi./sum(HRi);
+ phiSPflat = RiSPflat./(.25+abs(RiSPflat));
+ phirange = linspace(-1,1,Nh)	;
+ Hphi = histc(phiSPflat(NH:end),phirange);
+ Hphi = Hphi./sum(Hphi);
  #plot(phi(:,1),frac)
  datdir = "/home/mhoecker/tmp/";
  abrev = "richistogram";
- binmatrix(frac,Z,Rirank' ,[datdir "Rirank.dat"])
- binmatrix(frac,Z,phirank',[datdir "phirank.dat"])
- binmatrix(frac,Z,Ssqrank',[datdir "Ssqrank.dat"])
- binmatrix(frac,Z,Nsqrank',[datdir "Nsqrank.dat"])
- binmatrix(frac,Z,SPrank' ,[datdir "SPrank.dat"])
+ binmatrix(frac,Z,Rirank' ,[datdir "Rirank.dat"]);
+ binmatrix(frac,Z,phirank',[datdir "phirank.dat"]);
+ binmatrix(frac,Z,Ssqrank',[datdir "Ssqrank.dat"]);
+ binmatrix(frac,Z,Nsqrank',[datdir "Nsqrank.dat"]);
+ binmatrix(frac,Z,SPrank' ,[datdir "SPrank.dat"]);
+ binmatrix(frac,Z,SPrank' ,[datdir "RiSPrank.dat"]);
+ binmatrix(frac,Z,SPrank' ,[datdir "phiSPrank.dat"]);
+ binarray(flatfrac,[SPflat,Ssqflat,Riflat,phiflat,RiSPflat,phiSPflat]',[datdir "flat.dat"]);
+ binarray(phirange,Hphi',[datdir "Hphi.dat"]);
+ binarray(Rirange,HRi',[datdir "HRi.dat"]);
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(datdir,datdir,abrev);
- ["gnuplot " limitsfile " " scriptdir abrev ".plt"]
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
 end
