@@ -80,16 +80,7 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  RiSPrank = Ri(SPidx);
  phiSPrank = RiSPrank./(.25+abs(RiSPrank));
  RiSPflat = Ri(SPflatidx);
- # Histogram cutoff
- NH = floor(.9*Nflat)
- Nh = ceil(sqrt(NH));
- Rirange = 2.^linspace(-4,6,Nh);
- HRi = histc(RiSPflat(NH:end),Rirange);
- HRi = HRi./sum(HRi);
  phiSPflat = RiSPflat./(.25+abs(RiSPflat));
- phirange = linspace(-1,1,Nh)	;
- Hphi = histc(phiSPflat(NH:end),phirange);
- Hphi = Hphi./sum(Hphi);
  #plot(phi(:,1),frac)
  datdir = "/home/mhoecker/tmp/";
  abrev = "richistogram";
@@ -101,8 +92,36 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  binmatrix(frac,Z,SPrank' ,[datdir "RiSPrank.dat"]);
  binmatrix(frac,Z,SPrank' ,[datdir "phiSPrank.dat"]);
  binarray(flatfrac,[SPflat,Ssqflat,Riflat,phiflat,RiSPflat,phiSPflat]',[datdir "flat.dat"]);
- binarray(phirange,Hphi',[datdir "Hphi.dat"]);
- binarray(Rirange,HRi',[datdir "HRi.dat"]);
+ # Histograms cutoff
+ SPbins = 50;
+ NH = floor(Nflat./SPbins);
+ HRi = [];
+ HLRi = [];
+ Hphi = [];
+ Nh = ceil(sqrt(NH));
+ phirange = linspace(0,1,Nh);
+ Rirange = linspace(0,1,Nh);
+ LRirange = linspace(-5,7,Nh);
+ LRiSPflat = real(log(RiSPflat))./log(2);
+ semilogy(Rirange)
+ SPcutoff = [];
+ for i=0:(SPbins-1)
+  SPcutoff = [SPcutoff,i./SPbins];
+  NHi = floor(i*NH)+1;
+  NHf = floor((i+1)*NH);
+  HRii = histc(RiSPflat(NHi:NHf),Rirange);
+  HRii = HRii./sum(HRii);
+  HRi = [HRi,HRii];
+  HLRii = histc(LRiSPflat(NHi:NHf),LRirange);
+  HLRii = HLRii./sum(HLRii);
+  HLRi = [HLRi,HLRii];
+  Hphii = histc(phiSPflat(NHi:NHf),phirange);
+  Hphii = Hphii./sum(Hphii);
+  Hphi = [Hphi,Hphii];
+ end%for
+ binmatrix(phirange,SPcutoff,Hphi',[datdir "Hphi.dat"]);
+ binmatrix(Rirange,SPcutoff,HRi',[datdir "HRi.dat"]);
+ binmatrix(LRirange,SPcutoff,HLRi',[datdir "HLRi.dat"]);
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(datdir,datdir,abrev);
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
 end

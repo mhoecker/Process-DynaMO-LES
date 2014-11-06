@@ -66,7 +66,7 @@ plot outdir.'phiSPrank.dat' binary matrix u 1:2:(($3+abs($3))/2) w image
 #
 set title "Ri Ranked by Shear Production"
 set output outdir.'phiSPflat.png'
-set xrange [.8:1]
+set xrange [0:1]
 unset logscale cb
 set autoscale y
 set multiplot layout 2,1
@@ -82,21 +82,30 @@ set ytics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol 
 plot outdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:7 lc -1
 unset multiplot
 #
+load outdir."pospal.plt"
 set autoscale
 unset logscale
-set xtics auto
-set ytics auto
+set xtics auto out mirror
+set ytics auto out mirror
 set xrange [0:1]
+set xlabel "Ri"
+set ylabel "SP percentile"
+set yrange [0:1]
+set logscale cb
+set cbrange [10**(-3):1]
+set cbtics 10
+set format cb "10^{%T}"
 set format x "%g"
 set xtics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
+set xtics out mirror
 set output outdir.'Hphi.png'
-plot outdir."Hphi.dat" binary format="%f%f"
+plot outdir."Hphi.dat" binary matrix w image
 #
-set autoscale
-unset logscale
-set logscale x
-set xrange [2**(-4):2**(+6)]
-set xtics 4
-set ytics auto
+load outdir."pospal.plt"
+unset logscale x
+set xrange [-5:7]
+set xtics 2
+set xtics out mirror
+set xlabel "log_2(Ri)"
 set output outdir.'HRi.png'
-plot outdir."HRi.dat" binary format="%f%f"
+plot outdir."HLRi.dat" binary matrix w image
