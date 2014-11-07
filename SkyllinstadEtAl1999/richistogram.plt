@@ -109,3 +109,26 @@ set xtics out mirror
 set xlabel "log_2(Ri)"
 set output outdir.'HRi.png'
 plot outdir."HLRi.dat" binary matrix w image
+#
+load outdir."pospal.plt"
+set title "Shear Production with percentiles"
+set autoscale
+set xtics auto
+set ytics auto
+set ylabel "Z (m)"
+set xlabel "time"
+set cbrange [1e-12:1e-4]
+set xrange [0:30]
+set yrange [-80:0]
+set output outdir.'SP.png'
+set key
+set key samplen 1
+set key spacing 1.05
+set key b l
+plot outdir."SP.dat" binary matrix w image not,\
+outdir."SPcntr099.dat" w lines lc rgbcolor "#FFFFFF" title "99%",\
+outdir."SPcntr095.dat" w lines lc rgbcolor "#CCCCCC" title "95%",\
+outdir."SPcntr090.dat" w lines lc rgbcolor "#999999" title "90%",\
+outdir."SPcntr080.dat" w lines lc rgbcolor "#666666" title "80%",\
+outdir."SPcntr070.dat" w lines lc rgbcolor "#333333" title "70%",\
+outdir."SPcntr060.dat" w lines lc rgbcolor "#000000" title "60%",\
