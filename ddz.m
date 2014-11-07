@@ -1,6 +1,6 @@
 function [d,dsq]=ddz(z,order)
  % derivative matricies for independent variable z.
- % Three point stencil.
+ % default three point stencil.
  % One-sided derivatives at boundaries.
  % no assumptions about z spacing.
  % example
