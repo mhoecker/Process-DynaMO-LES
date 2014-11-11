@@ -1,7 +1,7 @@
 function momflux(dagnc,sfxnc,outdir,wavespecHL)
  abrev = "momflux";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
- trange = [0,24*3600*(tfsim-t0sim)]
+ trange = [0,24*3600*(tfsim-t0sim)];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange,wavespecHL);
@@ -18,24 +18,21 @@ function momflux(dagnc,sfxnc,outdir,wavespecHL)
  # need to calculate d/dz and d/dt of mean u and v
  #
  ddt = ddz(dagvar1.time);
- ddzzu = ddz(dagvar1.zzu);
- ddzzw = ddz(dagvar3.zzw);
+ [ddzzu,dsqdzzu] = ddz(-dagvar1.zzu,8);
+ [zzwu,ddzzwu] = ddzinterp(-dagvar3.zzw,-dagvar1.zzu,2);
+ %uwonzzu = dagvar3.uw_ave*zzwu';
+ %idx0 = find(dagvar1.zzu==0);
+ %uwonzzu(:,idx0)=0;
  #
  dudt = (ddt*dagvar1.u_ave)';
- ReyFlxDiv = -(dagvar3.uw_ave*ddzzw)';
- diff = (dagvar1.km_ave.*(dagvar1.u_ave*ddzzu))';
- #duwdzzw = dagvar3.uw_ave*ddzzw;
- #subplot(3,1,1)
- #pcolor(dagvar1.u_ave'); shading flat
- subplot(3,1,1)
- pcolor(dudt); caxis([-.00005,.00005]); shading flat; title("du/dt")
- subplot(3,1,2)
- pcolor(ReyFlxDiv); caxis([-.00005,.00005]); shading flat; title("d/dz(u'w')")
- subplot(3,1,3)
- pcolor(diff); caxis([-.00005,.00005]); shading flat; title("d/dz(km du/dz)")
- #plot(t0sim+dagvar2.time/(24*3600),dagvar2.ustr_t); axis(t0sim+trange/(24*3600))
- binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar3.zzw',ReyFlxDiv,[outdir abrev "duwdz.dat"])
- binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',dudt,[outdir abrev "dudt.dat"])
- binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',diff,[outdir abrev "ddzkmddzu.dat"])
+ ReyFlxDiv = -(dagvar3.uw_ave*ddzzwu')';
+ diff = (dagvar1.km_ave.*(dagvar1.u_ave*dsqdzzu')+(dagvar1.km_ave*ddzzu').*(dagvar1.u_ave*ddzzu'))';
+ rem = dudt-ReyFlxDiv-diff;
+ %
+ binarray(t0sim+dagvar2.time'/(24*3600),dagvar2.ustr_t',[outdir abrev "ustr.dat"]);
+ binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar1.zzu',ReyFlxDiv,[outdir abrev "duwdz.dat"]);
+ binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',dudt,[outdir abrev "dudt.dat"]);
+ binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',diff,[outdir abrev "ddzkmddzu.dat"]);
+ binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',rem,[outdir abrev "rem.dat"]);
  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
 end#function
