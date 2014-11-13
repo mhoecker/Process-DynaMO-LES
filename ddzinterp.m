@@ -39,7 +39,9 @@ function [val,der,dsq] = ddzinterp(z,Z,order)
    ainv = inv(A');
    for j=1:order
     val(i,idx(j))  = ainv(j,1);
-    der(i,idx(j)) = ainv(j,2);
+    if(order>1)
+     der(i,idx(j)) = ainv(j,2);
+    end%if
     if(order>2)
      dsq(i,idx(j)) = ainv(j,3);
     end%if
