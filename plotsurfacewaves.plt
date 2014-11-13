@@ -4,13 +4,13 @@ basename = '/home/mhoecker/work/Dynamo/plots/surfacewaves/wavespectra'
 imax(day) = (day>328) ? 23 : 23
 
 datform = '%f%f%f%f%f%f'
-freqform = '%f%f'
+freqform = '%f%f%f'
 highform = '%f%f%f%f'
 set term png enhanced notruecolor size 1536,1024 font "UnDinaru,24" nocrop linewidth 2
 
 set palette mode RGB
 set palette function 1-.5*gray,(1-gray),.5-.5*gray
-set palette maxcolors 12
+set palette maxcolors 7
 
 set output basename."test.png"
 test
@@ -21,12 +21,14 @@ midcolor = "gray40"
 psmall = 1
 psbig = 2
 ptype = 5
-
+liwid = 6
+Jmax = 20
 
 hour(j) = "".pad2(j)
 number(i,j) = hour(j).pad2(i)
-freqnum(i,j,day)  = 'freq'.day.number(i,j)
-highnum(i,j,day)  = 'SSH'.day.number(i,j)
+daynumber(i,j,day) = (j<0) ? "".(day-1).number(i,(24+j)) : ( (j>23) ? "".(day+1).number(i,j-24): "".day.number(i,j) )
+freqnum(i,j,day)  = 'freq'.daynumber(i,j,day)
+highnum(i,j,day)  = 'SSH'.daynumber(i,j,day)
 valnum(day)   = 'vals'.day
 datfile(day)  = basename.valnum(day)
 pngfile(day) = basename.valnum(day).'.png'
@@ -37,27 +39,31 @@ numberpng(j,day) = basename.day.hour(j).'.png'
 do for [day=328:329]{
 #
  set colorbox
- set autoscale cb
- unset logscale cb
- set format cb "10^{%+02.0f}"
- set cbtics 1
- set cbrange [-3:2]
- set yrange [1.9e-2:5]
  set ylabel "f (Hz)"
  set logscale y
- set xlabel "minutes"
- set xtics ("0 min" 0, "15 min" .25, "30 min" .5, "45 min" .75, "60 min" 1)
- set mxtics 3
- set xrange [0:1]
+ set ytics 2
+ set logscale cb
+ set cbrange [.05:300]
+ set yrange [.03125:.5]
+ set xlabel "2011 Yearday"
+ set view map
+ set xtics .05
+ set format x "%g"
 #
- do for [j=0:imax(day)]{
-  print freqfile(0,j,day)
-  set output numberpng(j,day)
-  set title "Periodogram ".day."-".hour(j)
+ do for [i=0:imax(day)]{
+  set xrange [day+(i-2)/24.:day+(3+i)/24.]
+  set output numberpng(i,day)
+  set title "Periodogram ".day."-".hour(i)
+  print freqfile(1,i,day)
   plot \
-  for [i=1:71] freqfile(i,j,day) binary format=freqform using ((i-.5)/71):1:(log($2)/log(10)) lc pal pt ptype ps psbig not\
-# ,for [i=1:71] freqfile(i,j) binary format=freqform using ((i-.5)/71):1:(log($2*$1)/log(10)) lc rgbcolor midcolor pt ptype ps psbig not
+  for [j=1:Jmax] freqfile(j,i-2,day) binary format=freqform u 1:2:3 w lines lc pal lw liwid not,\
+  for [j=1:Jmax] freqfile(j,i-1,day) binary format=freqform u 1:2:3 w lines lc pal lw liwid not,\
+  for [j=1:Jmax] freqfile(j,i,day) binary format=freqform u 1:2:3 w lines lc pal lw liwid not,\
+  for [j=1:Jmax] freqfile(j,i+1,day) binary format=freqform u 1:2:3 w lines lc pal lw liwid not,\
+  for [j=1:Jmax] freqfile(j,i+2,day) binary format=freqform u 1:2:3 w lines lc pal lw liwid not
+
  }
+ unset xlabel
  unset logscale y
  set output pngfile(day)
  unset title
