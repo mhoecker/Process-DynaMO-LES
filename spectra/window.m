@@ -12,7 +12,6 @@ function winy = window(y,order,NoBoost)
  ysq = var(y,1);
  winy = linspace(1,N,N)-.5;
  winy = sin(winy*pi/N).^order;
- plot(winy)
  winy = winy.*y;
  wsq = var(winy,1);
  if(NoBoost==0)
