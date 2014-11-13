@@ -1,4 +1,4 @@
-N = 256;
+N = 128;
 T = -log(rand(1,1));
 t = (1:N)/N;
 t = T*t;
@@ -42,7 +42,7 @@ figure(5)
 win = 'sinw';
 Pxnoise = 2*abs(Fxnoise.*conj(Fxnoise))/df;
 #
-gappy = 0.5;
+gappy = 0.25;
 idxnan = find(rand(1,N)<gappy);
 gaps = ones(1,N);
 gaps(idxnan) = NaN*gaps(idxnan);
@@ -58,16 +58,25 @@ xgapfill = harmfill(xgap(idxgood),t(idxgood),t,order,fillwid);
 [Pxgapfill,dPxgapfill,fgapfill] = gappypsd(xgapfill,t,win);
 xgapnoisefill = harmfill(xgapnoise(idxgood),t(idxgood),t,order,fillwid);
 [Pxgapnoisefill,dPxgapnoisefill,fgapnoisefill] = gappypsd(xgapnoisefill,t,win);
+# do linear interpolation
+interporder = 5;
+[Pxi,fi,xi] = interpPSD(xgap,t,interporder);
+Pxi = 2*Pxi;
+#
+[Pxin,fin,xin] = interpPSD(xgapnoise,t,interporder);
+Pxin = 2*Pxin;
 #
 figure(1)
 arange = [0,T];
-subplot(2,1,1)
+subplot(3,1,1)
 plot(t,x,'k;signal;',t,xnoise,'r;+noise;')
 title('data with gaps and noise')
 axis(arange)
-subplot(2,1,2)
+subplot(3,1,2)
 plot(t,xgap,'g;gaps;',t,xgapnoise,'b;gaps+noise;')
-#,t,xgapfill,'c;filltered gaps;',t,xgapnoisefill,'m;filtered gaps+noise;'
+axis(arange)
+subplot(3,1,3)
+plot(t,xi,'g;gaps;',t,xin,'b;gaps+noise;')
 axis(arange)
 print('gapy-noisy-data.png','-dpng')
 #
@@ -76,7 +85,7 @@ figure(2)
 subplot(1,1,1)
 #,fgap,dPxgap,'g',fgapnoise,dPxgapnoise,'b',fgapfill,dPxgapfill,'c',fgapnoisefill,dPxgapnoisefill,'m'
 #,fgapfill,Pxgapfill,'c.;filtered gaps;',fgapnoisefill,Pxgapnoisefill,'m.;filtered gaps+noise;'
-loglog(f,Px,'k;signal;',f,Pxnoise,'r;+noise;',fgap,Pxgap,'g.;gaps;',fgapnoise,Pxgapnoise,'b.;gaps+noise;')
+loglog(f,Px,'k;signal;',f,Pxnoise,'r;+noise;',fgap,Pxgap,'g.;gaps;',fgapnoise,Pxgapnoise,'b.;gaps+noise;',f,Pxi,"g;interpolated;",f,Pxin,"b;interpolated w/noise;")
 ylabel('PSD')
 legend('location','northwest')
 title('PSD of data with gaps and noise')
