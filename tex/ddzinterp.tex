@@ -1,0 +1,30 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Mart\'in  Hoecker-Mart\'inez}
+\begin{document}
+Given a set of points $x_i$ and a function evaluated at those points $y_i=f(x_i)$ you can estimate the  function and its derivatives at some new points $x_a$ using Taylor series and some linear algebra.
+Assuming the function is infinitely differentiable over the range spanned by $\{x_i\}\cup\{x_a\}$
+\begin{equation}
+y_i\approx f(x_a)\frac{(x_a)\left(x_i-x_a\right)^0}{0!}+f^{(1)}\frac{(x_a)\left(x_i-x_a\right)^1}{1!}+\cdots+f^{(n)}\frac{(x_i-x_a)^2}{n!}+\cdots
+\end{equation}
+for each point $x_b\in\{x_a\}$ define a matrix function 
+\begin{equation}
+\Delta_{ip}(x_a)=\left(x_i-x_a\right)^p}{p!}
+\end{equation}
+Now the Taylor expansion can be written as
+\begin{equation}
+y_i \approx\Delta_{ip}(x_a)f^{(p)}(x_a)
+\end{equation}
+if the matrix $\Delta_{ip}(x_a)$ is invertible then we can solve for the function and it's derivatives 
+\begin{eq	uation}
+f^{(p)}(x_a)\approx\Delta^{-1}_{ip}y_i
+\end{equation}
+This gives us a minimum stencil for a given order of approximation or differentiation.
+In particular if $x_i=x_a$ and they are evenly spaced so $x_n=x_0+n\delta$ then the 
+\end{document}
