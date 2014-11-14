@@ -1,45 +1,52 @@
-for k=0:47
+for k=0:48
  [h,t] =Wavecorrected2NetCDF("/home/mhoecker/work/Dynamo/Observations/ascii/PSD_wave/",["Wavecorrected_32" num2str(floor(8+k/24),"%1i") num2str(mod(k,24),"%02i")],"/home/mhoecker/work/Dynamo/Observations/netCDF/PSD_wave/");
  output_dir = "/home/mhoecker/work/Dynamo/output/surfspectra/";
  plot_dir = "/home/mhoecker/work/Dynamo/plots/surfacewaves/";
  basename = "wavespectra";
- time()-tic
+ time()-tic;
  day = floor(min(t));
  hour = floor((t(1)-day)*24);
  Nt = length(t);
  dt = mean(24*60*60*diff(t));
- dN = floor(180./dt);
+ dN = floor(90./dt);
+ [x,wmatrix]=harmfill(1:dN,1:dN,1:dN,4,ceil(1/dt));
+ clear x;
  tvals = [];
  Avals = [];
  Tvals = [];
  lamvals = [];
  cpvals = [];
  Usvals = [];
- j=0;
- for i=1:dN:Nt-dN
-  j=j+1;
+ for i=1:floor(Nt/dN)
   tic = time();
-  hin = h(i:i+dN);
-  hin = hin-nanmean(hin);
-  minute = floor(((t(i)-day)*24-hour)*60);
-  second = floor((((t(i)-day)*24-hour)*60-minute)*60);
+  idx = [1+(i-1)*dN:i*dN];
+  hnan = h(idx);
+  ti = t(idx);
+  hnan = hnan-nanmean(hnan);
+  minute = floor(((t(idx(1))-day)*24-hour)*60);
+  second = floor((((t(idx(1))-day)*24-hour)*60-minute)*60);
   dayhourstring = [padint2str(day,3) padint2str(hour,2)];
-  datestring = [padint2str(day,3) padint2str(hour,2) padint2str(j,2)];
-  ti = t(i:(i+dN));
+  datestring = [padint2str(day,3) padint2str(hour,2) padint2str(i,2)];
   tmid = mean(ti);
   tin = (ti-min(ti))*24*60*60;
   dt = mean(diff(tin));
   df = 1./(dN*dt);
-  [Px,f,xfit] = interpPSD(hin',tin,1);
-  Pxf = Px.*abs(f);
+  goodidx = find(~isnan(hnan));
+  tingood = tin(goodidx);
+  hgood = hnan(goodidx);
+  val = ddzinterp(tingood,tin,2);
+  hin = (val*hgood);
+  hin = wmatrix'*hin;
+  [Px,f,xfit] = interpPSD(hin',tin,3);
+  Pxf = Px.*abs(f.^3);
   df = mean(diff(f));
   Nf = length(f);
 #
-  Pxfm = max(Pxf);
-  if(~isnan(Pxfm));
-   idxmax = find(Pxf==Pxfm,1);
+  Pxm = max(Px);
+  if(~isnan(Pxm));
+   idxmax = find(Px==Pxm,1);
    fmax = abs(f(idxmax));
-   [SCamp,dSCamp,xfmax,err] = harmonicfit(hin,tin,fmax);
+   [SCamp,dSCamp,xfmax,err] = harmonicfit(hnan,tin,fmax);
    Amax = SCamp(2);
    Bmax = SCamp(1);
   else
@@ -66,18 +73,18 @@ for k=0:47
   Us = num2str(Usval);
 #
   tmids = tmid*ones(size(tin));
-  binarray(ti',[hin,xfit',xfmax]',[plot_dir basename "SSH" datestring '.dat']);
+  binarray(ti',[hnan,xfit',xfmax]',[plot_dir basename "SSH" datestring '.dat']);
   binarray(tmids',[f;Px],[plot_dir basename "freq" datestring '.dat']);
   figure(1)
   subplot(2,1,1)
-  loglog(abs(f),Pxf,fmax,Pxfm,"r+");
+  loglog(abs(f),Px,fmax,Pxm,"r+");
   title([datestring " T=" T " A=" A])
   subplot(2,1,2)
-  plot(tin,hin,"ko;;",tin,xfit,"r-",tin,SCamp(1)*sin(2*pi*fmax*tin)+SCamp(2)*cos(2*pi*fmax*tin),"g-");
+  plot(tin,hnan,"ko;;",tin,xfit,"r-",tin,SCamp(1)*sin(2*pi*fmax*tin)+SCamp(2)*cos(2*pi*fmax*tin),"g-");
   axis([0,dN*dt])
   figure(2)
 #
-  time()-tic
+  time()-tic;
   save("-V7",[output_dir basename datestring ".mat"],"tin","hin","xfit","f","Px");
  end%for i
  binarray(tvals,[Avals;Tvals;lamvals;cpvals;Usvals],[plot_dir basename "vals" dayhourstring '.dat']);

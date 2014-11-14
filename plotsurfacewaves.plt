@@ -22,7 +22,7 @@ psmall = 1
 psbig = 2
 ptype = 5
 liwid = 6
-Jmax = 20
+Jmax = 40
 
 hour(j) = "".pad2(j)
 number(i,j) = hour(j).pad2(i)
@@ -43,7 +43,7 @@ do for [day=328:329]{
  set logscale y
  set ytics 2
  set logscale cb
- set cbrange [.05:300]
+ set cbrange [.05:500]
  set yrange [.03125:.5]
  set xlabel "2011 Yearday"
  set view map
@@ -74,7 +74,7 @@ do for [day=328:329]{
  unset mytics
  set xtics out nomirror
  set mxtics 6
- set yrange [0:1.7]
+ set yrange [0:1.4]
  set xrange [day:day+1]
  set format x ""
  set colorbox user origin .875,.05 size .025,.9
@@ -93,7 +93,7 @@ do for [day=328:329]{
  set xlabel "2011 UTC yearday"
  set logscale y
  set ytics 10
- set yrange [10:300]
+ set yrange [30:500]
  plot \
  for [i=0:imax(day)]  datfile(day).pad2(i).".dat" binary format=datform u 1:4 lc rgbcolor midcolor  pt ptype ps psbig not \
  ,for [i=0:imax(day)]  datfile(day).pad2(i).".dat" binary format=datform u 1:4:($6) lc pal  pt ptype ps psmall not\
@@ -102,8 +102,8 @@ do for [day=328:329]{
  set autoscale xy
  set xtics 10
  unset mxtics
- set xrange [1:1000]
- set yrange [.05:2]
+ set xrange [3:3000]
+ set yrange [.05:3]
 # set size ratio -1
  set xlabel "{/Symbol l}"
  set ylabel "A"
