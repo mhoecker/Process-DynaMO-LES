@@ -13,44 +13,43 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  sst = sfx.SST;
  SalTSG = sfx.SalTSG;
  SolarNet = sfx.Solarup+sfx.Solardn;
- # Get wave charachterisics
+ % Get wave charachterisics
  load(wavespecHL)
  avgtime = 0.25/24;
-# wave_height = meanfil(Hs,tHL,tsfx,avgtime);
-# wave_length = meanfil(Lam,tHL,tsfx,avgtime);
+ % wave_height = meanfil(Hs,tHL,tsfx,avgtime);
+ % wave_length = meanfil(Lam,tHL,tsfx,avgtime);
  sigH = interp1(tHL,Hs,tsfx);
  wave_length = interp1(tHL,Lam,tsfx);
-
- # Honikker numbers
- # Requires some thermodynamic constants
+ % Honikker numbers
+ % Requires some thermodynamic constants
  findgsw;
- # Acceleration of gravity
+ % Acceleration of gravity
  g = gsw_grav(0);
- # Thermal expansion coefficient
+ % Thermal expansion coefficient
  alpha = gsw_alpha(SalTSG,sst,0);
- # Haline contraction coefficient
+ % Haline contraction coefficient
  beta = gsw_beta(SalTSG,sst,0);
- # Heat Capacity
+ % Heat Capacity
  Cp = gsw_cp_t_exact(SalTSG,sst,0);
- # Latent Heat
+ % Latent Heat
  LH = gsw_latentheat_evap_t(SalTSG,sst);
- # density
+ % density
  rho = gsw_rho(SalTSG,sst,0);
- # Convert Hs & L into omega and k
+ % Convert Hs & L into omega and k
  k = 2*pi./wave_length;
  omega = sqrt(g.*k);
  cp = omega./k;
- # Calculate Stokes drift velocity
+ % Calculate Stokes drift velocity
  St = omega.*k.*((sigH./2).^2);
- # Calculate u*
+ % Calculate u*
  ustarsq = stress./rho;
- # Calculate evaporation rate
+ % Calculate evaporation rate
  e = -sfx.lhf./(rho.*LH);
- # Calculate buoyancy flux scales
+ % Calculate buoyancy flux scales
  LaBflx = St.*k.*stress./rho;
  JhBflx = alpha.*g.*Jh./(Cp.*rho);
  SaBflx = -beta.*g.*SalTSG.*(e+p.*0.001/3600);
- # Calculate Thermal and Saline Honikker #s
+ % Calculate Thermal and Saline Honikker #s
  HoT = JhBflx./LaBflx;
  HoS = SaBflx./LaBflx;
 
