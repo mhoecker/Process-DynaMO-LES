@@ -1,9 +1,7 @@
-function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetype)
+function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,datdir)
  nargin
  if(nargin<1)
- filename = "/home/mhoecker/work/Dynamo/output/yellowstone10/dyn1024flx_s_dag.nc"
-% filename = "/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc"
- filetype = "dag"
+ filename = "/home/mhoecker/work/Dynamo/output/yellowstone12/dyn1024flxn_s_dag.nc"
  end%if
  % load gibbs sea water
  findgsw;
@@ -21,31 +19,19 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  % where the horizontal indecies have been flattened
  %
  nc = netcdf(filename,'r');
- switch(filetype)
- %Load mean values from dag file
- % dimensions z,t
- % velocities u,v
- % state S,T
-  case{"dag"}
-   % dag version file
-   t = squeeze(nc{'time'}(:))./3600;
-   Z = -squeeze(nc{'zzu'}(:));
-   U = squeeze(nc{'u_ave'}(:));
-   V = squeeze(nc{'v_ave'}(:));
-   T = squeeze(nc{'t_ave'}(:));
-   S = squeeze(nc{'s_ave'}(:));
-   Zw = -squeeze(nc{'zzw'}(:));
-   uw = interp1(Zw,squeeze(nc{'uw_ave'}(:))',Z)';
-   vw = interp1(Zw,squeeze(nc{'vw_ave'}(:))',Z)';
-   uw(:,end)=0;
-   vw(:,end)=0;
-  case{"slb"}
-   % slb version
-   % calculate statistics for each slab in the horizontal dimension(s)
-  case{"rst"}
-   % rst version
-   %Calculate statistics for each restart file in the horizontal dimensions
- end%switch
+ % dag version file
+ t = squeeze(nc{'time'}(:))./3600;
+ Z = -squeeze(nc{'zzu'}(:));
+ U = squeeze(nc{'u_ave'}(:));
+ V = squeeze(nc{'v_ave'}(:));
+ T = squeeze(nc{'t_ave'}(:));
+ S = squeeze(nc{'s_ave'}(:));
+ Zw = -squeeze(nc{'zzw'}(:));
+ uw = interp1(Zw,squeeze(nc{'uw_ave'}(:))',Z)';
+ vw = interp1(Zw,squeeze(nc{'vw_ave'}(:))',Z)';
+ #set surface value to 0
+ uw(:,end)=0;
+ vw(:,end)=0;
  ncclose(nc);
  % Calculate derivative matrix
  dzmat = ddz(Z,3);
@@ -82,8 +68,7 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  phiSPrank = RiSPrank./(.25+abs(RiSPrank));
  RiSPflat = Ri(SPflatidx);
  phiSPflat = RiSPflat./(.25+abs(RiSPflat));
- %plot(phi(:,1),frac)
- datdir = "/home/mhoecker/tmp/";
+ %
  abrev = "richistogram";
  binmatrix(frac,Z,Rirank' ,[datdir "Rirank.dat"]);
  binmatrix(frac,Z,phirank',[datdir "phirank.dat"]);
@@ -100,18 +85,17 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,filetyp
  HLRi = [];
  Hphi = [];
  Nh = ceil(sqrt(NH));
- phirange = linspace(0,1,Nh);
- Rirange = linspace(0,1,Nh);
+ phirange = linspace(-1,1,Nh);
+ Rirange = linspace(0,+1,Nh);
  LRirange = linspace(-5,7,Nh);
  LRiSPflat = real(log(RiSPflat))./log(2);
- semilogy(Rirange)
  SPcutoff = [];
  SPcutval = [];
  for i=0:(SPbins-1)
   SPcutoff = [SPcutoff,i./SPbins];
   NHi = floor(i*NH)+1;
-  SPcutval = [SPcutval,SPflat(NHi)];
   NHf = floor((i+1)*NH);
+  SPcutval = [SPcutval,SPflat(NHi)];
   HRii = histc(RiSPflat(NHi:NHf),Rirange);
   HRii = HRii./sum(HRii);
   HRi = [HRi,HRii];
