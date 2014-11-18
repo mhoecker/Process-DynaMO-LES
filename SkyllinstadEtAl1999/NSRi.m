@@ -8,7 +8,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  trange = [t0sim-2,tfsim+2];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange,wavespecHL);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,trange);
  # Extract Chameleon data
  [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
@@ -16,26 +16,27 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
+ % Calculate derivative matrix
+ ddzdag = ddz(zdag,3);
+ % need gsw
+ findgsw;
+ g = gsw_grav(0);
+ % Calculate pressure
+ P = gsw_p_from_z(zdag,0);
+ % Calculate Absolute Salinity
+ SA = gsw_SA_from_SP(Savgdag,P,0,0);
+ % Calculate Conservative Temperature
+ CT = gsw_CT_from_t(SA,Tavgdag,P);
+ % Calculate density(S,T,Z)
+ rho = gsw_rho(SA,CT,P);
+ % Calculate Buoyancy frquency
+ Nsqavg = -g*(rho*ddzdag')./rho;
  # Calculate vertical derivative matrix
  ddzdag = ddz(zdag);
  #
  # Calulate the Driven Richarson number
  [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
  #
- # Calculate Density
- # need gsw
- findgsw;
- # Gravity
- g = gsw_grav(0);
- # Pressure
- Pdag = gsw_p_from_z(zdag,0);
- # Density
- rhoavg = gsw_rho(Savgdag,Tavgdag,0);
- # Mean Density
- rho0 = mean(mean(rhoavg));
- #
- # Calculate Stratification
- Nsqavg = -(g/rho0)*(ddzdag*rhoavg')';
  #
  # Calculate Shear
  Ssqavg = ((ddzdag*uavgdag').^2+(ddzdag*vavgdag').^2)';
@@ -68,7 +69,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
   binmatrix(tdag',zdag',Nsqavg',[outdir abrev "b.dat"]);
   binmatrix(tdag',zdag',Ssqavg',[outdir abrev "c.dat"]);
   binmatrix(tdag',zdag',Ricavg',[outdir abrev "d.dat"]);
-  binmatrix(tdag',zdag',rhoavg',[outdir abrev "e.dat"]);
+  binmatrix(tdag',zdag',rho',[outdir abrev "e.dat"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
  end%if
