@@ -60,7 +60,8 @@ set palette maxcolors 11
 set title "Ri Ranked by Shear Production"
 set output outdir.'phiSPrank.png'
 unset logscale cb
-set cbtics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0, "+{\274}" .5, "+{/Symbol \245}" 1)
+set format cb "%g"
+set cbtics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
 set cbrange [-1:1]
 plot outdir.'phiSPrank.dat' binary matrix u 1:2:(($3+abs($3))/2) w image
 #
@@ -72,7 +73,7 @@ set autoscale y
 set multiplot layout 2,1
 set logscale y
 set ytics auto
-set format y "10^{%+T}"
+set format cb "%g"
 set style data points
 plot outdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:6 lc -1
 unset logscale y

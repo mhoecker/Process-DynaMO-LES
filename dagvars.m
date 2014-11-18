@@ -15,12 +15,11 @@ function vars = dagvars(dagnc,field,trange,zrange)
  else
   dagtidx = 1:length(dim);
  end%if
- deblank(field(1,:))
  vars.(deblank(field(1,:))) = squeeze(dag{deblank(field(1,:))}(dagtidx));
  % get and restict depth range
  dim = -squeeze(dag{deblank(field(2,:))}(:));
  if nargin()>3
-  dagzidx = inclusiverange(dim,zrange);
+   dagzidx = inclusiverange(dim,zrange);
  else
   dagzidx = 1:length(dim);
  end%if
@@ -29,6 +28,9 @@ function vars = dagvars(dagnc,field,trange,zrange)
  for i=3:length(field(:,1))
   fieldname = deblank(field(i,:));
   vars.(fieldname) = squeeze(dag{fieldname}(dagtidx,dagzidx,1,1));
+  %if(strcmp(fieldname,"rain"))
+  % vars.(fieldname)=squeeze(dag{fieldname}(:));
+  %end%if
  end%for
  ncclose(dag);
 end%function

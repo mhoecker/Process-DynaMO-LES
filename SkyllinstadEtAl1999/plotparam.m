@@ -15,7 +15,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
  if((useoctplot==0)&(nargin>0))
   [gnuplotterm,termsfx] = termselect("pngposter");
   termfile = [outdir abrev "term.plt"];
-  fid = fopen(termfile,"w");
+  [fid,MSG] = fopen(termfile,"w");
   fprintf(fid,"set term %s\n",gnuplotterm);
   fclose(fid);
   limitsfile = [outdir abrev "limits.plt"];

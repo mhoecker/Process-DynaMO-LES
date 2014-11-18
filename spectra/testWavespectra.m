@@ -1,4 +1,4 @@
-for k=0:48
+for k=0:47
  [h,t] =Wavecorrected2NetCDF("/home/mhoecker/work/Dynamo/Observations/ascii/PSD_wave/",["Wavecorrected_32" num2str(floor(8+k/24),"%1i") num2str(mod(k,24),"%02i")],"/home/mhoecker/work/Dynamo/Observations/netCDF/PSD_wave/");
  output_dir = "/home/mhoecker/work/Dynamo/output/surfspectra/";
  plot_dir = "/home/mhoecker/work/Dynamo/plots/surfacewaves/";

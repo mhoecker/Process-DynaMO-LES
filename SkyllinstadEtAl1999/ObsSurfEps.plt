@@ -52,15 +52,15 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key t l opaque
-set ytics 4 nomirror offset ytoff,0
-set mytics 4
-set yrange [0:10]
+set ytics 5 nomirror offset ytoff,0
+set mytics 5
+set yrange [0:29]
 set ylabel "U_s (cm/s)"
 set y2label "{/Symbol l} (m)" offset -yloff,0
-set y2tics out 150
-set my2tics 3
+set y2tics out 20
+set my2tics 4
 set y2tics nomirror offset -ytoff,0
-set y2range [0:400]
+set y2range [0:70]
 set format x "%g"
 #
 #set autoscale y

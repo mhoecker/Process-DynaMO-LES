@@ -130,7 +130,7 @@ if(k<Nvar) # Model wP
  formulae{k} = 'p_ave';
 end%if
 if(k<Nvar)
- k=k+1
+ k=k+1;
  vars{k} = 'f_ave';
  units{k} = 'W/kg';
  dims{k} = [ vars{1} "," vars{2} ];
@@ -143,10 +143,10 @@ end%if
   outnc = [inpath '/' inname "tke" inext];
  end%if
  [outpath,outname,outext] = fileparts(outnc);
- outtke = outnc
+ outtke = outnc;
  outzavg = [outpath '/' outname 'zavg' outext];
  outAVG =  [outpath '/' outname 'AVG' outext];
- outAVGdat = [outpath '/' outname '.dat';]
+ outAVGdat = [outpath '/' outname '.dat'];
  cdffile = [tempname("/home/mhoecker/tmp/")  ".cdf"];
  cdlid = fopen(cdffile,'w');
 # Write header
@@ -177,7 +177,7 @@ for i=1:Nvar
 
  %fclose(cdlid)
  writeCDFdata(cdlid,val,vars);
- "wrote CDF file"
+ %"wrote CDF file"
  unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile]);
  unix(['ncwa -O -a z ' outnc ' ' outzavg]);
  unix(['ncwa -O -a z,t ' outnc ' ' outAVG]);
@@ -189,7 +189,7 @@ for i=1:Nvar
  ncclose(ZVG)
  AVGdat = fopen(outAVGdat,'w');
  for i=1:length(tkeflow)
-  fprintf(AVGdat,'%20.20f ',tkeflow(i))
+  fprintf(AVGdat,'%20.20f ',tkeflow(i));
  end%for
- fclose(AVGdat)
+ fclose(AVGdat);
 end%function
