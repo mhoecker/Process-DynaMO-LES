@@ -1,4 +1,4 @@
-function ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL,trange)
+function ObsSurfEps(dagnc,chmnc,outdir,trange)
  %function fig1(sfxnc,chmnc,outdir)
  %
  % 4 plots stacked vertically with a common x-axis (yearday)
@@ -14,21 +14,23 @@ function ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL,trange)
  % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
- if(nargin<5)
+ if(nargin<4)
   trange = [t0sim,tfsim];
  end%if
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = surfaceflux(sfxnc,trange,wavespecHL);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = DAGsfcflux(dagnc,(trange-t0sim)*24*3600);
+ tsfx=t0sim+tsfx./(24*3600);
  # Decomplse Stress into components
- stressm = -stress.*sin(wdir*pi/180);
- stressz = -stress.*cos(wdir*pi/180);
+ %stressm = -stress.*sin(wdir*pi/180);
+ %stressz = -stress.*cos(wdir*pi/180);
+ stressm = real(stress);
+ stressz = imag(stress);
  #Calculate Stokes Drift and wavenumber
  findgsw;
  g = gsw_grav(0);
- k = g./(cp.*cp);
- U = cp.*(sigH.*k/2).^2;
- l = 2*pi./k;
+ U = cp;
+ l = sigH;
  # Extract epsilon profiles
  [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
  # Plot using octave or Gnuplot
@@ -58,6 +60,7 @@ function ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL,trange)
   # Save epsilon profiles
   binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
   if(nargin>3)
+   trange
    dtplot = diff(trange);
    T = max(trange)-min(trange);
    if(T<1)
@@ -70,9 +73,9 @@ function ObsSurfEps(sfxnc,chmnc,outdir,wavespecHL,trange)
     dttic = ceil(T/3);
     dtmtic = dttic;
    end%if
-   trangetext = ['t0sim = ' num2str(trange(1),"%12.10f") '; tfsim=' num2str(trange(2),"%12.10f") ';set xrange [t0sim:tfsim]']
-   xtictext = ['set xtic t0sim,' num2str(dttic,"%12.10f")]
-   mxtictext = ['set mxtic ' num2str(dtmtic,"%2i")]
+   trangetext = ['t0sim = ' num2str(trange(1),"%12.10f") '; tfsim=' num2str(trange(2),"%12.10f") ';set xrange [t0sim:tfsim]'];
+   xtictext = ['set xtic t0sim,' num2str(dttic,"%12.10f")];
+   mxtictext = ['set mxtic ' num2str(dtmtic,"%2i")];
    unix(['echo "' trangetext '">>' limitsfile]);
    unix(['echo "' xtictext '">>' limitsfile]);
    unix(['echo "' mxtictext '">>' limitsfile]);
