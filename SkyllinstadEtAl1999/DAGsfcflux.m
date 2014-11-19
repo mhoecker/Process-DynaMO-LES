@@ -26,8 +26,9 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  field = ["time";"z";"q";"rain";"hf_top";"ustr_t";"vstr_t";"swf_top";"lhf_top";"wave_l";"wave_h";"w_angle" ;"S_0";"L_a"];
  flxvars = dagvars(dagnc,field,trange);
  tsfx=flxvars.time;
+ %ddtsfx = ddz(tsfx);
  stress=flxvars.ustr_t+I*flxvars.vstr_t;
- p=flxvars.rain;
+ p=10*flxvars.rain./mode(diff(tsfx));
  Jh=flxvars.hf_top+flxvars.swf_top+flxvars.lhf_top;
  SolarNet=flxvars.swf_top;
  wdir=pi/2;
