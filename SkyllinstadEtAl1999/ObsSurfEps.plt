@@ -7,16 +7,13 @@ cols = 1
 col = 0
 row = 0
 #
-#set object 1 rectangle from t0sim,graph 0 to tfsim,graph 1 fc rgb "gray90" fs pattern 3
-#t0sim=t0sim-.25
-#tfsim=tfsim+.25
 load scriptdir."tlocbloc.plt"
 datfile = datdir.abrev."JhPrecipTxTyUk.dat"
 datform = "%f%f%f%f%f%f%f"
 #
 set autoscale y
 #
-set multiplot title "Surface Forcing Observetions"
+set multiplot title "Surface Forcing"
 set style data lines
 set ytics .5
 set yrange [-.2:1.2]
@@ -41,6 +38,7 @@ set yrange [-1:1]
 set ylabel "J_h (kW/m^2)"
 set y2label "P (mm/h)" offset -yloff,0
 set y2tics out 30
+set y2range [0:80]
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
 plot \

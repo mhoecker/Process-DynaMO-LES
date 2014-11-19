@@ -22,9 +22,9 @@ set format x ""
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -24,12,24 mirror
+set ytics -20,10,20 mirror
 set ytics add ("0" 0)
-set yrange [-15:15]
+set yrange [-11:11]
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
@@ -36,7 +36,7 @@ set bmargin at screen bloc(row)
 row = nextrow(row)
 #set format y "%+4.1te^{%+02T}"
 set ytics add ("0" 0)
-set yrange [0:30]
+set yrange [0:29]
 set label 1 "b"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 3 t "Langmuir (Uk{/Symbol t}/{/Symbol r})"
