@@ -7,7 +7,16 @@ function [MLD,MLI,drho,rho]=getMLD(S,T,Z,DRHO)
  tdim = find(vardims!=length(Z));
  ZZ = ones(vardims).*Z';
  findgsw;
- rho = gsw_rho(S,T,0);
+ findgsw;
+ g = gsw_grav(0);
+ % Calculate pressure
+ P = gsw_p_from_z(Z,0);
+ % Calculate Absolute Salinity
+ SA = gsw_SA_from_SP(S,P,0,0);
+ % Calculate Conservative Temperature
+ CT = gsw_CT_from_t(SA,T,P);
+ % Calculate density(S,T,Z)
+ rho = gsw_rho(SA,CT,P);
  drho = (rho.-min(rho,[],zdim));
  badidx = find(drho>DRHO);
  ZZ(badidx) = 0;
