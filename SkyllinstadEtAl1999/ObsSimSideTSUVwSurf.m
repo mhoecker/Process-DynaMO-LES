@@ -7,6 +7,8 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  abrev1 = "ObsSimTS";
  abrev2 = "ObsSimUV";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ MLdrho = 0.1;
+ MLtext = ["MLtext = ' {/Symbol Dr}=" num2str(1000*MLdrho,"%3.0f") " g/m^3'"];
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -20,11 +22,15 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  findgsw; # Check to make sure Gibbs Sea Water is in the path
  Pchm = gsw_p_from_z(zchm,0);
  Schm = gsw_SP_from_SA(Schm,Pchm,80.5,0);
+ % Calculate Mixed Layer Depth
+ [MLDchm,MLIchm,drhochm,rhochm]=getMLD(Schm,Tchm,zchm,MLdrho);
  # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ % Calculate Mixed Layer Depth
+ [MLD,MLI,drho,rho]=getMLD(Savgdag,Tavgdag,zdag,MLdrho);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  if(useoctplot==1)
@@ -83,6 +89,11 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
   binmatrix(tdag',zdag',Savgdag',[outdir abrev "Ss.dat"]);#was f
   binmatrix(tdag',zdag',uavgdag',[outdir abrev "Us.dat"]);#was h
   binmatrix(tdag',zdag',vavgdag',[outdir abrev "Vs.dat"]);#was j
+  # Mixed Layer Depths
+  unix(['echo "' MLtext '">>' limitsfile]);
+  binarray(tdag',[MLD]',[outdir abrev "ML.dat"])
+  binarray(tchm',[MLDchm]',[outdir abrev "MLchm.dat"])
+  #
   unix(["gnuplot " limitsfile " " scriptdir abrev "SideTSUVwSurf.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "T.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "S.plt"]);

@@ -39,7 +39,7 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_
 #
 load limfile
 load scriptdir."tlocbloc.plt"
-set key inside b l opaque samplen -1 width -.5
+set key inside b l opaque
 set format y "%g"
 set ylabel "Z (m)"
 # Temperature
@@ -57,14 +57,17 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "b"
-plot datdir.abrev."To.dat" binary matrix w image title "Observed"
+plot datdir.abrev."To.dat" binary matrix w image title "Observed",\
+datdir.abrev."MLchm.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 # Simulated
-set format x ""
+set format x "%g"
+set xlabel "2011 UTC yearday"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 set label 1 "c"
-plot datdir.abrev."Ts.dat" binary matrix w image title "Simulated"
+plot datdir.abrev."Ts.dat" binary matrix w image title "Simulated",\
+datdir.abrev."ML.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 unset colorbox
 unset multiplot

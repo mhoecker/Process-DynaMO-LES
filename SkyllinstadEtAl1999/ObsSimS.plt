@@ -38,7 +38,7 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbco
 #
 load limfile
 load scriptdir."tlocbloc.plt"
-set key l b opaque samplen -1 width -.5
+set key l b opaque
 set format y "%g"
 set ylabel "Z (m)"
 # Salinity
@@ -56,7 +56,8 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "b"
-plot datdir.abrev."So.dat" binary matrix w image title "Observed"
+plot datdir.abrev."So.dat" binary matrix w image title "Observed",\
+datdir.abrev."MLchm.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 # Simulated
 set format x "%g"
 set xlabel "2011 UTC yearday"
@@ -65,6 +66,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 set label 1 "c"
-plot datdir.abrev."Ss.dat" binary matrix w image title "Simulated"
+plot datdir.abrev."Ss.dat" binary matrix w image title "Simulated",\
+datdir.abrev."ML.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 unset colorbox
 unset multiplot

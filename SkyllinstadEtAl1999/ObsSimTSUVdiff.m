@@ -17,6 +17,8 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ % Calculate Mixed Layer Depth
+ [MLD,MLI,drho,rho]=getMLD(Savgdag,Tavgdag,zdag);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  # interpolate observations onto the computational grid
@@ -27,6 +29,8 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Schmi=interp2(zchm,tchm,Schm,zz,tt);
  uadcpi=interp2(zadcp,tadcp,ulpadcp,zz,tt);
  vadcpi=interp2(zadcp,tadcp,vlpadcp,zz,tt);
+ % Calculate Mixed Layer Depth
+ [MLDchm,MLIchm,drhochm,rhochm]=getMLD(Schmi,Tchmi,zdag);
  # Calculate the difference
  Tdiff = Tchmi'-Tavgdag;
  Sdiff = Schmi'-Savgdag;
@@ -80,6 +84,10 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',vdiff',[outdir abrev "vdiff.dat"]);
   binmatrix(tdag',zdag',udsum',[outdir abrev "udsum.dat"]);
   binmatrix(tdag',zdag',vdsum',[outdir abrev "vdsum.dat"]);
+  # Mixed Layer Depth
+  binarray(tdag',[MLD]',[outdir abrev "ML.dat"])
+  binarray(tdag',[MLDchm]',[outdir abrev "MLchm.dat"])
+  #Plot
   unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdiff.plt"]);
   unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdsum.plt"]);
  end%if
