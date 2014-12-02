@@ -32,7 +32,7 @@ set table outroot."dm.tab"
 #splot datroot."d.dat" binary matrix
 #
 # Density
-set cntrparam levels incremental 1000,.05,1040
+set cntrparam levels incremental 1000,.1,1040
 set table outroot."e.tab"
 splot datroot."e.dat" binary matrix
 #
