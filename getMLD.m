@@ -1,6 +1,6 @@
 function [MLD,MLI,drho,rho]=getMLD(S,T,Z,DRHO)
  if(nargin<4)
-  DRHO=0.01;
+  DRHO=0.1;
  end%if
  vardims = size(T);
  zdim = find(vardims==length(Z));
