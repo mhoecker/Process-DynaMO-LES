@@ -11,12 +11,12 @@ load scriptdir."tlocbloc.plt"
 #
 set multiplot title "Instability Criterion"
 #
-Nsqmax = 4e-4
+Nsqmax = 1e-2
 Nsqmin = -Nsqmax
 Rimax = 1.0
 Rimin= -Rimax
 cbform = "%+04.1te^{%+02T}"
-rhotitle = "{/Symbol Dr}=0.05 kg/m^3"
+rhotitle = " 	{/Symbol Dr}=100 g/m^3"
 rhocolor = "grey50"
 Rictitle = "Ri =+1/4"
 Riccolor = "black"
@@ -24,7 +24,7 @@ Ri0title = "Ri = 0  "
 Ri0color = "grey30"
 Rimtitle = "Ri =-1/4"
 Rimcolor = "grey60"
-set key l t
+set key l b opaque
 set format x ""
 set format y "%gm"
 #
@@ -32,8 +32,8 @@ set format y "%gm"
 load outdir."pospal.plt"
 set format cb cbform
 set cblabel "s^{-2}"
-set cbrange [0:Nsqmax]
-set cbtics 0,(Nsqmax)/2,Nsqmax; set cbtics add ("0" 0)
+set logscale cb
+set cbrange [1e-2*Nsqmax:Nsqmax]
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 #
 # Nsq
@@ -52,9 +52,10 @@ set ylabel "S^2"
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot datdir.abrev."c.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
 unset colorbox
+unset logscale cb
 #
 # Richardson Number
-load outdir."sympal.plt"
+load outdir."pospal.plt"
 set ylabel "Ri=N^2/S^2"
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -62,16 +63,16 @@ set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set format cb cbform
 set cblabel ""
-set cbrange [-1:1]
+set cbrange [0:1]
 set cbtics Rimin,(Rimax-Rimin)/2,Rimax
-set cbtics add ("+1/4" .5, "-1/4" -.5, "0" 0, "+{/Symbol \245}" 1, "-{/Symbol \245}" -1, "-3/4" -.75, "+3/4" .75, "-1/12" -.25, "+1/12" .25)
+set cbtics add ("+1/4" .5, "0" 0, "+{/Symbol \245}" 1, "+3/4" .75, "+1/12" .25)
 set format cb ""
 #set cblabel ""
 #set cbrange [Rimin:Rimax]
 #set cbtics Rimin,(Rimax-Rimin)/2,Rimax
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,1
-set key l b
+unset key
 set label 1 "b"
 plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
 #,\

@@ -1,4 +1,4 @@
-function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
+function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %
  %figure 4
  % Plot time series of N^2 S^2 and Ri
