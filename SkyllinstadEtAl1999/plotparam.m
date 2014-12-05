@@ -1,11 +1,15 @@
-function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,datdir,abrev)
+function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,abrev)
  % Set the plot parameters for all the plots
- if(nargin==1)
-  datdir = outdir;
+ if(nargin<1)
+  outdir = "/home/mhoecker/tmp/";
  end%if
- if(nargin<3)
+ if(nargin<2)
   abrev = "";
  end%if
+ % Subdirectories for data, gnuplt scripts, and PNG files
+ datdir = [outdir "/dat/"];
+ pltdir = [outdir "/plt/"];
+ pngdir = [outdir "/png/"];
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
@@ -16,20 +20,20 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
  if((useoctplot==0)&(nargin>0))
   [gnuplotterm,termsfx] = termselect("pngposter");
   %
-  termfile = [outdir abrev "term.plt"];
+  termfile = [pltdir abrev "term.plt"]
   [fid,MSG] = fopen(termfile,"w");
   fprintf(fid,"set term %s\n",gnuplotterm);
   fclose(fid);
   %
-  timeticfile = [outdir abrev "timetics.plt"];
+  timeticfile = [pltdir abrev "timetics.plt"];
   fid = fopen(timeticfile,"w");
   fprintf(fid,"set xrange [%f:%f]\n",trange(1),trange(2));
   fprintf(fid,"unset xtics\n");
-  fprintf(fid,"set xtics 1\n");
+  fprintf(fid,"set xtics .5\n");
   fprintf(fid,"set mxtics 12");
   fclose(fid);
   %
-  limitsfile = [outdir abrev "limits.plt"];
+  limitsfile = [pltdir abrev "limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"limfile='%s'\n",limitsfile);
   fprintf(fid,"timeticfile='%s'\n",timeticfile);
@@ -40,6 +44,8 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fprintf(fid,"palcolors=%f\n",palcolors);
   fprintf(fid,"abrev = '%s'\n",abrev);
   fprintf(fid,"outdir = '%s'\n",outdir);
+  fprintf(fid,"pngdir = '%s'\n",pngdir);
+  fprintf(fid,"pltdir = '%s'\n",pltdir);
   fprintf(fid,"datdir = '%s'\n",datdir);
   fprintf(fid,"scriptdir = '%s'\n",scriptdir);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
@@ -63,35 +69,35 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,d
   fprintf(fid,"%s",paltext("pmnan"));
   fclose(fid);
   %
-  palfile = [outdir "sympal.plt"];
+  palfile = [pltdir "sympal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pm",palcolors));
   fclose(fid);
-  palfile = [outdir "pospal.plt"];
+  palfile = [pltdir "pospal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pos",palcolors));
   fclose(fid);
-  palfile = [outdir "negpal.plt"];
+  palfile = [pltdir "negpal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("neg",palcolors));
   fclose(fid);
-  palfile = [outdir "sympalnan.plt"];
+  palfile = [pltdir "sympalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pmnan",palcolors));
   fclose(fid);
-  palfile = [outdir "pospalnan.plt"];
+  palfile = [pltdir "pospalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("posnan",palcolors));
   fclose(fid);
-  palfile = [outdir "negpalnan.plt"];
+  palfile = [pltdir "negpalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("negnan",palcolors));
   fclose(fid);
-  palfile = [outdir "zissou.plt"];
+  palfile = [pltdir "zissou.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("zissou",4*palcolors));
   fclose(fid);
-  palfile = [outdir "circle.plt"];
+  palfile = [pltdir "circle.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("circle",36));
   fclose(fid);
