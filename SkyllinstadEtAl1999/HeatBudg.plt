@@ -7,6 +7,7 @@ cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
 load termfile
+load limfile
 #
 cbform = "%+4.1te^{%+02T}"
 #
@@ -99,7 +100,7 @@ set cbtics auto
 # heat flux
 hdimax = hfxmax
 hdimin = -hfxmax
-hfxmax = 1000
+hfxmax = 750
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -111,15 +112,17 @@ load outdir."sympal.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
-set yrange [-1:1]
+set yrange [-.7:.7]
 set ytics -1,.5,1
 set ylabel "kW/m^2"
 unset xlabel
 set key horizontal
-set key left top
+set key b r
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) ls 1 title "J_0", \
+datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2/3) w filledcurves y1=0 ls 7 title "{/Symbol \261}J_0/3", \
+datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(-0.001*$2/3) w filledcurves y1=0 ls 7 notitle, \
 datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) ls 2 title " J_{ML}"
 unset y2tics
 unset y2label
@@ -133,10 +136,9 @@ set bmargin at screen bloc(row)
 set key left bottom
 set cbrange [hfxmin:hfxmax]
 unset cbtics
-set cbtics ("-1" -1000 ,"0" 0, "+1" 1000)
+set cbtics ("-0.5" -500 ,"0" 0, "+0.5" 500)
 set format cb ""
 set cblabel "kW/m^2"
-set xlabel ""
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "{/Symbol r}c_pw'T'"
 set label 1 "b"
