@@ -16,7 +16,7 @@ Nsqmin = -Nsqmax
 Rimax = 1.0
 Rimin= -Rimax
 cbform = "%+04.1te^{%+02T}"
-rhotitle = " 	{/Symbol Dr}=100 g/m^3"
+rhotitle = " {/Symbol Dr}=100 g/m^3"
 rhocolor = "grey50"
 Rictitle = "Ri =+1/4"
 Riccolor = "black"
