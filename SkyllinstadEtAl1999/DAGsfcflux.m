@@ -5,8 +5,8 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  field =["time";"zzu";"t_ave";"s_ave"];
  zrange = [0,1];
  flxvars = dagvars(dagnc,field,trange,zrange);
- sst=flxvars.t_ave(:,1);
- SalTSG=flxvars.s_ave(:,1);
+ sst=flxvars.t_ave(:,end);
+ SalTSG=flxvars.s_ave(:,end);
  clear flxvars;
  % Get required thermodynamic constants
  findgsw;
@@ -28,8 +28,9 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  tsfx=flxvars.time;
  %ddtsfx = ddz(tsfx);
  stress=flxvars.ustr_t+I*flxvars.vstr_t;
- p=10*flxvars.rain./mode(diff(tsfx));
+ p=NaN*flxvars.rain./mode(diff(tsfx));
  Jh=flxvars.hf_top+flxvars.swf_top+flxvars.lhf_top;
+ Jh = -Jh;
  SolarNet=flxvars.swf_top;
  wdir=pi/2;
  cp = flxvars.S_0;
