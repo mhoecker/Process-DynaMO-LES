@@ -7,7 +7,7 @@ function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
 # z = array of depths desired
  abrev = "jflxcomp";
  outfile = [outdir abrev];
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  trange = (trange-t0sim)*24*3600;
  zrange = [0,-dsim];
