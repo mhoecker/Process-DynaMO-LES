@@ -6,8 +6,8 @@ function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
 # outloc = location of output data (binary array?)
 # z = array of depths desired
  abrev = "jflxcomp";
- outfile = [outdir abrev];
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
+ outfile = [dir.dat abrev];
  trange = [t0sim,tfsim];
  trange = (trange-t0sim)*24*3600;
  zrange = [0,-dsim];
@@ -75,15 +75,11 @@ function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
   print([outdir abrev "Ho.png"],"-dpng")
  else
   binarray(tsfx',[Jh,p]',[outfile "surf.dat"]);
-#  binmatrix(t',Z',Jsgs',[outfile "Jsgs.dat"])
-#  binmatrix(t',Z',Jwt',[outfile "Jwt.dat"])
-#  binmatrix(t',Z',JswA',[outfile "JswA.dat"])
-#  binmatrix(t',Z',JswT',[outfile "JswT.dat"])
   binarray(tsfx',[HoT,HoS,Hosfx]',[outfile "HoTS.dat"]);
   binarray(tsfx',[LaBflx,JhBflx,SaBflx]',[outfile "Bflx.dat"]);
   binmatrix(t',Z',drhozs',[outfile "drhosz.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
 end%if
 end%function
 

@@ -3,7 +3,7 @@ unset pm3d
 unset surface
 set contour
 #
-outroot = outdir.abrev
+outroot = datdir.abrev
 datroot = datdir.abrev
 #
 # Density deviation

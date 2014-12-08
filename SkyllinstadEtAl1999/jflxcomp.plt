@@ -1,5 +1,5 @@
 load termfile
-set output outdir.abrev.termsfx
+set output pngdir.abrev.termsfx
 # Setup vertical spacing
 rows = 3
 row = 0
@@ -22,21 +22,24 @@ set format x ""
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -20,10,20 mirror
+set ytics -3,1,3 mirror
 set ytics add ("0" 0)
-set yrange [-11:11]
+set yrange [-2:2]
 set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 1 t "Saline (g{/Symbol b}S(E-P))"
 #
-set key horizontal t l
+set key horizontal b r
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 #set format y "%+4.1te^{%+02T}"
 set ytics add ("0" 0)
-set yrange [0:29]
+set yrange [0:24]
+set ytics -30,10,30 mirror
+set mytics 10
+set ytics add ("0" 0)
 set label 1 "b"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 3 t "Langmuir (Uk{/Symbol t}/{/Symbol r})"
@@ -47,8 +50,9 @@ set xlabel "2011 UTC yearday" offset 0,xloff
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set y2label "|Hoenikker\n Number|"
-set yrange [5e-4:5e3]
-set ytics 1e-3,1e3,1e3
+set yrange [5e-3:5e1]
+set ytics 1e-3,1e1,1e2
+set mytics default
 #set ytics add ("0" 0)
 #phi(x) = x/(1+abs(x))
 phi(x) = abs(x)
