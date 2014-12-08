@@ -1,5 +1,5 @@
 load termfile
-set output outdir.abrev.termsfx
+set output pngdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing
 rows = 2
@@ -29,7 +29,7 @@ set format x ""
 set format y "%gm"
 #
 # Common colorbar for Nsq and Ssq
-load outdir."pospal.plt"
+load pltdir."pospal.plt"
 set format cb cbform
 set cblabel "s^{-2}"
 set logscale cb
@@ -55,7 +55,7 @@ unset colorbox
 unset logscale cb
 #
 # Richardson Number
-load outdir."pospal.plt"
+load pltdir."pospal.plt"
 set ylabel "Ri=N^2/S^2"
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -75,9 +75,5 @@ set xlabel "2011 UTC yearday" offset 0,1
 unset key
 set label 1 "b"
 plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
-#,\
-#datdir.abrev."d.tab" lc rgbcolor Riccolor title Rictitle,\
-#datdir.abrev."d0.tab" lc rgbcolor Ri0color title Ri0title,\
-#datdir.abrev."dm.tab" lc rgbcolor Rimcolor title Rimtitle
 #
 unset multiplot

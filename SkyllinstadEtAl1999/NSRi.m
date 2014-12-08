@@ -3,7 +3,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %figure 4
  % Plot time series of N^2 S^2 and Ri
  abrev = "NSRi";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  #useoctplot=1;
  trange = [t0sim-2,tfsim+2];
  zrange = sort([0,-dsim]);
@@ -65,13 +65,13 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
-  binarray(tsfx',[4*Ri,Jb,stress]',[outdir abrev "a.dat"]);
-  binmatrix(tdag',zdag',Nsqavg',[outdir abrev "b.dat"]);
-  binmatrix(tdag',zdag',Ssqavg',[outdir abrev "c.dat"]);
-  binmatrix(tdag',zdag',Ricavg',[outdir abrev "d.dat"]);
-  binmatrix(tdag',zdag',rho',[outdir abrev "e.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  binarray(tsfx',[4*Ri,Jb,stress]',[dir.dat abrev "a.dat"]);
+  binmatrix(tdag',zdag',Nsqavg',[dir.dat abrev "b.dat"]);
+  binmatrix(tdag',zdag',Ssqavg',[dir.dat abrev "c.dat"]);
+  binmatrix(tdag',zdag',Ricavg',[dir.dat abrev "d.dat"]);
+  binmatrix(tdag',zdag',rho',[dir.dat abrev "e.dat"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
  end%if
  %
 end%function

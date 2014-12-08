@@ -13,7 +13,7 @@ function ObsSurfEps(dagnc,chmnc,outdir,trange)
  % line plots are filled
  % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs]=plotparam(outdir,abrev);
  if(nargin<4)
   trange = [t0sim,tfsim];
  end%if
@@ -56,9 +56,9 @@ function ObsSurfEps(dagnc,chmnc,outdir,trange)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',[outdir abrev "JhPrecipTxTyUk.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',[dirs.dat abrev "JhPrecipTxTyUk.dat"]);
   # Save epsilon profiles
-  binmatrix(tchm',zchm',epschm',[outdir abrev "d.dat"]);
+  binmatrix(tchm',zchm',epschm',[dirs.dat abrev "d.dat"]);
   if(nargin>3)
    trange
    dtplot = diff(trange);
@@ -80,6 +80,6 @@ function ObsSurfEps(dagnc,chmnc,outdir,trange)
    unix(['echo "' xtictext '">>' limitsfile]);
    unix(['echo "' mxtictext '">>' limitsfile]);
   end%if
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
+  unix(["gnuplot " limitsfile " " dirs.script abrev ".plt"])
  end%if
 end%function

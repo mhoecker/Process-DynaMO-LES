@@ -1,5 +1,5 @@
 load termfile
-set output outdir.abrev.termsfx
+set output pngdir.abrev.termsfx
 #
 # Setup spacing
 rows = 3
@@ -50,9 +50,9 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key t l opaque
-set ytics 5 nomirror offset ytoff,0
-set mytics 5
-set yrange [0:29]
+set ytics 10 nomirror offset ytoff,0
+set mytics 2
+set yrange [0:34]
 set ylabel "U_s (cm/s)"
 set y2label "{/Symbol l} (m)" offset -yloff,0
 set y2tics out 20

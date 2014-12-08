@@ -1,5 +1,5 @@
 load termfile
-set output outdir.abrev.termsfx
+set output pngdir.abrev.termsfx
 set multiplot
 # Setup spacing
 rows = 1
@@ -41,17 +41,19 @@ set key t l
 set ylabel ""
 set y2label "Z (m)" offset -yloff,0
 set y2tics mirror -70,20,-10
-set xrange [-.6:.6]
-set x2range [-.6:.6]
+set xrange [-.55:.55]
+set x2range [-.55:.55]
 set xlabel  "U (m/s)" offset graph 0, char +xloff
 set label 35 "V (m/s)" at graph 1,1 left offset char 0, char .5
-set xtics -.2,.2,.4
-set x2tics -.2,.2,.2
+set xtics -.6,.3,.6
+set x2tics -.6,.3,.6
+set mxtics 3
+set mx2tics 3
 set yzeroaxis
 set label 1 "b"
 plot \
 datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 2:(-$1) w lines axes x1y2 title "U "   ls 3 ,\
 datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 3:(-$1) w lines axes x2y2 title "V "   ls 4 ,\
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 4:(-$1) w lines axes x1y2 title "U_{L5}" ls 5,\
-datdir.abrev."b.dat" binary format="%f%f%f%f%f" u 5:(-$1) w lines axes x2y2 title "V_{L5}" ls 6
+datdir.abrev."UVfit.dat" binary format="%f%f%f" u 2:(-$1) w lines axes x1y2 title "U_{L5}" ls 5,\
+datdir.abrev."UVfit.dat" binary format="%f%f%f" u 3:(-$1) w lines axes x2y2 title "V_{L5}" ls 6
 unset multiplot
