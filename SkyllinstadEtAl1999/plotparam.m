@@ -1,4 +1,4 @@
-function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,abrev)
+function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  % Set the plot parameters for all the plots
  if(nargin<1)
   outdir = "/home/mhoecker/tmp/";
@@ -7,25 +7,27 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,a
   abrev = "";
  end%if
  % Subdirectories for data, gnuplt scripts, and PNG files
- datdir = [outdir "/dat/"];
- pltdir = [outdir "/plt/"];
- pngdir = [outdir "/png/"];
+ dir.out = outdir;
+ dir.dat = [outdir "/dat/"];
+ dir.plt = [outdir "/plt/"];
+ dir.png = [outdir "/png/"];
+ dir.script = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
+ %
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 15; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
- scriptdir = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/";
  if((useoctplot==0)&(nargin>0))
   [gnuplotterm,termsfx] = termselect("pngposter");
   %
-  termfile = [pltdir abrev "term.plt"]
+  termfile = [dir.plt abrev "term.plt"]
   [fid,MSG] = fopen(termfile,"w");
   fprintf(fid,"set term %s\n",gnuplotterm);
   fclose(fid);
   %
-  timeticfile = [pltdir abrev "timetics.plt"];
+  timeticfile = [dir.plt abrev "timetics.plt"];
   fid = fopen(timeticfile,"w");
   fprintf(fid,"set xrange [%f:%f]\n",trange(1),trange(2));
   fprintf(fid,"unset xtics\n");
@@ -33,7 +35,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,a
   fprintf(fid,"set mxtics 12");
   fclose(fid);
   %
-  limitsfile = [pltdir abrev "limits.plt"];
+  limitsfile = [dir.plt abrev "limits.plt"];
   fid = fopen(limitsfile,"w");
   fprintf(fid,"limfile='%s'\n",limitsfile);
   fprintf(fid,"timeticfile='%s'\n",timeticfile);
@@ -44,10 +46,10 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,a
   fprintf(fid,"palcolors=%f\n",palcolors);
   fprintf(fid,"abrev = '%s'\n",abrev);
   fprintf(fid,"outdir = '%s'\n",outdir);
-  fprintf(fid,"pngdir = '%s'\n",pngdir);
-  fprintf(fid,"pltdir = '%s'\n",pltdir);
-  fprintf(fid,"datdir = '%s'\n",datdir);
-  fprintf(fid,"scriptdir = '%s'\n",scriptdir);
+  fprintf(fid,"pngdir = '%s'\n",dir.png);
+  fprintf(fid,"pltdir = '%s'\n",dir.plt);
+  fprintf(fid,"datdir = '%s'\n",dir.dat);
+  fprintf(fid,"scriptdir = '%s'\n",dir.script);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
   fprintf(fid,"set style data lines\n");
   fprintf(fid,"set style line 1 lc pal frac 0 lw 1\n");
@@ -69,35 +71,35 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir,a
   fprintf(fid,"%s",paltext("pmnan"));
   fclose(fid);
   %
-  palfile = [pltdir "sympal.plt"];
+  palfile = [dir.plt "sympal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pm",palcolors));
   fclose(fid);
-  palfile = [pltdir "pospal.plt"];
+  palfile = [dir.plt "pospal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pos",palcolors));
   fclose(fid);
-  palfile = [pltdir "negpal.plt"];
+  palfile = [dir.plt "negpal.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("neg",palcolors));
   fclose(fid);
-  palfile = [pltdir "sympalnan.plt"];
+  palfile = [dir.plt "sympalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("pmnan",palcolors));
   fclose(fid);
-  palfile = [pltdir "pospalnan.plt"];
+  palfile = [dir.plt "pospalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("posnan",palcolors));
   fclose(fid);
-  palfile = [pltdir "negpalnan.plt"];
+  palfile = [dir.plt "negpalnan.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("negnan",palcolors));
   fclose(fid);
-  palfile = [pltdir "zissou.plt"];
+  palfile = [dir.plt "zissou.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("zissou",4*palcolors));
   fclose(fid);
-  palfile = [pltdir "circle.plt"];
+  palfile = [dir.plt "circle.plt"];
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("circle",36));
   fclose(fid);
