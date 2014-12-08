@@ -29,10 +29,13 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   %
   timeticfile = [dir.plt abrev "timetics.plt"];
   fid = fopen(timeticfile,"w");
-  fprintf(fid,"set xrange [%f:%f]\n",trange(1),trange(2));
   fprintf(fid,"unset xtics\n");
+  fprintf(fid,"set xtics out nomirror offset 0,xtoff\n")
+  fprintf(fid,"set xzeroaxis ls 2 lw 2 lc rgbcolor 'grey80'\n")
+  fprintf(fid,"set xrange [%f:%f]\n",trange(1),trange(2));
   fprintf(fid,"set xtics .5\n");
-  fprintf(fid,"set mxtics 12");
+  fprintf(fid,"set mxtics 12\n");
+  fprintf(fid,"set xlabel offset 0,xloff\n");
   fclose(fid);
   %
   limitsfile = [dir.plt abrev "limits.plt"];
@@ -61,11 +64,19 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"set style line 7 lc pal frac .375 lw 1\n");
   fprintf(fid,"set style line 8 lc pal frac .875 lw 1\n");
   fprintf(fid,"set style line 9 lc -1 lw 1\n");
+  fprintf(fid,"set label 1 '' at graph 0, graph 1 left front textcolor rgbcolor 'grey30' nopoint offset character 0,character .3\n");
   fprintf(fid,"unset colorbox\n");
+  fprintf(fid,"load termfile\n");
+  fprintf(fid,"load scriptdir.'tlocbloc.plt'\n");
   fprintf(fid,"load timeticfile\n");
   fprintf(fid,"set yrange [-dsim:0]\n");
   fprintf(fid,"dytic = dsim/4.0\n");
+  fprintf(fid,"set ylabel offset yloff,0\n");
+  fprintf(fid,"set xlabel offset 0,xloff\n");
+  fprintf(fid,"set cblabel offset 0,0\n");
   fprintf(fid,"set ytics -dsim+.5*dytic,dytic,-0.5*dytic\n");
+  fprintf(fid,"set ytics out nomirror offset ytoff,0\n");
+  fprintf(fid,"set cbtics offset -ytoff,0\n");
   fprintf(fid,"cbmarks = (palcolors+1)/2\n");
   fprintf(fid,"set palette maxcolors palcolors\n");
   fprintf(fid,"%s",paltext("pmnan"));

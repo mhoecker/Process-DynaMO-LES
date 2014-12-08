@@ -25,7 +25,7 @@ set format y "%g"
 set ytics -3,1,3 mirror
 set ytics add ("0" 0)
 set yrange [-2:2]
-set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
+set label 1 "a"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 1 t "Saline (g{/Symbol b}S(E-P))"

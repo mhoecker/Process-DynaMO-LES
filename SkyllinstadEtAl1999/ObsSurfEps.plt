@@ -24,7 +24,7 @@ set format x ""
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set ylabel "{/Symbol t} (Pa)"
-set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
+set label 1 "a"
 plot \
 datfile binary format=datform u 1:4 ls 1 title "zonal",\
 datfile binary format=datform u 1:5 ls 2 title "meridional"

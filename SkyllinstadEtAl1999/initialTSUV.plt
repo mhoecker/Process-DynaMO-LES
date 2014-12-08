@@ -29,7 +29,7 @@ set autoscale x
 set xtics 1.5
 set x2range [35.1:35.8]
 set x2tics 35.3,.2,35.7
-set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
+set label 1 "a"
 plot \
 datdir.abrev."a.dat" binary format="%f%f%f" u 2:1 w lines axes x1y2 title "T" ls 1,\
 datdir.abrev."a.dat" binary format="%f%f%f" u 3:1 w lines axes x2y2 title "S" ls 2
