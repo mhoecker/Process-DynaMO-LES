@@ -1,7 +1,7 @@
 # given a number of figures calculate spacing for flush plots
 # vertical spacing
-tlocmax = .93
-blocmin = .07
+tlocmax = .92
+blocmin = .08
 tloc(r) = tlocmax-(tlocmax-blocmin)*(r+0.0)/(rows)
 vgap = .04
 bloc(r) = tloc(r+1)+vgap
@@ -25,7 +25,7 @@ if(!exists('cols')) set lmargin at screen llocmin
 #
 # Common label offsets
 yloff = 2
-xloff = 1.25
+xloff = 1
 # How to use
 #set ylabel offset yloff,0
 #set xlabel offset 0,xloff
