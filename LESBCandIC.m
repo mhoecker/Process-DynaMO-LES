@@ -15,8 +15,8 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
  end%if
  if nargin()<3
   %adcpfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc";
-  adcpfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
-  adcpvarnames = ["t";"z";"u";"v"];
+  adcpfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E_1hr_data_3day_filter.nc"
+  adcpvarnames = ["t";"z";"ulp";"vlp"];
   %adcpfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc";
   %adcpvarnames = ["t";"z";"ulp";"vlp"];
  end%if
@@ -28,7 +28,7 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
   maxdepth = 80;
  end%if
  if nargin()<6
-  avgtime = 0.25/24;
+  avgtime = 1.0/24;
  end%if
  if nargin()<7
   order = 5;
@@ -40,13 +40,14 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
   wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
  end%if
  yeardates = wantdates-datenum(2010,12,31)
+ if(length(adcpvarnames)>0)
+  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order,adcpvarnames);
+ else
+  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order);
+ end%if
  #flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime,wavespecHL)
  flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime)
  figure(5)
  TSout = LESinitialTS(TSfile,min(yeardates),outloc,avgtime,maxdepth);
  figure(6)
- if(length(adcpvarnames)>0)
-  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order,adcpvarnames);
- else
-  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order);
 end%function
