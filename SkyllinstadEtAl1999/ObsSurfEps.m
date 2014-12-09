@@ -1,17 +1,6 @@
-function ObsSurfEps(dagnc,chmnc,outdir,trange)
- %function fig1(sfxnc,chmnc,outdir)
+function ObsSurfEps(dagnc,bcascii,outdir,trange)
+ %function fig1(dagnc,bcascii,outdir,trange)
  %
- % 4 plots stacked vertically with a common x-axis (yearday)
- %
- % 1st plot is Wind stress (tau~Pa) as a function of time
- % 2nd plot is Precipitation (P~mm/h) as a function of time
- % 3rd plot is Net Heat flux (J~W/m^2) as a function of time
- % 4th plot is Turbulent dissipation (epsilon~W/kg) as a function of depth (m) and time
- %
- % The simulated time is bracketed by 2 days prior and 1 day after
- % The simulated time is highlighted on the line plots
- % line plots are filled
- % epsilon is plotted on a log10 scale
  abrev = "ObsSurfEps";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs]=plotparam(outdir,abrev);
  if(nargin<4)
@@ -31,8 +20,6 @@ function ObsSurfEps(dagnc,chmnc,outdir,trange)
  g = gsw_grav(0);
  U = cp;
  l = sigH;
- # Extract epsilon profiles
- [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);
  # Plot using octave or Gnuplot
  if(useoctplot==1)
   figure(1)
@@ -57,8 +44,6 @@ function ObsSurfEps(dagnc,chmnc,outdir,trange)
  else
   # Save Flux data
   binarray(tsfx',[Jh,p,stressm,stressz,U,l]',[dirs.dat abrev "JhPrecipTxTyUk.dat"]);
-  # Save epsilon profiles
-  binmatrix(tchm',zchm',epschm',[dirs.dat abrev "d.dat"]);
   if(nargin>3)
    trange
    dtplot = diff(trange);
