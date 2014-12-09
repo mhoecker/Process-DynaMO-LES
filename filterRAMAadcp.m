@@ -1,24 +1,34 @@
-function filterRAMAadcp(filename,fileloc)
-tmpdir   = "/home/mhoecker/tmp/";
-filtersuffix = "_filtered_1hr_3day";
-if nargin()<2
- fileloc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/';
-end%if
-if nargin()<1
- filename = 'uv_RAMA_0N80E';
-endif
+function filterRAMAadcp(filename,fileloc,trange,zrange)
+ tmpdir   = "/home/mhoecker/tmp/";
+ filtersuffix = "_1hr_data_3day_filter";
+ if nargin()<4
+  zrange = [0,-100];
+ end%if
+ if nargin()<3
+  trange = [324,334];
+ end%if
+ if nargin()<2
+  fileloc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/';
+ end%if
+ if nargin()<1
+  filename = 'uv_RAMA_0N80E';
+ endif
 cdffile  = [tmpdir filename filtersuffix ".cdf"];
 ncfile   = [fileloc filename filtersuffix ".nc"];
 nc = netcdf([fileloc filename '.nc'],'r');
 t = nc{'t'}(:);
+tidx = inclusiverange(t,trange);
+t = nc{'t'}(tidx);
 dt = diff(t);
 % depths
 z = nc{'z'}(:);
+zidx = inclusiverange(z,zrange);
+z = nc{'z'}(zidx);
 % velocity data
-u = nc{'u'}(:,:);
-v = nc{'v'}(:,:);
+u = nc{'u'}(tidx,zidx);
+v = nc{'v'}(tidx,zidx);
 % choose days near station
-s = floor(min(t)):1/24:ceil(max(t));
+s = floor(min(trange)):1/24:ceil(max(trange));
 ds = mean(diff(s));
 ulp = zeros(length(s),length(z));
 uhp = zeros(length(s),length(z));
