@@ -49,25 +49,19 @@ datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key t l opaque
+set key b r opaque
 set ytics 10 nomirror offset ytoff,0
 set mytics 2
-set yrange [0:34]
+set yrange [0:27]
 set ylabel "U_s (cm/s)"
 set y2label "{/Symbol l} (m)" offset -yloff,0
 set y2tics out 20
 set my2tics 4
 set y2tics nomirror offset -ytoff,0
-set y2range [0:70]
+set y2range [0:50]
 set format x "%g"
-#
-#set autoscale y
-#set autoscale y2
-#
 set xlabel "2011 UTC yearday" offset 0,xloff
 set label 1 "c"
-#w filledcurves y1=0 fs transparent solid .5 noborder
-#w filledcurves y1=0 fs transparent solid .25 noborder
 plot \
 datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 5 axes x1y1 title "U_s"\
 ,\
