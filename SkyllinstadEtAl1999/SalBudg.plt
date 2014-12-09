@@ -104,7 +104,7 @@ load pltdir."sympal.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
-unset xlabel
+set xlabel ""
 set key left bottom
 set cbrange [sfxmin:sfxmax]
 unset cbtics
@@ -114,8 +114,6 @@ set cblabel "psu mm/s"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "psu m/s"
 set label 1 "a"
-show lab
-show xla
 plot datdir.abrev."ws.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
 unset colorbox
