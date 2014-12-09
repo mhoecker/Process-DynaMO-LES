@@ -1,8 +1,13 @@
-function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,datdir)
- nargin
+function [SPcontour,pc] = richistogram(filename,outdir)
  if(nargin<1)
  filename = "/home/mhoecker/work/Dynamo/output/yellowstone12/dyn1024flxn_s_dag.nc"
  end%if
+ if(nargin<2)
+ outdir = "/home/mhoecker/work/Dynamo/plots/y12/"
+ end%if
+ %
+ abrev = "richistogram";
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev);
  % load gibbs sea water
  findgsw;
  g = gsw_grav(0);
@@ -20,7 +25,7 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,datdir)
  %
  nc = netcdf(filename,'r');
  % dag version file
- t = squeeze(nc{'time'}(:))./3600;
+ t = t0sim+squeeze(nc{'time'}(:))./(24*3600);
  Z = -squeeze(nc{'zzu'}(:));
  U = squeeze(nc{'u_ave'}(:));
  V = squeeze(nc{'v_ave'}(:));
@@ -69,15 +74,14 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,datdir)
  RiSPflat = Ri(SPflatidx);
  phiSPflat = RiSPflat./(.25+abs(RiSPflat));
  %
- abrev = "richistogram";
- binmatrix(frac,Z,Rirank' ,[datdir "Rirank.dat"]);
- binmatrix(frac,Z,phirank',[datdir "phirank.dat"]);
- binmatrix(frac,Z,Ssqrank',[datdir "Ssqrank.dat"]);
- binmatrix(frac,Z,Nsqrank',[datdir "Nsqrank.dat"]);
- binmatrix(frac,Z,SPrank' ,[datdir "SPrank.dat"]);
- binmatrix(frac,Z,SPrank' ,[datdir "RiSPrank.dat"]);
- binmatrix(frac,Z,SPrank' ,[datdir "phiSPrank.dat"]);
- binarray(flatfrac,[SPflat,Ssqflat,Riflat,phiflat,RiSPflat,phiSPflat]',[datdir "flat.dat"]);
+ binmatrix(frac,Z,Rirank' ,[dir.dat "Rirank.dat"]);
+ binmatrix(frac,Z,phirank',[dir.dat "phirank.dat"]);
+ binmatrix(frac,Z,Ssqrank',[dir.dat "Ssqrank.dat"]);
+ binmatrix(frac,Z,Nsqrank',[dir.dat "Nsqrank.dat"]);
+ binmatrix(frac,Z,SPrank' ,[dir.dat "SPrank.dat"]);
+ binmatrix(frac,Z,RiSPrank' ,[dir.dat "RiSPrank.dat"]);
+ binmatrix(frac,Z,phiSPrank' ,[dir.dat "phiSPrank.dat"]);
+ binarray(flatfrac,[SPflat,Ssqflat,Riflat,phiflat,RiSPflat,phiSPflat]',[dir.dat "flat.dat"]);
  % Histograms cutoff
  SPbins = 200;
  NH = floor(Nflat./SPbins);
@@ -106,29 +110,38 @@ function [Z,Rirank,Ssqrank,Nsqrank,frac,phirank] = richistogram(filename,datdir)
   Hphii = Hphii./sum(Hphii);
   Hphi = [Hphi,Hphii];
  end%for
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(datdir,datdir,abrev);
- cntrfile = [datdir "SPcntr.plt"];
+ cntrfile = [dir.plt "SPcntr.plt"];
  fid = fopen(cntrfile,"w");
  fprintf(fid,"set contour base \n");
  fprintf(fid,"unset surface\n");
  fprintf(fid,"unset pm3d\n");
  fprintf(fid,"unset logscale\n");
  fprintf(fid,"set autoscale\n");
- pc = [60,70,80,90,95,99];
- for i=1:length(pc)
-  j = ceil(pc(i)*SPbins/100);
-  fprintf(fid,"set table '%s'\n",[datdir "SPcntr" num2str(pc(i),"%03i") ".dat"]);
-  fprintf(fid,"set cntrparam level discrete %+2.6e\n",SPcutval(j));
-  fprintf(fid,"splot '%s' binary matrix \n",[datdir "SP.dat"]);
- end%for
+ pc = 80;
+ j = ceil(pc*SPbins/100);
+ SPcontour = [dir.dat "SPcntr" num2str(pc,"%03i") ".dat"];
+ fprintf(fid,"set table '%s'\n",SPcontour);
+ fprintf(fid,"set cntrparam level discrete %+2.6e\n",SPcutval(j));
+ fprintf(fid,"splot '%s' binary matrix \n",[dir.dat "SP.dat"]);
  fprintf(fid,"unset contour\n");
  fprintf(fid,"unset table\n");
  fclose(fid);
- binmatrix(t,Z,SP',[datdir "SP.dat"])
- unix(["gnuplot " limitsfile " " datdir "SPcntr.plt"])
- binmatrix(phirange,SPcutoff,Hphi',[datdir "Hphi.dat"]);
- binmatrix(Rirange,SPcutoff,HRi',[datdir "HRi.dat"]);
- binmatrix(LRirange,SPcutoff,HLRi',[datdir "HLRi.dat"]);
- unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"])
+ %
+ % Do some sums of lower percentiel and upper percentile
+ % distributions of Ri and phi
+ %
+ Hphi80p = sum(Hphi(:,j:end),2);
+ Hphi80m = sum(Hphi(:,1:j-1),2);
+ N80 = sum(Hphi80p)+sum(Hphi80m);
+ Hphi80p = Hphi80p./N80;
+ Hphi80m = Hphi80m./N80;
+ plot(phirange,Hphi80p,phirange,Hphi80m)
+ binarray(phirange,[Hphi80p,Hphi80m]',[dir.dat "HphiPM.dat"]);
+ binmatrix(t,Z,SP',[dir.dat "SP.dat"])
+ binmatrix(phirange,SPcutoff,Hphi',[dir.dat "Hphi.dat"]);
+ binmatrix(Rirange,SPcutoff,HRi',[dir.dat "HRi.dat"]);
+ binmatrix(LRirange,SPcutoff,HLRi',[dir.dat "HLRi.dat"]);
+ unix(["gnuplot " limitsfile " " dir.plt "SPcntr.plt"])
+ unix(["gnuplot " limitsfile " " dir.script abrev ".plt"])
 end
 
