@@ -247,6 +247,7 @@ set ylabel "SP percentile"
 set yrange [0:100]
 set cbrange [10**(-3):1]
 set logscale cb 10
+set cblabel "Abundance"
 set format cb "10^{%T}"
 set format y "%g"
 set format x "2^{%+2.0f}"
