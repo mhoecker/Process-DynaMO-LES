@@ -25,7 +25,7 @@ if(!exists('cols')) set lmargin at screen llocmin
 #
 # Common label offsets
 yloff = 2
-xloff = 1
+xloff = 1.25
 # How to use
 #set ylabel offset yloff,0
 #set xlabel offset 0,xloff
