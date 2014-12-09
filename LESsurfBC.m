@@ -71,7 +71,10 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
   fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',tmodel(i),shortw(i),surfac(i),latent(i),precip(i),Taux(i),Tauy(i),wave_length(i),wave_height(i),wave_direct(i))
  end%for
  fclose(outid)
- # plot forcing functions
+ %Save the data as a binary array
+ datarray = [shortw;surfac;latent;precip;Taux;Tauy;wave_length;wave_height;wave_direct];
+ binarray(tmodel,datarray,[outname ".dat"])
+ % plot forcing functions
  figure(1)
  subplot(3,1,1)
  plot(tmodel,shortw,";Net Short Wave Flux (swf_{top});")
