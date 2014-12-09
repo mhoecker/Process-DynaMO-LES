@@ -30,6 +30,7 @@ end%if
    wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
  end%if
  #
+ %
  allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
  #
  #
@@ -54,61 +55,60 @@ end%if
  removeSkyllingstad1999;
 end%function
 
-function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL)
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
+function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ %
+ %% Preliminaries
+ %% Get plot parameters
+ %% parse file names
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs] = plotparam();
  [dagpath,dagname,dagext] = fileparts(dagnc)
- pyflowscript = [scriptdir "tkeflow.py"];
- Nfigs = 10;
- Ncur = 0;
- waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
- Ncur = Ncur+1;
- # Richardson Number Defined by Surface Flux
- #figRi(sfxnc,outdir);
- # Surface and dissipation observations
- ObsSurfEps(dagnc,chmnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
- Ncur = Ncur+1;
- %# Initial Conditions
- initialTSUV(chmnc,adcpnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
- Ncur = Ncur+1;
- # Model Obersvation Comparison
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
- Ncur = Ncur+1;
- # Model Observation Difference
- #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
- Ncur = Ncur+1;
- # Stability Criterion
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
- waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
- Ncur = Ncur+1;
- # Heat flux comparison
- Heatfluxcompare(dagnc,sfxnc,outdir,wavespecHL);
- waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
- Ncur = Ncur+1;
- #Heat Budget
- HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir,wavespecHL);
- waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
- Ncur = Ncur+1;
- # Momentum Budget
- momflux(dagnc,sfxnc,outdir,wavespecHL)
- # Richardson # histogram
- richistogram(dagnc,outdir);
- # Turbulent Kinetic energy Budget plots
- tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- # tke Budget
- # Hourly tke Budget
- dt = 2*3600
+ pyflowscript = [dirs.script "tkeflow.py"];
+ %
+ %% Richardson Number Defined by Surface Flux
+ %
+ %figRi(sfxnc,outdir);
+
+ %% Surface and dissipation observations
+ %
+ %ObsSurfEps(dagnc,chmnc,outdir);
+
+ %% Initial Conditions
+ %
+ %initialTSUV(chmnc,adcpnc,outdir);
+
+ %% Stability Criterion
+ %
+ %NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+
+ %% Heat flux comparison
+
+ %Heatfluxcompare(dagnc,sfxnc,outdir);
+
+ %% Heat Budget
+
+ %HeatBudg(dagnc,outdir);
+
+ %% Salt Budget
+
+ %SalBudg(dagnc,outdir);
+
+ %% Momentum Budget
+
+ %momflux(dagnc,outdir)
+
+ %% Richardson # histogram
+
+ %[SPfile,pcval] = richistogram(dagnc,outdir);
+
+ %% Turbulent Kinetic energy Budget plots
+
+ %tkeBudg(dagnc,outdir,SPfile,pcval);
+
+ % tke Budget
+ % Hourly tke Budget
+ dt = 2*3600;
  imax = ceil(30*3600/dt);
- tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript,wavespecHL);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- #
- close(waithandle);
+ %tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript,wavespecHL);
 end%function
 
 function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript,wavespecHL)
