@@ -19,7 +19,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 15; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
- if((useoctplot==0)&(nargin>0))
+ if((useoctplot==0)&&(nargin>0))
   [gnuplotterm,termsfx] = termselect("pngposter");
   %
   termfile = [dir.plt abrev "term.plt"]
@@ -55,15 +55,15 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"scriptdir = '%s'\n",dir.script);
   fprintf(fid,"termsfx = '%s'\n",termsfx);
   fprintf(fid,"set style data lines\n");
-  fprintf(fid,"set style line 1 lc pal frac 0 lw 1\n");
-  fprintf(fid,"set style line 2 lc pal frac 1 lw 1\n");
-  fprintf(fid,"set style line 3 lc pal frac .25 lw 1\n");
-  fprintf(fid,"set style line 4 lc pal frac .75 lw 1\n");
-  fprintf(fid,"set style line 5 lc pal frac .125 lw 1\n");
-  fprintf(fid,"set style line 6 lc pal frac .625 lw 1\n");
-  fprintf(fid,"set style line 7 lc pal frac .375 lw 1\n");
-  fprintf(fid,"set style line 8 lc pal frac .875 lw 1\n");
-  fprintf(fid,"set style line 9 lc -1 lw 1\n");
+  fprintf(fid,"set style line 1 lt 1 lc pal frac 0 lw 1\n");
+  fprintf(fid,"set style line 2 lt 1 lc pal frac 1 lw 1\n");
+  fprintf(fid,"set style line 3 lt 2 lc pal frac .25 lw 1\n");
+  fprintf(fid,"set style line 4 lt 2 lc pal frac .75 lw 1\n");
+  fprintf(fid,"set style line 5 lt 3 lc pal frac .125 lw 1\n");
+  fprintf(fid,"set style line 6 lt 3 lc pal frac .625 lw 1\n");
+  fprintf(fid,"set style line 7 lt 4 lc pal frac .375 lw 1\n");
+  fprintf(fid,"set style line 8 lt 4 lc pal frac .875 lw 1\n");
+  fprintf(fid,"set style line 9 lt 1 lc -1 lw 1\n");
   fprintf(fid,"set label 1 '' at graph 0, graph 1 left front textcolor rgbcolor 'grey30' nopoint offset character 0,character .3\n");
   fprintf(fid,"unset colorbox\n");
   fprintf(fid,"load termfile\n");
