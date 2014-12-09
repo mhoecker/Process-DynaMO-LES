@@ -132,11 +132,17 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  %
  Hphi80p = sum(Hphi(:,j:end),2);
  Hphi80m = sum(Hphi(:,1:j-1),2);
- N80 = sum(Hphi80p)+sum(Hphi80m);
- Hphi80p = Hphi80p./N80;
- Hphi80m = Hphi80m./N80;
- plot(phirange,Hphi80p,phirange,Hphi80m)
+ Nphi80 = sum(Hphi80p)+sum(Hphi80m);
+ Hphi80p = Hphi80p./Nphi80;
+ Hphi80m = Hphi80m./Nphi80;
  binarray(phirange,[Hphi80p,Hphi80m]',[dir.dat "HphiPM.dat"]);
+ %
+ HLRi80p = sum(HLRi(:,j:end),2);
+ HLRi80m = sum(HLRi(:,1:j-1),2);
+ NLRi80 = sum(HLRi80p)+sum(HLRi80m);
+ HLRi80p = HLRi80p./NLRi80;
+ HLRi80m = HLRi80m./NLRi80;
+ binarray(LRirange,[HLRi80p,HLRi80m]',[dir.dat "HLRiPM.dat"]);
  binmatrix(t,Z,SP',[dir.dat "SP.dat"])
  binmatrix(phirange,SPcutoff,Hphi',[dir.dat "Hphi.dat"]);
  binmatrix(Rirange,SPcutoff,HRi',[dir.dat "HRi.dat"]);
