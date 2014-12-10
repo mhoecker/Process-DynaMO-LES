@@ -1,7 +1,7 @@
 function tkebzavg(zavgnc,outdir)
 # Read vertical average tke budget and plot time sereis
  abrev = "tkebzavg";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  zavg = netcdf(zavgnc,'r');
  t    = t0sim+zavg{"t"}(:)./(60*60*24);
  tke  = squeeze(zavg{"tke"}(:));
@@ -48,8 +48,8 @@ function tkebzavg(zavgnc,outdir)
  src = [St,SP,wb,eps,fil];
  scale = sum(abs(src),2)/2;
  data = [tke,dtke,flx,src];
- binarray(t',data',[outdir "/" abrev ".dat"]);
- binarray(t',abs(data./tke)',[outdir "/tkescale" abrev ".dat"]);
- binarray(t',(data./scale)',[outdir "/scaled" abrev ".dat"]);
- unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+ binarray(t',data',[dir.dat abrev ".dat"]);
+ binarray(t',abs(data./tke)',[dir.dat "tkescale" abrev ".dat"]);
+ binarray(t',(data./scale)',[dir.dat "scaled" abrev ".dat"]);
+ unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
 end%function

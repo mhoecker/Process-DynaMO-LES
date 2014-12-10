@@ -4,9 +4,9 @@ function [outtke,outzavg,outAVG,outAVGdat] = tkeBudget(dagnc,outnc,trange,zrange
 # Total Shear Production
 # Total Buoyancy Production
 # Total Dissipation
-#data = cell array of flattened data to be saved
-#vars = cell array of corresponding variable names
-#fileid = identifier of file to use as cdf file
+# data = cell array of flattened data to be saved
+# vars = cell array of corresponding variable names
+# fileid = identifier of file to use as cdf file
  if(nargin<3)
   [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP,Szdag,fave] = DAGtkeprofiles(dagnc);
  elseif(nargin<4)
@@ -175,7 +175,6 @@ for i=1:Nvar
  fprintf(cdlid,':Function_called = "%s";\n',mfilename);
 
 
- %fclose(cdlid)
  writeCDFdata(cdlid,val,vars);
  %"wrote CDF file"
  unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile]);
