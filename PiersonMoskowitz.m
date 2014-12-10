@@ -18,19 +18,20 @@ if(nargin<1)
  ncclose(sfx)
 elseif(nargin<2)
  wind.U = U;
- wind.t = 1:length(U);
 else
  wind.U = U;
  wind.t = t;
 end
 #
-spectra.t = wind.t;
-spectra.f = .05:.01:1;
-spectra.Sf = zeros(length(spectra.f),length(wind.U));
-spectra.f0 = g./(2*pi*wind.U);
+if(nargin!=1)
+ spectra.t = wind.t;
+ spectra.f = .05:.01:1;
+ spectra.Sf = zeros(length(spectra.f),length(wind.U));
+ spectra.f0 = g./(2*pi*wind.U);
+ wave.t = wind.t;
+end%if
 # Calculate wave charachteristics
 # Following Li & Garrett 1993
-wave.t = wind.t;
 wave.Us = 0.015*wind.U;
 wave.k = 1./(.24 *(wind.U.^2)/g);
 wave.L = 2*pi./wave.k;
@@ -39,10 +40,12 @@ wave.A = sqrt(wave.Us./wave.cp)./wave.k;
 wave.fs = sqrt(g*wave.k)/(2*pi);
 wave.T = 1./wave.fs;
 #
-for i=1:length(wind.U)
- # Calculate peak frequency
- spectra.Sf(:,i) = 2*pi*(alpha*g^2).*exp(-beta*(spectra.f0(i)./spectra.f).^4)./(2*pi*spectra.f).^5;
-end
+ if(nargin!=1)
+  for i=1:length(wind.U)
+   # Calculate peak frequency
+   spectra.Sf(:,i) = 2*pi*(alpha*g^2).*exp(-beta*(spectra.f0(i)./spectra.f).^4)./(2*pi*spectra.f).^5;
+ end%for
+ end%if
 if(nargin<1)
  figure(1)
  [tt,ff] = meshgrid(wind.t,spectra.f);
