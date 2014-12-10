@@ -42,7 +42,7 @@ cbmin = UVmin
 cbmax = UVmax
 load outdir."pospalnan.plt"
 set cbrange [0:cbmax]
-set cbtics cbmin,(cbmax-cbmin),cbmax;set cbtics add ("0" 0)
+set cbtics cbmin,cbmax/2,cbmax;set cbtics add ("0" 0)
 # Observed
 unset colorbox
 set format x ""

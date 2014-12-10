@@ -25,7 +25,7 @@ function ObsSurfEps(sfxnc,chmnc,outdir)
  findgsw;
  g = gsw_grav(0);
  k = g./cp.^2;
- U = cp.*(sigH.*k).^2;
+ U = cp.*(sigH.*k/2).^2;
  l = 2*pi./k;
  # Extract epsilon profiles
  [tchm,zchm,epschm]=ChameleonProfiles(chmnc,trange,zrange);

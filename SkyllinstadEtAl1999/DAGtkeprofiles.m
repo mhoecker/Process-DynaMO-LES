@@ -1,4 +1,4 @@
-function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr,badPTra,Szdag] = DAGtkeprofiles(dagnc,trange,zrange)
+function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr,badPTra,Szdag,fave] = DAGtkeprofiles(dagnc,trange,zrange)
  % Extract diagnostic profiles
  dag      = netcdf(dagnc,'r');
  tdag     = squeeze(dag{'time'}(:));
@@ -40,6 +40,9 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr
  if(length(zidx)>0)
   StDr(:,zidx)=0;
  end%if
+ fave = squeeze(dag{'uf_ave'}(dagtidx,dagzidx,1,1));
+ fave = fave+squeeze(dag{'vf_ave'}(dagtidx,dagzidx,1,1));
+ fave = fave+squeeze(dag{'wf_ave'}(dagtidx,dagzidx,1,1));
  #
  tkePTra  = badPTra+badStDr-StDr;
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));

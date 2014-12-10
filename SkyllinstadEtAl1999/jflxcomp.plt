@@ -27,6 +27,7 @@ set format y "%g"
 set ytics -4,2,2 mirror
 set ytics add ("0" 0)
 set yrange [-6:2]
+set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) t "Saline (g{/Symbol b}S(E-P))"
@@ -39,6 +40,7 @@ row = nextrow(row)
 set ytics 500,500,1000 mirror
 set ytics add ("0" 0)
 set yrange [0:1200]
+set label 1 "b"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) t "Langmuir (Uk{/Symbol t}/{/Symbol r})"
 #
@@ -54,6 +56,7 @@ set ytics add ("0" 0)
 unset colorbox
 #phi(x) = x/(1+abs(x))
 phi(x) = x
+set label 1 "c"
 plot \
 datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 3 lw 2 t " Ho",\
 datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 1 t " Ho_T",\
