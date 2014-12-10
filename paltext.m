@@ -24,31 +24,49 @@ function palette = paltext(paltype,N,clims)
  n = num2str(N,"%i");
  crange = cmax-cmin;
  cmid = num2str(-cmin/(crange));
-
+ rmid = .7;
+ % Define common palette elements
+ palstruct.HSV = "set palette mode HSV\n";
+ %
+ palstruct.RGB = "set palette mode RGB\n";
+ %
+ palstruct.gamma = "a= .75;\n";
+ %
+ palstruct.Ncolors = ["set palette maxcolors " n "\n"];
+ %
+ palstruct.xmid = ["xmid = " cmid "\nz(x) = (x<xmid ? x/xmid:(1-x)/(1-xmid));"];
+ %
+ palstruct.rgbfunctions = "set palette function r(gray),g(gray),b(gray)\n";
+ %
+ palstruct.r = [palstruct.xmid palstruct.gamma "rb(x,rmid,zval)=(x>xmid ? 1-rmid+rmid*z(x)**a:(x<xmid ? rmid*z(x)**a : zval))\n"];
+ %
+ palstruct.g = [palstruct.xmid "G(x,rmid)=(x==xmid ? rmid:z(x)**a)\n"];
+ %
  % Define all the possible palettes
- palstruct.hue = ["set palette mode HSV\nset palette functions (gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\nset palette maxcolors " n "\n"];
  %
- palstruct.euh = ["set palette mode HSV\nset palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\nset palette maxcolors " n "\n"];
+ palstruct.hue = [ palstruct.HSV "set palette functions (gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n" palstruct.Ncolors];
  %
- palstruct.pmnan = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>xmid ?  .3+.7*(1-x)/(1-xmid) : .75*x/xmid)\nb(x) = (x<xmid ? .3+.7*x/xmid : .75*(1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : .75))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
+ palstruct.euh = [palstruct.HSV "set palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n" palstruct.Ncolors];
  %
- palstruct.pm = ["set palette mode RGB\nxmid = " cmid "\nr(x) = (x>=xmid ?  .3+.7*(1-x)/(1-xmid) : x/xmid)\nb(x) = (x<=xmid ? .3+.7*x/xmid : (1-x)/(1-xmid))\ng(x) = (x>xmid ? (1-x)/(1-xmid) : (x<xmid ? x/xmid : 1))\nset palette function r(gray),g(gray),b(gray)\nset palette maxcolors " n "\n"];
+ palstruct.pmnan = [ palstruct.RGB palstruct.r palstruct.g "r(x) = rb(x," num2str(rmid) "," num2str(rmid) ")\n" "b(x) = r(1-x)\n" "g(x) = G(x," num2str(rmid) ")\n" palstruct.rgbfunctions palstruct.Ncolors];
  %
- palstruct.posnan = ["set palette mode RGB\nset palette function 1-.7*gray,(1-gray),.7-.7*gray\nset palette maxcolors " n "\n"];
+ palstruct.pm = [  palstruct.RGB  palstruct.r  palstruct.g "r(x) = rb(x," num2str(rmid) ",1)\n" "b(x) = r(1-x)\n" "g(x) = G(x,1)\n"  palstruct.rgbfunctions  palstruct.Ncolors ];
  %
- palstruct.negnan = ["set palette mode RGB\nset palette function .7-.7*gray,(1-gray),1-.7*gray\nset palette maxcolors " n "\n"];
+ palstruct.posnan = [  palstruct.RGB palstruct.gamma "set palette function " num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a,(1-gray)**a," num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
  %
- palstruct.pos = ["set palette mode RGB\nset palette function 1-.7*gray,(1-gray),1-gray\nset palette maxcolors " n "\n"];
+ palstruct.negnan = [  palstruct.RGB palstruct.gamma "set palette function " num2str(rmid) "*(1-gray)**a,(1-gray)**a," num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
  %
- palstruct.neg = ["set palette mode RGB\nset palette function 1-gray,(1-gray),1-.7*gray\nset palette maxcolors " n "\n"];
+ palstruct.pos = [  palstruct.RGB palstruct.gamma "set palette function " num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a,(1-gray)**a,(1-gray)**a\n"  palstruct.Ncolors ];
  %
- palstruct.zissou = ["set palette mode RGB\nset palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\nset palette maxcolors " n "\n"];
+ palstruct.neg = [  palstruct.RGB palstruct.gamma "set palette function (1-gray)**a,(1-gray)**a," num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
  %
- palstruct.zissoublocks = ["set palette mode RGB\nset palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\nset palette maxcolors 5\n"];
+ palstruct.zissou = [  palstruct.RGB  "set palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\n"  palstruct.Ncolors ];
  %
- palstruct.circle = ["set palette mode HSV\nset palette function .3+.3*sgn(sin(2*pi*gray+pi/2)),(.5-.5*cos(4*pi*gray+pi))**.5,.3+.7*(.5-.5*cos(2*pi*gray+pi/2))**.5\nset palette maxcolors " n "\n"];
+ palstruct.zissoublocks = [  palstruct.RGB  "set palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\n"  "set palette maxcolors 5\n" ];
  %
- palstruct.other = ["set palette grey\nset palette maxcolors " n "\n"];
+ palstruct.circle = [  palstruct.HSV  "set palette function .3+.3*sgn(sin(2*pi*gray+pi/2)),(.5-.5*cos(4*pi*gray+pi))**.5,.3+.7*(.5-.5*cos(2*pi*gray+pi/2))**.5\n"  palstruct.Ncolors ];
+ %
+ palstruct.other = [  "set palette grey\n"  palstruct.Ncolors ];
  %
  switch paltype
   case {"rainbow" "hue"}
