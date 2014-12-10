@@ -9,7 +9,7 @@
 load termfile
 Tmin = 28.3
 Tmax = 30.10
-set output outdir.abrev."T".termsfx
+set output pngdir.abrev."T".termsfx
 #
 # Setup spacing
 rows = 3
@@ -37,16 +37,18 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_
 #
 # Profile Observations
 #
-load limfile
-load scriptdir."tlocbloc.plt"
+#load limfile
+#load scriptdir."tlocbloc.plt"
 set key inside b l opaque
 set format y "%g"
 set ylabel "Z (m)"
+set ytics -70,20,10
+set yrange [-dsim:0]
 # Temperature
 set cblabel "T (^oC)" offset -yloff/2
 cbmin = Tmin
 cbmax = Tmax
-load outdir."pospalnan.plt"
+load pltdir."pospalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set format cb cbform

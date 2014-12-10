@@ -1,7 +1,7 @@
 UVmin = -0.9
 UVmax = +0.9
 cbform = "%+04.2f"
-set output outdir.abrev."UVwSurf".termsfx
+set output pngdir.abrev."UVwSurf".termsfx
 #
 # Setup spacing
 rows = 3
@@ -32,14 +32,15 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y1 title "{
 #
 set key b l opaque
 set ylabel "Z (m)"
+set ytics -70,20,10
+set yrange [-dsim:0]
 set format y "%g"
 # U Velocity
 set format cb cbform
 set cblabel "u (m/s)" offset -yloff/2
 cbmin = UVmin
 cbmax = UVmax
-load limfile
-load outdir."pospalnan.plt"
+load pltdir."pospalnan.plt"
 set cbrange [0:cbmax]
 set cbtics cbmin,cbmax/2,cbmax;set cbtics add ("0" 0)
 # Observed

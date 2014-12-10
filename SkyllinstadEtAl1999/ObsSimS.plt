@@ -7,7 +7,7 @@
 Smin = 35.00
 Smax = 35.5
 load termfile
-set output outdir.abrev."S".termsfx
+set output pngdir.abrev."S".termsfx
 #
 # Setup spacing
 rows = 3
@@ -36,13 +36,13 @@ plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbco
 #
 # Profile Observations
 #
-load limfile
-load scriptdir."tlocbloc.plt"
 set key l b opaque
 set format y "%g"
 set ylabel "Z (m)"
+set ytics -70,20,10
+set yrange [-dsim:0]
 # Salinity
-load outdir."negpalnan.plt"
+load pltdir."negpalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax

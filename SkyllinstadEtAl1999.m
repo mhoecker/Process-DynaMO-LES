@@ -54,6 +54,10 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
  %
  initialTSUV(chmnc,adcpnc,outdir);
 
+ %
+ %
+ ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
+
  %% Stability Criterion
  %
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);

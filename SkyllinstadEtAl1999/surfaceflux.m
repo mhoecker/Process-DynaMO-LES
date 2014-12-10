@@ -1,6 +1,6 @@
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxnc,trange,wavespecHL)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxnc,trange)
  % Extract Flux data
- field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
+ field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH";"U10"];
  field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"];
  % Some other things to extract
  % "Precip";
@@ -13,13 +13,18 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  sst = sfx.SST;
  SalTSG = sfx.SalTSG;
  SolarNet = sfx.Solarup+sfx.Solardn;
- % Get wave charachterisics
- load(wavespecHL)
- avgtime = 0.25/24;
+ %% Get wave charachterisics
+ %load(wavespecHL)
+ %avgtime = 0.25/24;
  % wave_height = meanfil(Hs,tHL,tsfx,avgtime);
  % wave_length = meanfil(Lam,tHL,tsfx,avgtime);
- sigH = interp1(tHL,Hs,tsfx);
- wave_length = interp1(tHL,Lam,tsfx);
+ %sigH = interp1(tHL,Hs,tsfx);
+ %wave_length = interp1(tHL,Lam,tsfx);
+ PMwaves = PiersonMoskowitz(sfx.U10);
+ wave_height = 2*PMwaves.A;
+ wave_length = PMwaves.L;
+ clear PMwaves
+ %
  % Honikker numbers
  % Requires some thermodynamic constants
  findgsw;
@@ -40,7 +45,7 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  omega = sqrt(g.*k);
  cp = omega./k;
  % Calculate Stokes drift velocity
- St = omega.*k.*((sigH./2).^2);
+ St = omega.*k.*((wave_height./2).^2);
  % Calculate u*
  ustarsq = stress./rho;
  % Calculate evaporation rate
