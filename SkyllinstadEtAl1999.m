@@ -48,39 +48,39 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Surface and dissipation observations
  %
- %ObsSurfEps(dagnc,chmnc,outdir);
+ ObsSurfEps(dagnc,chmnc,outdir);
 
  %% Initial Conditions
  %
- %initialTSUV(chmnc,adcpnc,outdir);
+ initialTSUV(chmnc,adcpnc,outdir);
 
  %% Stability Criterion
  %
- %NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
 
  %% Heat flux comparison
 
- %Heatfluxcompare(dagnc,sfxnc,outdir);
+ Heatfluxcompare(dagnc,sfxnc,outdir);
 
  %% Heat Budget
 
- %HeatBudg(dagnc,outdir);
+ HeatBudg(dagnc,outdir);
 
  %% Salt Budget
 
- %SalBudg(dagnc,outdir);
+ SalBudg(dagnc,outdir);
 
  %% Momentum Budget
 
- %momflux(dagnc,outdir)
+ momflux(dagnc,outdir)
 
  %% Richardson # histogram
 
- %[SPfile,pcval] = richistogram(dagnc,outdir);
+ [SPfile,pcval] = richistogram(dagnc,outdir);
 
  %% Turbulent Kinetic energy Budget plots
 
- %tkeBudg(dagnc,outdir,SPfile,pcval);
+ tkeBudg(dagnc,outdir,SPfile,pcval);
 
  %% Hourly tke Budget
  dt = 2*3600;
