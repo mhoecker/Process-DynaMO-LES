@@ -4,7 +4,7 @@ function testpaltext(dir,N)
   dir="/home/mhoecker/tmp/"
  end%if
  if nargin<2
-  N=21;
+  N=31;
  end%if
  paltypes = {"hue","euh","pos","neg","negnan","posnan","pm","pmnan","circle","zissou","zissoublocks","grey"};
  types = length(paltypes);
