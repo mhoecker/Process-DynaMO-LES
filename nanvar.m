@@ -5,9 +5,11 @@ function thevar = nanvar(hasnan,dim)
  nonan = hasnan;
  Ntot = size(hasnan)(dim);
  Nnan = sum(isnan(hasnan),dim);
- if(Nnan>0)
-  nonan(find(isnan(hasnan))) = themean ;
- end%if
- themean = nanmean(hasnan,dim);
- thevar = sum((nonan-themean).^2,dim)./(Ntot-Nnan-1);
+ [themean,idxnan] = nanmean(hasnan,dim);
+ nonan(idxnan) = themean;
+ diffsq = (nonan-themean).^2;
+ thevar = sum(diffsq,dim)./(Ntot-Nnan)
+ diffsq = diffsq.-thevar;
+ diffsq(idxnan) = 0;
+ thevar = thevar+sum(diffsq,dim)./(Ntot-Nnan-1)
 end%function
