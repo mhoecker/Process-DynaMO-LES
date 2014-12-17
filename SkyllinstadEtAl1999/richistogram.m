@@ -117,7 +117,7 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  fprintf(fid,"unset pm3d\n");
  fprintf(fid,"unset logscale\n");
  fprintf(fid,"set autoscale\n");
- pc = 80;
+ pc = 75;
  j = ceil(pc*SPbins/100);
  SPcontour = [dir.dat "SPcntr" num2str(pc,"%03i") ".dat"];
  fprintf(fid,"set table '%s'\n",SPcontour);
@@ -148,6 +148,8 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  binmatrix(Rirange,SPcutoff,HRi',[dir.dat "HRi.dat"]);
  binmatrix(LRirange,SPcutoff,HLRi',[dir.dat "HLRi.dat"]);
  unix(["gnuplot " limitsfile " " dir.plt "SPcntr.plt"])
+ SPpcval = ['SPpc = ' num2str(pc) '\n'];
+ unix(['echo "' SPpcval '">>' limitsfile]);
  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"])
 end
 

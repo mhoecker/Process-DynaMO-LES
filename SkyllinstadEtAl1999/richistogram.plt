@@ -187,8 +187,8 @@ set xtics out nomirror
 set xtics ("" -1, "" -.5, "" 0, "" .5, "" 1)
 set xrange [0:1]
 unset colorbox
-plot datdir.'HphiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">80%",\
-datdir.'HphiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<80%"
+plot datdir.'HphiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">".SPpc."%",\
+datdir.'HphiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<".SPpc."%"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -235,8 +235,8 @@ set xtics 2
 set xrange [-5:7]
 set format x ""
 unset colorbox
-plot datdir.'HLRiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">80%",\
-datdir.'HLRiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<80%"
+plot datdir.'HLRiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">".SPpc."%",\
+datdir.'HLRiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<".SPpc."%"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -254,6 +254,6 @@ set format x "2^{%+2.0f}"
 set xtics add ("1" 0)
 set xlabel "Ri\nWhere\nIs\This\nlabel?"
 set colorbox
-plot datdir."HLRi.dat" binary matrix u 1:(100*$2):3 w image
+plot datdir."HLRi.dat" binary matrix u 1:(100*$2):3 w image, SPpc lc 0
 unset multiplot
 unset logscale

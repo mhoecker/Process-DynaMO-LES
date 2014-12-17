@@ -25,7 +25,7 @@ set key t r
 set yrange [-.1:.9]
 set ytics mirror -0,.4,.8 offset ytoff,0
 set ylabel "{/Symbol t} (Pa)" offset yloff,0
-set label 1 "a" at graph 0, 1 left front textcolor rgbcolor "grey30" nopoint offset character 0, .3
+set label 1 "a"
 plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:4 axes x1y1 title "{/Symbol t}_x" lc rgbcolor "black"
 #
 # Profile Observations

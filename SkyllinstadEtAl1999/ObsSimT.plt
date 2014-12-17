@@ -7,7 +7,7 @@
 #  Modeled Sainity
 #
 load termfile
-Tmin = 28.3
+Tmin = 27.70
 Tmax = 30.10
 set output pngdir.abrev."T".termsfx
 #
@@ -32,7 +32,7 @@ set autoscale y
 set key l t
 set ylabel "J_h (kW/m^2)" offset yloff,0
 set ytics mirror -1,.5,1 offset ytoff,0
-set label 1 "a" at graph 0, 1 left front textcolor rgbcolor "grey30" nopoint offset character 0, .3
+set label 1 "a"
 plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_h" lc rgbcolor "black"
 #
 # Profile Observations

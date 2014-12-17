@@ -20,7 +20,7 @@ Ftkemax = +10e-7
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
 set xrange[t0sim:tfsim]
-set yrange [-40:0]
+set yrange [-dplt:0]
 #
 # Set common color bar for production/dissipation
 set cbrange [dtkemin:dtkemax]
@@ -90,7 +90,7 @@ set multiplot title "Kinetic Energy Density/Transport"
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 # Truncated depth range
-set yrange [-40:0]
+set yrange [-dplt:0]
 #
 # Plot tke
 set ylabel "tke"

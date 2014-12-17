@@ -7,8 +7,6 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  abrev1 = "ObsSimTS";
  abrev2 = "ObsSimUV";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
- MLdrho = 0.1;
- MLtext = ["MLtext = ' {/Symbol Dr}=" num2str(1000*MLdrho,"%3.0f") " g/m^3'"];
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
@@ -23,14 +21,15 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Pchm = gsw_p_from_z(zchm,0);
  Schm = gsw_SP_from_SA(Schm,Pchm,80.5,0);
  % Calculate Mixed Layer Depth
- [MLDchm,MLIchm,drhochm,rhochm]=getMLD(Schm,Tchm,zchm,MLdrho);
+ [MLDchm,MLIchm,drhochm,rhochm,drho]=getMLD(Schm,Tchm,zchm);
+ MLtext = ["MLtext = ' {/Symbol Dr}=" num2str(1000*drho,"%3.0f") " g/m^3'"];
  # extract ADCP data
  [tadcp,zadcp,ulpadcp,vlpadcp]=ADCPprofiles(adcpnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  % Calculate Mixed Layer Depth
- [MLD,MLI,drho,rho]=getMLD(Savgdag,Tavgdag,zdag,MLdrho);
+ [MLD,MLI,drho,rho]=getMLD(Savgdag,Tavgdag,zdag,drho);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  if(useoctplot==1)
@@ -77,18 +76,22 @@ function  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir 'fig3.png'],'-dpng')
  else
   # Save T,S profiles
-  binmatrix(tchm',zchm',Tchm',[dir.dat abrev "To.dat"]);# was c
-  binmatrix(tchm',zchm',Schm',[dir.dat abrev "So.dat"]);#was e
+  binmatrix(tchm',zchm',Tchm',[dir.dat abrev "To.dat"]);#
+  binmatrix(tchm',zchm',Schm',[dir.dat abrev "So.dat"]);#
+  binmatrix(tchm',zchm',rhochm',[dir.dat abrev "rhoo.dat"]);#
+  binmatrix(tchm',zchm',drhochm',[dir.dat abrev "drhoo.dat"]);#
   # save U,V profiles
-  binmatrix(tadcp',zadcp',ulpadcp',[dir.dat abrev "Uo.dat"]);#was g
-  binmatrix(tadcp',zadcp',vlpadcp',[dir.dat abrev "Vo.dat"]);#was i
+  binmatrix(tadcp',zadcp',ulpadcp',[dir.dat abrev "Uo.dat"]);#
+  binmatrix(tadcp',zadcp',vlpadcp',[dir.dat abrev "Vo.dat"]);#
   # Save surface flux profiles
-  binarray(tsfx',[Jh,p,stressm,stressz]',[dir.dat abrev "JPtau.dat"]);#was ab
+  binarray(tsfx',[Jh,p,stressm,stressz]',[dir.dat abrev "JPtau.dat"]);#
   # save Simulated profiles
-  binmatrix(tdag',zdag',Tavgdag',[dir.dat abrev "Ts.dat"]);#was d
-  binmatrix(tdag',zdag',Savgdag',[dir.dat abrev "Ss.dat"]);#was f
-  binmatrix(tdag',zdag',uavgdag',[dir.dat abrev "Us.dat"]);#was h
-  binmatrix(tdag',zdag',vavgdag',[dir.dat abrev "Vs.dat"]);#was j
+  binmatrix(tdag',zdag',Tavgdag',[dir.dat abrev "Ts.dat"]);#
+  binmatrix(tdag',zdag',Savgdag',[dir.dat abrev "Ss.dat"]);#
+  binmatrix(tdag',zdag',rho',[dir.dat abrev "rhos.dat"]);#
+  binmatrix(tdag',zdag',drho',[dir.dat abrev "drhos.dat"]);#
+  binmatrix(tdag',zdag',uavgdag',[dir.dat abrev "Us.dat"]);#
+  binmatrix(tdag',zdag',vavgdag',[dir.dat abrev "Vs.dat"]);#
   # Mixed Layer Depths
   unix(['echo "' MLtext '">>' limitsfile]);
   binarray(tdag',[MLD]',[dir.dat abrev "ML.dat"]);
