@@ -16,6 +16,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 80; % Maximum simulation depth
+ dplt = 50; % Maximum depth of plots
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 15; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
@@ -46,6 +47,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"t0sim=%f\n",t0sim+.25);
   fprintf(fid,"tfsim=%f\n",tfsim);
   fprintf(fid,"dsim=%f\n",dsim);
+  fprintf(fid,"dplt=%f\n",dplt);
   fprintf(fid,"palcolors=%f\n",palcolors);
   fprintf(fid,"abrev = '%s'\n",abrev);
   fprintf(fid,"outdir = '%s'\n",outdir);
@@ -64,13 +66,13 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"set style line 7 lt 4 lc pal frac .375 lw 1\n");
   fprintf(fid,"set style line 8 lt 4 lc pal frac .875 lw 1\n");
   fprintf(fid,"set style line 9 lt 1 lc -1 lw 1\n");
-  fprintf(fid,"set label 1 '' at graph 0, graph 1 left front textcolor rgbcolor 'grey30' nopoint offset character 0,character .3\n");
+  fprintf(fid,"set label 1 '' at graph 0, graph 1  left front textcolor rgbcolor 'grey30' nopoint offset character 0,character .45\n");
   fprintf(fid,"unset colorbox\n");
   fprintf(fid,"load termfile\n");
   fprintf(fid,"load scriptdir.'tlocbloc.plt'\n");
   fprintf(fid,"load timeticfile\n");
-  fprintf(fid,"set yrange [-dsim:0]\n");
-  fprintf(fid,"dytic = dsim/4.0\n");
+  fprintf(fid,"set yrange [-dplt:0]\n");
+  fprintf(fid,"dytic = dplt/2.5\n");
   fprintf(fid,"set ylabel offset yloff,0\n");
   fprintf(fid,"set xlabel offset 0,xloff\n");
   fprintf(fid,"set cblabel offset 0,0\n");

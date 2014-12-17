@@ -24,47 +24,63 @@ function palette = paltext(paltype,N,clims)
  n = num2str(N,"%i");
  crange = cmax-cmin;
  cmid = num2str(-cmin/(crange));
- rmid = .7;
  % Define common palette elements
- palstruct.HSV = "set palette mode HSV\n";
  %
- palstruct.RGB = "set palette mode RGB\n";
+ palstruct.rvals = "rmin=0.5\nrrng=1-rmin\n";
  %
- palstruct.gamma = "a=0.875;\n";
+ palstruct.gamma = [palstruct.rvals "a=1\n"];
  %
  palstruct.Ncolors = ["set palette maxcolors " n "\n"];
  %
- palstruct.xmid = ["xmid = " cmid "\nz(x) = (x<xmid ? x/xmid:(1-x)/(1-xmid));"];
+ palstruct.HSV = [palstruct.gamma  palstruct.Ncolors "set palette mode HSV\n"];
  %
- palstruct.rgbfunctions = "set palette function r(gray),g(gray),b(gray)\n";
+ palstruct.RGB = [palstruct.gamma  palstruct.Ncolors "set palette mode RGB\n"];
  %
- palstruct.r = [palstruct.xmid palstruct.gamma "rb(x,rmid,zval)=(x>xmid ? 1-rmid+rmid*z(x)**a:(x<xmid ? rmid*z(x)**a : zval))\n"];
+ palstruct.xmid = ["xm = " cmid "\nz(x) = (x<xm ? x/xm:(1-x)/(1-xm));"];
  %
- palstruct.g = [palstruct.xmid "G(x,rmid)=(x==xmid ? rmid:z(x)**a)\n"];
+ palstruct.xmax = ["xm = 1\nz(x) = (1-x)\n"];
+ %
+ palstruct.xmin = ["xm = 0\nz(x) = x\n"];
+ %
+ palstruct.white = ["zval = 1.0\n"];
+ %
+ palstruct.gray  = ["zval = 0.8\n"];
+ %
+ palstruct.r = [ ];
+ %
+ palstruct.g = [];
+ %
+ palstruct.rgbfunctions = [palstruct.RGB "set palette function r(gray),g(gray),b(gray)\n" palstruct.Ncolors];
+ %
+ palstruct.posfunctions = [palstruct.xmax "r(x)=(x==0 ? zval:rmin+rrng*z(x)**a)\n" "g(x)=(x==0 ? zval:(rrng+rmin)*z(x)**a)\n" "b(x)=(x==0 ? zval:rrng*z(x)**a)\n" palstruct.rgbfunctions];
+ %
+ palstruct.negfunctions = [palstruct.xmax "b(x)=(x==0 ? zval:rmin+rrng*z(x)**a)\n" "g(x)=(x==0 ? zval:(rrng+rmin)*z(x)**a)\n" "r(x)=(x==0 ? zval:rrng*z(x)**a)\n" palstruct.rgbfunctions];
+ %
+ palstruct.pmfunctions = [palstruct.xmid "r(x)=(x>xm ? rmin+rrng*z(x)**a:(x<xm ? rrng*z(x)**a: zval))\n" "g(x)=(x==xm ? zval:(rrng+rmin)*z(x)**a)\n" "b(x)=r(1-x)\n" palstruct.rgbfunctions];
  %
  % Define all the possible palettes
  %
- palstruct.hue = [ palstruct.HSV "set palette functions (gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n" palstruct.Ncolors];
+ palstruct.hue = [ palstruct.HSV "set palette functions (gray)*.9,rmin+rrng*(1-gray)**.5,rmin+rrng*gray**.5\n" ];
  %
- palstruct.euh = [palstruct.HSV "set palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n" palstruct.Ncolors];
+ palstruct.euh = [palstruct.HSV "set palette function (1-gray)*.9,.25+.75*(1-gray)**.5,.25+.75*gray**.5\n"];
  %
- palstruct.pmnan = [ palstruct.RGB palstruct.r palstruct.g "r(x) = rb(x," num2str(rmid) "," num2str(rmid) ")\n" "b(x) = r(1-x)\n" "g(x) = G(x," num2str(rmid) ")\n" palstruct.rgbfunctions palstruct.Ncolors];
+ palstruct.pmnan = [ palstruct.gray palstruct.pmfunctions];
  %
- palstruct.pm = [  palstruct.RGB  palstruct.r  palstruct.g "r(x) = rb(x," num2str(rmid) ",1)\n" "b(x) = r(1-x)\n" "g(x) = G(x,1)\n"  palstruct.rgbfunctions  palstruct.Ncolors ];
+ palstruct.pm =    [ palstruct.white palstruct.pmfunctions];
  %
- palstruct.posnan = [  palstruct.RGB palstruct.gamma "set palette function " num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a,(1-gray)**a," num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
+ palstruct.posnan = [ palstruct.gray palstruct.posfunctions];
  %
- palstruct.negnan = [  palstruct.RGB palstruct.gamma "set palette function " num2str(rmid) "*(1-gray)**a,(1-gray)**a," num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
+ palstruct.negnan = [ palstruct.gray palstruct.negfunctions];
  %
- palstruct.pos = [  palstruct.RGB palstruct.gamma "set palette function " num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a,(1-gray)**a,(1-gray)**a\n"  palstruct.Ncolors ];
+ palstruct.pos = [ palstruct.white palstruct.posfunctions];
  %
- palstruct.neg = [  palstruct.RGB palstruct.gamma "set palette function (1-gray)**a,(1-gray)**a," num2str(1-rmid) "+" num2str(rmid) "*(1-gray)**a\n"  palstruct.Ncolors ];
+ palstruct.neg = [ palstruct.white palstruct.negfunctions];
  %
  palstruct.zissou = [  palstruct.RGB  "set palette defined (0 '#3B9AB2', .25 '#78B7C5', .5 '#EBCC2A', .75 '#E1AF00', 1 '#F21A00')\n"  palstruct.Ncolors ];
  %
  palstruct.zissoublocks = [  palstruct.RGB  "set palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\n"  "set palette maxcolors 5\n" ];
  %
- palstruct.circle = [palstruct.RGB "g(x) = .125+.75*(x<.25 ? 2*(x+.25) : (x<.75 ? 2*(.75-x) : 2*(x-.75)  ))\n r(x) = .125+.75*(x<.25 ? 2*(x+.25) : (x<.5 ? 1 : (x<.75 ? 4*(.75-x) : 2*(x-.75) ) ) )\n b(x) = .125+.75*(x<.25 ? 1 : (x<.75 ? 2*(.75-x) : 4*(x-.75) ) )\n" palstruct.rgbfunctions palstruct.Ncolors ];
+ palstruct.circle = [palstruct.RGB "g(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.75 ? 2*(.75-x) : 2*(x-.75)  ))\n r(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.5 ? 1 : (x<.75 ? 4*(.75-x) : 2*(x-.75) ) ) )\n b(x) = .5*rmin+rrng*(x<.25 ? 1 : (x<.75 ? 2*(.75-x) : 4*(x-.75) ) )\n" palstruct.rgbfunctions palstruct.Ncolors ];
  %
  palstruct.other = ["set palette grey\n"  palstruct.Ncolors ];
  %

@@ -29,7 +29,7 @@ function [termtxt,termsfx] = termselect(termtype,font)
 			termsfx = '.eps';
 		case 'pngposter'
 			# if blown up to 12inx12in creates a 96 pixel/in image
-			termtxt = ['pngcairo enhanced dashed truecolor size 1280,1152 nocrop ' font '36" linewidth 3'];
+			termtxt = ['pngcairo enhanced dashed truecolor size 1280,1152 nocrop ' font '36" linewidth 4'];
 			termsfx = '.png';
 		case 'epsarticle'
 			termtxt = ['postscript eps enhanced color size 9in,6in ' font '12" blacktext dashed linewidth 2'];
