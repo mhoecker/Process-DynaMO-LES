@@ -59,13 +59,11 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"set style data lines\n");
   fprintf(fid,"set style line 1 lt 1 lc pal frac 0 lw 1\n");
   fprintf(fid,"set style line 2 lt 1 lc pal frac 1 lw 1\n");
-  fprintf(fid,"set style line 3 lt 2 lc pal frac .25 lw 1\n");
-  fprintf(fid,"set style line 4 lt 2 lc pal frac .75 lw 1\n");
-  fprintf(fid,"set style line 5 lt 3 lc pal frac .125 lw 1\n");
-  fprintf(fid,"set style line 6 lt 3 lc pal frac .625 lw 1\n");
-  fprintf(fid,"set style line 7 lt 4 lc pal frac .375 lw 1\n");
-  fprintf(fid,"set style line 8 lt 4 lc pal frac .875 lw 1\n");
-  fprintf(fid,"set style line 9 lt 1 lc -1 lw 1\n");
+  fprintf(fid,"set style line 3 lt 2 lc pal frac .33 lw 1\n");
+  fprintf(fid,"set style line 4 lt 2 lc pal frac .66 lw 1\n");
+  fprintf(fid,"set style line 5 lt 3 lc pal frac .16 lw 1\n");
+  fprintf(fid,"set style line 6 lt 3 lc pal frac .83 lw 1\n");
+  fprintf(fid,"set style line 7 lt 4 lc -1 lw 1\n");
   fprintf(fid,"set label 1 '' at graph 0, graph 1  left front textcolor rgbcolor 'grey30' nopoint offset character 0,character .45\n");
   fprintf(fid,"unset colorbox\n");
   fprintf(fid,"load termfile\n");
