@@ -1,4 +1,4 @@
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagnc,bcdat,trange)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx,netp] = DAGsfcflux(dagnc,bcdat,trange)
  % this function replaces surfaceflux in post processing of model runs
  % it pulls values from the dag file instead of from surface observations
  % Get surface values from sea surface teperature and salinity
@@ -39,9 +39,10 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  sigH = flxvars.wave_l;
  %
  e = -flxvars.lhf_top./(rho.*LH);
+ netp = p-e;
  LaBflx = flxvars.S_0.*(2*pi./flxvars.wave_l).*stress./rho;
  JhBflx = alpha.*g.*Jh./(Cp.*rho);
- SaBflx = -beta.*g.*SalTSG.*(e-SalTSG.*p*(1e-3)/3600);
+ SaBflx = -beta.*g.*SalTSG.*(e-p*(1e-3)/3600);
  % Calculate Thermal and Saline Honikker #s
  HoT = JhBflx./LaBflx;
  HoS = SaBflx./LaBflx;

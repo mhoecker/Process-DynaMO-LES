@@ -8,7 +8,7 @@ function ObsSurfEps(dagnc,bcdat,outdir,trange)
  end%if
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx,netp] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  tsfx=t0sim+tsfx./(24*3600);
  # Decomplse Stress into components
  %stressm = -stress.*sin(wdir*pi/180);
@@ -43,7 +43,7 @@ function ObsSurfEps(dagnc,bcdat,outdir,trange)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',cstrcat(dirs.dat,abrev,"JhPrecipTxTyUk.dat"));
+  binarray(tsfx',[Jh,netp,stressm,stressz,U,l]',cstrcat(dirs.dat,abrev,"JhPrecipTxTyUk.dat"));
   if(nargin>3)
    trange
    dtplot = diff(trange);

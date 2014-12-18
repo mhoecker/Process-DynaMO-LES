@@ -44,7 +44,7 @@ set label 1 "b"
 plot \
 datfile binary format=datform u 1:($2*.001) ls 3 title "J_h" \
 ,\
-datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P"\
+datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P-E"\
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
