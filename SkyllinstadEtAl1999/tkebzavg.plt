@@ -10,7 +10,7 @@ col = 0
 load scriptdir."tlocbloc.plt"
 dtke = 2e-6
 dtketic  = 2e-6
-set yrange [-1.2*dtketic:1.7*dtketic]
+set yrange [-1.1*dtketic:1.5*dtketic]
 set ytics dtketic
 #set autoscale y
 set y2label "W/kg"
@@ -40,7 +40,7 @@ col = 0
 load scriptdir."tlocbloc.plt"
 set multiplot title "Spatial mean of tke sources/sinks"
 set ytics dtketic
-set yrange [-1.2*dtketic:1.7*dtketic]
+set yrange [-1.1*dtketic:1.5*dtketic]
 set xtics format ""
 set xtics format "%g"
 #
