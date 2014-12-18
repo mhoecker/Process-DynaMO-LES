@@ -1,11 +1,11 @@
-function HeatBudg(dagnc,outdir)
+function HeatBudg(dagnc,bcfile,outdir)
 % figure 7 Heat Profiles
  abrev = "HeatBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcfile,(trange-t0sim)*24*3600);
  # Extract simulation data
  [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);

@@ -1,6 +1,6 @@
 function [MLD,MLI,drho,rho,DRHO]=getMLD(S,T,Z,DRHO)
  if(nargin<4)
-  DRHO=0.125;
+  DRHO=0.01;
  end%if
  vardims = size(T);
  zdim = find(vardims==length(Z));
@@ -16,7 +16,7 @@ function [MLD,MLI,drho,rho,DRHO]=getMLD(S,T,Z,DRHO)
  % Calculate Conservative Temperature
  CT = gsw_CT_from_t(SA,T,P);
  % Calculate density(S,T,Z)
- rho = gsw_rho(SA,CT,P);
+ rho = gsw_rho(SA,CT,P*0);
  %rhobar = nanmean(nanmean(rho,2))
  drho = (rho.-min(rho,[],zdim));
  badidx = find(drho>DRHO);

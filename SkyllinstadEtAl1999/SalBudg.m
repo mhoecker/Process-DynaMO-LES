@@ -1,11 +1,11 @@
-function SalBudg(dagnc,outdir)
+function SalBudg(dagnc,bcdat,outdir)
 % Salinity Flux Profiles
  abrev = "SalBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  # Extract simulation data
  [DAGSal] = DAGSalprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
@@ -50,17 +50,18 @@ function SalBudg(dagnc,outdir)
   [Ydayu,zzu2] = meshgrid(DAGSal.Yday,DAGSal.zzu);
   pcolor(Ydayu',-zzu2',log(DAGSal.d2_ave)); shading flat;
  else
-  binarray(DAGSal.Yday',[p.*DAGSal.s_ave(:,end)*(1e-3/3600),MLws]',[dir.dat abrev "SFC_ML_flx.dat"]);
-  binarray(DAGSal.Yday',[MLD,MLws]',[dir.dat abrev "ML.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.sf_ave',[dir.dat abrev "sf.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.ws_ave',[dir.dat abrev "ws.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.s2_ave',[dir.dat abrev "Ssq.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.s_ave' ,[dir.dat abrev "S.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.dsfdz_ave',[dir.dat abrev "dsfdz.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.dwsdz_ave',[dir.dat abrev "dwsdz.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.dSdt_ave' ,[dir.dat abrev "dSdt.dat"]);
-  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.S_dSdz_ave' ,[dir.dat abrev "S_dSdz.dat"]);
+  datprfx = cstrcat(dir.dat,abrev);
+  binarray(DAGSal.Yday',[p.*sal*(1e-3/3600),MLws]',cstrcat(datprfx,"SFC_ML_flx.dat"));
+  binarray(DAGSal.Yday',[MLD,MLws]',cstrcat(datprfx,"ML.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.sf_ave',cstrcat(datprfx,"sf.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.ws_ave',cstrcat(datprfx,"ws.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.s2_ave',cstrcat(datprfx,"Ssq.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.s_ave' ,cstrcat(datprfx,"S.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.dsfdz_ave',cstrcat(datprfx,"dsfdz.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.dwsdz_ave',cstrcat(datprfx,"dwsdz.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.dSdt_ave' ,cstrcat(datprfx,"dSdt.dat"));
+  binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.S_dSdz_ave' ,cstrcat(datprfx,"S_dSdz.dat"));
   % invoke gnuplot
-  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
+  unix(cstrcat("gnuplot ",limitsfile," ",dir.script,abrev,".plt"));
  end%if
 end%function

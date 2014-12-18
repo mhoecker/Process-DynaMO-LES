@@ -28,9 +28,6 @@ function vars = dagvars(dagnc,field,trange,zrange)
  for i=3:length(field(:,1))
   fieldname = deblank(field(i,:));
   vars.(fieldname) = squeeze(dag{fieldname}(dagtidx,dagzidx,1,1));
-  %if(strcmp(fieldname,"rain"))
-  % vars.(fieldname)=squeeze(dag{fieldname}(:));
-  %end%if
  end%for
  ncclose(dag);
 end%function

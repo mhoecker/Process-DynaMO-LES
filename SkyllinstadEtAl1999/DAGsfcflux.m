@@ -1,4 +1,4 @@
-function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagnc,trange)
+function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagnc,bcdat,trange)
  % this function replaces surfaceflux in post processing of model runs
  % it pulls values from the dag file instead of from surface observations
  % Get surface values from sea surface teperature and salinity
@@ -23,12 +23,14 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  % density
  rho = gsw_rho(SalTSG,sst,0);
  % Get surface driving fluxes
- field = ["time";"z";"q";"rain";"hf_top";"ustr_t";"vstr_t";"swf_top";"lhf_top";"wave_l";"wave_h";"w_angle" ;"S_0";"L_a"];
+ field = ["time";"z";"hf_top";"ustr_t";"vstr_t";"swf_top";"lhf_top";"wave_l";"wave_h";"w_angle" ;"S_0";"L_a"];
  flxvars = dagvars(dagnc,field,trange);
  tsfx=flxvars.time;
+ bc = readbcdat(bcdat,tsfx);
+ flxvas.rain = bc.rain;
  %ddtsfx = ddz(tsfx);
  stress=flxvars.ustr_t+I*flxvars.vstr_t;
- p=NaN*flxvars.rain./mode(diff(tsfx));
+ p=bc.rain;
  Jh=flxvars.hf_top+flxvars.swf_top+flxvars.lhf_top;
  Jh = -Jh;
  SolarNet=flxvars.swf_top;
@@ -39,7 +41,7 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  e = -flxvars.lhf_top./(rho.*LH);
  LaBflx = flxvars.S_0.*(2*pi./flxvars.wave_l).*stress./rho;
  JhBflx = alpha.*g.*Jh./(Cp.*rho);
- SaBflx = -beta.*g.*SalTSG.*(e+p.*0.001/3600);
+ SaBflx = -beta.*g.*SalTSG.*(e-SalTSG.*p*(1e-3)/3600);
  % Calculate Thermal and Saline Honikker #s
  HoT = JhBflx./LaBflx;
  HoS = SaBflx./LaBflx;

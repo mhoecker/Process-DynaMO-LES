@@ -22,9 +22,9 @@ set format x ""
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -3,1,3 mirror
+set ytics -15,15,60 mirror
 set ytics add ("0" 0)
-set yrange [-2:2]
+set yrange [-1:50]
 set label 1 "a"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \

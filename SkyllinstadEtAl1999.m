@@ -15,32 +15,33 @@ function SkyllinstadEtAl1999()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- ModelDir = [DynamoDir '/output/yellowstone12/'];
- ObserveDir = [DynamoDir '/Observations/netCDF/'];
- dagnc  = [ModelDir 'd1024flxn_s_dag.nc']
- sfxnc  = [ObserveDir 'RevelleMet/Revelle1minuteLeg3_r3.nc']
- chmnc  = [ObserveDir 'Chameleon/dn11b_sum_clean_v2.nc']
- adcpnc = [ObserveDir 'RAMA/uv_RAMA_0N80E.nc']
- outdir = [DynamoDir 'plots/y12/']
- bcascii= [ModelDir 'Surface_Flux_328-330.bc']
- wavespecHL = [DynamoDir '/output/surfspectra/wavespectraHSL.mat'];
+ ModelDir = cstrcat(DynamoDir,'/output/yellowstone12/');
+ ObserveDir = cstrcat(DynamoDir,'/Observations/netCDF/');
+ dagnc  = cstrcat(ModelDir,'d1024flxn_s_dag.nc');
+ sfxnc  = cstrcat(ObserveDir,'RevelleMet/Revelle1minuteLeg3_r3.nc');
+ chmnc  = cstrcat(ObserveDir,'Chameleon/dn11b_sum_clean_v2.nc');
+ adcpnc = cstrcat(ObserveDir,'RAMA/uv_RAMA_0N80E.nc');
+ outdir = cstrcat(DynamoDir,'plots/y12/');
+ wavespecHL = cstrcat(DynamoDir,'/output/surfspectra/wavespectraHSL.mat');
+ bcascii= cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.bc');
+ bcdat = cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.dat');
  %
  % Add figure plotting comands to the PATH
  ensureSkyllingstad1999;
  %
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,outdir)
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
 end%function
 
-function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,outdir)
  %
  %% Preliminaries
  %% Get plot parameters
  %% parse file names
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs] = plotparam();
  [dagpath,dagname,dagext] = fileparts(dagnc)
- pyflowscript = [dirs.script "tkeflow.py"];
+ pyflowscript = cstrcat(dirs.script,"tkeflow.py");
  %
  %% Richardson Number Defined by Surface Flux
  %
@@ -48,13 +49,13 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Surface and dissipation observations
  %
- ObsSurfEps(dagnc,chmnc,outdir);
+ ObsSurfEps(dagnc,bcdat,outdir);
 
  %% Initial Conditions
  %
  initialTSUV(chmnc,adcpnc,outdir);
 
- %
+ % T,S,U plots
  %
  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
@@ -64,19 +65,19 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Heat flux comparison
 
- Heatfluxcompare(dagnc,sfxnc,outdir);
+ Heatfluxcompare(dagnc,bcdat,outdir);
 
  %% Heat Budget
 
- HeatBudg(dagnc,outdir);
+ HeatBudg(dagnc,bcdat,outdir);
 
  %% Salt Budget
 
- SalBudg(dagnc,outdir);
+ SalBudg(dagnc,bcdat,outdir);
 
  %% Momentum Budget
 
- momflux(dagnc,outdir)
+ momflux(dagnc,bcdat,outdir)
 
  %% Richardson # histogram
 

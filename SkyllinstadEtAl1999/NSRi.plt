@@ -55,7 +55,7 @@ unset colorbox
 unset logscale cb
 #
 # Richardson Number
-load pltdir."pospal.plt"
+load pltdir."sympal.plt"
 set ylabel "Ri=N^2/S^2"
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -63,9 +63,11 @@ set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set format cb cbform
 set cblabel ""
-set cbrange [0:1]
+set cbrange [-1:1]
 set cbtics Rimin,(Rimax-Rimin)/2,Rimax
-set cbtics add ("+1/4" .5, "0" 0, "+{/Symbol \245}" 1, "+3/4" .75, "+1/12" .25)
+set cbtics add ("0" 0)
+set cbtics add ("+1/4" +.5,"+{/Symbol \245}" +1, "+3/4" +.75, "+1/12" +.25)
+set cbtics add ("-1/4" -.5,"-{/Symbol \245}" -1, "-3/4" -.75, "-1/12" -.25)
 set format cb ""
 #set cblabel ""
 #set cbrange [Rimin:Rimax]

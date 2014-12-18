@@ -1,10 +1,10 @@
-function momflux(dagnc,outdir)
+function momflux(dagnc,bcdat,outdir)
  abrev = "momflux";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [0,24*3600*(tfsim-t0sim)];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  # Extract parameters needed for momentum flux
  # reynolds stress
  # mean velocity profile (for shear)

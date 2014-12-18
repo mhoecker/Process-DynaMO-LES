@@ -1,16 +1,14 @@
-function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
  %
  %figure 4
  % Plot time series of N^2 S^2 and Ri
  abrev = "NSRi";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  #useoctplot=1;
- trange = [t0sim-2,tfsim+2];
+ trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,trange);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
@@ -28,7 +26,7 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % Calculate Conservative Temperature
  CT = gsw_CT_from_t(SA,Tavgdag,P);
  % Calculate density(S,T,Z)
- rho = gsw_rho(SA,CT,P);
+ rho = gsw_rho(SA,CT,P*0);
  % Calculate Buoyancy frquency
  Nsqavg = -g*(rho*ddzdag')./rho;
  # Calculate vertical derivative matrix
@@ -65,13 +63,13 @@ function NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
-  binarray(tsfx',[4*Ri,Jb,stress]',[dir.dat abrev "a.dat"]);
-  binmatrix(tdag',zdag',Nsqavg',[dir.dat abrev "b.dat"]);
-  binmatrix(tdag',zdag',Ssqavg',[dir.dat abrev "c.dat"]);
-  binmatrix(tdag',zdag',Ricavg',[dir.dat abrev "d.dat"]);
-  binmatrix(tdag',zdag',rho',[dir.dat abrev "e.dat"]);
-  unix(["gnuplot " limitsfile " " dir.script abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
+  binarray(tsfx',[4*Ri,Jb,stress]',cstrcat(dir.dat,abrev,"a.dat"));
+  binmatrix(tdag',zdag',Nsqavg',cstrcat(dir.dat,abrev,"b.dat"));
+  binmatrix(tdag',zdag',Ssqavg',cstrcat(dir.dat,abrev,"c.dat"));
+  binmatrix(tdag',zdag',Ricavg',cstrcat(dir.dat,abrev,"d.dat"));
+  binmatrix(tdag',zdag',rho',cstrcat(dir.dat,abrev,"e.dat"));
+  unix(cstrcat("gnuplot ",limitsfile," ",dir.script,abrev,"tab.plt"));
+  unix(cstrcat("gnuplot ",limitsfile," ",dir.script,abrev,".plt"));
  end%if
  %
 end%function

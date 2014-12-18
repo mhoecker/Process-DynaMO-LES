@@ -1,4 +1,4 @@
-function ObsSurfEps(dagnc,bcascii,outdir,trange)
+function ObsSurfEps(dagnc,bcdat,outdir,trange)
  %function fig1(dagnc,bcascii,outdir,trange)
  %
  abrev = "ObsSurfEps";
@@ -8,7 +8,7 @@ function ObsSurfEps(dagnc,bcascii,outdir,trange)
  end%if
  zrange = sort([0,-dsim]);
  % Extract Flux data
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = DAGsfcflux(dagnc,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  tsfx=t0sim+tsfx./(24*3600);
  # Decomplse Stress into components
  %stressm = -stress.*sin(wdir*pi/180);
@@ -43,7 +43,7 @@ function ObsSurfEps(dagnc,bcascii,outdir,trange)
   print([outdir 'fig1.png'],'-dpng')
  else
   # Save Flux data
-  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',[dirs.dat abrev "JhPrecipTxTyUk.dat"]);
+  binarray(tsfx',[Jh,p,stressm,stressz,U,l]',cstrcat(dirs.dat,abrev,"JhPrecipTxTyUk.dat"));
   if(nargin>3)
    trange
    dtplot = diff(trange);
@@ -58,13 +58,13 @@ function ObsSurfEps(dagnc,bcascii,outdir,trange)
     dttic = ceil(T/3);
     dtmtic = dttic;
    end%if
-   trangetext = ['t0sim = ' num2str(trange(1),"%12.10f") '; tfsim=' num2str(trange(2),"%12.10f") ';set xrange [t0sim:tfsim]'];
-   xtictext = ['set xtic t0sim,' num2str(dttic,"%12.10f")];
-   mxtictext = ['set mxtic ' num2str(dtmtic,"%2i")];
-   unix(['echo "' trangetext '">>' limitsfile]);
-   unix(['echo "' xtictext '">>' limitsfile]);
-   unix(['echo "' mxtictext '">>' limitsfile]);
+   trangetext = cstrcat('t0sim = ',num2str(trange(1),"%12.10f"),'; tfsim=',num2str(trange(2),"%12.10f"),';set xrange [t0sim:tfsim]');
+   xtictext = cstrcat('set xtic t0sim,',num2str(dttic,"%12.10f"));
+   mxtictext = cstrcat('set mxtic ',num2str(dtmtic,"%2i"));
+   unix(cstrcat('echo "',trangetext,'">>',limitsfile));
+   unix(cstrcat('echo "',xtictext,'">>',limitsfile));
+   unix(cstrcat('echo "',mxtictext,'">>',limitsfile));
   end%if
-  unix(["gnuplot " limitsfile " " dirs.script abrev ".plt"])
+  unix(cstrcat("gnuplot ",limitsfile," ",dirs.script,abrev,".plt"))
  end%if
 end%function

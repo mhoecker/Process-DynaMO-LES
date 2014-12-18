@@ -47,7 +47,7 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  % Calculate Conservative Temperature
  CT = gsw_CT_from_t(SA,T,P);
  % Calculate density(S,T,Z)
- rho = gsw_rho(SA,CT,P);
+ rho = gsw_rho(SA,CT,P*0);
  % Calculate Buoyancy frquency
  Nsq = -g*(rho*dzmat')./rho;
  Nsqrank = sort(Nsq,1);

@@ -36,15 +36,15 @@ set key t l horizontal
 set ytics .5 nomirror offset ytoff,0
 set yrange [-1:1]
 set ylabel "J_h (kW/m^2)"
-set y2label "P (mm/h)" offset -yloff,0
-set y2tics out 30
-set y2range [0:80]
+set y2label "P-E (mm/h)" offset -yloff,0
+set y2tics out 10
+set y2range [-5:25]
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
 plot \
 datfile binary format=datform u 1:($2*.001) ls 3 title "J_h" \
 ,\
-datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P"
+datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P"\
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)

@@ -1,4 +1,4 @@
-function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
+function Heatfluxcompare(dagfile,bcfile,outdir,wavespecHL)
 #
 #
 # function Heatfluxcompare(dagfile,z,outfile)
@@ -15,7 +15,7 @@ function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
  # get surface fields
  surfacefields  = ['time';'z'];
  #co-ordinates
- surfacefields  = [surfacefields ; 'hf_top';'lhf_top';'q';'rain'];
+ surfacefields  = [surfacefields ; 'hf_top';'lhf_top'];
  #Surface Heat Flux
  surfacefields  = [surfacefields ; 'swf_top'];
  # Penatrating Heat flux
@@ -56,7 +56,7 @@ function Heatfluxcompare(dagfile,sfxfile,outdir,wavespecHL)
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
  # Get Honikker # from Observations
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagfile,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagfile,bcfile,(trange-t0sim)*24*3600);
  tsfx=t0sim+tsfx./(24*3600);
  Hosfx = HoT+HoS;
  Ho = interp1(Hosfx,tsfx,t);
