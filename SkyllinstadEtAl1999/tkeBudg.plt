@@ -15,8 +15,8 @@ tkemax = 5e-3
 tkemin = 0
 dtkemin = -10e0
 dtkemax = +10e0
-Ftkemin = -10e-7
-Ftkemax = +10e-7
+Ftkemin = -5
+Ftkemax = +5
 nullcolor = "grey20"
 cbform = "%+4.1te^{%+02T}"
 set xrange[t0sim:tfsim]
@@ -112,9 +112,12 @@ unset colorbox
 # Set common color bar for Transport
 set cbrange [Ftkemin:Ftkemax]
 load pltdir."sympal.plt"
-set format cb "%3.s%cWm/kg"
+set format cb "%+4.1f"
+set cblabel "Transport {/Symbol m}Wm/kg"
 set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
 set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-2)*vskip+cbhig
+#set autoscale cb
+#set cbtics auto
 #
 # Plot Advective transport
 row = nextrow(row)
@@ -125,7 +128,7 @@ set xlabel ""
 set ylabel "w'tke"
 field = "wtke"
 set label 1 "b"
-plot datdir.abrev.field.".dat" binary matrix w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 # Plot Pressure transport
@@ -135,7 +138,7 @@ set bmargin at screen bloc(row)
 set ylabel "w'P'"
 field = "wpi"
 set label 1 "c"
-plot datdir.abrev.field.".dat" binary matrix w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 unset colorbox
 #
@@ -148,7 +151,7 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 field = "sgs"
 set label 1 "d"
-plot datdir.abrev.field.".dat" binary matrix w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot
