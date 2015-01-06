@@ -15,20 +15,22 @@ load scriptdir."tlocbloc.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-set key horizontal t l
+set key b r horizontal
 set y2label "Buoyancy Flux\n10^{-6} (m^2/s^2/s)"
 set format x ""
 #phi(x) = x/(1+abs(x))
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -15,15,60 mirror
+set ytics -2,.5,2 mirror
 set ytics add ("0" 0)
-set yrange [-1:50]
+set yrange [-.75:1.4]
 set label 1 "a"
+#"Heat g{/Symbol a}J_h/{/Symbol r}C_P"
+#"Salt g{/Symbol b}S(E-P)"
 plot \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 2 t "Thermal (g{/Symbol a}J_h/{/Symbol r}C_P)", \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 1 t "Saline (g{/Symbol b}S(E-P))"
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 11 t "Heat", \
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 12 t "Salt"
 #
 set key horizontal b r
 set tmargin at screen tloc(row)
@@ -42,15 +44,16 @@ set mytics 10
 set ytics add ("0" 0)
 set label 1 "b"
 plot \
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 3 t "Langmuir (Uk{/Symbol t}/{/Symbol r})"
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 11 t "Langmuir"
+unset y2tics
 #
-set key top center
+set key t r
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set y2label "|Hoenikker\n Number|"
-set yrange [5e-3:5e1]
+set y2label ""
+set yrange [5e-3:5e0]
 set ytics 1e-3,1e1,1e2
 set mytics default
 #set ytics add ("0" 0)
@@ -59,7 +62,8 @@ phi(x) = abs(x)
 set logscale y
 set label 1 "c"
 plot \
-datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 3 lw 2 t " Ho",\
-datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 2 t " Ho_T",\
-datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 1 t " Ho_S"
+datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 11 t " Hoenikker Number",\
+#datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 2 t " Ho_T",\
+#datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 1 t " Ho_S"
+
 unset multiplot
