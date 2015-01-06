@@ -36,7 +36,7 @@ set format x ""
 set xlabel ""
 set ylabel "St"
 field = "uudSdz"
-set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
+set label 1 "a"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 unset colorbox
 #
@@ -105,7 +105,7 @@ set cbrange [tkemin:tkemax]
 set cbtics tkemin,(tkemax-tkemin)/2,tkemax;set cbtics add ("0" 0)
 load pltdir."pospal.plt"
 field = "tke"
-set label 1 "a" at graph 0, graph 1 left front textcolor rgbcolor "grey30" nopoint offset character 0,character .3
+set label 1 "a"
 plot datdir.abrev.field.".dat" binary matrix w image not
 unset colorbox
 #
