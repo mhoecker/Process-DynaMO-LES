@@ -57,6 +57,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,outdir)
 
  % T,S,U plots
  %
+
  ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Stability Criterion
