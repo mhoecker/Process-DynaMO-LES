@@ -16,7 +16,7 @@ set autoscale y
 set multiplot title "Surface Forcing"
 set style data lines
 set ytics .5
-set yrange [-.2:1.2]
+set yrange [-.1:1.1]
 set key t c horizontal
 set rmargin at screen rloc(col)
 set lmargin at screen lloc(col)
@@ -26,25 +26,25 @@ set bmargin at screen bloc(row)
 set ylabel "{/Symbol t} (Pa)"
 set label 1 "a"
 plot \
-datfile binary format=datform u 1:4 ls 1 title "zonal",\
-datfile binary format=datform u 1:5 ls 2 title "meridional"
+datfile binary format=datform u 1:4 ls 11 title "zonal",\
+datfile binary format=datform u 1:5 ls 12 title "meridional"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key t l horizontal
+set key b r horizontal
 set ytics .5 nomirror offset ytoff,0
-set yrange [-1:1]
+set yrange [-.8:.8]
 set ylabel "J_h (kW/m^2)"
 set y2label "P-E (mm/h)" offset -yloff,0
 set y2tics out 10
-set y2range [-5:25]
+set y2range [-22:22]
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
 plot \
-datfile binary format=datform u 1:($2*.001) ls 3 title "J_h" \
+datfile binary format=datform u 1:($2*.001) ls 11 title "J_h" \
 ,\
-datfile binary format=datform u 1:3 ls 4 axes x1y2 title "P-E"\
+datfile binary format=datform u 1:3 ls 12 axes x1y2 title "P-E"\
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -63,9 +63,9 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 set label 1 "c"
 plot \
-datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 5 axes x1y1 title "U_s"\
+datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 11 axes x1y1 title "U_s"\
 ,\
-datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 6 axes x1y2 title "{/Symbol l}"\
+datfile binary format="%f%f%f%f%f%f%f" u 1:7 ls 12 axes x1y2 title "{/Symbol l}"\
 ,\
 #datfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6):(.01) w circles lc pal fraction .75 fs transparent solid .0625 noborder axes x1y1 notitle\
 #,\
