@@ -62,6 +62,8 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  Ssqflat = sort(Ssq(:));
  % Calculate Richardson number
  Ri = Nsq./Ssq;
+ binmatrix(t,Z,Ri' ,[dir.dat "Ritz.dat"]);
+ #
  Rirank = sort(Ri,1);
  Riflat = sort(Ri(:));
  frac = (1:length(Rirank(:,1)))./length(Rirank(:,1));
