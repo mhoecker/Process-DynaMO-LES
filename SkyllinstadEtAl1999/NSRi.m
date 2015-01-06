@@ -12,6 +12,9 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ # Get MLD
+ [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  % Calculate derivative matrix
@@ -42,6 +45,11 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
  # Calculate Richardson #
  Ricavg = Nsqavg./Ssqavg;
  #
+ # Calculate Ozmidov Scale
+ LO = sqrt(-Diss)./power(abs(Nsqavg),3./4);
+ LObad = find(Nsqavg<0);
+ LO(LObad) = NaN;
+ #
  if(useoctplot==1)
   subplot(4,1,1)
 %  plot(tsfx,Jh,tsfx,0*ones(size(tsfx)),"k")
@@ -68,6 +76,8 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
   binmatrix(tdag',zdag',Ssqavg',cstrcat(dir.dat,abrev,"c.dat"));
   binmatrix(tdag',zdag',Ricavg',cstrcat(dir.dat,abrev,"d.dat"));
   binmatrix(tdag',zdag',rho',cstrcat(dir.dat,abrev,"e.dat"));
+  binmatrix(tdag',zdag',LO',cstrcat(dir.dat,abrev,"LO.dat"));
+  binarray(tdag',MLD',[dir.dat abrev "ML.dat"]);
   unix(cstrcat("gnuplot ",limitsfile," ",dir.script,abrev,"tab.plt"));
   unix(cstrcat("gnuplot ",limitsfile," ",dir.script,abrev,".plt"));
  end%if
