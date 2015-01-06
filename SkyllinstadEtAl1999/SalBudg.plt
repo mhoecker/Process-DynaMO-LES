@@ -124,7 +124,7 @@ set bmargin at screen bloc(row)
 set format x "%g"
 set xlabel "2011 UTC yearday"
 set yrange [0:.74]
-set ytics -1,.25,1
+set ytics -1.2,.3,1.2
 set ylabel "psu mm/s"
 set key horizontal
 set key top left
