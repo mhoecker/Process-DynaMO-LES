@@ -23,6 +23,10 @@ else
  wind.t = t;
 end
 #
+#Correct the wind to 19.5 m
+# the hight of the weather ship in Pierson Moskowitz
+wind.UPM = uofy(wind.U,19.5)
+#
 if(nargin!=1)
  spectra.t = wind.t;
  spectra.f = .05:.01:1;
@@ -32,8 +36,8 @@ if(nargin!=1)
 end%if
 # Calculate wave charachteristics
 # Following Li & Garrett 1993
-wave.Us = 0.015*wind.U;
-wave.k = 1./(.24 *(wind.U.^2)/g);
+wave.Us = 0.015*wind.UPM;
+wave.k = 1./(.24 *(wind.UPM.^2)/g);
 wave.L = 2*pi./wave.k;
 wave.cp = sqrt(g./wave.k);
 wave.A = sqrt(wave.Us./wave.cp)./wave.k;
