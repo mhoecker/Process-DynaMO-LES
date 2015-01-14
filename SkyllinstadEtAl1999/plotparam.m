@@ -18,7 +18,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  dsim = 80; % Maximum simulation depth
  dplt = 50; % Maximum depth of plots
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
- palcolors = 15; % number of colors in the color bar palette
+ palcolors = 11; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
  if((useoctplot==0)&&(nargin>0))
   [gnuplotterm,termsfx] = termselect("pngposter");
