@@ -44,34 +44,14 @@ if(nargin<7)
  isoP.rho_cords = rho_cords;
  [zz,tt] = meshgrid(z,t);
  [rr,tr] = meshgrid(isoP.rho_cords,t);
- isoP.z = rr*0;
- isoP.SA = isoP.z;
- isoP.CT = isoP.z;
- isoP.U = isoP.z;
- isoP.V = isoP.z;
-
- for i=1:length(t)
-  % find z(t,rho)
-  rhoi = isoP.rho(i,:);
-  rhoirange = [min(rhoi),max(rhoi)];
-  idxbad = find((isoP.rho_cords<min(rhoi))+(isoP.rho_cords>max(rhoi)));
-  Ui  = U_z(i,:);
-  Vi  = V_z(i,:);
-  CTi = CT(i,:);
-  SAi = SA(i,:);
-  %
-  val = ddzinterp(rhoi,isoP.rho_cords,interp_order);
-  isoP.z(i,:)  = clipper(val*z'  ,z);
-  isoP.CT(i,:) = clipper(val*CTi',CTi);
-  isoP.SA(i,:) = clipper(val*SAi',SAi);
-  isoP.U(i,:)  = clipper(val*Ui' ,Ui);
-  isoP.V(i,:)  = clipper(val*Vi' ,Vi);
-  isoP.z(i,idxbad) = NaN;
-  isoP.U(i,idxbad) = NaN;
-  isoP.V(i,idxbad) = NaN;
-  isoP.CT(i,idxbad) = NaN;
-  isoP.SA(i,idxbad) = NaN;
- end%for
+ fields = {isoP.rho,U_z,V_z,CT,SA};
+ changed = changevar2(t,z,fields,rho_cords);
+ clear fields
+ isoP.z  = changed.fields{1};
+ isoP.U  = changed.fields{2};
+ isoP.V  = changed.fields{3};
+ isoP.CT = changed.fields{4};
+ isoP.SA = changed.fields{5};
  if(nargin<1)
   figure(1)
    subplot(2,2,1)
