@@ -15,10 +15,10 @@ function [changed]=changevar2(x,y,fields,z)
 %           if length(fields>1)
 %           changed.fields{i}(x,z)
  if(nargin<1)
-  x=4*pi*(0:.03125:1);
+  x=4*pi*(linspace(0,1,63));
  end%if
  if(nargin<2)
-  y=0:.05:1;
+  y=linspace(0,1,64);
  end%if
  if(nargin<3)
   [yy,xx]=meshgrid(y,x);
@@ -34,6 +34,8 @@ function [changed]=changevar2(x,y,fields,z)
   zmin = min(min(fields{1}));
   zrange = zmax-zmin;
   changed.z = zmin:zrange/(2*length(y)):zmax;
+ else
+  changed.z = z;
  end%if
  changed.fields = {NaN*zeros(length(x),length(changed.z))};
  for i=2:length(fields)
@@ -81,7 +83,7 @@ function [changed]=changevar2(x,y,fields,z)
     title(["field{" num2str(i,"%i") "}(x,z)"])
    end%if
   end%for
-  print("/home/mhoecker/tmp/changevar2.png","-dpng")
+  print("/home/mhoecker/tmp/changevar2.png","-dpng","-F:28")
  end%if
 end%function
 
