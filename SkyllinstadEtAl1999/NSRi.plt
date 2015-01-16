@@ -35,7 +35,11 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 set label 1 "a"
-plot datdir.abrev."b.dat" binary matrix w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
+plot \
+datdir.abrev."b.dat" binary matrix w image not,\
+datdir.abrev."e.tab" lc rgbcolor rhocolor title rhotitle
+#datdir.abrev."b.tab" ls 1 title " N^2",\
+#datdir.abrev."c.tab" ls 2 title " S^2/4"
 unset colorbox
 #
 # Ssq
@@ -94,3 +98,21 @@ unset logscale cb
 #plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
 #
 unset multiplot
+#
+load termfile
+set output pngdir.abrev."alt".termsfx
+set style data lines
+# Setup vertical spacing
+rows = 1
+row = 0
+cols = 1
+col = 0
+#
+load scriptdir."tlocbloc.plt"
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+load pltdir."sympal.plt"
+set label 1 ""
+plot \
+datdir.abrev."b.tab" ls 1 title " N^2",\
+datdir.abrev."c.tab" ls 2 title " S^2/4"

@@ -11,4 +11,13 @@ set cntrparam levels incremental 1000,.1,1040
 set table outroot."e.tab"
 splot datroot."e.dat" binary matrix
 #
+# common interval for (S/2)^2 and N^2
+set cntrparam levels incremental -4e-4,4e-5,4e-4
+# Shear
+set table outroot."c.tab"
+splot datroot."c.dat" binary matrix u 1:2:($3/4)
+#
+# Stratification
+set table outroot."b.tab"
+splot datroot."b.dat" binary matrix
 #
