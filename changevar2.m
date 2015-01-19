@@ -1,4 +1,4 @@
-function [changed]=changevar2(x,y,fields,z)
+function [changed]=changevar2(x,y,fields,z,interp_order)
 % function [changed]=changevar2(x,y,fields,z)
 %          [changed]=changevar2(x,y,fields)
 %
@@ -37,6 +37,10 @@ function [changed]=changevar2(x,y,fields,z)
  else
   changed.z = z;
  end%if
+%
+ if(nargin<5)
+  interp_order=4;
+ end%if
  changed.fields = {NaN*zeros(length(x),length(changed.z))};
  for i=2:length(fields)
   changed.fields = {changed.fields{:},changed.fields{1}};
@@ -44,18 +48,27 @@ function [changed]=changevar2(x,y,fields,z)
  for i=1:length(x)
   zi = fields{1}(i,:);
   zirange = [min(zi),max(zi)];
-  idxbad = find((changed.z<min(zi))+(changed.z>max(zi)));
-  val = ddzinterp(zi,changed.z,4);
-  for j=1:length(fields)
-   if(j==1)
-    fieldsi                     = y;
-   else
-    fieldsi                     = fields{j}(i,:);
-   end%if
-   changed.fields{j}(i,:)      = clipper(val*fieldsi',fieldsi);
-   changed.fields{j}(i,idxbad) = NaN;
+  outgood = find((changed.z>=min(zi))+(changed.z<=max(zi)));
+  zo = changed.z(outgood);
+  % Check if any of the out vals are good
+  if(length(zo)>1)
+   for j=1:length(fields)
+    if(j==1)
+     fieldsi                     = y;
+    else
+     fieldsi                     = fields{j}(i,:);
+    end%if
+    ingood = find(~isnan(fieldsi));
+    fieldsigood = fieldsi(ingood);
+    zigood = zi(ingood);
+    % Ensure enough data for interpolation
+    if(length(zigood)>interp_order)
+     val = ddzinterp(zigood,zo,interp_order);
+     changed.fields{j}(i,outgood)      = clipper(val*fieldsigood',fieldsigood);
+    end%if
+   end%for
   end%for
- end%for
+ end%if
  if(nargin<1)
   NF = length(fields);
   figure(1)
