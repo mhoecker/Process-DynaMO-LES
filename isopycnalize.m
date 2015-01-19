@@ -6,20 +6,21 @@ function [isoP] = isopycnalize(t,z,U_z,V_z,SA,CT,rho_cords)
  interp_order = 4;
  findgsw;
  if(nargin<1)
-  t = 1:.5:20;
-  z = -(1:.25:20);
+  t = 2*pi*linspace(0,1,20);
+  z = -(1:1:30);
   zmid = mean(z);
   zrange = (max(z)-min(z))/2;
-  wh = zrange*.2;
+  wh = .3;
   [zz,tt] = meshgrid(z,t);
   bad = rand(size(zz));
-  idxbad = find(bad>.99);
+  idxbad = find(bad>.9);
   bad = 0*bad;
   bad(idxbad) = NaN;
-  SA = bad+35.-.5*(wh*sin(tt)+zz-zmid)/zrange+tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  CT = bad+10.+5*(wh*sin(tt)+zz-zmid)/zrange+5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  U_z = bad+.5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  V_z = bad+.5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
+  ww = wh*sin(tt)+(zz-zmid)/zrange;
+  SA  = bad + 35+.005*(ww-.05*tt.*tanh(pi*ww));
+  CT  = bad + 15+12*(ww-.05*tt.*tanh(pi*ww));
+  U_z = bad + 0.5.+sin(pi*ww);
+  V_z = bad + 0.5.+cos(pi*ww);
  end%if
  isoP.t = t;
 
@@ -43,7 +44,7 @@ function [isoP] = isopycnalize(t,z,U_z,V_z,SA,CT,rho_cords)
 
 if(nargin<7)
   rhodiff = isoP.rhomax-isoP.rhomin;
-  rho_cords = isoP.rhomin:rhodiff/(2*length(z)):isoP.rhomax;
+  rho_cords = linspace(isoP.rhomin,isoP.rhomax,2*length(z));
  end%if
  isoP.rho_cords = rho_cords;
  [zz,tt] = meshgrid(z,t);
@@ -59,13 +60,13 @@ if(nargin<7)
  if(nargin<1)
   figure(1)
    subplot(2,2,1)
-   pcolor(tt,zz,SA); shading flat
+   pcolor(tt,zz,SA); shading flat; title("SA")
    subplot(2,2,2)
-   pcolor(tt,zz,CT); shading flat
+   pcolor(tt,zz,CT); shading flat; title("CT")
    subplot(2,2,3)
-   pcolor(tt,zz,U_z); shading flat
+   pcolor(tt,zz,U_z); shading flat; title("U ")
    subplot(2,2,4)
-   pcolor(tt,zz,V_z); shading flat
+   pcolor(tt,zz,V_z); shading flat; title("V ")
   figure(2)
    subplot(2,1,1)
    pcolor(tt,zz,isoP.rho); shading flat; caxis([isoP.rhomin,isoP.rhomax]); colorbar
@@ -73,13 +74,13 @@ if(nargin<7)
    pcolor(tr,rr,isoP.z); shading flat; caxis(zmid+[-1.1,+1.1]*zrange); colorbar
   figure(3)
    subplot(2,2,1)
-   pcolor(tr,rr,isoP.SA); shading flat;
+   pcolor(tr,rr,isoP.SA); shading flat; title("SA")
    subplot(2,2,2)
-   pcolor(tr,rr,isoP.CT); shading flat;
+   pcolor(tr,rr,isoP.CT); shading flat; title("CT")
    subplot(2,2,3)
-   pcolor(tr,rr,isoP.U); shading flat;
+   pcolor(tr,rr,isoP.U); shading flat; title("U ")
    subplot(2,2,4)
-   pcolor(tr,rr,isoP.V); shading flat;
+   pcolor(tr,rr,isoP.V); shading flat; title("V ")
  end%if
 end%function
 
