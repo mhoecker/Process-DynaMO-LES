@@ -39,16 +39,17 @@ function [changed]=changevar2(x,y,fields,z,interp_order)
  end%if
 %
  if(nargin<5)
-  interp_order=4;
+  interp_order=3;
  end%if
- changed.fields = {NaN*zeros(length(x),length(changed.z))};
+ changed.fields = {NaN+zeros(length(x),length(changed.z))};
  for i=2:length(fields)
   changed.fields = {changed.fields{:},changed.fields{1}};
  end%for
  for i=1:length(x)
   zi = fields{1}(i,:);
-  zirange = [min(zi),max(zi)];
-  outgood = find((changed.z>=min(zi))+(changed.z<=max(zi)));
+  ingood = find(~isnan(zi));
+  zigood = zi(ingood);
+  outgood = find((changed.z>=min(zigood)).*(changed.z<=max(zigood)));
   zo = changed.z(outgood);
   % Check if any of the out vals are good
   if(length(zo)>1)
