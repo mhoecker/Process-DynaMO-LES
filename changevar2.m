@@ -47,9 +47,7 @@ function [changed]=changevar2(x,y,fields,z,interp_order)
  end%for
  for i=1:length(x)
   zi = fields{1}(i,:);
-  ingood = find(~isnan(zi));
-  zigood = zi(ingood);
-  outgood = find((changed.z>=min(zigood)).*(changed.z<=max(zigood)));
+  outgood = find((changed.z>=min(zi))&(changed.z<=max(zi)));
   zo = changed.z(outgood);
   % Check if any of the out vals are good
   if(length(zo)>1)
