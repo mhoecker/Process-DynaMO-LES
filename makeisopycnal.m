@@ -6,7 +6,8 @@ pltdir  = "/home/mhoecker/work/Dynamo/plots/isopycnals/";
 
 mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
-tidx = inclusiverange(t,[325,333]);
+tidx = inclusiverange(t,[326.5,329.5]);
+%tidx = inclusiverange(t,[327.9,328.1]);
 z = mergec{"z"}(:);
 zidx = inclusiverange(z,[-100,0]);
 t = mergec{"t"}(tidx);
