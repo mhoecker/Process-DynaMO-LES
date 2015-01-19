@@ -7,9 +7,9 @@ pltdir  = "/home/mhoecker/work/Dynamo/plots/isopycnals/";
 mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
 tidx = inclusiverange(t,[326.5,329.5]);
-%tidx = inclusiverange(t,[327.9,328.1]);
+%tidx = inclusiverange(t,[327.95,328.05]);
 z = mergec{"z"}(:);
-zidx = inclusiverange(z,[-100,0]);
+zidx = inclusiverange(z,[-200,0]);
 t = mergec{"t"}(tidx);
 dt = mean(diff(t));
 z = mergec{"z"}(zidx);
@@ -21,34 +21,19 @@ v = mergec{"V"}(tidx,zidx);
 ct = mergec{"CT"}(tidx,zidx);
 sa = mergec{"SA"}(tidx,zidx);
 ncclose(mergec);
-% sub sample time and depth
-ds = 2*dt;
-s = min(t):ds:max(t);
-[zz,ss] = meshgrid(z,s);
-%
-U  = 0*zz;
-V  = U;
-CT = U;
-SA = U;
-% filter data using 2*ds to fill small gaps
-fill_order = 3;
-for i=1:length(z)
- U(:,i)  = harmfill(u(:,i) ,t,s,fill_order,2*ds);
- V(:,i)  = harmfill(v(:,i) ,t,s,fill_order,2*ds);
- CT(:,i) = harmfill(ct(:,i),t,s,fill_order,2*ds);
- SA(:,i) = harmfill(sa(:,i),t,s,fill_order,2*ds);
-end%for
 
-Urange = [min(min(U)),max(max(U))];
-Vrange = [min(min(V)),max(max(V))];
-CTrange = [min(min(CT)),max(max(CT))];
-SArange = [min(min(SA)),max(max(SA))];
-binmatrix(s,z,U' ,[pltdir "Uin.dat" ]);
-binmatrix(s,z,V' ,[pltdir "Vin.dat" ]);
-binmatrix(s,z,CT',[pltdir "CTin.dat"]);
-binmatrix(s,z,SA',[pltdir "SAin.dat"]);
+[zz,ss] = meshgrid(z,t);
 
-isoP=isopycnalize(s,z',U,V,SA,CT);
+Urange = [min(min(u)),max(max(u))];
+Vrange = [min(min(v)),max(max(v))];
+CTrange = [min(min(ct)),max(max(ct))];
+SArange = [min(min(sa)),max(max(sa))];
+binmatrix(t,z,u' ,[pltdir "Uin.dat" ]);
+binmatrix(t,z,v' ,[pltdir "Vin.dat" ]);
+binmatrix(t,z,ct',[pltdir "CTin.dat"]);
+binmatrix(t,z,sa',[pltdir "SAin.dat"]);
+
+isoP=isopycnalize(t,z',u,v,sa,ct);
 
 % filter data using T=3days to remove tides
 fill_order = 4;
