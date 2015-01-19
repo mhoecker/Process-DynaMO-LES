@@ -12,10 +12,14 @@ function [isoP] = isopycnalize(t,z,U_z,V_z,SA,CT,rho_cords)
   zrange = (max(z)-min(z))/2;
   wh = zrange*.2;
   [zz,tt] = meshgrid(z,t);
-  SA = 35.-.5*(wh*sin(tt)+zz-zmid)/zrange+tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  CT = 10.+5*(wh*sin(tt)+zz-zmid)/zrange+5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  U_z = .5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
-  V_z = .5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
+  bad = rand(size(zz));
+  idxbad = find(bad>.99);
+  bad = 0*bad;
+  bad(idxbad) = NaN;
+  SA = bad+35.-.5*(wh*sin(tt)+zz-zmid)/zrange+tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
+  CT = bad+10.+5*(wh*sin(tt)+zz-zmid)/zrange+5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
+  U_z = bad+.5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
+  V_z = bad+.5.+.5*tanh(pi*(wh*sin(tt).+zz-zmid)/zrange);
  end%if
  isoP.t = t;
 
