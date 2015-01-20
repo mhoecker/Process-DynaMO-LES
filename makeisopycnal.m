@@ -6,7 +6,9 @@ pltdir  = "/home/mhoecker/work/Dynamo/plots/isopycnals/";
 
 mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
-tidx = inclusiverange(t,[326.5,329.5]);
+t0 = 328;
+fill_T = 3;
+tidx = inclusiverange(t,[t0-fill_T/2,t0+fill_T/2]);
 %tidx = inclusiverange(t,[327.95,328.05]);
 z = mergec{"z"}(:);
 zidx = inclusiverange(z,[-200,0]);
@@ -34,15 +36,15 @@ binmatrix(t,z,ct',[pltdir "CTin.dat"]);
 binmatrix(t,z,sa',[pltdir "SAin.dat"]);
 
 isoP=isopycnalize(t,z',u,v,sa,ct);
-
+isoP.t0 = t0;
 % filter data using T=3days to remove tides
 fill_order = 4;
 for i=1:length(isoP.rho_cords)
- isoP.zbar(:,i)  = harmfill(isoP.z(:,i) ,isoP.t,isoP.t,fill_order,3);
- isoP.Ubar(:,i)  = harmfill(isoP.U(:,i) ,isoP.t,isoP.t,fill_order,3);
- isoP.Vbar(:,i)  = harmfill(isoP.V(:,i) ,isoP.t,isoP.t,fill_order,3);
- isoP.CTbar(:,i) = harmfill(isoP.CT(:,i),isoP.t,isoP.t,fill_order,3);
- isoP.SAbar(:,i) = harmfill(isoP.SA(:,i),isoP.t,isoP.t,fill_order,3);
+ isoP.zbar(:,i)  = harmfill(isoP.z(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
+ isoP.Ubar(:,i)  = harmfill(isoP.U(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
+ isoP.Vbar(:,i)  = harmfill(isoP.V(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
+ isoP.CTbar(:,i) = harmfill(isoP.CT(:,i),isoP.t,isoP.t0,fill_order,fill_T);
+ isoP.SAbar(:,i) = harmfill(isoP.SA(:,i),isoP.t,isoP.t0,fill_order,fill_T);
 end%for
 
 
@@ -54,38 +56,45 @@ binmatrix(isoP.t,isoP.rho_cords,isoP.CT' ,[pltdir "CTout.dat" ]);
 binmatrix(isoP.t,isoP.rho_cords,isoP.SA' ,[pltdir "SAout.dat" ]);
 
 %
-	val = {isoP.rho_cords(:),isoP.t(:),isoP.U(:),isoP.V(:),isoP.CT(:),isoP.SA(:),isoP.z(:),isoP.Ubar(:),isoP.Vbar(:),isoP.CTbar(:),isoP.SAbar(:),isoP.zbar(:)};
+val = {isoP.rho_cords(:),isoP.t(:),isoP.t0(:),isoP.U(:),isoP.V(:),isoP.CT(:),isoP.SA(:),isoP.z(:),isoP.Ubar(:),isoP.Vbar(:),isoP.CTbar(:),isoP.SAbar(:),isoP.zbar(:)};
 
-	Nvar = length(val);
-	Ndim = 2;
-	vars = {};
-	longname = {};
-	units = {};
-	dims = {};
-	formulae = {};
-	for i=1:Nvar;
-		vars = {vars{:},['var' num2str(i)]};
-		units = {units{:},'TBD'};
-		longname = {longname{:},'TBD'};
-		dims = {dims{:},''};
-		formulae = {formulae{:},''};
-	end%for
+Nvar = length(val);
+Ndim = 3;
+vars = {};
+longname = {};
+units = {};
+dims = {};
+formulae = {};
+for i=1:Nvar;
+ vars = {vars{:},['var' num2str(i)]};
+ units = {units{:},'TBD'};
+ longname = {longname{:},'TBD'};
+ dims = {dims{:},''};
+ formulae = {formulae{:},''};
+end%for
 k=0;
 
 % Dimension Variable Title
 if((k<Nvar)*(k<Ndim))
-	k = k+1;
-	vars{k} = 'rho';
-	units{k} = 'kg/m^3';
-	longname{k} = 'Density';
-	dims{k} = vars{k};
+ k = k+1;
+ vars{k} = 'rho';
+ units{k} = 'kg/m^3';
+ longname{k} = 'Density';
+ dims{k} = vars{k};
 end%if
 if((k<Nvar)*(k<Ndim))
-	k = k+1;
-	vars{k} = 't';
-	units{k} = 'd';
-	longname{k} = '2011 Julian day';
-	dims{k} = vars{k};
+ k = k+1;
+ vars{k} = 't';
+ units{k} = 'd';
+ longname{k} = '2011 Julian day';
+ dims{k} = vars{k};
+end%if
+if((k<Nvar)*(k<Ndim))
+ k = k+1;
+ vars{k} = 't0';
+ units{k} = 'd';
+ longname{k} = '2011 Julian day';
+ dims{k} = vars{k};
 end%if
 if(k<Nvar)
  k = k+1;
@@ -127,35 +136,35 @@ if(k<Nvar)
  vars{k} = 'Ubar';
  units{k} = 'm/s';
  longname{k} = 'Low Pass Filtered Zonal Velocity';
- dims{k} = [vars{1} "," vars{2}];
+ dims{k} = [vars{1} "," vars{3}];
 end%if
 if(k<Nvar)
  k = k+1;
  vars{k} = 'Vbar';
  units{k} = 'm/s';
  longname{k} = 'Low Pass Filtered Meridional Velocity';
- dims{k} = [vars{1} "," vars{2}];
+ dims{k} = [vars{1} "," vars{3}];
 end%if
 if(k<Nvar)
  k = k+1;
   vars{k} = 'CTbar';
    units{k} = 'C';
     longname{k} = 'Low Pass Filtered Conservative Temperature';
-     dims{k} = [vars{1} "," vars{2}];
+     dims{k} = [vars{1} "," vars{3}];
      end%if
 if(k<Nvar)
  k = k+1;
  vars{k} = 'SAbar';
  units{k} = 'ppt';
  longname{k} = 'Low Pass Filtered Absolute Salinity';
- dims{k} = [vars{1} "," vars{2}];
+ dims{k} = [vars{1} "," vars{3}];
 end%if
 if(k<Nvar)
  k = k+1;
  vars{k} = 'zbar';
  units{k} = 'm';
  longname{k} = 'Low Pass Filtered Depth';
- dims{k} = [vars{1} "," vars{2}];
+ dims{k} = [vars{1} "," vars{3}];
 end%if
 % Variable Title
 
@@ -167,26 +176,25 @@ end%if
  fprintf(cdlid,'netcdf %s {\n', fname);
  fprintf(cdlid,'dimensions:\n');
  for i=1:Ndim
-		fprintf(cdlid,'%s=%i;\n',vars{i},length(val{i}));
-	endfor
-%	Declare variables
-	fprintf(cdlid,'variables:\n');
-	for i=1:Nvar
-		fprintf(cdlid,'double %s(%s);\n',vars{i},dims{i});
-	endfor
+  fprintf(cdlid,'%s=%i;\n',vars{i},length(val{i}));
+ end%for
+%Declare variables
+ fprintf(cdlid,'variables:\n');
+ for i=1:Nvar
+  fprintf(cdlid,'double %s(%s);\n',vars{i},dims{i});
+ end%for
 % Add units, long_name and instrument
 fprintf(cdlid,'\n');
 for i=1:Nvar
-	fprintf(cdlid,'%s:units = "%s";\n',vars{i},units{i});
-	fprintf(cdlid,'%s:long_name = "%s";\n',vars{i},longname{i});
-	if(length(formulae{i})>0)
-		fprintf(cdlid,'%s:formulae = "%s";\n',vars{i},formulae{i});
-	endif
-endfor
+ fprintf(cdlid,'%s:units = "%s";\n',vars{i},units{i});
+ fprintf(cdlid,'%s:long_name = "%s";\n',vars{i},longname{i});
+ if(length(formulae{i})>0)
+  fprintf(cdlid,'%s:formulae = "%s";\n',vars{i},formulae{i});
+ end%if
+end%for
 %Declare global attributes
 fprintf(cdlid,':source = "%s";\n',[fname '.mat']);
 fprintf(cdlid,':instrument = "Chameleon and RAMA mooring";\n');
 fprintf(cdlid,':vessel = "R/V Roger Revelle";\n');
 writeCDFdata(cdlid,val,vars)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' isoPnc '&& rm ' cdffile])
-
