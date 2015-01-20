@@ -8,7 +8,7 @@ makeplots = 1;
 %Read in isopycnal averaged from netcdf
 % subset the data if neccecary
 isopnc = netcdf(isopfile,"r");
-t = isopnc{"t"}(:)';
+t = isopnc{"t0"}(:)';
 rho = isopnc{"rho"}(:)';
 fields = {isopnc{"zbar"}(:)'};
 fields = {fields{:},isopnc{"Ubar" }(:)'};
@@ -18,7 +18,7 @@ fields = {fields{:},isopnc{"SAbar"}(:)'};
 ncclose(isopnc)
 
 % set depths for interpolation
-z = -100:0;
+z = floor(min(min(fields{1}))):ceil(max(max(fields{1})));
 %feed to changevar2 to get z variable
 [changed]=changevar2(t,rho,fields,z);
 
@@ -29,11 +29,13 @@ if(makeplots!=0)
  size(tt)
  size(changed.fields{1})
  size(changed.fields{2})
+ titles = {"rho","U","V","CT","SA"};
  for i=1:length(changed.fields);
   figfile = ["/home/mhoecker/tmp/unmakeisop" num2str(i,"%03i") ".png"];
   figure(i)
   subplot(1,1,1)
-  pcolor(tt,zz,changed.fields{i}); shading flat
+  plot(changed.fields{i},z); shading flat
+  title(titles{i})
   print(figfile,"-dpng")
  end%for
 end%if
