@@ -6,9 +6,11 @@ pltdir  = "/home/mhoecker/work/Dynamo/plots/isopycnals/";
 
 mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
-t0 = 328;
-fill_T = 3;
-tidx = inclusiverange(t,[t0-fill_T/2,t0+fill_T/2]);
+t0 = 326.5:.25:329.5;
+% filter data to T>1day to remove tides
+fill_T = 1.5;
+fill_order = 1;
+tidx = inclusiverange(t,[min(t0)-fill_T/2,max(t0)+fill_T/2]);
 %tidx = inclusiverange(t,[327.95,328.05]);
 z = mergec{"z"}(:);
 zidx = inclusiverange(z,[-200,0]);
@@ -34,12 +36,15 @@ binmatrix(t,z,u' ,[pltdir "Uin.dat" ]);
 binmatrix(t,z,v' ,[pltdir "Vin.dat" ]);
 binmatrix(t,z,ct',[pltdir "CTin.dat"]);
 binmatrix(t,z,sa',[pltdir "SAin.dat"]);
-
 isoP=isopycnalize(t,z',u,v,sa,ct);
 isoP.t0 = t0;
-% filter data using T=3days to remove tides
-fill_order = 4;
+isoP.zbar  = NaN+zeros(length(isoP.t0),length(isoP.rho_cords));
+isoP.Ubar  = isoP.zbar;
+isoP.Vbar  = isoP.zbar;
+isoP.CTbar = isoP.zbar;
+isoP.SAbar = isoP.zbar;
 for i=1:length(isoP.rho_cords)
+ ["average for rho=" num2str(isoP.rho_cords(i))]
  isoP.zbar(:,i)  = harmfill(isoP.z(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
  isoP.Ubar(:,i)  = harmfill(isoP.U(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
  isoP.Vbar(:,i)  = harmfill(isoP.V(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
