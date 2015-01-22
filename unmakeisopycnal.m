@@ -27,22 +27,33 @@ if(makeplots!=0)
  [zz,tt] = meshgrid(z,t);
  titles = {"rho","U","V","CT","SA"};
  medfil = 13;
+ Nt = length(t);
+ Nz = length(z);
  for i=1:length(changed.fields);
-  for j=1:length(z)
+  for j=1:Nz
    jmin = max([1,ceil( j-medfil/2)]);
    jmax = min([length(z),floor(j+medfil/2)]);
-   for k=1:length(t)
+   for k=1:Nt
     varin = changed.fields{i}(k,jmin:jmax);
     idxgood = find(~isnan(varin));
     vargood = varin(idxgood);
     changed.fields{i}(k,j)=median(vargood);
    end%for
   end%for
+ end%for
+ for i=1:length(changed.fields);
   figfile = ["/home/mhoecker/tmp/unmakeisop" num2str(i,"%03i") ".png"];
+  xyrange = [min(min(changed.fields{i})),max(max(changed.fields{i})),min(z),max(z)];
   figure(i)
-  subplot(1,1,1)
-  pcolor(tt,zz,changed.fields{i}); shading flat; colorbar
-  title(titles{i})
+  %for j=6:8
+   %subplot(1,,j-5)
+   %plot(changed.fields{i}(j,:)',z);
+   %axis(xyrange);
+   %title([titles{i} "(t0) =" num2str(t(j),"%6.2f")]);
+  %end%for
+   subplot(1,1,1)
+   pcolor(tt,zz,changed.fields{i}); shading flat; colorbar
+   title([titles{i} " t0 =" num2str(t(1),"%6.2f") " to " num2str(t(end),"%6.2f")]);
   print(figfile,"-dpng")
  end%for
 end%if
