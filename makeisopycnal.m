@@ -6,10 +6,10 @@ pltdir  = "/home/mhoecker/work/Dynamo/plots/isopycnals/";
 
 mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
-t0 = 326.5:.25:329.5;
+t0 = 320.0:.5:330.0;
 % filter data to T>1day to remove tides
-fill_T = 1.5;
-fill_order = 1;
+fill_T = 5;
+fill_order = 0;
 tidx = inclusiverange(t,[min(t0)-fill_T/2,max(t0)+fill_T/2]);
 %tidx = inclusiverange(t,[327.95,328.05]);
 z = mergec{"z"}(:);
