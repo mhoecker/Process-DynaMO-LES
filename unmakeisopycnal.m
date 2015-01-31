@@ -3,8 +3,10 @@
 %
 %
 % finish off the isopycnal average and return to z co-ordinate
-isopfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/chamRAMA/isoPchamAndRAMA.nc"
-makeplots = 1;
+datdir = "/home/mhoecker/work/Dynamo/Observations/netCDF/chamRAMA/";
+isopfile = [datdir "isoPchamAndRAMA.nc"]
+isopzfile = [datdir "isoPZchamAndRAMA.nc"]
+makeplots = 0;
 %Read in isopycnal averaged from netcdf
 % subset the data if neccecary
 isopnc = netcdf(isopfile,"r");
@@ -60,3 +62,106 @@ end%if
 %save new netcdf with varibles of z,t
 
 
+val = {z,t};
+for i=1:length(changed.fields);
+ val = {val{:},changed.fields{i}};
+end%for
+Nvar = length(val);
+Ndim = 2;
+vars = {};
+longname = {};
+units = {};
+dims = {};
+formulae = {};
+for i=1:Nvar;
+ vars = {vars{:},['var' num2str(i)]};
+ units = {units{:},'TBD'};
+ longname = {longname{:},'TBD'};
+ dims = {dims{:},''};
+ formulae = {formulae{:},''};
+end%for
+k=0;
+
+% Dimension Variable Title
+if((k<Nvar)*(k<Ndim))
+ k = k+1;
+ vars{k} = 'Z';
+ units{k} = 'm';
+ longname{k} = 'Depth';
+ dims{k} = vars{k};
+end%if
+if((k<Nvar)*(k<Ndim))
+ k = k+1;
+ vars{k} = 't';
+ units{k} = 'd';
+ longname{k} = '2011 Julian day';
+ dims{k} = vars{k};
+end%if
+%Data Variables
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 'rho';
+ units{k} = 'kg/m^3';
+ longname{k} = 'Density';
+ dims{k} = [vars{1} "," vars{2}];
+end%if
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 'U';
+ units{k} = 'm/s';
+ longname{k} = 'Zonal Velocity';
+ dims{k} = [vars{1} "," vars{2}];
+end%if
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 'V';
+ units{k} = 'm/s';
+ longname{k} = 'Meridional Velocity';
+ dims{k} = [vars{1} "," vars{2}];
+end%if
+if(k<Nvar)
+ k = k+1;
+  vars{k} = 'CT';
+   units{k} = 'C';
+    longname{k} = 'Conservative Temperature';
+     dims{k} = [vars{1} "," vars{2}];
+     end%if
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 'SA';
+ units{k} = 'ppt';
+ longname{k} = 'Absolute Salinity';
+ dims{k} = [vars{1} "," vars{2}];
+end%if
+% Variable Title
+
+%
+ tmp = "/home/mhoecker/tmp/";
+ fname = "isoPavgZmergeChamRAMA";
+ cdffile = [tmp fname '.cdf'];
+ cdlid = fopen(cdffile,'w');
+ fprintf(cdlid,'netcdf %s {\n', fname);
+ fprintf(cdlid,'dimensions:\n');
+ for i=1:Ndim
+  fprintf(cdlid,'%s=%i;\n',vars{i},length(val{i}));
+ end%for
+%Declare variables
+ fprintf(cdlid,'variables:\n');
+ for i=1:Nvar
+  fprintf(cdlid,'double %s(%s);\n',vars{i},dims{i});
+ end%for
+% Add units, long_name and instrument
+fprintf(cdlid,'\n');
+for i=1:Nvar
+ fprintf(cdlid,'%s:units = "%s";\n',vars{i},units{i});
+ fprintf(cdlid,'%s:long_name = "%s";\n',vars{i},longname{i});
+ if(length(formulae{i})>0)
+  fprintf(cdlid,'%s:formulae = "%s";\n',vars{i},formulae{i});
+ end%if
+end%for
+%Declare global attributes
+fprintf(cdlid,':source = "%s";\n',[fname '.mat']);
+fprintf(cdlid,':instrument = "Chameleon and RAMA mooring";\n');
+fprintf(cdlid,':vessel = "R/V Roger Revelle";\n');
+writeCDFdata(cdlid,val,vars)
+unix(['ncgen -k1 -x -b ' cdffile ' -o ' isopzfile '&& rm ' cdffile])
