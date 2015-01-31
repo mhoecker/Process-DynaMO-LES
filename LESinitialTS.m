@@ -1,4 +1,4 @@
-function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
+function fileout = LESinitialTS(filename,outloc,maxdepth)
  #function fileout = LESinitialTS(fileloc,filename,date,outloc)
  # filename - name of the data file (no suffix, it is assumed to be .nc)
  # wantdate - date in matlab datenum format
@@ -9,16 +9,15 @@ function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  % Check for Gibbs Sea Water
  [version_number,version_date] = findgsw;
  nc = netcdf(filename,"r");
- t = nc{'t'}(:);
- z = nc{'z'}(:);
- dateidx = find(abs(t-wantdate)<avgtime);
+  z = nc{'Z'}(:);
+ if(nargin<3)
+  maxdepth = max(abs(z));
+ end%if
  depthidx = find(abs(z)<=abs(maxdepth));
- dateused  = mean(t(dateidx))
- clear t;
  clear z;
- z = nc{'z'}(depthidx);
- Tc = nanmean(nc{'T'}(dateidx,depthidx),1);
- Sa = nanmean(nc{'S'}(dateidx,depthidx),1);
+ z = nc{'Z'}(depthidx);
+ Tc = nc{'CT'}(depthidx);
+ Sa = nc{'SA'}(depthidx);
  P = gsw_p_from_z(z,0);
  idxgood = find(isnan(Tc).*isnan(Sa)==0);
  z = z(idxgood);
@@ -28,7 +27,7 @@ function fileout = LESinitialTS(filename,wantdate,outloc,avgtime,maxdepth)
  Sp = gsw_SP_from_SA(Sa,P,80.5,0);
  ncclose(nc);
  #
- outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"  int2str(round(dateused))]
+ outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"]
  fileout = [outname ".ic"];
  outid = fopen(fileout,"w");
  fprintf(outid,'-z|Tc|Sp/%s\n',filename);
