@@ -3,7 +3,7 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  # filename - name of the data file (no suffix, it is assumed to be .nc)
  # wantdate - date in matlab datenum format
  # outloc   - directory of output file (assume to be the currentdirectory if not given)
- if(nargin<3)
+ if(nargin<2)
   outloc = "";
  end%if
  % Check for Gibbs Sea Water
@@ -27,16 +27,16 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  Sp = gsw_SP_from_SA(Sa,P,80.5,0);
  ncclose(nc);
  #
- outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"]
+ outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"];
  fileout = [outname ".ic"];
  outid = fopen(fileout,"w");
  fprintf(outid,'-z|Tc|Sp/%s\n',filename);
  if(max(z)<0)
   imax = find(z==max(z));
-  fprintf(outid,'%f %f %f\n',0.0,Tc(imax),Sp(imax))
+  fprintf(outid,'%f %f %f\n',0.0,Tc(imax),Sp(imax));
  end%if
  for i=1:length(z);
-  fprintf(outid,'%f %f %f\n',abs(z(i)),Tc(i),Sp(i))
+  fprintf(outid,'%f %f %f\n',abs(z(i)),Tc(i),Sp(i));
  end%for
  fclose(outid)
  subplot(1,2,1)
