@@ -1,4 +1,4 @@
-function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,maxdepth,avgtime,order,outloc,adcpvarnames)
+function [flxout,TSout,UVout] = LESBCandIC(flxfile,chamRamafile,wantdates,outloc,avgtime)
  % initialize a run of the LES code using surface fluxes,
  % tempreature, salinity and ADCP profiles
  %
@@ -11,42 +11,23 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,TSfile,adcpfile,wantdates,max
   flxfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc";
  end%if
  if nargin()<2
-  TSfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc";
+  chamRAMAfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/chamRAMA/isoPZchamAndRAMA.nc"
  end%if
  if nargin()<3
-  %adcpfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc";
-  adcpfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E_1hr_data_3day_filter.nc"
-  adcpvarnames = ["t";"z";"ulp";"vlp"];
-  %adcpfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140_filtered_1hr_3day.nc";
-  %adcpvarnames = ["t";"z";"ulp";"vlp"];
- end%if
- if nargin()<4
   % 2011 Year day 328-330
   wantdates = [datenum(2011,0,328),datenum(2011,0,330)];
  end%if
- if nargin()<5
-  maxdepth = 80;
- end%if
- if nargin()<6
-  avgtime = 1.0/24;
- end%if
- if nargin()<7
-  order = 5;
- end%if
- if nargin()<8
+ if nargin()<4
   outloc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/nextrun/";
  end%if
- if nargin()<9
-  wavespecHL = "/home/mhoecker/work/Dynamo/output/surfspectra/wavespectraHSL.mat";
+ if nargin()<5
+  avgtime = 1.0/24;
  end%if
- yeardates = wantdates-datenum(2010,12,31)
- flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime)
- figure(5)
- TSout = LESinitialTS(TSfile,min(yeardates),outloc,avgtime,maxdepth);
- figure(6)
- if(length(adcpvarnames)>0)
-  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order,adcpvarnames);
- else
-  UVout = uvincfile(adcpfile,min(yeardates),maxdepth,outloc,avgtime,order);
- end%if
+ yeardates = wantdates-datenum(2010,12,31);
+ flxout = LESsurfBC(flxfile,yeardates,outloc,avgtime);
+ avgcenter = num2str(min(yeardates)-2.5,"%5.1f");
+ ncwacall = ["ncwa -v U,V,SA,CT -O -a t -d t," avgcenter "," avgcenter " "];
+ UVoutnc = [outloc "UVinit.nc"];
+ unix([ncwacall chamRAMAfile " -o" UVoutnc]);
+ TSout = LESinitialTS(UVoutnc,outloc);
 end%function
