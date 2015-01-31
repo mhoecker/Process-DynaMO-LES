@@ -8,8 +8,8 @@ mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
 t0 = 320.0:.5:330.0;
 % filter data to T>1day to remove tides
-fill_T = 5;
-fill_order = 0;
+isoP.fill_T = 5;
+isoP.fill_order = 0;
 tidx = inclusiverange(t,[min(t0)-fill_T/2,max(t0)+fill_T/2]);
 %tidx = inclusiverange(t,[327.95,328.05]);
 z = mergec{"z"}(:);
@@ -45,11 +45,11 @@ isoP.CTbar = isoP.zbar;
 isoP.SAbar = isoP.zbar;
 for i=1:length(isoP.rho_cords)
  ["average for rho=" num2str(isoP.rho_cords(i))]
- isoP.zbar(:,i)  = harmfill(isoP.z(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
- isoP.Ubar(:,i)  = harmfill(isoP.U(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
- isoP.Vbar(:,i)  = harmfill(isoP.V(:,i) ,isoP.t,isoP.t0,fill_order,fill_T);
- isoP.CTbar(:,i) = harmfill(isoP.CT(:,i),isoP.t,isoP.t0,fill_order,fill_T);
- isoP.SAbar(:,i) = harmfill(isoP.SA(:,i),isoP.t,isoP.t0,fill_order,fill_T);
+ isoP.zbar(:,i)  = harmfill(isoP.z(:,i) ,isoP.t,isoP.t0,isoP.fill_order,isoP.fill_T);
+ isoP.Ubar(:,i)  = harmfill(isoP.U(:,i) ,isoP.t,isoP.t0,isoP.fill_order,isoP.fill_T);
+ isoP.Vbar(:,i)  = harmfill(isoP.V(:,i) ,isoP.t,isoP.t0,isoP.fill_order,isoP.fill_T);
+ isoP.CTbar(:,i) = harmfill(isoP.CT(:,i),isoP.t,isoP.t0,isoP.fill_order,isoP.fill_T);
+ isoP.SAbar(:,i) = harmfill(isoP.SA(:,i),isoP.t,isoP.t0,isoP.fill_order,isoP.fill_T);
 end%for
 
 
@@ -61,7 +61,7 @@ binmatrix(isoP.t,isoP.rho_cords,isoP.CT' ,[pltdir "CTout.dat" ]);
 binmatrix(isoP.t,isoP.rho_cords,isoP.SA' ,[pltdir "SAout.dat" ]);
 
 %
-val = {isoP.rho_cords(:),isoP.t(:),isoP.t0(:),isoP.U(:),isoP.V(:),isoP.CT(:),isoP.SA(:),isoP.z(:),isoP.Ubar(:),isoP.Vbar(:),isoP.CTbar(:),isoP.SAbar(:),isoP.zbar(:)};
+val = {isoP.rho_cords(:),isoP.t(:),isoP.t0(:),isoP.fill_order,isoP.fill_T,isoP.U(:),isoP.V(:),isoP.CT(:),isoP.SA(:),isoP.z(:),isoP.Ubar(:),isoP.Vbar(:),isoP.CTbar(:),isoP.SAbar(:),isoP.zbar(:)};
 
 Nvar = length(val);
 Ndim = 3;
@@ -100,6 +100,19 @@ if((k<Nvar)*(k<Ndim))
  units{k} = 'd';
  longname{k} = '2011 Julian day';
  dims{k} = vars{k};
+end%if
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 'n_F';
+ units{k} = '';
+ longname{k} = 'filter weight order';
+ formulae{k} = 'filter weight = cos(2*pi*(t-t0)/t_F)^n_f for 2*|t-t0|<t_f';
+end%if
+if(k<Nvar)
+ k = k+1;
+ vars{k} = 't_f';
+ units{k} = 's';
+ longname{k} = 'Filter window width';
 end%if
 if(k<Nvar)
  k = k+1;
