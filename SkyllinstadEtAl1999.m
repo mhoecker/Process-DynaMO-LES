@@ -21,7 +21,7 @@ function SkyllinstadEtAl1999()
  sfxnc  = cstrcat(ObserveDir,'RevelleMet/Revelle1minuteLeg3_r3.nc');
  chmnc  = cstrcat(ObserveDir,'Chameleon/dn11b_sum_clean_v2.nc');
  adcpnc = cstrcat(ObserveDir,'RAMA/uv_RAMA_0N80E.nc');
- outdir = cstrcat(DynamoDir,'plots/y12/');
+ outdir = cstrcat(DynamoDir,'plots/y13/');
  wavespecHL = cstrcat(DynamoDir,'/output/surfspectra/wavespectraHSL.mat');
  bcascii= cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.bc');
  bcdat = cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.dat');
@@ -49,7 +49,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,outdir)
 
  %% Surface and dissipation observations
  %
- ObsSurfEps(dagnc,bcdat,outdir);
+ %ObsSurfEps(dagnc,bcdat,outdir);
 
  %% Initial Conditions
  %
@@ -58,40 +58,40 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,outdir)
  % T,S,U plots
  %
 
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ %ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Stability Criterion
  %
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ %NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
 
  %% Heat flux comparison
 
- Heatfluxcompare(dagnc,bcdat,outdir);
+ %Heatfluxcompare(dagnc,bcdat,outdir);
 
  %% Heat Budget
 
- HeatBudg(dagnc,bcdat,outdir);
+ %HeatBudg(dagnc,bcdat,outdir);
 
  %% Salt Budget
 
- SalBudg(dagnc,bcdat,outdir);
+ %SalBudg(dagnc,bcdat,outdir);
 
  %% Momentum Budget
 
- momflux(dagnc,bcdat,outdir)
+ %momflux(dagnc,bcdat,outdir)
 
  %% Richardson # histogram
 
- [SPfile,pcval] = richistogram(dagnc,outdir);
+ %[SPfile,pcval] = richistogram(dagnc,outdir);
 
  %% Turbulent Kinetic energy Budget plots
 
- tkeBudg(dagnc,outdir,SPfile,pcval);
+ %tkeBudg(dagnc,outdir,SPfile,pcval);
 
  %% Hourly tke Budget
- dt = 2*3600;
- imax = ceil(30*3600/dt);
- tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
+ %dt = 2*3600;
+ %imax = ceil(30*3600/dt);
+ %tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
 
 end%function
 
@@ -120,7 +120,7 @@ function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
  [tkepath,tkename,tkeext] = fileparts(tkenc);
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
- tkebzavg(tkezavgnc,outdir);
+ tkebzavg(tkezavgnc,dagnc,outdir);
  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
  unix(["python " pyflowscript " " outdat " " outdir "png/full " plotlab]);
 end%function
