@@ -11,7 +11,7 @@ function [flxout,TSout,UVout] = LESBCandIC(flxfile,chamRamafile,wantdates,outloc
   flxfile = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc";
  end%if
  if nargin()<2
-  chamRAMAfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/chamRAMA/isoPZchamAndRAMA.nc"
+  chamRAMAfile = "/home/mhoecker/work/Dynamo/Observations/netCDF/chamRAMA/isoPZchamAndRAMA.nc";
  end%if
  if nargin()<3
   % 2011 Year day 328-330
