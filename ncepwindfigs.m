@@ -27,5 +27,5 @@ for i=1:1#length(t)
  binmatrix(lon,lat,a,adat);
  binmatrix(lon,lat,s,sdat);
 end#for
-unix(["gnuplot " limitsfile " " scriptdir "ncepwindfigs.plt"])
+unix(["gnuplot " limitsfile " " scriptdir "ncepwindfigs.plt"]);
 #
