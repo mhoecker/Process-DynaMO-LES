@@ -2,6 +2,8 @@ function tkebzavg(zavgnc,dagnc,outdir)
 # Read vertical average tke budget and plot time sereis
  abrev = "tkebzavg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
+ trange = [t0sim,tfsim];
+ zrange = sort([0,-dsim]);
  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  zavg = netcdf(zavgnc,'r');
  t    = t0sim+zavg{"t"}(:)./(60*60*24);
