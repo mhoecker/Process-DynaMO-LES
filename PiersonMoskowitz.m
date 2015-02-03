@@ -25,7 +25,7 @@ end
 #
 #Correct the wind to 19.5 m
 # the hight of the weather ship in Pierson Moskowitz
-wind.UPM = uofy(wind.U,19.5)
+wind.UPM = uofy(wind.U,19.5);
 #
 if(nargin!=1)
  spectra.t = wind.t;
