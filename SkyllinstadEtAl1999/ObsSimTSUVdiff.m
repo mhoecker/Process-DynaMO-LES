@@ -3,7 +3,7 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  % difference of Temperature, Salinity, and Velocity
  % between observations and model.
  abrev = "ObsSim";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract Chameleon data
@@ -17,6 +17,8 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ % Calculate Mixed Layer Depth
+ [MLD,MLI,drho,rho]=getMLD(Savgdag,Tavgdag,zdag);
  # convert to yearday
  tdag = t0sim+tdag/(24*3600);
  # interpolate observations onto the computational grid
@@ -27,6 +29,8 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
  Schmi=interp2(zchm,tchm,Schm,zz,tt);
  uadcpi=interp2(zadcp,tadcp,ulpadcp,zz,tt);
  vadcpi=interp2(zadcp,tadcp,vlpadcp,zz,tt);
+ % Calculate Mixed Layer Depth
+ [MLDchm,MLIchm,drhochm,rhochm]=getMLD(Schmi',Tchmi',zdag);
  # Calculate the difference
  Tdiff = Tchmi'-Tavgdag;
  Sdiff = Schmi'-Savgdag;
@@ -71,16 +75,20 @@ function  ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir)
   print([outdir 'fig3diff.png'],'-dpng')
  else
   # Save T,S profiles
-  binmatrix(tdag',zdag',Tdiff',[outdir abrev "Tdiff.dat"]);
-  binmatrix(tdag',zdag',Sdiff',[outdir abrev "Sdiff.dat"]);
-  binmatrix(tdag',zdag',Tdsum',[outdir abrev "Tdsum.dat"]);
-  binmatrix(tdag',zdag',Sdsum',[outdir abrev "Sdsum.dat"]);
+  binmatrix(tdag',zdag',Tdiff',[dir.dat abrev "Tdiff.dat"]);
+  binmatrix(tdag',zdag',Sdiff',[dir.dat abrev "Sdiff.dat"]);
+  binmatrix(tdag',zdag',Tdsum',[dir.dat abrev "Tdsum.dat"]);
+  binmatrix(tdag',zdag',Sdsum',[dir.dat abrev "Sdsum.dat"]);
   # save U,V profiles
-  binmatrix(tdag',zdag',udiff',[outdir abrev "udiff.dat"]);
-  binmatrix(tdag',zdag',vdiff',[outdir abrev "vdiff.dat"]);
-  binmatrix(tdag',zdag',udsum',[outdir abrev "udsum.dat"]);
-  binmatrix(tdag',zdag',vdsum',[outdir abrev "vdsum.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdiff.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "TSUVdsum.plt"]);
+  binmatrix(tdag',zdag',udiff',[dir.dat abrev "udiff.dat"]);
+  binmatrix(tdag',zdag',vdiff',[dir.dat abrev "vdiff.dat"]);
+  binmatrix(tdag',zdag',udsum',[dir.dat abrev "udsum.dat"]);
+  binmatrix(tdag',zdag',vdsum',[dir.dat abrev "vdsum.dat"]);
+  # Mixed Layer Depth
+  binarray(tdag',[MLD]',[dir.dat abrev "ML.dat"])
+  binarray(tdag',[MLDchm]',[dir.dat abrev "MLchm.dat"])
+  #Plot
+  unix(["gnuplot " limitsfile " " dir.script abrev "TSUVdiff.plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev "TSUVdsum.plt"]);
  end%if
 end%function

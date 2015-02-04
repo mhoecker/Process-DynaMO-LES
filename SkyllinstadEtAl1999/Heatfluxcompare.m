@@ -1,4 +1,4 @@
-function Heatfluxcompare(dagfile,sfxfile,outdir)
+function Heatfluxcompare(dagfile,bcfile,outdir,wavespecHL)
 #
 #
 # function Heatfluxcompare(dagfile,z,outfile)
@@ -6,8 +6,8 @@ function Heatfluxcompare(dagfile,sfxfile,outdir)
 # outloc = location of output data (binary array?)
 # z = array of depths desired
  abrev = "jflxcomp";
- outfile = [outdir abrev];
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
+ outfile = [dir.dat abrev];
  trange = [t0sim,tfsim];
  trange = (trange-t0sim)*24*3600;
  zrange = [0,-dsim];
@@ -15,7 +15,7 @@ function Heatfluxcompare(dagfile,sfxfile,outdir)
  # get surface fields
  surfacefields  = ['time';'z'];
  #co-ordinates
- surfacefields  = [surfacefields ; 'hf_top';'lhf_top';'q';'rain'];
+ surfacefields  = [surfacefields ; 'hf_top';'lhf_top'];
  #Surface Heat Flux
  surfacefields  = [surfacefields ; 'swf_top'];
  # Penatrating Heat flux
@@ -56,7 +56,8 @@ function Heatfluxcompare(dagfile,sfxfile,outdir)
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
  # Get Honikker # from Observations
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxfile,trange);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagfile,bcfile,(trange-t0sim)*24*3600);
+ tsfx=t0sim+tsfx./(24*3600);
  Hosfx = HoT+HoS;
  Ho = interp1(Hosfx,tsfx,t);
  if(useoctplot==1)
@@ -74,15 +75,11 @@ function Heatfluxcompare(dagfile,sfxfile,outdir)
   print([outdir abrev "Ho.png"],"-dpng")
  else
   binarray(tsfx',[Jh,p]',[outfile "surf.dat"]);
-#  binmatrix(t',Z',Jsgs',[outfile "Jsgs.dat"])
-#  binmatrix(t',Z',Jwt',[outfile "Jwt.dat"])
-#  binmatrix(t',Z',JswA',[outfile "JswA.dat"])
-#  binmatrix(t',Z',JswT',[outfile "JswT.dat"])
   binarray(tsfx',[HoT,HoS,Hosfx]',[outfile "HoTS.dat"]);
   binarray(tsfx',[LaBflx,JhBflx,SaBflx]',[outfile "Bflx.dat"]);
   binmatrix(t',Z',drhozs',[outfile "drhosz.dat"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev "tab.plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
 end%if
 end%function
 

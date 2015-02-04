@@ -1,13 +1,9 @@
 % figure 6
-function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function tkeBudg(dagnc,outdir,SPcontour,SPval)
  abrev = "tkeBudg";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
- # Extract surface fluxes
- #[tsfx,stress,p,Jh,wdir] = surfaceflux(sfxnc,trange);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
  # Extract simulation data
  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
@@ -122,48 +118,54 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  else
   # save files for gnuplot
   # tke
-  binmatrix(tdag',zdag',tkeavg',[outdir abrev "tke.dat"]);
+  binmatrix(tdag',zdag',tkeavg',[dir.dat abrev "tke.dat"]);
   # d tke d t
-  binmatrix(tdag',zdag',dtkedt',[outdir abrev "dtkedt.dat"]);
-  binmatrix(zdag',tdag',dtkedt,[outdir abrev "dtkedtT.dat"]);
+  binmatrix(tdag',zdag',dtkedt',[dir.dat abrev "dtkedt.dat"]);
+  binmatrix(zdag',tdag',dtkedt,[dir.dat abrev "dtkedtT.dat"]);
   # d w' pi'd z
-  binmatrix(tdag',zdag',tkePTra',[outdir abrev "dwpidz.dat"]);
-  binmatrix(zdag',tdag',tkePTra,[outdir abrev "dwpidzT.dat"]);
+  binmatrix(tdag',zdag',tkePTra',[dir.dat abrev "dwpidz.dat"]);
+  binmatrix(zdag',tdag',tkePTra,[dir.dat abrev "dwpidzT.dat"]);
   # w' pi'
-  binmatrix(tdag',zdag',tkePTra',[outdir abrev "wpi.dat"]);
-  binmatrix(zdag',tdag',tkePTra,[outdir abrev "wpiT.dat"]);
+  binmatrix(tdag',zdag',tkePTra',[dir.dat abrev "wpi.dat"]);
+  binmatrix(zdag',tdag',tkePTra,[dir.dat abrev "wpiT.dat"]);
   # d w' tke d z
-  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "dwtkedz.dat"]);
-  binmatrix(zdag',tdag',tkeAdve,[outdir abrev "dwtkedzT.dat"]);
+  binmatrix(tdag',zdag',tkeAdve',[dir.dat abrev "dwtkedz.dat"]);
+  binmatrix(zdag',tdag',tkeAdve,[dir.dat abrev "dwtkedzT.dat"]);
   # w' tke
-  binmatrix(tdag',zdag',tkeAdve',[outdir abrev "wtke.dat"]);
-  binmatrix(zdag',tdag',tkeAdve,[outdir abrev "wtkeT.dat"]);
+  binmatrix(tdag',zdag',tkeAdve',[dir.dat abrev "wtke.dat"]);
+  binmatrix(zdag',tdag',tkeAdve,[dir.dat abrev "wtkeT.dat"]);
   # d sgs dz
-  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "dsgsdz.dat"]);
-  binmatrix(zdag',tdag',tkeSGTr,[outdir abrev "dsgsdzT.dat"]);
+  binmatrix(tdag',zdag',tkeSGTr',[dir.dat abrev "dsgsdz.dat"]);
+  binmatrix(zdag',tdag',tkeSGTr,[dir.dat abrev "dsgsdzT.dat"]);
   # sgs
-  binmatrix(tdag',zdag',tkeSGTr',[outdir abrev "sgs.dat"]);
-  binmatrix(zdag',tdag',tkeSGTr,[outdir abrev "sgsT.dat"]);
+  binmatrix(tdag',zdag',tkeSGTr',[dir.dat abrev "sgs.dat"]);
+  binmatrix(zdag',tdag',tkeSGTr,[dir.dat abrev "sgsT.dat"]);
   # b' w'
-  binmatrix(tdag',zdag',BuoyPr',[outdir abrev "bw.dat"]);
-  binmatrix(zdag',tdag',BuoyPr,[outdir abrev "bwT.dat"]);
+  binmatrix(tdag',zdag',BuoyPr',[dir.dat abrev "bw.dat"]);
+  binmatrix(zdag',tdag',BuoyPr,[dir.dat abrev "bwT.dat"]);
   # u' u' d U d z
-  binmatrix(tdag',zdag',ShPr',[outdir abrev "uudUdz.dat"]);
-  binmatrix(zdag',tdag',ShPr,[outdir abrev "uudUdzT.dat"]);
+  binmatrix(tdag',zdag',ShPr',[dir.dat abrev "uudUdz.dat"]);
+  binmatrix(zdag',tdag',ShPr,[dir.dat abrev "uudUdzT.dat"]);
   # u' u' d S d z
-  binmatrix(tdag',zdag',StDr',[outdir abrev "uudSdz.dat"]);
-  binmatrix(zdag',tdag',StDr,[outdir abrev "uudSdzT.dat"]);
+  binmatrix(tdag',zdag',StDr',[dir.dat abrev "uudSdz.dat"]);
+  binmatrix(zdag',tdag',StDr,[dir.dat abrev "uudSdzT.dat"]);
   # dissipation
-  binmatrix(tdag',zdag',Diss',[outdir abrev "diss.dat"]);
-  binmatrix(zdag',tdag',Diss,[outdir abrev "dissT.dat"]);
+  binmatrix(tdag',zdag',Diss',[dir.dat abrev "diss.dat"]);
+  binmatrix(zdag',tdag',Diss,[dir.dat abrev "dissT.dat"]);
+  #
+  if(nargin>2)
+   fid = fopen(limitsfile,'a');
+   fprintf(fid,"SPcontour = '%s'\n",SPcontour);
+   fprintf(fid,"SPpc = %i\n",SPval);
+   fclose(fid);
+  end%if
   # Invoke gnuplot for main plots
-  #unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
   # Make profile movies
   movies = 0;
   if(movies)
    # write out profile plots
-   fid = fopen([outdir "profiles/" abrev ".plt"],"w");
+   fid = fopen([dir.plt "profiles/" abrev ".plt"],"w");
    #
    plt = 'set style data lines';
    fprintf(fid,"%s\n",plt);
@@ -415,7 +417,7 @@ function tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   fclose(fid);
   # invoke gnuplot
    unix(["gnuplot " limitsfile " " outdir "/profiles/" abrev ".plt"]);
-   profiledir = [outdir "profiles/"];
+   profiledir = [dir.plt "profiles/"];
    frameloc = [profiledir abrev];
    unix(moviemaker(frameloc,frameloc,"30","avi"));
    frameloc = [profiledir "ProDis" abrev];

@@ -4,9 +4,10 @@
 #  Observed Salinity
 #  Modeled Sainity
 #
-Smin = 35.00
+Smin = 34.7
 Smax = 35.5
-set output outdir.abrev."S".termsfx
+load termfile
+set output pngdir.abrev."S".termsfx
 #
 # Setup spacing
 rows = 3
@@ -29,18 +30,19 @@ set autoscale y
 set key l t
 set ylabel "P (mm/hr)" offset yloff,0
 set ytics mirror 0,30,90 offset ytoff,0
-set label 1 "a" at graph 0, 1 left front textcolor rgbcolor "grey30" nopoint offset character 0, .3
+set label 1 "a"
 plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:3 title "P" lc rgbcolor "black"
 #
 #
 # Profile Observations
 #
-load scriptdir."tlocbloc.plt"
-set key l b opaque samplen -1 width -.5
+set key l b opaque
 set format y "%g"
 set ylabel "Z (m)"
+set ytics -70,20,10
+set yrange [-dsim:0]
 # Salinity
-load outdir."negpalnan.plt"
+load pltdir."negpalnan.plt"
 set cblabel "S (psu)"
 cbmin = Smin
 cbmax = Smax
@@ -54,7 +56,8 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "b"
-plot datdir.abrev."So.dat" binary matrix w image title "Observed"
+plot datdir.abrev."So.dat" binary matrix w image not, 0 lw 0 title "Observed",\
+datdir.abrev."MLchm.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 # Simulated
 set format x "%g"
 set xlabel "2011 UTC yearday"
@@ -63,6 +66,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 set label 1 "c"
-plot datdir.abrev."Ss.dat" binary matrix w image title "Simulated"
+plot datdir.abrev."Ss.dat" binary matrix w image not, 0 lw 0 title "Simulated",\
+datdir.abrev."ML.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 unset colorbox
 unset multiplot

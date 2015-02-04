@@ -1,4 +1,4 @@
-function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
+function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  # function LESsurfBC(fileloc,ncfile,wantdates,outloc)
  # filename - name of the data file
  # wantdates - [start date, end date] in 2011 yearday
@@ -40,11 +40,22 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
  Tauy   = -nc{'stress'}(dateidx).*cos(nc{'Wdir'}(dateidx)*pi/180);
  Tauy = meanfil(Tauy,t,s,avgtime);
  %
- wave_height = nc{'sigH'}(dateidx);
- wave_height = meanfil(wave_height,t,s,avgtime);
+ %wave_height = nc{'sigH'}(dateidx);
+ %wave_height = meanfil(wave_height,t,s,avgtime);
  %
- wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
- wave_length = meanfil(wave_length,t,s,avgtime);
+ %wave_length = (2*pi./gsw_grav(0))*nc{'cp'}(dateidx).^2;
+ %wave_length = meanfil(wave_length,t,s,avgtime);
+ %
+ if(nargin==5)
+  load(wavespecHL)
+  wave_height = meanfil(Hs,tHL,s,avgtime);
+  wave_length = meanfil(Lam,tHL,s,avgtime);
+ else
+  PMwaves = PiersonMoskowitz(nc{'U10'}(dateidx),t);
+  wave_height = meanfil(2*PMwaves.A,PMwaves.t,s,avgtime);
+  wave_length = meanfil(PMwaves.L,PMwaves.t,s,avgtime);
+  clear PMwaves
+ end
  %
  wave_direct = exp(nc{'Wdir'}(dateidx)*I*pi/180);
  wave_direct = meanfil(wave_direct,t,s,avgtime);
@@ -60,7 +71,10 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,maxdepth);
   fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',tmodel(i),shortw(i),surfac(i),latent(i),precip(i),Taux(i),Tauy(i),wave_length(i),wave_height(i),wave_direct(i))
  end%for
  fclose(outid)
- # plot forcing functions
+ %Save the data as a binary array
+ datarray = [shortw;surfac;latent;precip;Taux;Tauy;wave_length;wave_height;wave_direct];
+ binarray(tmodel,datarray,[outname ".dat"])
+ % plot forcing functions
  figure(1)
  subplot(3,1,1)
  plot(tmodel,shortw,";Net Short Wave Flux (swf_{top});")

@@ -11,6 +11,7 @@ Tmax = 30.20
 Smin = 35.00
 Smax = 35.5
 set output outdir.abrev."TSwSurf".termsfx
+load termfile
 #
 # Setup spacing
 rows = 5
@@ -43,6 +44,7 @@ unset y2label
 #
 # Profile Observations
 #
+load limfile
 load scriptdir."tlocbloc.plt"
 set key opaque inside top left
 set format y "%g"

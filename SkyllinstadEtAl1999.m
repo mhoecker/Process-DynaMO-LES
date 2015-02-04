@@ -1,124 +1,142 @@
-function SkyllinstadEtAl1999(dagnc,sfxnc,chmnc,adcpnc,outdir)
-% function skyllinstad1999(dagnc,sfxnc,chmnc,outdir)
-% dagnc - dag file from LES (netCDF)
-% sfxnc - surface flux file (netCDF)
-% chmnc - Chameleon data file (netCDF)
+function SkyllinstadEtAl1999()
+% function skyllinstad1999()
+% dagnc     - dag file from LES (netCDF)
+% sfxnc     - surface flux file (netCDF)
+% chmnc     - Chameleon data file (netCDF)
+% adcpnc    - Acoustic Doppler Current Profiler data file (netCDF)
+% bcascii   - Boundary condition file (ASCII)
+%
+% outdir    - path where data, image and script files will be generated
+%             contains "dat", "plt", and "png" subdirectories
 %
 % inspired by analysis in
 % Skyllingstad, E. D.; Smyth, W. D.; Moum, J. N. & Wijesekera, H.
 % Upper-ocean turbulence during a westerly wind burst:
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
-%
+ DynamoDir = '/home/mhoecker/work/Dynamo/';
+ ModelDir = cstrcat(DynamoDir,'/output/yellowstone13/');
+ ObserveDir = cstrcat(DynamoDir,'/Observations/netCDF/');
+ dagnc  = cstrcat(ModelDir,'dag.nc');
+ sfxnc  = cstrcat(ObserveDir,'RevelleMet/Revelle1minuteLeg3_r3.nc');
+ chmnc  = cstrcat(ObserveDir,'Chameleon/dn11b_sum_clean_v2.nc');
+ adcpnc = cstrcat(ObserveDir,'RAMA/uv_RAMA_0N80E.nc');
+ TSUVnc = cstrcat(ModelDir,'UVinit.nc')
+ outdir = cstrcat(DynamoDir,'plots/y13/')
+ bcascii= cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.bc');
+ bcdat = cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.dat');
+ %
+ % Add figure plotting comands to the PATH
  ensureSkyllingstad1999;
- if nargin()<1
-  %dagnc = '/home/mhoecker/work/Dynamo/output/run8/dyno_328Rev_5-a_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone1/o448_1-b_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone2/o512_1_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone3/o1024_1_dag.nc'
-  %dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
-  dagnc ='/home/mhoecker/work/Dynamo/output/yellowstone7/dyntest-b_dag.nc'
- end%if
- if nargin()<2
-  sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/RevelleMet/Revelle1minuteLeg3_r3.nc'
-  %sfxnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/FluxTower/PSDflx_leg3.nc'
-end%if
- if nargin()<3
-  chmnc = '/home/mhoecker/work/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
- end%if
- if nargin()<4
-  %adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/ADCP/adcp150_filled_with_140.nc"
-  adcpnc = "/home/mhoecker/work/Dynamo/Observations/netCDF/RAMA/uv_RAMA_0N80E.nc"
- end%if
- if nargin()<5
-  %outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/Skyllinstad1999copy/'
-  outdir = '/home/mhoecker/work/Dynamo/plots/y7/';
- end%if
- #
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- #
- #
- outdir = '/home/mhoecker/work/Dynamo/plots/y8/';
- dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone8/dyn1024-dag.nc'
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- #
- outdir = '/home/mhoecker/work/Dynamo/Documents/EnergyBudget/y6/';
- dagnc = '/home/mhoecker/work/Dynamo/output/yellowstone6/d1024_1_dag.nc'
- allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
- #
- # Test figure
- #testfig(outdir);
- #figRi(sfxnc,outdir);
- #fig1
- #ObsSurfEps(sfxnc,chmnc,outdir);
- #fig2
- #initialTSUV(chmnc,adcpnc,outdir);
- #fig3
- #ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig3diff
- #ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig4
- #NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig6
- #tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- #fig7
- #HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ %
+ allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
  % Remove the figure ploting commands from the PATH
  removeSkyllingstad1999;
 end%function
 
-function allfigs(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
+ %
+ %% Preliminaries
+ %% Get plot parameters
+ %% parse file names
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs] = plotparam();
  [dagpath,dagname,dagext] = fileparts(dagnc)
- Nfigs = 10;
- Ncur = 0;
- waithandle = waitbar(Ncur./Nfigs,["Generating ObsSurfEps figures in " outdir]);
- Ncur = Ncur+1;
- # Richardson Number Defined by Surface Flux
- #figRi(sfxnc,outdir);
- # Surface and dissipation observations
- ObsSurfEps(sfxnc,chmnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating initialTSUV figures in\n" outdir]);
- Ncur = Ncur+1;
- # Initial Conditions
- initialTSUV(chmnc,adcpnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating ObsSimSideTSUVwSurf figures in\n" outdir]);
- Ncur = Ncur+1;
- # Model Obersvation Comparison
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures ObsSimTSUVdiff in\n" outdir]);
- Ncur = Ncur+1;
- # Model Observation Difference
- ObsSimTSUVdiff(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating NSRi figures in\n" outdir]);
- Ncur = Ncur+1;
- # Stability Criterion
+ pyflowscript = cstrcat(dirs.script,"tkeflow.py");
+ %
+ %% Richardson Number Defined by Surface Flux
+ %
+ %figRi(sfxnc,outdir);
+
+ %% Surface and dissipation observations
+ %
+ ObsSurfEps(dagnc,bcdat,outdir);
+
+ %% Initial Conditions
+ %
+ initialTSUV(TSUVnc,outdir);
+
+ % T,S,U plots
+ %
+
+ ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
+
+ %% Stability Criterion
+ %
  NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating Heatfluxcompare figures in\n" outdir]);
- Ncur = Ncur+1;
- # Heat flux comparison
- Heatfluxcompare(dagnc,sfxnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating HeatBudg figures in\n" outdir]);
- Ncur = Ncur+1;
- #Heat Budget
- HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating tkeBudg figures in\n" outdir]);
- Ncur = Ncur+1;
- # Turbulent Kinetic energy Budget plots
- tkeBudg(chmnc,adcpnc,sfxnc,dagnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- #
- [outtke,outzavg,outAVG] = tkeBudget(dagnc);
- tkenc = [dagpath '/' dagname "tke" dagext];
+
+ %% Heat flux comparison
+
+ Heatfluxcompare(dagnc,bcdat,outdir);
+
+ %% Heat Budget
+
+ HeatBudg(dagnc,bcdat,outdir);
+
+ %% Salt Budget
+
+ SalBudg(dagnc,bcdat,outdir);
+
+ %% Momentum Budget
+
+ momflux(dagnc,bcdat,outdir)
+
+ %% Richardson # histogram
+
+ [SPfile,pcval] = richistogram(dagnc,outdir);
+
+ %% Turbulent Kinetic energy Budget plots
+
+ tkeBudg(dagnc,outdir,SPfile,pcval);
+
+ %% Hourly tke Budget
+ dt = 2*3600;
+ imax = ceil(30*3600/dt);
+ tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
+
+end%function
+
+function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
+ [dagpath,dagname,dagext] = fileparts(dagnc)
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
+ for i=1:imax
+  trange = [-dt,0]+dt*i;
+  obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
+  namesfx = ["hourlytke" num2str(i,"%02i")];
+  outnc = [outdir '/dat/' dagname namesfx dagext];
+  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
+  [tscale,tunit] = timeunits(trange);
+  ti = num2str(trange(1)/tscale,"%03.1f");
+  tf = num2str(trange(2)/tscale,"%03.1f");
+  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+  unix(["python " pyflowscript ' ' outdat ' ' outdir "png/" namesfx " " plotlab]);
+ end%for
+ %% Overall tke Budget
+ trange = [0,dt*imax];
+ tkenc = [outdir '/dat/' dagname "tke" dagext];
+ [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
+ [tscale,tunit] = timeunits(trange);
+ ti = num2str(trange(1)/tscale,"%03.1f");
+ tf = num2str(trange(2)/tscale,"%03.1f");
+ [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
  [tkepath,tkename,tkeext] = fileparts(tkenc);
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
- tkebzavg(tkezavgnc,outdir);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- #
- pyflowscript = "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tkeflow.py";
- unix(["python " pyflowscript " " dagpath "/tkeflow.dat " outdir]);
- waitbar(Ncur./Nfigs,waithandle,["Generating figures in\n" outdir]);
- Ncur = Ncur+1;
- close(waithandle);
+ tkebzavg(tkezavgnc,dagnc,outdir);
+ plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+ unix(["python " pyflowscript " " outdat " " outdir "png/full " plotlab]);
+end%function
+
+function [tscale,tunit] = timeunits(trange)
+  if(diff(trange)<6)
+   tscale = 1;
+   tunit = "sec";
+  elseif(diff(trange)<360)
+   tscale = 60;
+   tunit = "min";
+  elseif(diff(trange)<8640)
+   tscale = 3600;
+   tunit = "hr";
+  else
+   tscale = 86400;
+   tunit = "day";
+  end%if
 end%function

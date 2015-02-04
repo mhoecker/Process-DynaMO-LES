@@ -6,9 +6,10 @@
 #  Observed Salinity
 #  Modeled Sainity
 #
-Tmin = 28.3
+load termfile
+Tmin = 27.70
 Tmax = 30.10
-set output outdir.abrev."T".termsfx
+set output pngdir.abrev."T".termsfx
 #
 # Setup spacing
 rows = 3
@@ -31,20 +32,23 @@ set autoscale y
 set key l t
 set ylabel "J_h (kW/m^2)" offset yloff,0
 set ytics mirror -1,.5,1 offset ytoff,0
-set label 1 "a" at graph 0, 1 left front textcolor rgbcolor "grey30" nopoint offset character 0, .3
+set label 1 "a"
 plot datdir.abrev."JPtau.dat" binary format="%f%f%f%f%f"u 1:(0.001*$2) title "J_h" lc rgbcolor "black"
 #
 # Profile Observations
 #
-load scriptdir."tlocbloc.plt"
-set key inside b l opaque samplen -1 width -.5
+#load limfile
+#load scriptdir."tlocbloc.plt"
+set key inside b l opaque
 set format y "%g"
 set ylabel "Z (m)"
+set ytics -70,20,10
+set yrange [-dsim:0]
 # Temperature
 set cblabel "T (^oC)" offset -yloff/2
 cbmin = Tmin
 cbmax = Tmax
-load outdir."pospalnan.plt"
+load pltdir."pospalnan.plt"
 set cbrange [cbmin:cbmax]
 set cbtics cbmin,(cbmax-cbmin)/2,cbmax
 set format cb cbform
@@ -55,14 +59,17 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "b"
-plot datdir.abrev."To.dat" binary matrix w image title "Observed"
+plot datdir.abrev."To.dat" binary matrix w image title "Observed",\
+datdir.abrev."MLchm.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 # Simulated
-set format x ""
+set format x "%g"
+set xlabel "2011 UTC yearday"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,1*vskip+cbhig
 set label 1 "c"
-plot datdir.abrev."Ts.dat" binary matrix w image title "Simulated"
+plot datdir.abrev."Ts.dat" binary matrix w image title "Simulated",\
+datdir.abrev."ML.dat" binary form="%float%float" u 1:2 ls -1 title MLtext
 unset colorbox
 unset multiplot

@@ -1,15 +1,11 @@
-function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
+function HeatBudg(dagnc,bcfile,outdir)
 % figure 7 Heat Profiles
  abrev = "HeatBudg";
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir]=plotparam(outdir,outdir,abrev);
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = surfaceflux(sfxnc,trange);
- # Calulatwe the Driven Richarson number
- [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
- # Extract Chameleon data
- [tchm,zchm,epschm,Tchm,Schm]=ChameleonProfiles(chmnc,trange,zrange);
+ [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcfile,(trange-t0sim)*24*3600);
  # Extract simulation data
  [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
@@ -35,8 +31,6 @@ function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  DAGheat.dhfdz_ave = -DAGheat.hf_ave*ddzw';
  DAGheat.dwtdz_ave = -DAGheat.wt_ave*ddzw';
  DAGheat.dTdt_ave = ddt*DAGheat.t_ave*4e6;
- #DAGheat.T_dTdz_ave = sqrt(DAGheat.t2_ave);
- #DAGheat.T_dTdz_ave = (DAGheat.t_ave*ddzu');
  DAGheat.T_dTdz_ave = sqrt(DAGheat.t2_ave)./abs(DAGheat.t_ave*ddzu');
  #
  #
@@ -44,7 +38,6 @@ function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
  for i=1:length(tdag)
   MLwt(i) = DAGheat.wt_ave(i,MLI(i));
  end%for
- MLwtsfx = interp1(tdag,MLwt,tsfx);
  #
  if(useoctplot==1)
   subplot(3,1,1)
@@ -56,19 +49,17 @@ function HeatBudg(chmnc,adcpnc,sfxnc,dagnc,outdir)
   [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
   pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
  else
-  binarray(tsfx',[Jh,MLwtsfx]',[outdir abrev "Jh.dat"]);
-  binarray(tdag',[MLD,MLwt]',[outdir abrev "ML.dat"])
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[outdir abrev "hf.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[outdir abrev "wt.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[outdir abrev "c.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[outdir abrev "d.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dhfdz_ave',[outdir abrev "dhfdz.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dwtdz_ave',[outdir abrev "dwtdz.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[outdir abrev "dTdt.dat"]);
-  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[outdir abrev "T_dTdz.dat"]);
+  binarray(tdag',[Jh,MLwt]',[dir.dat abrev "Jh.dat"]);
+  binarray(tdag',[MLD,MLwt]',[dir.dat abrev "ML.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[dir.dat abrev "hf.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[dir.dat abrev "wt.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[dir.dat abrev "c.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t_ave' ,[dir.dat abrev "d.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dhfdz_ave',[dir.dat abrev "dhfdz.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.dwtdz_ave',[dir.dat abrev "dwtdz.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.dTdt_ave' ,[dir.dat abrev "dTdt.dat"]);
+  binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.T_dTdz_ave' ,[dir.dat abrev "T_dTdz.dat"]);
   # invoke gnuplot
-  #unix(["gnuplot " limitsfile " " scriptdir abrev "tab.plt"]);
-  unix(["gnuplot " limitsfile " " scriptdir abrev ".plt"]);
-  #unix(["gnuplot /home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/" abrev ".plt"]);
+  unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
  end%if
 end%function

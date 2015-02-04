@@ -1,12 +1,12 @@
-function [outtke,outzavg,outAVG] = tkeBudget(dagnc,outnc,trange,zrange)
+function [outtke,outzavg,outAVG,outAVGdat] = tkeBudget(dagnc,outnc,trange,zrange)
 # output is a ascii file with the mean terms in the tke budget
 # Toatal Stokes Production
 # Total Shear Production
 # Total Buoyancy Production
 # Total Dissipation
-#data = cell array of flattened data to be saved
-#vars = cell array of corresponding variable names
-#fileid = identifier of file to use as cdf file
+# data = cell array of flattened data to be saved
+# vars = cell array of corresponding variable names
+# fileid = identifier of file to use as cdf file
  if(nargin<3)
   [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badSt,badwP,Szdag,fave] = DAGtkeprofiles(dagnc);
  elseif(nargin<4)
@@ -130,7 +130,7 @@ if(k<Nvar) # Model wP
  formulae{k} = 'p_ave';
 end%if
 if(k<Nvar)
- k=k+1
+ k=k+1;
  vars{k} = 'f_ave';
  units{k} = 'W/kg';
  dims{k} = [ vars{1} "," vars{2} ];
@@ -138,15 +138,15 @@ if(k<Nvar)
  formulae{k} = 'f_ave=uf_ave+vf_ave+wf_ave';
 end%if
 
- [inpath,inname,inext] = fileparts(dagnc)
+ [inpath,inname,inext] = fileparts(dagnc);
  if(nargin<2)
-  outnc = [inpath '/' inname "tke" inext]
+  outnc = [inpath '/' inname "tke" inext];
  end%if
  [outpath,outname,outext] = fileparts(outnc);
- outtke = outnc
+ outtke = outnc;
  outzavg = [outpath '/' outname 'zavg' outext];
  outAVG =  [outpath '/' outname 'AVG' outext];
- outAVGdat = [outpath '/tkeflow.dat';]
+ outAVGdat = [outpath '/' outname '.dat'];
  cdffile = [tempname("/home/mhoecker/tmp/")  ".cdf"];
  cdlid = fopen(cdffile,'w');
 # Write header
@@ -175,12 +175,11 @@ for i=1:Nvar
  fprintf(cdlid,':Function_called = "%s";\n',mfilename);
 
 
- %fclose(cdlid)
  writeCDFdata(cdlid,val,vars);
- "wrote CDF file"
- unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile])
- unix(['ncwa -O -a z ' outnc ' ' outzavg])
- unix(['ncwa -O -a z,t ' outnc ' ' outAVG])
+ %"wrote CDF file"
+ unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile]);
+ unix(['ncwa -O -a z ' outnc ' ' outzavg]);
+ unix(['ncwa -O -a z,t ' outnc ' ' outAVG]);
  AVG = netcdf(outAVG,'r');
  ZVG = netcdf(outzavg,'r');
  netdtke = -ZVG{'tke'}(end)/ZVG{'t'}(end);
@@ -189,7 +188,7 @@ for i=1:Nvar
  ncclose(ZVG)
  AVGdat = fopen(outAVGdat,'w');
  for i=1:length(tkeflow)
-  fprintf(AVGdat,'%20.20f ',tkeflow(i))
+  fprintf(AVGdat,'%20.20f ',tkeflow(i));
  end%for
- fclose(AVGdat)
+ fclose(AVGdat);
 end%function

@@ -1,6 +1,6 @@
 function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = surfaceflux(sfxnc,trange)
  % Extract Flux data
- field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH"];
+ field = ["Yday";"stress";"P";"Wdir";"SST";"SalTSG";"cp";"sigH";"U10"];
  field = [field;"shf";"lhf";"rhf";"Solarup";"Solardn";"IRup";"IRdn"];
  % Some other things to extract
  % "Precip";
@@ -13,37 +13,48 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBfl
  sst = sfx.SST;
  SalTSG = sfx.SalTSG;
  SolarNet = sfx.Solarup+sfx.Solardn;
- cp = sfx.cp;
- sigH = sfx.sigH;
- # Honikker numbers
- # Requires some thermodynamic constants
+ %% Get wave charachterisics
+ %load(wavespecHL)
+ %avgtime = 0.25/24;
+ % wave_height = meanfil(Hs,tHL,tsfx,avgtime);
+ % wave_length = meanfil(Lam,tHL,tsfx,avgtime);
+ %sigH = interp1(tHL,Hs,tsfx);
+ %wave_length = interp1(tHL,Lam,tsfx);
+ PMwaves = PiersonMoskowitz(sfx.U10);
+ wave_height = 2*PMwaves.A;
+ wave_length = PMwaves.L;
+ clear PMwaves
+ %
+ % Honikker numbers
+ % Requires some thermodynamic constants
  findgsw;
- # Acceleration of gravity
+ % Acceleration of gravity
  g = gsw_grav(0);
- # Thermal expansion coefficient
+ % Thermal expansion coefficient
  alpha = gsw_alpha(SalTSG,sst,0);
- # Haline contraction coefficient
+ % Haline contraction coefficient
  beta = gsw_beta(SalTSG,sst,0);
- # Heat Capacity
+ % Heat Capacity
  Cp = gsw_cp_t_exact(SalTSG,sst,0);
- # Latent Heat
+ % Latent Heat
  LH = gsw_latentheat_evap_t(SalTSG,sst);
- # density
+ % density
  rho = gsw_rho(SalTSG,sst,0);
- # Convert Cp into omega and k
- k = g./cp.^2;
+ % Convert Hs & L into omega and k
+ k = 2*pi./wave_length;
  omega = sqrt(g.*k);
- # Calculate Stokes drift velocity
- St = omega.*k.*(sigH.^2);
- # Calculate u*
+ cp = omega./k;
+ % Calculate Stokes drift velocity
+ St = omega.*k.*((wave_height./2).^2);
+ % Calculate u*
  ustarsq = stress./rho;
- # Calculate evaporation rate
+ % Calculate evaporation rate
  e = -sfx.lhf./(rho.*LH);
- # Calculate buoyancy flux scales
+ % Calculate buoyancy flux scales
  LaBflx = St.*k.*stress./rho;
  JhBflx = alpha.*g.*Jh./(Cp.*rho);
  SaBflx = -beta.*g.*SalTSG.*(e+p.*0.001/3600);
- # Calculate Thermal and Saline Honikker #s
+ % Calculate Thermal and Saline Honikker #s
  HoT = JhBflx./LaBflx;
  HoS = SaBflx./LaBflx;
 

@@ -1,4 +1,4 @@
-function [gamsq,gamc,favg,phi,dphi,fphi] = gammaphi(Sxy,Sx,Sy,f,bands,conf)
+function [gamsq,gamc,favg,phi,dphi,fphi,Sxavg,Syavg,Sxyavg] = gammaphi(Sxy,Sx,Sy,f,bands,conf)
  % Band average
  [Sxavg,favg,dof] = bandavg(Sx,f,bands);
  Syavg = bandavg(Sy,f,bands);

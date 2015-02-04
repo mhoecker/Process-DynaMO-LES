@@ -37,12 +37,12 @@ function [y,wmatrix] = harmfill(x,t,s,order,T,demoname)
   N = length(t);
   M = length(s);
   wmatrix = [];
-% ensure there is nothing to alias into the new sampling
+% Set the new data series to zero
   y = zeros(1,M);
   for i=1:M
    w = zeros(1,N);
    for j=1:N
-    if((abs(s(i)-t(j))<T/2)*(1-isnan(x(j))))
+    if((abs(s(i)-t(j))<T/2)*(~isnan(x(j))))
      w(j) = harmwt(s(i)-t(j),T,order);
      y(i) = y(i)+x(j).*w(j);
     end%if

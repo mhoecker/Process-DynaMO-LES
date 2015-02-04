@@ -1,10 +1,9 @@
 # Make table for countours
 unset pm3d
 unset surface
-set style data lines
 set contour
 #
-outroot = outdir.abrev
+outroot = datdir.abrev
 datroot = datdir.abrev
 #
 # Density deviation

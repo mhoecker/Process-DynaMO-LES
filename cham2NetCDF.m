@@ -9,6 +9,15 @@
 #	uses "/home/mhoecker/tmp/" as a temporay directory
 #
 #
+ if(nargin<1)
+  inloc = "/home/mhoecker/Documents/work/Dynamo/Observations/mat/Chameleon/";
+ end%if
+ if(nargin<2)
+  fname = "dn11b_sum_clean_v2";
+ end%if
+ if(nargin<3)
+  outloc = "/home/mhoecker/Documents/work/Dynamo/Observations/netCDF/Chameleon/";
+ end%if
 	tmp = "/home/mhoecker/tmp/";
 	infile = [inloc fname '.mat'];
 	cdffile = [tmp fname '.cdf'];
@@ -55,7 +64,7 @@
 # size(cham.time)
 # size(cham.depth)
 # size(cham.EPSILON)
-	val = {cham.time(:)-datenum(2011,1,0),-cham.depth(:),cham.EPSILON(:),cham.T(:),cham.S(:),cham.CHI(:)};
+	val = {cham.time(:)-datenum(2011,1,0),-cham.depth(:),cham.EPSILON(:),cham.T(:),cham.S(:),cham.CHI(:),cham.lat(:),cham.lon(:),cham.P(:)};
 
 	Nvar = length(val);
 	Ndim = 2;
@@ -122,6 +131,30 @@ if(k<Nvar)
 	longname{k} = 'Dissipation of temperature variability';
 	formulae{k} = '';
 end%if
+if(k<Nvar)
+	k = k+1;
+	vars{k} = 'lat';
+	units{k} = 'degrees';
+	dims{k} = [ vars{1} ];
+	longname{k} = 'Lattitude';
+	formulae{k} = '';
+end%if
+if(k<Nvar)
+	k = k+1;
+	vars{k} = 'lon';
+	units{k} = 'degrees';
+	dims{k} = [ vars{1} ];
+	longname{k} = 'Longitude';
+	formulae{k} = '';
+end%if
+if(k<Nvar)
+	k = k+1;
+	vars{k} = 'P';
+	units{k} = 'dbar';
+	dims{k} = [ vars{1} "," vars{2} ];
+	longname{k} = 'Pressure';
+	formulae{k} = '';
+end%if
 #
 #	Declare Dimensions
 	fprintf(cdlid,'dimensions:\n');
@@ -170,4 +203,4 @@ writeCDFdata(cdlid,val,vars)
 #fprintf(cdlid,'}\n',fname)
 #fclose(cdlid)
 unix(['ncgen -k1 -x -b ' cdffile ' -o ' outfile '&& rm ' cdffile])
-endfunction
+end%function

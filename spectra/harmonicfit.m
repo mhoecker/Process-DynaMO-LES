@@ -1,4 +1,4 @@
-function [SCamp,dSCamp,y,err] = harmonicfit(x,t,f,win)
+function [SCamp,dSCamp,y,err,f] = harmonicfit(x,t,f,win)
 y = x*NaN;
 N = length(t);
 dt = mean(diff(t));
@@ -8,6 +8,14 @@ mu = mean(xgood);
 xgood = xgood-mu;
 tgood = t(idxgood);
 Ngood = length(idxgood);
+if(nargin<3)
+ df = 1./(N*dt);
+ Nf = floor((Ngood-1)/4);
+ f = (1:1:Nf)*df;
+end%if
+if(nargin<4)
+ win='';
+end%if
 Period = (max(t)-min(t))*(N/(N+1));
 clear idxgood
 switch(win)
@@ -25,7 +33,7 @@ end
 # window the data
 nowinvar = var(xgood,1);
 xgood = w.*xgood;
-scale = nowinvar./var(xgood,1);
+scale = sqrt(nowinvar./var(xgood,1));
 xgood = scale*xgood;
 
 if(size(xgood)(1)!=1)
