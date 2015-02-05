@@ -11,7 +11,7 @@ cbform = "%+4.1te^{%+02T}"
 set autoscale cb
 set cbtics auto
 # heat flux
-sfxmax = 5e-5
+sfxmax = 4.0e-5
 sfxmin = -sfxmax
 #
 Tdispmax = 50.0
@@ -94,8 +94,8 @@ set cbtics auto
 Tdispmax = 50.0
 Tdispmin = 0.5
 #
-sfxmin = -1e-3
-sfxmax = +1e-3
+sfxmin = -1.0e-4
+sfxmax = +1.0e-4
 set autoscale cb
 #
 set multiplot title "Surface and Mixed Layer Salt Flux"
@@ -108,7 +108,7 @@ set xlabel ""
 set key left bottom
 set cbrange [sfxmin:sfxmax]
 unset cbtics
-set cbtics ("-0.5" -5e-4 ,"0" 0, "+0.5" 5e-4)
+set cbtics ("-0.1" -1e-4 ,"0" 0, "+0.1" 1e-4)
 set format cb ""
 set cblabel "psu mm/s"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
@@ -123,8 +123,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x "%g"
 set xlabel "2011 UTC yearday"
-set yrange [0:.74]
-set ytics -1.2,.3,1.2
+set yrange [0:.19]
+set ytics -1.2,.1,1.2
 set ylabel "psu mm/s"
 set key horizontal
 set key top left
