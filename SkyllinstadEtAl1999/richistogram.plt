@@ -262,19 +262,18 @@ unset logscale cb
 load pltdir."sympal.plt"
 load depthticfile
 load timeticfile
-set ylabel "Ri=N^2/S^2"
+set ylabel "Depth (m)"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set format cb ""
-set cblabel ""
+set cblabel "Ri=N^2/S^2"
 set cbrange [-1:1]
 set cbtics ("0" 0)
 set cbtics add ("+1/4" +.5,"+{/Symbol \245}" +1)#, "+3/4" +.75, "+1/12" +.25)
 set cbtics add ("-1/4" -.5,"-{/Symbol \245}" -1)#, "-3/4" -.75, "-1/12" -.25)
 set format cb ""
-set cblabel ""
 set format x "%g"
 set xlabel "2011 UTC yearday"
 unset key
