@@ -15,16 +15,16 @@ function SkyllinstadEtAl1999()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- ModelDir = cstrcat(DynamoDir,'/output/yellowstone13/');
+ ModelDir = cstrcat(DynamoDir,'/output/yellowstone14/');
  ObserveDir = cstrcat(DynamoDir,'/Observations/netCDF/');
  dagnc  = cstrcat(ModelDir,'dag.nc');
  sfxnc  = cstrcat(ObserveDir,'RevelleMet/Revelle1minuteLeg3_r3.nc');
  chmnc  = cstrcat(ObserveDir,'Chameleon/dn11b_sum_clean_v2.nc');
  adcpnc = cstrcat(ObserveDir,'RAMA/uv_RAMA_0N80E.nc');
  TSUVnc = cstrcat(ModelDir,'UVinit.nc')
- outdir = cstrcat(DynamoDir,'plots/y13/')
- bcascii= cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.bc');
- bcdat = cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.dat');
+ outdir = cstrcat(DynamoDir,'plots/y14/')
+ bcascii= cstrcat(DynamoDir,'/output/yellowstone14/Surface_Flux_328-330.bc');
+ bcdat = cstrcat(DynamoDir,'/output/yellowstone14/Surface_Flux_328-330.dat');
  %
  % Add figure plotting comands to the PATH
  ensureSkyllingstad1999;
@@ -89,9 +89,9 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
  tkeBudg(dagnc,outdir,SPfile,pcval);
 
  %% Hourly tke Budget
- dt = 2*3600;
- imax = ceil(30*3600/dt);
- tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
+ %dt = 2*3600;
+ %imax = ceil(30*3600/dt);
+ %tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
 
 end%function
 
