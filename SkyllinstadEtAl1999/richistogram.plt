@@ -277,6 +277,7 @@ set format cb ""
 set format x "%g"
 set xlabel "2011 UTC yearday"
 unset key
+set palette maxcolors 8
 set label 1 "c"
 plot datdir."Ritz.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
 #

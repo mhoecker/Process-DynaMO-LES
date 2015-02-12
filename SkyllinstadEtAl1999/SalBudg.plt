@@ -110,9 +110,9 @@ set cbrange [sfxmin:sfxmax]
 unset cbtics
 set cbtics ("-0.1" -1e-4 ,"0" 0, "+0.1" 1e-4)
 set format cb ""
-set cblabel "psu mm/s"
+set cblabel "w'S'\n(psu mm/s)"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set ylabel "psu m/s"
+set ylabel "Depth (m)"
 set label 1 "a"
 plot datdir.abrev."ws.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
@@ -131,6 +131,6 @@ set key top left
 set label 1 "b"
 plot \
 datdir.abrev."SFC_ML_flx.dat" binary format="%f%f%f" u 1:($2*1e3) ls 1 title "Surface", \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f" u 1:($3*1e3) ls 2 title "w's' at ML"
+datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f" u 1:($3*1e3) ls 2 title "w'S' at ML"
 #
 unset multiplot

@@ -15,7 +15,7 @@ function  initialTSUV(TSUVnc,outdir)
  z = TSUV{'Z'}(:);
  idx = inclusiverange(z,zrange);
  z = TSUV{'Z'}(idx)';
- T = TSUV{'CT'}(idx)';
+ CT = TSUV{'CT'}(idx)';
  S = TSUV{'SA'}(idx)';
  U = TSUV{'U'}(idx)';
  V = TSUV{'V'}(idx)';
@@ -23,12 +23,13 @@ function  initialTSUV(TSUVnc,outdir)
  if(max(z)<0)
   imin = find(z==max(z),1);
   z = [z(:);0]';
-  T = [T(:);T(imin)]';
+  CT = [CT(:);CT(imin)]';
   S = [S(:);S(imin)]';
   U = [U(:);U(imin)]';
   V = [V(:);V(imin)]';
  end%if
-
+ findgsw;
+ T = gsw_t_from_CT(S,CT,0*S);
  %useoctplot=1
  if(useoctplot==1)
   figure(1)

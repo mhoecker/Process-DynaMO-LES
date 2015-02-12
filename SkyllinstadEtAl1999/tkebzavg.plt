@@ -8,8 +8,8 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
-dtke = 2e-6
-dtketic  = 2e-6
+dtke = 1e-6
+dtketic  = 1e-6
 set yrange [-1.1*dtketic:1.5*dtketic]
 set ytics dtketic
 #set autoscale y
@@ -30,6 +30,7 @@ plot datdir."tkebzavg.dat" binary format=form u 1:3 title "<^{d}/_{dt}tke>" ls 6
  datdir."tkebzavg.dat" binary format=form u 1:5 title "<sgs>" ls 8,\
  datdir."tkebzavg.dat" binary format=form u 1:6 title "<w'P'>" ls 9
 unset multiplot
+unset y2label
 #
 set output pngdir.abrev."src".termsfx
 # Setup spacing
@@ -39,19 +40,22 @@ cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
 set multiplot title "Spatial mean of tke sources/sinks"
-set ytics dtketic
-set yrange [-1.1*dtketic:1.5*dtketic]
+dtkescale = 1e-6;
+dtkepfx = "{/Symbol m}"
+set ylabel dtkepfx."W/kg"
+set ytics dtketic/dtkescale
+set yrange [-2.2*dtketic/dtkescale:2.2*dtketic/dtkescale]
 set xtics format ""
 set xtics format "%g"
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 
-plot datdir."tkebzavg.dat" binary format=form u 1:7 title "<St>" ls 1 ,\
- datdir."tkebzavg.dat" binary format=form u 1:8 title "<SP>" ls 2 ,\
- datdir."tkebzavg.dat" binary format=form u 1:9 title "<w'b'>" ls 3 ,\
- datdir."tkebzavg.dat" binary format=form u 1:10 title "<{/Symbol e}>" ls 4 ,\
- datdir."tkebzavg.dat" binary format=form u 1:11 title "<{/Symbol a\321}^{12}>" ls 5
+plot datdir."tkebzavg.dat" binary format=form u 1:($7/dtkescale) title "<St>" ls 1 ,\
+ datdir."tkebzavg.dat" binary format=form u 1:($8/dtkescale) title "<SP>" ls 2 ,\
+ datdir."tkebzavg.dat" binary format=form u 1:($9/dtkescale) title "<w'b'>" ls 3 ,\
+ datdir."tkebzavg.dat" binary format=form u 1:($10/dtkescale) title "<{/Symbol e}>" ls 4 ,\
+ datdir."tkebzavg.dat" binary format=form u 1:($11/dtkescale) title "<{/Symbol a\321}^{12}>" ls 5
 
 #
 unset multiplot

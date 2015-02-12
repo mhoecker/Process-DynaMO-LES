@@ -50,7 +50,7 @@ set label 1 "b"
 if(exists("SPcontour")){
 set key b l
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not,\
-SPcontour w lines lc -1 title "".SPpc."%";\
+SPcontour w lines lc -1 lw .5 title "".SPpc."%";\
 }
 else{
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
@@ -135,7 +135,7 @@ plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "w'P'"
+set ylabel "w'p'"
 field = "wpi"
 set label 1 "c"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not

@@ -19,7 +19,7 @@ set x2tics nomirror offset 0,-xtoff
 set yrange [-dsim:0]
 set ytics mirror -70,20,-10 offset ytoff,0
 set y2range [-dsim:0]
-set xlabel  "{/Symbol T} "
+set xlabel  "T (^oC)"
 set x2label "" offset  graph -.6, char -xloff
 set label 35 "S (g/kg)" at graph 0, graph 1 right nopoint offset character 0, .5
 set lmargin at screen lloc(col)
@@ -32,8 +32,8 @@ set x2range [35.2:35.8]
 set x2tics 35.3,.2,35.7
 set label 1 "a"
 plot \
-datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 2:1 w lines axes x1y2 title "T" ls 1,\
-datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 3:1 w lines axes x2y2 title "S" ls 2
+datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 2:1 w lines axes x1y2 title "T" ls 11,\
+datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 3:1 w lines axes x2y2 title "S" ls 12
 col = nextcol(col)
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
@@ -43,17 +43,15 @@ set ylabel ""
 set y2label "Z (m)" offset -yloff,0
 set y2tics nomirror -70,20,-10
 set xrange [-.55:.55]
-set x2range [-.55:.55]
-set xlabel  "U (m/s)" offset graph 0, char +xloff
-set label 35 "V (m/s)" at graph 1,1 left offset char 0, char .5
+set xlabel  "Vel. (m/s)" offset graph 0, char +xloff
+unset label 35
 set xtics -.6,.3,.6
-set x2tics -.6,.3,.6
+unset x2tics
 set mxtics 3
-set mx2tics 3
 set yzeroaxis
 set label 1 "b"
 plot \
-datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 4:1 w lines axes x1y2 title "U "   ls 3 ,\
-datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 5:1 w lines axes x2y2 title "V "   ls 4 ,\
+datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 4:1 w lines axes x1y2 title "U "   ls 11 ,\
+datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 5:1 w lines axes x1y1 title "V "   ls 12 ,\
 
 unset multiplot
