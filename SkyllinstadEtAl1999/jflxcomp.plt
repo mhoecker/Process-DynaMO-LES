@@ -16,13 +16,13 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
 set key b r horizontal
-set y2label "Buoyancy Flux\n10^{-6} (m^2/s^2/s)"
+set y2label "Buoyancy Flux\n({/Symbol m}W/kg)"
 set format x ""
 #phi(x) = x/(1+abs(x))
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -2,.5,2 mirror
+set ytics -2,.5,2 nomirror
 set ytics add ("0" 0)
 set yrange [-.75:1.4]
 set label 1 "a"
@@ -39,7 +39,7 @@ row = nextrow(row)
 #set format y "%+4.1te^{%+02T}"
 set ytics add ("0" 0)
 set yrange [0:24]
-set ytics -30,10,30 mirror
+set ytics -30,10,30 nomirror
 set mytics 10
 set ytics add ("0" 0)
 set label 1 "b"
@@ -53,7 +53,8 @@ set xlabel "2011 UTC yearday" offset 0,xloff
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set y2label ""
-set yrange [5e-3:5e0]
+set autoscale y
+set yrange [2e-2:2e0]
 set ytics 1e-3,1e1,1e2
 set mytics default
 #set ytics add ("0" 0)
@@ -62,7 +63,8 @@ phi(x) = abs(x)
 set logscale y
 set label 1 "c"
 plot \
-datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 11 t " Hoenikker Number",\
+datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 11 t " Hoenikker \#",\
+datdir.abrev."Lat.dat" binary form="%float%float" u 1:(phi($4)) ls 12 t " Turbulent Langmuir \#",\
 #datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 2 t " Ho_T",\
 #datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 1 t " Ho_S"
 

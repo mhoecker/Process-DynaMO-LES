@@ -119,7 +119,7 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  fprintf(fid,"unset pm3d\n");
  fprintf(fid,"unset logscale\n");
  fprintf(fid,"set autoscale\n");
- pc = 75;
+ pc = 65;
  j = ceil(pc*SPbins/100);
  SPcontour = [dir.dat "SPcntr" num2str(pc,"%03i") ".dat"];
  fprintf(fid,"set table '%s'\n",SPcontour);

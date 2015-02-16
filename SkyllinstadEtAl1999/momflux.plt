@@ -21,8 +21,8 @@ set cbrange [0:7e-4]
 unset cbtics
 set cbtics ("0" 0, "-5" 5e-4)
 set format cb ""
-set cblabel "(cm/s)^2"
-set ylabel "u'w'"
+set cblabel "u'w'\n(cm/s)^2"
+set ylabel "Depth (m)"
 set key b l
 plot datdir.abrev."uw.dat" binary matrix u 1:2:(-$3) w image not,\
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"

@@ -56,10 +56,10 @@ function Heatfluxcompare(dagfile,bcfile,outdir,wavespecHL)
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
  # Get Honikker # from Observations
- [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,cp,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagfile,bcfile,(trange-t0sim)*24*3600);
+ [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,S0,sigH,HoT,HoS,LaBflx,JhBflx,SaBflx] = DAGsfcflux(dagfile,bcfile,(trange-t0sim)*24*3600);
  tsfx=t0sim+tsfx./(24*3600);
  Hosfx = HoT+HoS;
- Ho = interp1(Hosfx,tsfx,t);
+ Lat = surfacevars.u_star./surfacevars.S_0;
  if(useoctplot==1)
   # Rescale
   scalefactor = .1
@@ -75,6 +75,7 @@ function Heatfluxcompare(dagfile,bcfile,outdir,wavespecHL)
   print([outdir abrev "Ho.png"],"-dpng")
  else
   binarray(tsfx',[Jh,p]',[outfile "surf.dat"]);
+  binarray(t',[Lat]',[outfile "Lat.dat"]);
   binarray(tsfx',[HoT,HoS,Hosfx]',[outfile "HoTS.dat"]);
   binarray(tsfx',[LaBflx,JhBflx,SaBflx]',[outfile "Bflx.dat"]);
   binmatrix(t',Z',drhozs',[outfile "drhosz.dat"]);

@@ -117,9 +117,9 @@ set cbrange [hfxmin:hfxmax]
 unset cbtics
 set cbtics ("-0.5" -500 ,"0" 0, "+0.5" 500)
 set format cb ""
-set cblabel "kW/m^2"
+set cblabel "{/Symbol r}c_pw'T'\n(kW/m^2)"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set ylabel "{/Symbol r}c_pw'T'"
+set ylabel "Depth (m)"
 set label 1 "a"
 set format x ""
 set xlabel ""

@@ -21,7 +21,7 @@ function momflux(dagnc,bcdat,outdir)
  [ddzzu,dsqdzzu] = ddz(-dagvar1.zzu,8);
  [zzwu,ddzzwu] = ddzinterp(-dagvar3.zzw,-dagvar1.zzu,3);
  % Calculate Mixed Layer Depth
- [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
+ [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,trange,zrange);
  [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
  % zdag is equal to zzu
  %

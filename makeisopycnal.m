@@ -8,6 +8,8 @@ mergec = netcdf(mergenc,"r");
 t = mergec{"t"}(:);
 t0 = 320.0:.5:330.0;
 % filter data to T>1day to remove tides
+% order 0 is a simple average
+% higher orders are powers of a cosine bell
 isoP.fill_T = 5;
 isoP.fill_order = 0;
 tidx = inclusiverange(t,[min(t0)-fill_T/2,max(t0)+fill_T/2]);

@@ -15,16 +15,16 @@ function SkyllinstadEtAl1999()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- ModelDir = cstrcat(DynamoDir,'/output/yellowstone13/');
+ ModelDir = cstrcat(DynamoDir,'/output/yellowstone15/');
  ObserveDir = cstrcat(DynamoDir,'/Observations/netCDF/');
  dagnc  = cstrcat(ModelDir,'dag.nc');
  sfxnc  = cstrcat(ObserveDir,'RevelleMet/Revelle1minuteLeg3_r3.nc');
  chmnc  = cstrcat(ObserveDir,'Chameleon/dn11b_sum_clean_v2.nc');
  adcpnc = cstrcat(ObserveDir,'RAMA/uv_RAMA_0N80E.nc');
  TSUVnc = cstrcat(ModelDir,'UVinit.nc')
- outdir = cstrcat(DynamoDir,'plots/y13/')
- bcascii= cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.bc');
- bcdat = cstrcat(DynamoDir,'/output/yellowstone13/Surface_Flux_328-330.dat');
+ outdir = cstrcat(DynamoDir,'plots/y15/')
+ bcascii= cstrcat(ModelDir,'Surface_Flux_328-330.bc');
+ bcdat = cstrcat(ModelDir,'Surface_Flux_328-330.dat');
  %
  % Add figure plotting comands to the PATH
  ensureSkyllingstad1999;
@@ -58,7 +58,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
  % T,S,U plots
  %
 
- ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
+ %ObsSimSideTSUVwSurf(chmnc,adcpnc,sfxnc,dagnc,outdir)
 
  %% Stability Criterion
  %
@@ -98,7 +98,7 @@ end%function
 function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
  [dagpath,dagname,dagext] = fileparts(dagnc)
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
- for i=1:imax
+ for i=1:1
   trange = [-dt,0]+dt*i;
   obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
   namesfx = ["hourlytke" num2str(i,"%02i")];
