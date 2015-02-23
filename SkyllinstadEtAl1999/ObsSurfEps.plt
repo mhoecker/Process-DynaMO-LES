@@ -15,15 +15,15 @@ set autoscale y
 #
 set multiplot title "Surface Forcing"
 set style data lines
-set ytics .5
-set yrange [-.1:1.1]
+set ytics .3
+set yrange [-.1:.75]
 set key t c horizontal
 set rmargin at screen rloc(col)
 set lmargin at screen lloc(col)
 set format x ""
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "{/Symbol t} (Pa)"
+set ylabel "{/Symbol t} [Pa]"
 set label 1 "a"
 plot \
 datfile binary format=datform u 1:4 ls 11 title "zonal",\
@@ -35,8 +35,8 @@ set bmargin at screen bloc(row)
 set key b r horizontal
 set ytics .5 nomirror offset ytoff,0
 set yrange [-.8:.8]
-set ylabel "J_h (kW/m^2)"
-set y2label "P-E (mm/h)" offset -yloff,0
+set ylabel "J_h [kW/m^2]"
+set y2label "P-E [mm/h]" offset -yloff,0
 set y2tics out 10
 set y2range [-22:22]
 set y2tics nomirror offset -ytoff,0
@@ -53,8 +53,8 @@ set key b r opaque
 set ytics 10 nomirror offset ytoff,0
 set mytics 2
 set yrange [0:27]
-set ylabel "U_s (cm/s)"
-set y2label "{/Symbol l} (m)" offset -yloff,0
+set ylabel "U_s [cm/s]"
+set y2label "{/Symbol l} [m]" offset -yloff,0
 set y2tics out 20
 set my2tics 4
 set y2tics nomirror offset -ytoff,0

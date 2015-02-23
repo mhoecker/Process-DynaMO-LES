@@ -110,9 +110,9 @@ set cbrange [sfxmin:sfxmax]
 unset cbtics
 set cbtics ("-0.1" -1e-4 ,"0" 0, "+0.1" 1e-4)
 set format cb ""
-set cblabel "w'S'\n(psu mm/s)"
+set cblabel "w'S'\n[psu mm/s]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set ylabel "Depth (m)"
+set ylabel "Z [m]"
 set label 1 "a"
 plot datdir.abrev."ws.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
@@ -125,7 +125,7 @@ set format x "%g"
 set xlabel "2011 UTC yearday"
 set yrange [0:.19]
 set ytics -1.2,.1,1.2
-set ylabel "psu mm/s"
+set ylabel "Salt flux [psu mm/s]"
 set key horizontal
 set key top left
 set label 1 "b"

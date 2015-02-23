@@ -15,16 +15,16 @@ load scriptdir."tlocbloc.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 row = nextrow(row)
-set key b r horizontal
-set y2label "Buoyancy Flux\n({/Symbol m}W/kg)"
+set key b c horizontal
+set y2label "Buoyancy Flux\n[{/Symbol m}W/kg]"
 set format x ""
 #phi(x) = x/(1+abs(x))
 phi(x) = x/1e-6
 set format y "%+4.1te^{%+02T}"
 set format y "%g"
-set ytics -2,.5,2 nomirror
+set ytics -1.2,.4,2 nomirror
 set ytics add ("0" 0)
-set yrange [-.75:1.4]
+set yrange [-1.19:0.5]
 set label 1 "a"
 #"Heat g{/Symbol a}J_h/{/Symbol r}C_P"
 #"Salt g{/Symbol b}S(E-P)"
@@ -38,7 +38,7 @@ set bmargin at screen bloc(row)
 row = nextrow(row)
 #set format y "%+4.1te^{%+02T}"
 set ytics add ("0" 0)
-set yrange [0:24]
+set yrange [0:22]
 set ytics -30,10,30 nomirror
 set mytics 10
 set ytics add ("0" 0)
@@ -54,7 +54,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set y2label ""
 set autoscale y
-set yrange [2e-2:2e0]
+set yrange [2e-3:9e0]
 set ytics 1e-3,1e1,1e2
 set mytics default
 #set ytics add ("0" 0)
