@@ -125,95 +125,95 @@ unset key
 #set title ""
 #
 # Setup spacing
-rows = 2
-cols = 1
-col = 0
-row = 0
+#rows = 2
+#cols = 1
+#col = 0
+#row = 0
 #
-load scriptdir."tlocbloc.plt"
-set output pngdir.'phiSPflat.png'
-set xrange [0:1]
-unset logscale cb
-set autoscale y
-set multiplot title "Ri Ranked by Shear Production"
-set rmargin at screen rloc(col)
-set lmargin at screen lloc(col)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set logscale y
-set ytics auto
-set xlabel ""
-set format x ""
-set format cb "%g"
-set style data points
-plot datdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:6 lc -1
+#load scriptdir."tlocbloc.plt"
+#set output pngdir.'phiSPflat.png'
+#set xrange [0:1]
+#unset logscale cb
+#set autoscale y
+#set multiplot title "Ri Ranked by Shear Production"
+#set rmargin at screen rloc(col)
+#set lmargin at screen lloc(col)
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set logscale y
+#set ytics auto
+#set xlabel ""
+#set format x ""
+#set format cb "%g"
+#set style data points
+#plot datdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:6 lc -1
 #
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-unset logscale y
-set xlabel "Percentile"
-set format x "%g"
-set yrange [0:1]
-set format y "%g"
-set ytics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
-plot datdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:7 lc -1
-unset multiplot
+#row = nextrow(row)
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#unset logscale y
+#set xlabel "Percentile"
+#set format x "%g"
+#set yrange [0:1]
+#set format y "%g"
+#set ytics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
+#plot datdir.'flat.dat' binary format="%f%f%f%f%f%f%f" u 1:7 lc -1
+#unset multiplot
 #
 #
-set output pngdir."test.png"
-test
+#set output pngdir."test.png"
+#test
 #
-set output pngdir.'HphiPM.png'
-set multiplot
+#set output pngdir.'HphiPM.png'
+#set multiplot
 # Setup spacing
-rows = 2
-cols = 1
-col = 0
-row = 0
+#rows = 2
+#cols = 1
+#col = 0
+#row = 0
 #
-load scriptdir."tlocbloc.plt"
-load pltdir."sympalnan.plt"
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set key t l
-set ylabel "Abundance"
-set xlabel ""
-set format x "%g"
-set autoscale y
-set ytics auto
-set format y "%g"
-set xtics out nomirror
-set xtics ("" -1, "" -.5, "" 0, "" .5, "" 1)
-set xrange [0:1]
-unset colorbox
-plot datdir.'HphiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">".SPpc."%",\
-datdir.'HphiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<".SPpc."%"
+#load scriptdir."tlocbloc.plt"
+#load pltdir."sympalnan.plt"
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set key t l
+#set ylabel "Abundance"
+#set xlabel ""
+#set format x "%g"
+#set autoscale y
+#set ytics auto
+#set format y "%g"
+#set xtics out nomirror
+#set xtics ("" -1, "" -.5, "" 0, "" .5, "" 1)
+#set xrange [0:1]
+#unset colorbox
+#plot datdir.'HphiPM.dat' binary format="%f%f%f" u 1:2 w lines ls 1 title ">".SPpc."%",\
+#datdir.'HphiPM.dat' binary format="%f%f%f" u 1:3 w lines ls 2 title "<".SPpc."%"
 #
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set ytics auto out nomirror
-set xlabel "Ri"
-set ylabel "SP percentile"
-set yrange [0:100]
-set logscale cb
-load pltdir."pospal.plt"
-set cbrange [10**(-3):1]
-set cbtics 10
-set format cb "10^{%T}"
-set format y "%g"
-set colorbox
-set xtics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
-plot datdir."Hphi.dat" binary matrix u 1:(100*$2):3 w image
-unset multiplot
-unset logscale
+#row = nextrow(row)
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set ytics auto out nomirror
+#set xlabel "Ri"
+#set ylabel "SP percentile"
+#set yrange [0:100]
+#set logscale cb
+#load pltdir."pospal.plt"
+#set cbrange [10**(-3):1]
+#set cbtics 10
+#set format cb "10^{%T}"
+#set format y "%g"
+#set colorbox
+#set xtics ("-{/Symbol \245}" -1, "-{\274}" -.5, 0 "0", "+{\274}" .5, "+{/Symbol \245}" 1)
+#plot datdir."Hphi.dat" binary matrix u 1:(100*$2):3 w image
+#unset multiplot
+#unset logscale
 #
 #
 set output pngdir.'HLRiPM.png'
 set multiplot title "Richardson Number Distribution"
 # Setup spacing
-rows = 3
+rows = 2
 cols = 1
 col = 0
 row = 0
@@ -242,7 +242,7 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 load pltdir."pospal.plt"
-set ytics 0,50 out nomirror
+set ytics 0,100 out nomirror
 set ylabel "SP percentile"
 set yrange [0:100]
 set cbrange [10**(-3):1]
@@ -258,28 +258,5 @@ set colorbox
 set label 1 "b"
 plot datdir."HLRi.dat" binary matrix u ($1/2):(100*$2):3 w image not, SPpc lc 0 not
 unset logscale cb
-# Richardson Number
-load pltdir."sympal.plt"
-load depthticfile
-load timeticfile
-set ylabel "Depth (m)"
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set format cb ""
-set cblabel "Ri=N^2/S^2"
-set cbrange [-1:1]
-set cbtics ("0" 0)
-set cbtics add ("+1/4" +.5,"+{/Symbol \245}" +1)#, "+3/4" +.75, "+1/12" +.25)
-set cbtics add ("-1/4" -.5,"-{/Symbol \245}" -1)#, "-3/4" -.75, "-1/12" -.25)
-set format cb ""
-set format x "%g"
-set xlabel "2011 UTC yearday"
-unset key
-set palette maxcolors 8
-set label 1 "c"
-plot datdir."Ritz.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
-#
 unset multiplot
 unset logscale
