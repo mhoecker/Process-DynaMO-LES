@@ -62,7 +62,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Stability Criterion
  %
- NSRi(chmnc,adcpnc,sfxnc,dagnc,outdir);
+ NSRi(adcpnc,sfxnc,dagnc,outdir);
 
  %% Heat flux comparison
 
@@ -117,7 +117,6 @@ function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
  [tscale,tunit] = timeunits(trange);
  ti = num2str(trange(1)/tscale,"%03.1f");
  tf = num2str(trange(2)/tscale,"%03.1f");
- [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
  [tkepath,tkename,tkeext] = fileparts(tkenc);
  tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
  tkebzavg(tkezavgnc,dagnc,outdir);

@@ -1,4 +1,4 @@
-function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
+function NSRi(adcpnc,sfxnc,dagnc,outdir)
  %
  %figure 4
  % Plot time series of N^2 S^2 and Ri
@@ -7,8 +7,6 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
  #useoctplot=1;
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
- # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcdat,(trange-t0sim)*24*3600);
  # Extract simulation data
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,uavgdag,vavgdag] = DAGvelprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
@@ -35,8 +33,6 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
  # Calculate vertical derivative matrix
  ddzdag = ddz(zdag);
  #
- # Calulate the Driven Richarson number
- [Ri,Jb]  = surfaceRi(stress,Jh,sst,sal);
  #
  #
  # Calculate Shear
@@ -71,7 +67,6 @@ function NSRi(bcdat,adcpnc,sfxnc,dagnc,outdir)
   ylabel("-4Ri")
   print([outdir "fig4.png"],"-dpng")
  else
-  binarray(tsfx',[4*Ri,Jb,stress]',cstrcat(dir.dat,abrev,"a.dat"));
   binmatrix(tdag',zdag',Nsqavg',cstrcat(dir.dat,abrev,"b.dat"));
   binmatrix(tdag',zdag',Ssqavg',cstrcat(dir.dat,abrev,"c.dat"));
   binmatrix(tdag',zdag',Ricavg',cstrcat(dir.dat,abrev,"d.dat"));

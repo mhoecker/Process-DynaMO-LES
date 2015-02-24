@@ -42,7 +42,7 @@ function [tsfx,stress,p,Jh,wdir,sst,SalTSG,SolarNet,S0,sigH,HoT,HoS,LaBflx,JhBfl
  netp = p-e;
  LaBflx = flxvars.S_0.*(2*pi./flxvars.wave_l).*abs(stress)./rho;
  JhBflx = alpha.*g.*Jh./(Cp.*rho);
- SaBflx = -beta.*g.*SalTSG.*(e-p*(1e-3)/3600);
+ SaBflx = beta.*g.*SalTSG.*(e-p*(1e-3)/3600);
  % Calculate Thermal and Saline Honikker #s
  HoT = JhBflx./LaBflx;
  HoS = SaBflx./LaBflx;

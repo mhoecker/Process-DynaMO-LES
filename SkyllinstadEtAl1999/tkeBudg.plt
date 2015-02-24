@@ -7,7 +7,7 @@ load scriptdir."tlocbloc.plt"
 #
 set output pngdir.abrev.termsfx
 #
-set multiplot title "Kinetic Energy Sources/Sinks"
+set multiplot
 # all share the same left/right margins
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
@@ -34,9 +34,9 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
 set xlabel ""
-set ylabel "St"
 field = "uudSdz"
-set label 1 "a"
+set ylabel "Z [m]"
+set label 1 "a: StP"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 unset colorbox
 #
@@ -44,9 +44,8 @@ unset colorbox
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "SP"
 field = "uudUdz"
-set label 1 "b"
+set label 1 "b: SP"
 if(exists("SPcontour")){
 set key b l
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not,\
@@ -60,9 +59,8 @@ plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "b'w'"
 field = "bw"
-set label 1 "c"
+set label 1 "c: b'w'"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #
 # Plot Dissipation
@@ -71,9 +69,8 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
-set ylabel "{/Symbol e}"
 field = "diss"
-set label 1 "d"
+set label 1 "d: {/Symbol e}"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 unset multiplot
 #

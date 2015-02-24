@@ -117,9 +117,9 @@ set cbrange [hfxmin:hfxmax]
 unset cbtics
 set cbtics ("-0.5" -500 ,"0" 0, "+0.5" 500)
 set format cb ""
-set cblabel "{/Symbol r}c_pw'T'\n(kW/m^2)"
+set cblabel "{/Symbol r}c_pw'T'\n[kW/m^2]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set ylabel "Depth (m)"
+set ylabel "Z [m]"
 set label 1 "a"
 set format x ""
 set xlabel ""
@@ -133,7 +133,7 @@ set bmargin at screen bloc(row)
 set format x "%g"
 set yrange [-.7:.7]
 set ytics -1,.5,1
-set ylabel "kW/m^2"
+set ylabel "Heat flux [kW/m^2]"
 set key horizontal
 set key b r
 set label 1 "b"
