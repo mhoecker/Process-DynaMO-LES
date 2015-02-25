@@ -76,35 +76,35 @@ unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
 # Setup spacing
-rows = 4
+rows = 2
 row = 0
 cols = 1
 col = 0
 load "/home/mhoecker/work/Dynamo/octavescripts/SkyllinstadEtAl1999/tlocbloc.plt"
 #
-set multiplot title "Kinetic Energy Density/Transport"
+set multiplot
 # all share the same left/right margins
-set lmargin at screen lloc(col)
-set rmargin at screen rloc(col)
+#set lmargin at screen lloc(col)
+#set rmargin at screen rloc(col)
 # Truncated depth range
 set yrange [-dplt:0]
 #
 # Plot tke
-set ylabel "tke"
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,+cbhig
-set format x ""
-set xlabel ""
-set format cb cbform
-set cblabel "J/kg"
-set cbrange [tkemin:tkemax]
-set cbtics tkemin,(tkemax-tkemin)/2,tkemax;set cbtics add ("0" 0)
-load pltdir."pospal.plt"
-field = "tke"
-set label 1 "a"
-plot datdir.abrev.field.".dat" binary matrix w image not
-unset colorbox
+#set ylabel "Z [m]"
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,+cbhig
+#set format x ""
+#set xlabel ""
+#set format cb cbform
+#set cblabel "J/kg"
+#set cbrange [tkemin:tkemax]
+#set cbtics tkemin,(tkemax-tkemin)/2,tkemax;set cbtics add ("0" 0)
+#load pltdir."pospal.plt"
+#field = "tke"
+#set label 1 "a: Turbulent Kinetic Energy"
+#plot datdir.abrev.field.".dat" binary matrix w image not
+#unset colorbox
 #
 # Set common color bar for Transport
 set cbrange [Ftkemin:Ftkemax]
@@ -112,19 +112,18 @@ load pltdir."sympal.plt"
 set format cb "%+4.1f"
 set cblabel "Transport {/Symbol m}Wm/kg"
 set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
-set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-2)*vskip+cbhig
+set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-1)*vskip+cbhig
 #set autoscale cb
 #set cbtics auto
 #
 # Plot Advective transport
-row = nextrow(row)
+#row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
 set xlabel ""
-set ylabel "w'tke"
 field = "wtke"
-set label 1 "b"
+set label 1 "a: w'tke"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
@@ -132,23 +131,21 @@ plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set ylabel "w'p'"
 field = "wpi"
-set label 1 "c"
+set label 1 "b: w'p'"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 unset colorbox
 #
 # Plot sub-gridscale transport
-row = nextrow(row)
-set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set ylabel "sgs"
-set format x "%g"
-set xlabel "2011 UTC yearday" offset 0,xloff
-field = "sgs"
-set label 1 "d"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+#row = nextrow(row)
+#set tmargin at screen tloc(row)
+#set bmargin at screen bloc(row)
+#set format x "%g"
+#set xlabel "2011 UTC yearday" offset 0,xloff
+#field = "sgs"
+#set label 1 "d: sgs"
+#plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot

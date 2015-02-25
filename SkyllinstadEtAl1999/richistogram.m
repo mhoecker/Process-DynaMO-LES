@@ -54,7 +54,7 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  % Calculate Shear and Shear Production
  Uz = U*dzmat';
  Vz = V*dzmat';
- SP = abs(uw.*Uz)+abs(vw.*Vz);
+ SP = -(uw.*Uz)-(vw.*Vz);
  [SPrank,SPidx] = sort(SP,1);
  [SPflat,SPflatidx] = sort(SP(:));
  Ssq = Uz.^2+Vz.^2;
