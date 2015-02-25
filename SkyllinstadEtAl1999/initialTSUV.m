@@ -5,8 +5,8 @@ function  initialTSUV(TSUVnc,outdir)
  %
  % 1st plot on upper x-axis Salinity (psu) on lower x-axis Potential Temperature (C) at simulation start
  % 2nd plot E/W (u) and N/S (v) velocity at simulation start
+ findgsw;
  abrev = "initialTSUV";
- outdir
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,t0sim];
  zrange = sort([0,-dsim]);
@@ -47,8 +47,45 @@ function  initialTSUV(TSUVnc,outdir)
   axis([min([V]),max([V]),zrange])
   print([outdir 'fig2.png'],'-dpng')
  else
+  %
+  CTmid = (max(CT)+min(CT))/2;
+  Smid  = (max(S)+min(S))/2;
+  Tmid = (max(T)+min(T))/2;
+  UVmid = (max([max(U),max(V)])+min([min(U),min(V)]))/2;
+  %
+  DCT = (max(CT)-min(CT))/2;
+  DS  = (max(S)-min(S))/2;
+  DT  = (max(T)-min(T))/2;
+  DUV = (max([max(U),max(V)])-min([min(U),min(V)]))/2;
+  %
+  alpha = gsw_alpha(Smid,CTmid,0);
+  beta = gsw_beta(Smid,CTmid,0);
+  %
+  DrhoT = abs(alpha*DCT);
+  DrhoS = abs(beta*DS);
+  %
+  pad = 1.1
+  UVmax = UVmid+pad*DUV;
+  UVmin = UVmid-pad*DUV;
+  if(DrhoT>DrhoS)
+   Tmax = Tmid+DT*pad;
+   Tmin = Tmid-DT*pad;
+   Smin = Smid-DS*pad*DrhoT/DrhoS;
+   Smax = Smid+DS*pad*DrhoT/DrhoS;
+  else
+   Tmax = Tmid+DT*pad*DrhoS/DrhoT;
+   Tmin = Tmid-DT*pad*DrhoS/DrhoT;
+   Smin = Smid-DS*pad;
+   Smax = Smid+DS*pad;
+  end%if
   # save CT,SA,U,V profiles
   binarray(z,[T;S;U;V],[dir.dat abrev "TSUV.dat"]);
+  Trangetext = cstrcat('Tmin= ',num2str(Tmin,"%12f"),'\nTmax= ',num2str(Tmax,"%12f"));
+  Srangetext = cstrcat('Smin= ',num2str(Smin,"%12f"),'\nSmax= ',num2str(Smax,"%12f"));
+  UVrangetext = cstrcat('UVmin= ',num2str(UVmin,"%12f"),'\nUVmax= ',num2str(UVmax,"%12f"));
+  unix(cstrcat('echo "',Trangetext,'">>',limitsfile));
+  unix(cstrcat('echo "',Srangetext,'">>',limitsfile));
+  unix(cstrcat('echo "',UVrangetext,'">>',limitsfile));
   unix(["gnuplot " limitsfile " " dir.script abrev ".plt"]);
  end%if
 end%function
