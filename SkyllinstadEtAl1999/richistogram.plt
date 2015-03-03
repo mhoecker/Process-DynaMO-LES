@@ -219,15 +219,15 @@ col = 0
 row = 0
 #
 load scriptdir."tlocbloc.plt"
-load pltdir."sympalnan.plt"
+load pltdir."grey.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key t r
 set ylabel "Abundance"
 set xlabel ""
 set format x "%g"
-set yrange [0:.12]
-set ytics 0,.05
+set yrange [0:.07]
+set ytics 0,.03
 set format y "%g"
 set xtics out nomirror
 set xtics ("" -1,  "" 0, "" 1)
@@ -235,13 +235,13 @@ set xrange [-2.5:3]
 set format x ""
 unset colorbox
 set label 1 "a"
-plot datdir.'HLRiPM.dat' binary format="%f%f%f" u ($1/2):2 w lines ls 1 title ">".SPpc."%",\
-datdir.'HLRiPM.dat' binary format="%f%f%f" u ($1/2):3 w lines ls 2 title "<".SPpc."%"
+plot datdir.'HLRiPM.dat' binary format="%f%f%f" u ($1/2):2 w lines ls 11 title ">".SPpc."%",\
+datdir.'HLRiPM.dat' binary format="%f%f%f" u ($1/2):3 w lines ls 12 title "<".SPpc."%"
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-load pltdir."pospal.plt"
+load pltdir."grey.plt"
 set ytics 0,100 out nomirror
 set ylabel "SP percentile"
 set yrange [0:100]
@@ -250,10 +250,10 @@ set logscale cb 10
 set cblabel "Abundance"
 set format cb "10^{%T}"
 set format y "%g"
-set xtics ("Ri=1/4" -1,  "1" 0, "4" 1)
+set xtics ("1/4" -1,  "1" 0, "4" 1)
 set xtics add ("1^{ }" 0)
 set ytics add (SPpc)
-set xlabel ""
+set xlabel "Richardson Number"
 set colorbox
 set label 1 "b"
 plot datdir."HLRi.dat" binary matrix u ($1/2):(100*$2):3 w image not, SPpc lc 0 not
