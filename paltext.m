@@ -32,9 +32,9 @@ function palette = paltext(paltype,N,clims)
  %
  palstruct.Ncolors = ["set palette maxcolors " n "\n"];
  %
- palstruct.HSV = [palstruct.gamma  palstruct.Ncolors "set palette mode HSV\n"];
+ palstruct.HSV = [palstruct.gamma palstruct.Ncolors "set palette mode HSV\n"];
  %
- palstruct.RGB = [palstruct.gamma  palstruct.Ncolors "set palette mode RGB\n"];
+ palstruct.RGB = [palstruct.gamma  "set palette mode RGB\n"];
  %
  palstruct.xmid = ["xm = " cmid "\nz(x) = (x<xm ? x/xm:(1-x)/(1-xm));"];
  %
@@ -80,9 +80,11 @@ function palette = paltext(paltype,N,clims)
  %
  palstruct.zissoublocks = [  palstruct.RGB  "set palette defined (0 '#3B9AB2',.2 '#3B9AB2', .2 '#78B7C5', .4 '#78B7C5', .4 '#EBCC2A', .6 '#EBCC2A', .6 '#E1AF00', .8 '#E1AF00', .8 '#F21A00', 1 '#F21A00')\n"  "set palette maxcolors 5\n" ];
  %
- palstruct.circle = [palstruct.RGB "g(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.75 ? 2*(.75-x) : 2*(x-.75)  ))\n r(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.5 ? 1 : (x<.75 ? 4*(.75-x) : 2*(x-.75) ) ) )\n b(x) = .5*rmin+rrng*(x<.25 ? 1 : (x<.75 ? 2*(.75-x) : 4*(x-.75) ) )\n" palstruct.rgbfunctions palstruct.Ncolors ];
+ palstruct.circle = ["g(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.75 ? 2*(.75-x) : 2*(x-.75)  ))\n r(x) = .5*rmin+rrng*(x<.25 ? 2*(x+.25) : (x<.5 ? 1 : (x<.75 ? 4*(.75-x) : 2*(x-.75) ) ) )\n b(x) = .5*rmin+rrng*(x<.25 ? 1 : (x<.75 ? 2*(.75-x) : 4*(x-.75) ) )\n" palstruct.rgbfunctions ];
  %
- palstruct.other = ["set palette grey\n"  palstruct.Ncolors ];
+ palstruct.gsneg = ["r(x) = .1+.9*(x**.8)\ng(x)=r(x)\nb(x)=r(x)\n" palstruct.rgbfunctions];
+ %
+ palstruct.other = ["r(x) = .1+.9*(1-x**.8)\ng(x)=r(x)\nb(x)=r(x)\n" palstruct.rgbfunctions];
  %
  switch paltype
   case {"rainbow" "hue"}
@@ -107,6 +109,8 @@ function palette = paltext(paltype,N,clims)
    palette = palstruct.zissoublocks;
   case { "circle" "angle" "phase"}
    palette = palstruct.circle;
+  case { "gsneg" "greyneg"}
+   palette = palstruct.gsneg;
   otherwise
    palette =  palstruct.other;
  end%switch
