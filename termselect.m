@@ -25,45 +25,45 @@ function [termtxt,termsfx] = termselect(termtype,font)
  end%if
  switch(termtype)
   case 'epsposter'
-   termtxt = ['postscript eps enhanced color size 12in,12in ' font ',48" blacktext dashed linewidth 2'];
+   termtxt = ['postscript eps enhanced color size 12in,12in ' font ',48" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'pngposter'
 			# if blown up to 12inx12in creates a 96 pixel/in image
-			termtxt = ['pngcairo enhanced dashed truecolor size 1280,1152 nocrop ' font '36" linewidth 4'];
+			termtxt = ['pngcairo enhanced dashed rounded truecolor size 1280,1152 nocrop ' font '36" linewidth 4'];
 			termsfx = '.png';
 		case 'epsarticle'
-			termtxt = ['postscript eps enhanced color size 9in,6in ' font '12" blacktext dashed linewidth 2'];
+			termtxt = ['postscript eps enhanced color size 9in,6in ' font '12" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'epsarticlesmall'
-			termtxt = ['postscript eps enhanced color size 4.5in,3in ' font '10" blacktext dashed linewidth 2'];
+			termtxt = ['postscript eps enhanced color size 4.5in,3in ' font '10" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'pdfarticle'
-			termtxt = ['pdf enhanced color size 9in,6in ' font '12" dashed linewidth 2'];
+			termtxt = ['pdf enhanced color size 9in,6in ' font '12" dashed rounded linewidth 2'];
 			termsfx = '.pdf';
 		case 'pdfarticlesmall'
-			termtxt = ['pdf enhanced color size 4.5in,3in ' font '10" dashed linewidth 2'];
+			termtxt = ['pdf enhanced color size 4.5in,3in ' font '10" dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'canvas'
 			termtxt = [' canvas size 1536,1024 jsdir "js" mousing enhanced dashed linewidth 2'];
 			termsfx = '.html';
 		case 'epsposterbw'
 			type = 'postscript eps'
-			termtxt = ['postscript eps enhanced mono size 12in,12in ' font '48" blacktext dashed linewidth 2'];
+			termtxt = ['postscript eps enhanced mono size 12in,12in ' font '48" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'epsarticlebw'
-			termtxt = ['postscript eps enhanced mono size 9in,6in ' font '12" blacktext dashed linewidth 2'];
+			termtxt = ['postscript eps enhanced mono size 9in,6in ' font '12" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'epsarticlesmallbw'
-			termtxt = ['postscript eps enhanced mono size 4.5in,3in ' font '10" blacktext dashed linewidth 2'];
+			termtxt = ['postscript eps enhanced mono size 4.5in,3in ' font '10" blacktext dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		case 'pdfarticlebw'
-			termtxt = ['pdf enhanced dashed mono size 9in,6in ' font '12" dashed linewidth 2'];
+			termtxt = ['pdf enhanced dashed mono size 9in,6in ' font '12" dashed rounded linewidth 2'];
 			termsfx = '.pdf';
 		case 'pdfarticlesmallbw'
-			termtxt = ['pdf enhanced dashed mono size 4.5in,3in ' font '10" dashed linewidth 2'];
+			termtxt = ['pdf enhanced dashed mono size 4.5in,3in ' font '10" dashed rounded linewidth 2'];
 			termsfx = '.eps';
 		otherwise
-			termtxt = ["pngcairo enhanced dashed size 1536,1024" font '"' " truecolor nocrop linewidth 2"];
+			termtxt = ["pngcairo enhanced dashed size 1536,1024" font '"' " truecolor nocrop rounded linewidth 2"];
 			termsfx = '.png';
 	end
 end

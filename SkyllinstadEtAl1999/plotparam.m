@@ -126,6 +126,10 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fid = fopen(palfile,"w");
   fprintf(fid,"%s",paltext("circle",36));
   fclose(fid);
+  palfile = cstrcat(dir.plt,"grey.plt");
+  fid = fopen(palfile,"w");
+  fprintf(fid,"%s",paltext("grey",palcolors));
+  fclose(fid);
  else
     limitsfile = [""];
  end%if
