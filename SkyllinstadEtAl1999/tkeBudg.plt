@@ -35,7 +35,7 @@ set bmargin at screen bloc(row)
 set format x ""
 set xlabel ""
 field = "uudSdz"
-set ylabel "Z [m]"
+set ylabel "z [m]"
 set label 1 "a: StP"
 plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 unset colorbox
@@ -90,7 +90,7 @@ set multiplot
 set yrange [-dplt:0]
 #
 # Plot tke
-#set ylabel "Z [m]"
+#set ylabel "z [m]"
 #set tmargin at screen tloc(row)
 #set bmargin at screen bloc(row)
 #set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,+cbhig

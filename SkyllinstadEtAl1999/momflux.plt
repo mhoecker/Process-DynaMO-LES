@@ -22,9 +22,10 @@ unset cbtics
 set cbtics ("0" 0, "-5" 5e-4)
 set format cb ""
 set cblabel "u'w'\n[(cm/s)^2]"
-set ylabel "Z [m]"
+set ylabel "z [m]"
 set key b l
 plot datdir.abrev."uw.dat" binary matrix u 1:2:(-$3) w image not,\
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
 unset colorbox
 #
@@ -41,6 +42,6 @@ set yrange [-7:0]
 set ytics -5,5,5
 set ylabel "u'w' [(cm/s)^2]"
 set key b r
-plot datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10)w lines ls 1 title "Surface Flux",\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 2 title "Mixed Layer Flux"#
+plot datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10)w lines ls 11 title "Surface Flux",\
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 12 title "Mixed Layer Flux"#
 #

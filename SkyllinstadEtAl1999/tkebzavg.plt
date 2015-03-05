@@ -43,7 +43,7 @@ set multiplot
 # Plot tke
 tkemax = 5
 tkemin = 0
-set ylabel "Z [m]"
+set ylabel "z [m]"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,+cbhig

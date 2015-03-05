@@ -24,7 +24,7 @@ set x2label "" offset  graph -.6, char -xloff
 set label 35 "S [g/kg]" at graph .5, graph 1 center nopoint offset character 0, 1.25
 set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
-set ylabel "Z [m]" offset yloff,0
+set ylabel "z [m]" offset yloff,0
 set border 7
 set key t l
 set xrange [Tmin:Tmax]
