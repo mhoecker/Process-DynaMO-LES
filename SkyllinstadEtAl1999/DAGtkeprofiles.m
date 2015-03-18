@@ -25,12 +25,19 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr
  ShPr  = -squeeze(dag{'sp_ave'}(dagtidx,dagzidx,1,1));
  #
  badPTra  = squeeze(dag{'p_ave'}(dagtidx,dagzidx,1,1));
- badStDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
  #
- S0  = squeeze(dag{'S_0'}(dagtidx,1,1,1));
- waveL  = squeeze(dag{'wave_l'}(dagtidx,1,1,1));
+ try
+  badStDr  = squeeze(dag{'sd_ave'}(dagtidx,dagzidx,1,1));
+  S0  = squeeze(dag{'S_0'}(dagtidx,1,1,1));
+  waveL  = squeeze(dag{'wave_l'}(dagtidx,1,1,1));
+  wave_a  = 2*pi*squeeze(dag{'w_angle'}(dagtidx,1,1,1))/180;
+ catch
+  S0=NaN;
+  waveL = NaN;
+  badStDr = NaN;
+  wave_a = NaN;
+ end%try/catch
  [Sz,dUsdz] = StokesAtDepth(S0,waveL,zwdag');
- wave_a  = 2*pi*squeeze(dag{'w_angle'}(dagtidx,1,1,1))/180;
  uwave  = squeeze(dag{'uw_ave'}(dagtidx,dagzidx,1,1));
  vwave  = squeeze(dag{'vw_ave'}(dagtidx,dagzidx,1,1));
  StDr  = (uwave.*cos(wave_a)+vwave.*sin(wave_a)).*dUsdz;
