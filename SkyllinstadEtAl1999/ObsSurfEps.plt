@@ -33,9 +33,9 @@ row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key b r horizontal
-set ytics .5 nomirror offset ytoff,0
-set yrange [-.8:.8]
-set ylabel "J_h [kW/m^2]"
+set ytics 500 nomirror offset ytoff,0
+set yrange [-600:600]
+set ylabel "J_h [W/m^2]"
 set y2label "P-E [mm/h]" offset -yloff,0
 set y2tics out 10
 set y2range [-22:22]
@@ -44,7 +44,7 @@ set label 1 "b"
 set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 plot \
-datfile binary format=datform u 1:($2*.001) ls 11 title "J_h" \
+datfile binary format=datform u 1:2 ls 11 title "J_h" \
 ,\
 datfile binary format=datform u 1:3 ls 12 axes x1y2 title "P-E"\
 #
