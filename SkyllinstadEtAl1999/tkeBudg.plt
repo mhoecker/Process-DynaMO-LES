@@ -109,7 +109,7 @@ set yrange [-dplt:0]
 # Set common color bar for Transport
 set cbrange [Ftkemin:Ftkemax]
 load pltdir."sympal.plt"
-set format cb "%+4.1f"
+set format cb "%+4.0f"
 set cblabel "Transport {/Symbol m}Wm/kg"
 set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
 set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-1)*vskip+cbhig
