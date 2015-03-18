@@ -25,9 +25,17 @@ function vars = dagvars(dagnc,field,trange,zrange)
  end%if
  vars.(deblank(field(2,:))) = squeeze(dag{deblank(field(2,:))}(dagzidx));
  % get the values of the desired variables
+ Nt = length(dagtidx);
+ Nz = length(dagzidx);
  for i=3:length(field(:,1))
   fieldname = deblank(field(i,:));
-  vars.(fieldname) = squeeze(dag{fieldname}(dagtidx,dagzidx,1,1));
+  % if the variable is defined, return it
+  % othersie return a Nt by Nz array of NaN
+  try
+   vars.(fieldname) = squeeze(dag{fieldname}(dagtidx,dagzidx,1,1));
+  catch
+   vars.(fieldname) = NaN*ones(Nt,Nz);
+  end%trycatch
  end%for
  ncclose(dag);
 end%function
