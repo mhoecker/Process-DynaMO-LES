@@ -15,10 +15,10 @@ tkemax = 5e-3
 tkemin = 0
 dtkemin = -3e0
 dtkemax = +3e0
-Ftkemin = -2
-Ftkemax = +2
+Ftkemin = -10
+Ftkemax = +10
 nullcolor = "grey20"
-cbform = "%+4.1te^{%+02T}"
+cbform = "%+4.0te^{%+02T}"
 set xrange[t0sim:tfsim]
 set yrange [-dplt:0]
 #

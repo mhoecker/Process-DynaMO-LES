@@ -15,9 +15,12 @@ function tkeBudg(dagnc,outdir,SPcontour,SPval)
  # Calculate the time rate of change of tke
  dtkedt = ddtM*tkeavg;
  # Calculate Integrated Fluxes
- wpi = backcumsum(tkePTra,2).*dz;
- wtke = backcumsum(tkeAdve,2).*dz;
- sgs = backcumsum(tkeSGTr,2).*dz;
+ wpi = cumsum(tkePTra,2).*dz;
+ #idxtop = find(abs(zdag)<=abs(1))
+ #zdag(idxtop)
+ #wpi(idxtop) = NaN;
+ wtke = -cumsum(tkeAdve,2).*dz;
+ sgs = -cumsum(tkeSGTr,2).*dz;
  # Scale by tke
  # Find the zeros of tke
  #notkeidx = find((tkeavg==0));
@@ -126,14 +129,14 @@ function tkeBudg(dagnc,outdir,SPcontour,SPval)
   binmatrix(tdag',zdag',tkePTra',[dir.dat abrev "dwpidz.dat"]);
   binmatrix(zdag',tdag',tkePTra,[dir.dat abrev "dwpidzT.dat"]);
   # w' pi'
-  binmatrix(tdag',zdag',tkePTra',[dir.dat abrev "wpi.dat"]);
-  binmatrix(zdag',tdag',tkePTra,[dir.dat abrev "wpiT.dat"]);
+  binmatrix(tdag',zdag',wpi',[dir.dat abrev "wpi.dat"]);
+  binmatrix(zdag',tdag',wpi,[dir.dat abrev "wpiT.dat"]);
   # d w' tke d z
   binmatrix(tdag',zdag',tkeAdve',[dir.dat abrev "dwtkedz.dat"]);
   binmatrix(zdag',tdag',tkeAdve,[dir.dat abrev "dwtkedzT.dat"]);
   # w' tke
-  binmatrix(tdag',zdag',tkeAdve',[dir.dat abrev "wtke.dat"]);
-  binmatrix(zdag',tdag',tkeAdve,[dir.dat abrev "wtkeT.dat"]);
+  binmatrix(tdag',zdag',wtke',[dir.dat abrev "wtke.dat"]);
+  binmatrix(zdag',tdag',wtke,[dir.dat abrev "wtkeT.dat"]);
   # d sgs dz
   binmatrix(tdag',zdag',tkeSGTr',[dir.dat abrev "dsgsdz.dat"]);
   binmatrix(zdag',tdag',tkeSGTr,[dir.dat abrev "dsgsdzT.dat"]);
