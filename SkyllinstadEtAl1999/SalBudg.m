@@ -11,6 +11,7 @@ function SalBudg(dagnc,bcdat,outdir)
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  #Mixed Layer Depth
  [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
+ [MLD2,MLI2]=getMLD(Savgdag,Tavgdag,zdag,.1);
  # convert to yearday
  DAGSal.Yday = t0sim+DAGSal.time/(24*3600);
  # time derivative matricies
@@ -36,8 +37,10 @@ function SalBudg(dagnc,bcdat,outdir)
  #
  #
  MLws = 0*MLD;
+ MLws2 = 0*MLD;
  for i=1:length(DAGSal.time)
   MLws(i) = DAGSal.ws_ave(i,MLI(i));
+  MLws2(i) = DAGSal.ws_ave(i,MLI2(i));
  end%for
  #
  if(useoctplot==1)
@@ -51,8 +54,9 @@ function SalBudg(dagnc,bcdat,outdir)
   pcolor(Ydayu',-zzu2',log(DAGSal.d2_ave)); shading flat;
  else
   datprfx = cstrcat(dir.dat,abrev);
-  binarray(DAGSal.Yday',[p.*sal*(1e-3/3600),MLws]',cstrcat(datprfx,"SFC_ML_flx.dat"));
+  binarray(DAGSal.Yday',[p.*sal*(1e-3/3600),MLws,MLws2]',cstrcat(datprfx,"SFC_ML_flx.dat"));
   binarray(DAGSal.Yday',[MLD,MLws]',cstrcat(datprfx,"ML.dat"));
+  binarray(DAGSal.Yday',[MLD2,MLws2]',cstrcat(datprfx,"ML2.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.sf_ave',cstrcat(datprfx,"sf.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.ws_ave',cstrcat(datprfx,"ws.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzu',DAGSal.s2_ave',cstrcat(datprfx,"Ssq.dat"));

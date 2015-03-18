@@ -23,6 +23,7 @@ function momflux(dagnc,bcdat,outdir)
  % Calculate Mixed Layer Depth
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,trange,zrange);
  [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
+ [MLD2,MLI2]=getMLD(Savgdag,Tavgdag,zdag,.1);
  % zdag is equal to zzu
  %
  dudt = (ddt*dagvar1.u_ave)';
@@ -30,8 +31,10 @@ function momflux(dagnc,bcdat,outdir)
  idx0 = find(abs(dagvar1.zzu)==min(abs(dagvar1.zzu)));
  ReyFlx(idx0,:)=0;
  MLflx = 0*MLI;
+ MLflx2 = 0*MLI;
  for i=1:length(MLI)
   MLflx(i) = ReyFlx(MLI(i),i);
+  MLflx2(i) = ReyFlx(MLI2(i),i);
  end%for
  ReyFlxDiv = -(dagvar3.uw_ave*ddzzwu')';
  diff = (dagvar1.km_ave.*(dagvar1.u_ave*dsqdzzu')+(dagvar1.km_ave*ddzzu').*(dagvar1.u_ave*ddzzu'))';
@@ -39,6 +42,7 @@ function momflux(dagnc,bcdat,outdir)
  %
  binarray(t0sim+dagvar2.time'/(24*3600),dagvar2.ustr_t',[dir.dat abrev "ustr.dat"]);
  binarray(t0sim+tdag'/(24*3600),[MLD,MLflx]',[dir.dat abrev "ML.dat"]);
+ binarray(t0sim+tdag'/(24*3600),[MLD2,MLflx2]',[dir.dat abrev "ML2.dat"]);
  binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar1.zzu',ReyFlxDiv,[dir.dat abrev "duwdz.dat"]);
  binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar1.zzu',ReyFlx,[dir.dat abrev "uw.dat"]);
  binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',dudt,[dir.dat abrev "dudt.dat"]);

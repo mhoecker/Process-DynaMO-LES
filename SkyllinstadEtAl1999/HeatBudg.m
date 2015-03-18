@@ -11,6 +11,7 @@ function HeatBudg(dagnc,bcfile,outdir)
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  #Mixed Layer Depth
  [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
+ [MLD2,MLI2]=getMLD(Savgdag,Tavgdag,zdag,.1);
  # convert to yearday
  DAGheat.Yday = t0sim+DAGheat.time/(24*3600);
  tdag = t0sim+tdag/(24*3600);
@@ -35,8 +36,10 @@ function HeatBudg(dagnc,bcfile,outdir)
  #
  #
  MLwt = MLD;
+ MLwt2 = MLD2;
  for i=1:length(tdag)
   MLwt(i) = DAGheat.wt_ave(i,MLI(i));
+  MLwt2(i) = DAGheat.wt_ave(i,MLI2(i));
  end%for
  #
  if(useoctplot==1)
@@ -49,8 +52,9 @@ function HeatBudg(dagnc,bcfile,outdir)
   [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
   pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
  else
-  binarray(tdag',[Jh,MLwt]',[dir.dat abrev "Jh.dat"]);
+  binarray(tdag',[Jh,MLwt,MLwt2]',[dir.dat abrev "Jh.dat"]);
   binarray(tdag',[MLD,MLwt]',[dir.dat abrev "ML.dat"]);
+  binarray(tdag',[MLD2,MLwt2]',[dir.dat abrev "ML2.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[dir.dat abrev "hf.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.wt_ave',[dir.dat abrev "wt.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzu',DAGheat.t2_ave',[dir.dat abrev "c.dat"]);

@@ -100,7 +100,7 @@ hfxmin = -hfxmax
 Tdispmax = 50.0
 Tdispmin = 0.5
 #
-set multiplot title "Surface and Mixed layer Heat flux"
+set multiplot title "Heat fluxes"
 #
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -115,9 +115,9 @@ set cbtics auto
 set autoscale cb
 set cbrange [hfxmin:hfxmax]
 unset cbtics
-set cbtics ("-0.5" -500 ,"0" 0, "+0.5" 500)
+set cbtics ("-500" -500 ,"0" 0, "+500" 500)
 set format cb ""
-set cblabel "{/Symbol r}c_pw'T'\n[kW/m^2]"
+set cblabel "{/Symbol r}c_pw'T'\n[W/m^2]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "z [m]"
 set label 1 "a"
@@ -125,22 +125,26 @@ set format x ""
 set xlabel ""
 plot datdir.abrev."wt.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3 Mixed Layer",\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3 Mixed Layer"
 unset colorbox
 # Heat flux
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x "%g"
-set yrange [-.7:.7]
-set ytics -1,.5,1
-set ylabel "Heat flux [kW/m^2]"
+set yrange [-950:550]
+set ytics -1000,500,1000
+set ylabel "Heat flux [W/m^2]"
 set key horizontal
+#set key opaque
 set key b r
 set label 1 "b"
 set xlabel "2011 UTC yearday" offset 0,xloff
 plot \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$2) ls 11 title "J_0", \
-datdir.abrev."Jh.dat" binary form="%float%float%float" u 1:(0.001*$3) ls 12 title " J_{ML}"
+datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:2 ls 1 title "Surface", \
+datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:3 ls 2 title "0.01 kg/m^3", \
+datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:4 ls 3 title "0.10 kg/m^3"
 #
 unset multiplot

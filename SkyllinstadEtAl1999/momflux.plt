@@ -8,7 +8,7 @@ col = 0
 load scriptdir."tlocbloc.plt"
 #
 #
-set multiplot title "Surface and Mixed Layer Momentum Flux"
+set multiplot title "Momentum Fluxes"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "a"
@@ -24,14 +24,17 @@ set format cb ""
 set cblabel "u'w'\n[(cm/s)^2]"
 set ylabel "z [m]"
 set key b l
-plot datdir.abrev."uw.dat" binary matrix u 1:2:(-$3) w image not,\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls -1 title "Mixed Layer"
+plot datdir.abrev."uw.dat" binary matrix u 1:2:(-$3) w image not, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "{/Symbol Ds}= 0.01kg/m^3 Mixed Layer", \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "{/Symbol Ds}= 0.10kg/m^3 Mixed Layer"
 unset colorbox
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
+load pltdir."sympalnan.plt"
 set xtics format "%g"
 set xlabel "2011 UTC yearday"
 load pltdir."sympal.plt"
@@ -42,6 +45,9 @@ set yrange [-7:0]
 set ytics -5,5,5
 set ylabel "u'w' [(cm/s)^2]"
 set key b r
-plot datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10)w lines ls 11 title "Surface Flux",\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 12 title "Mixed Layer Flux"#
+plot datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10)w lines ls 1 title "Surface Flux", \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 2 title "0.01 kg/m^3", \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:($3*1e4) ls 3 title "0.10 kg/m^3"
+
+#
 #
