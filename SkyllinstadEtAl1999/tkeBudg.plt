@@ -16,8 +16,8 @@ tkemax = 5e-3
 tkemin = 0
 dtkemin = -3e0
 dtkemax = +3e0
-Ftkemin = -10
-Ftkemax = +10
+Ftkemin = -6.5
+Ftkemax = +6.5
 nullcolor = "grey20"
 cbform = "%+4.0te^{%+02T}"
 set xrange[t0sim:tfsim]
@@ -77,7 +77,7 @@ unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
 # Setup spacing
-rows = 3
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -87,8 +87,6 @@ set multiplot
 # all share the same left/right margins
 #set lmargin at screen lloc(col)
 #set rmargin at screen rloc(col)
-# Truncated depth range
-set yrange [-dsim:0]
 #
 # Plot tke
 #set ylabel "z [m]"
@@ -112,9 +110,10 @@ set cbrange [Ftkemin:Ftkemax]
 load pltdir."sympal.plt"
 load pltdir.abrev."timetics.plt"
 set format cb "%+4.0f"
+set palette maxcolors 13
 set cblabel "Transport {/Symbol m}Wm/kg"
-set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
-set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-1)*vskip+cbhig
+set cbtics ceil(Ftkemin),2*floor(Ftkemax),floor(Ftkemax);set cbtics add ("0" 0)
+set colorbox user origin rloc(col)+cbgap,bloc(rows-2) size cbwid,(rows-2)*vskip+cbhig
 #set autoscale cb
 #set cbtics auto
 #

@@ -16,7 +16,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
  dsim = 60; % Maximum simulation depth
- dplt = 45; % Maximum depth of plots
+ dplt = 50; % Maximum depth of plots
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 11; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
@@ -48,7 +48,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   %
   timedepthfile = cstrcat(dir.plt, abrev, "timedepth.plt");
   fid = fopen(timedepthfile,"w");
-  fprintf(fid,"set size ratio -.0053 \n");
+  fprintf(fid,"set size ratio 0 \n");
   fclose(fid);
   %
   limitsfile = cstrcat(dir.plt, abrev, "limits.plt");

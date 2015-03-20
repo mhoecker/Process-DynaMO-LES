@@ -81,7 +81,7 @@ unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
 # Setup spacing
-rows = 2
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -121,7 +121,6 @@ set format cb ""
 set cblabel "{/Symbol r}c_pw'T'\n[W/m^2]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "z [m]"
-set yrange [-dsim:0]
 set label 1 "a"
 set format x ""
 set xlabel ""
@@ -134,7 +133,8 @@ unset colorbox
 set size ratio 0
 # Heat flux
 row = nextrow(row)
-set tmargin at screen tloc(row)
+row = nextrow(row)
+set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
 set format x "%g"
 set yrange [-950:550]

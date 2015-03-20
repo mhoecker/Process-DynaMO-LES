@@ -98,18 +98,18 @@ end%function
 function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
  [dagpath,dagname,dagext] = fileparts(dagnc)
  [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
- for i=1:1
-  trange = [-dt,0]+dt*i;
-  obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
-  namesfx = ["hourlytke" num2str(i,"%02i")];
-  outnc = [outdir '/dat/' dagname namesfx dagext];
-  [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
-  [tscale,tunit] = timeunits(trange);
-  ti = num2str(trange(1)/tscale,"%03.1f");
-  tf = num2str(trange(2)/tscale,"%03.1f");
-  plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
-  unix(["python " pyflowscript ' ' outdat ' ' outdir "png/" namesfx " " plotlab]);
- end%for
+ %for i=1:1
+ % trange = [-dt,0]+dt*i;
+ % obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
+ % namesfx = ["hourlytke" num2str(i,"%02i")];
+ % outnc = [outdir '/dat/' dagname namesfx dagext];
+ % [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
+ % [tscale,tunit] = timeunits(trange);
+ % ti = num2str(trange(1)/tscale,"%03.1f");
+ % tf = num2str(trange(2)/tscale,"%03.1f");
+ % plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
+ % unix(["python " pyflowscript ' ' outdat ' ' outdir "png/" namesfx " " plotlab]);
+ %end%for
  %% Overall tke Budget
  trange = [0,dt*imax];
  tkenc = [outdir '/dat/' dagname "tke" dagext];

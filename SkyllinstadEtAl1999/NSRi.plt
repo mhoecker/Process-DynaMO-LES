@@ -2,7 +2,7 @@ load termfile
 set output pngdir.abrev.termsfx
 set style data lines
 # Setup vertical spacing
-rows = 3
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -20,7 +20,6 @@ rhocolor = "grey50"
 set cbtics (Nsqmin, "0" 0, Nsqmax)
 set format x ""
 set format y "%3.0f"
-set yrange [-dsim:0]
 #
 # Common colorbar, depth range and t:z aspect ratio for Nsq and Ssq
 load pltdir.abrev."timedepth.plt"

@@ -1,6 +1,6 @@
 set output pngdir.abrev.termsfx
 # Setup vertical spacing
-rows = 2
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -24,7 +24,6 @@ set cbtics ("0" 0, "-5" 5e-4)
 set format cb ""
 set cblabel "u'w'\n[(cm/s)^2]"
 set ylabel "z [m]"
-set yrange [-dsim:0]
 set key horizontal b l
 plot datdir.abrev."uw.dat" binary matrix u 1:2:(-$3) w image not, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not, \
@@ -35,7 +34,8 @@ unset colorbox
 set size ratio 0
 #
 row = nextrow(row)
-set tmargin at screen tloc(row)
+row = nextrow(row)
+set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
 load pltdir."sympalnan.plt"
 set xtics format "%g"
@@ -44,7 +44,7 @@ load pltdir."sympal.plt"
 set label 1 "b"
 set autoscale y
 set ytics auto
-set yrange [-7:0]
+set yrange [-5.5:0]
 set ytics -5,5,5
 set ylabel "u'w' [(cm/s)^2]"
 set key b r

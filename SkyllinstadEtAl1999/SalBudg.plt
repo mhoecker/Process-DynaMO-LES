@@ -80,7 +80,7 @@ unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
 # Setup spacing
-rows = 2
+rows = 4
 row = 0
 cols = 1
 col = 0
@@ -114,18 +114,20 @@ set format cb ""
 set cblabel "w'S'\n[psu mm/s]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "z [m]"
-set yrange [-dsim:0]
 set label 1 "a"
+set label 32 "*" front at first 328.8, -20
 plot datdir.abrev."ws.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
 unset colorbox
+unset label 32
 set size ratio 0
 #
 row = nextrow(row)
-set tmargin at screen tloc(row)
+row = nextrow(row)
+set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
 load pltdir."sympalnan.plt"
 set format x "%g"
