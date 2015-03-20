@@ -15,8 +15,8 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  %
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 328; % simulated start time is 2011 yearday 328
- dsim = 80; % Maximum simulation depth
- dplt = 50; % Maximum depth of plots
+ dsim = 60; % Maximum simulation depth
+ dplt = 45; % Maximum depth of plots
  tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
  palcolors = 11; % number of colors in the color bar palette
  trange = [t0sim+.25,tfsim];
@@ -31,7 +31,7 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   timeticfile = cstrcat(dir.plt, abrev, "timetics.plt");
   fid = fopen(timeticfile,"w");
   fprintf(fid,"unset xtics\n");
-  fprintf(fid,"set xtics out nomirror offset 0,xtoff\n");
+  fprintf(fid,"set xtics out scale .5 nomirror offset 0,xtoff\n");
   fprintf(fid,"set xzeroaxis lt 0\n");
   fprintf(fid,"set xrange [%f:%f]\n",trange(1),trange(2));
   fprintf(fid,"set xtics .5\n");
@@ -42,8 +42,13 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   depthticfile = cstrcat(dir.plt, abrev, "depthtics.plt");
   fid = fopen(depthticfile,"w");
   fprintf(fid,"set yrange [-dplt:0]\n");
-  fprintf(fid,"dytic = dplt/2.5\n");
-  fprintf(fid,"set ytics -dsim+.5*dytic,dytic,-0.5*dytic\n");
+  fprintf(fid,"dytic = 15\n");
+  fprintf(fid,"set ytics -65,dytic,0\n");
+  fclose(fid);
+  %
+  timedepthfile = cstrcat(dir.plt, abrev, "timedepth.plt");
+  fid = fopen(timedepthfile,"w");
+  fprintf(fid,"set size ratio -.0053 \n");
   fclose(fid);
   %
   limitsfile = cstrcat(dir.plt, abrev, "limits.plt");
@@ -77,18 +82,20 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   fprintf(fid,"set style line 10 lt 1 pal frac .5 lw 1\n");
   fprintf(fid,"set style line 11 lt 1 lc -1 lw 1\n");
   fprintf(fid,"set style line 12 lt 2 lc -1 lw 1\n");
+  fprintf(fid,"set style line 13 lt 1 lc rgbcolor 'grey60' lw 1\n");
   fprintf(fid,"set label 1 '' at graph 0, graph 1 left front nopoint offset character 0,character .5\n");
   fprintf(fid,"unset colorbox\n");
   fprintf(fid,"load termfile\n");
   fprintf(fid,"load scriptdir.'tlocbloc.plt'\n");
   fprintf(fid,"load timeticfile\n");
   fprintf(fid,"load depthticfile\n");
-  fprintf(fid,"set xtics out nomirror offset 0,xtoff\n");
+  fprintf(fid,"set xtics out scale .5 nomirror offset 0,xtoff\n");
   fprintf(fid,"set xlabel offset 0,xloff\n");
   fprintf(fid,"set ylabel offset yloff,0\n");
-  fprintf(fid,"set ytics out nomirror offset ytoff,0\n");
+  fprintf(fid,"set ytics scale .5 out nomirror offset ytoff,0\n");
+  fprintf(fid,"set key samplen 2\n");
   fprintf(fid,"set cblabel offset 0,0\n");
-  fprintf(fid,"set cbtics offset -ytoff,0\n");
+  fprintf(fid,"set cbtics scale .5 offset -ytoff,0\n");
   fprintf(fid,"cbmarks = (palcolors+1)/2\n");
   fprintf(fid,"set palette maxcolors palcolors\n");
   fprintf(fid,"%s",paltext("pmnan"));

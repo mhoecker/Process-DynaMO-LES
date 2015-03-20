@@ -141,8 +141,8 @@ function tkeBudg(dagnc,outdir,SPcontour,SPval)
   binmatrix(tdag',zdag',tkeSGTr',[dir.dat abrev "dsgsdz.dat"]);
   binmatrix(zdag',tdag',tkeSGTr,[dir.dat abrev "dsgsdzT.dat"]);
   # sgs
-  binmatrix(tdag',zdag',tkeSGTr',[dir.dat abrev "sgs.dat"]);
-  binmatrix(zdag',tdag',tkeSGTr,[dir.dat abrev "sgsT.dat"]);
+  binmatrix(tdag',zdag',sgs',[dir.dat abrev "sgs.dat"]);
+  binmatrix(zdag',tdag',sgs,[dir.dat abrev "sgsT.dat"]);
   # b' w'
   binmatrix(tdag',zdag',BuoyPr',[dir.dat abrev "bw.dat"]);
   binmatrix(zdag',tdag',BuoyPr,[dir.dat abrev "bwT.dat"]);

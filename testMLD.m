@@ -1,6 +1,6 @@
 %TEST MLD
 chamfile = '/home/mhoecker/work/Dynamo/Observations/netCDF/Chameleon/dn11b_sum_clean_v2.nc'
-dagfile = '/home/mhoecker/work/Dynamo/output/yellowstone14/dag.nc';
+dagfile = '/home/mhoecker/work/Dynamo/output/yellowstone15/dag.nc';
 trange = [328.25,328.75];
 zrange = [-50,0];
 %

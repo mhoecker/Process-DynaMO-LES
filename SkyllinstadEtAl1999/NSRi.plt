@@ -11,17 +11,19 @@ load scriptdir."tlocbloc.plt"
 #
 set multiplot
 #
+unset key
 Nsqmax = 4e-4
 Nsqmin = 0
 cbform = "%1.0te^{%+02T}"
 rhotitle = " {/Symbol Dr}=100 g/m^3"
 rhocolor = "grey50"
 set cbtics (Nsqmin, "0" 0, Nsqmax)
-set key l b opaque
 set format x ""
 set format y "%3.0f"
+set yrange [-dsim:0]
 #
-# Common colorbar for Nsq and Ssq
+# Common colorbar, depth range and t:z aspect ratio for Nsq and Ssq
+load pltdir.abrev."timedepth.plt"
 load pltdir."pospal.plt"
 set format cb cbform
 set cblabel "[(rad/s)^{2}]"

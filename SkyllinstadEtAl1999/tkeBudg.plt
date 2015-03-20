@@ -4,6 +4,7 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
+load pltdir.abrev."timedepth.plt"
 #
 set output pngdir.abrev.termsfx
 #
@@ -76,7 +77,7 @@ unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
 # Setup spacing
-rows = 2
+rows = 3
 row = 0
 cols = 1
 col = 0
@@ -87,7 +88,7 @@ set multiplot
 #set lmargin at screen lloc(col)
 #set rmargin at screen rloc(col)
 # Truncated depth range
-set yrange [-dplt:0]
+set yrange [-dsim:0]
 #
 # Plot tke
 #set ylabel "z [m]"
@@ -109,6 +110,7 @@ set yrange [-dplt:0]
 # Set common color bar for Transport
 set cbrange [Ftkemin:Ftkemax]
 load pltdir."sympal.plt"
+load pltdir.abrev."timetics.plt"
 set format cb "%+4.0f"
 set cblabel "Transport {/Symbol m}Wm/kg"
 set cbtics Ftkemin,(Ftkemax-Ftkemin),Ftkemax;set cbtics add ("0" 0)
@@ -138,14 +140,14 @@ plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 unset colorbox
 #
 # Plot sub-gridscale transport
-#row = nextrow(row)
-#set tmargin at screen tloc(row)
-#set bmargin at screen bloc(row)
-#set format x "%g"
-#set xlabel "2011 UTC yearday" offset 0,xloff
-#field = "sgs"
-#set label 1 "d: sgs"
-#plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set format x "%g"
+set xlabel "2011 UTC yearday" offset 0,xloff
+field = "sgs"
+set label 1 "c: sgs"
+plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot

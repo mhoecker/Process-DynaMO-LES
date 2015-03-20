@@ -16,7 +16,7 @@ set rmargin at screen rloc(col)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set xtics nomirror offset 0,xtoff
-set x2tics nomirror offset 0,-xtoff
+set x2tics nomirror scale .5 	offset 0,-xtoff
 set yrange [-dsim:0]
 set ytics nomirror -70,20,-10 offset ytoff,0
 set xlabel  "T [^oC]"
@@ -28,11 +28,11 @@ set ylabel "z [m]" offset yloff,0
 set border 7
 set key t l
 set xrange [Tmin:Tmax]
-set xtics 1
+set xtics in .5
 set xtics rangelimited
 set x2range [Smin:Smax]
-set x2tics .5 rangelimited
-set x2tics add (35,36)
+set x2tics 35,.3,36 rangelimited
+set x2tics add (35.3,35.9)
 set label 1 "a"
 plot \
 datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 2:1 w lines axes x1y1 title "T" ls 11,\

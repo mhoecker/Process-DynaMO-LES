@@ -21,7 +21,7 @@ set ytics 10 nomirror offset ytoff,0
 set yrange [0:27]
 set ylabel "U^s [cm/s]"
 set y2label "L [m]" offset -yloff,0
-set y2tics out 2
+set y2tics scale .5 out 2
 set my2tics 4
 set y2tics nomirror offset -ytoff,0
 set y2range [0:5]
@@ -85,7 +85,7 @@ set label 1 "c: Buoyancy Flux"
 plot \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 11 t "Heat", \
 datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 12 t "Salt",\
-datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3+$4)) ls 0 t "Total"
+datdir.abrev."Bflx.dat" binary form="%float%float%float%float" u 1:(phi($3+$4)) ls 13 t "Total"
 
 #
 unset multiplot
