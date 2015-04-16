@@ -1,4 +1,9 @@
-function makeICBCnetcdf
+function makeICBCnetCDF(outpath)
+ if(nargin<1)
+  tmpdir = "/home/mhoecker/tmp/";
+ else
+  tmpdir = outpath;
+ end%if
  #
  #
  z = -200:5:0; % meters
@@ -32,15 +37,14 @@ function makeICBCnetcdf
  W_l = 100*nostorm+30*storm;
  W_h = W_l.*(nostorm/100+storm/10);
  W_d = 0*t;
- tmpdir = "/home/mhoecker/tmp/";
  filename = [tmpdir "ICBC.cdf"];
- ncname = [tmpdir "test.nc"];
- dim_names ={"t","z"};
+ ncname = [tmpdir "ICBC.nc"];
+ dim_names ={"t","Z"};
  dim_sizes =[length(t),length(z)];
- var_names = {dim_names{:},"U","V","T","S"};
+ var_names = {dim_names{:},"U","V","CT","SA"};
  var_names  = {var_names{:},"J_sw","J_lw","J_la"};
  var_names  = {var_names{:},"P","tau_x","tau_y"};
- var_names  = {var_names{:},"W_l","W_h","W_d"}
+ var_names  = {var_names{:},"W_l","W_h","W_d"};
  descriptions = {};
  values = {};
  # Variable text
@@ -58,7 +62,7 @@ function makeICBCnetcdf
  longname = ' %s:longname = "%s";\n';
  for i=1:length(var_names)
   switch var_names{i}
-   case{"z"}
+   case{"Z"}
     desc = sprintf(var_desc.z,var_names{i});
     desc = [desc sprintf(var_desc.len,var_names{i})];
     desc = [desc sprintf(longname,var_names{i},"depth")];
@@ -78,12 +82,12 @@ function makeICBCnetcdf
     desc = [desc sprintf(var_desc.vel,var_names{i})];
     desc = [desc sprintf(longname,var_names{i},"meridional velocity")];
     values = {values{:},v};
-   case{"T"}
+   case{"CT"}
     desc = sprintf(var_desc.z,var_names{i});
     desc = [desc sprintf(var_desc.tmp,var_names{i})];
     desc = [desc sprintf(longname,var_names{i},"Temperature")];
     values = {values{:},T};
-   case{"S"}
+   case{"SA"}
     desc = sprintf(var_desc.z,var_names{i});
     desc = [desc sprintf(var_desc.sal,var_names{i})];
     desc = [desc sprintf(longname,var_names{i},"Salinity")];
@@ -142,4 +146,5 @@ function makeICBCnetcdf
  desc = sprintf(':created = "%s";\n',date);
  descriptions = {descriptions{:},desc};
  writeCDF(filename,var_names,dim_names,dim_sizes,descriptions,values);
+ unix(["ncgen -k 3 -o " ncname " " filename]);
 end%function
