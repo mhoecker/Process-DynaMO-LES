@@ -9,14 +9,15 @@ function winy = window(y,order,NoBoost)
   NoBoost=0;
  end%if
  N = length(y);
+ ymean = mean(y);
  ysq = var(y,1);
  winy = linspace(1,N,N)-.5;
  winy = sin(winy*pi/N).^order;
- winy = winy.*y;
+ winy = ymean + winy.*(y-ymean);
  wsq = var(winy,1);
  if(NoBoost==0)
   if(wsq>0)
-   winy = winy.*sqrt(ysq./wsq);
+   winy = ymean+(winy-ymean).*sqrt(ysq./wsq);
   end%if
  end%if
 end%function
