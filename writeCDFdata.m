@@ -1,7 +1,8 @@
-function writeCDFdata(fileid,data,vars)
+function writeCDFdata(filename,data,vars)
 % writeCDFdata(fileid,data,vars)
 % data is a cell array of data in each variable
 % vars is a cell aray with the variable names
+fileid = fopen(filename,'a');
 fprintf(fileid,'data:\n')
 for i=1:length(data)
  y = data{i}(:);
@@ -10,10 +11,13 @@ for i=1:length(data)
   if(isnan(y(j))==1)
    fprintf(fileid,'NaN');
   else
-   fprintf(fileid,'%20.20g',y(j));
+   fprintf(fileid,'%+01.16e',y(j));
   end%if
   if(j<length(y))
    fprintf(fileid,', ');
+   if(mod(j,5)==0)
+    fprintf(fileid,'\n');
+   end%if
   else
    fprintf(fileid,';\n');
   end%if
