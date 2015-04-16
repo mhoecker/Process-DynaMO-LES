@@ -5,7 +5,6 @@ function [Fy,f,f0,nyq] = PSDplot(t,y,outname)
  minA = maxA*1./N^4;
  Fy = fft(y)/N;
  f0 = ((N+1)/N)/abs(t(N)-t(1));
- f0 = f0;
  f = f0*(0:1:N-1);
  nyq = f0*floor((N+1)/2);
  ReFy = real(Fy);
