@@ -6,19 +6,19 @@ function makeICBCnetCDF(outpath)
  end%if
  #
  #
- z = -200:5:0; % meters
+ z = 0:-5:-200; % meters
  t = (0:36)*3600; % seconds
  #Shape parameters for tanh profiles
- zmid = -75;
- dz = 20;
+ zmid = -50;
+ dz = 30;
  # Velocity scale
  dU = .3;
  # Temperature scale and offset
- T0 = 22;
+ T0 = 20.5;
  dT = 8;
  # Salinity scale and offset
- S0 = 33;
- dS = 2;
+ S0 = 35;
+ dS = .2;
  #
  u = dU*tanh((z-zmid)/dz);
  v = 0*z;
@@ -28,7 +28,8 @@ function makeICBCnetCDF(outpath)
  storm = (1+tanh(t-3600*3))/2;
  nostorm = 1-storm;
  #
- J_sw = +50*storm  +500*nostorm;
+ J_sw = (50*storm+500*nostorm).*cos(2*pi*t/(3600*24));
+ J_sw = J_sw.*(1+sign(J_sw))/2;
  J_lw = -50*storm -50*nostorm;
  J_la = -300*storm-100*nostorm;
  P = 5*storm;
@@ -146,5 +147,5 @@ function makeICBCnetCDF(outpath)
  desc = sprintf(':created = "%s";\n',date);
  descriptions = {descriptions{:},desc};
  writeCDF(filename,var_names,dim_names,dim_sizes,descriptions,values);
- unix(["ncgen -k 3 -o " ncname " " filename]);
+ unix(["ncgen -k 3 -o " ncname " " filename "&& rm " filename]);
 end%function
