@@ -28,7 +28,7 @@ set ylabel "z [m]" offset yloff,0
 set border 7
 set key t l
 set xrange [Tmin:Tmax]
-set xtics in .3
+set xtics in 1
 set xtics rangelimited
 set x2range [Smin:Smax]
 set x2tics 35,.3,36 rangelimited
