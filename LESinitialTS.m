@@ -4,7 +4,7 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  # wantdate - date in matlab datenum format
  # outloc   - directory of output file (assume to be the currentdirectory if not given)
  if(nargin<2)
-  outloc = "";
+  outloc = "/media/mhoecker/8982053a-3b0f-494e-84a1-98cdce5e67d9/Dynamo/output/nextrun/";
  end%if
  % Check for Gibbs Sea Water
  [version_number,version_date] = findgsw;
@@ -21,6 +21,7 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  P = gsw_p_from_z(z,0);
  idxgood = find(isnan(Tc).*isnan(Sa)==0);
  z = z(idxgood);
+ Nz = length(z);
  Tc = Tc(idxgood);
  Sa = Sa(idxgood);
  P = P(idxgood);
@@ -35,9 +36,15 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
   imax = find(z==max(z));
   fprintf(outid,'%f %f %f\n',0.0,Tc(imax),Sp(imax));
  end%if
+ if(mean(diff(z))<0)
  for i=1:length(z);
   fprintf(outid,'%f %f %f\n',abs(z(i)),Tc(i),Sp(i));
  end%for
+ else
+ for i=length(z):-1:1;
+  fprintf(outid,'%f %f %f\n',abs(z(i)),Tc(i),Sp(i));
+ end%for
+ end%if
  fclose(outid)
  subplot(1,2,1)
  plot(Tc,z)

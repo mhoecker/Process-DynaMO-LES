@@ -1,13 +1,12 @@
 function makeICBCnetCDF(outpath)
- if(nargin<1)
   tmpdir = "/home/mhoecker/tmp/";
- else
-  tmpdir = outpath;
+ if(nargin<1)
+  outpath = tmpdir;
  end%if
  #
  #
  z = 0:-5:-200; % meters
- t = (0:36)*3600; % seconds
+ t = (0:36); % seconds
  #Shape parameters for tanh profiles
  zmid = -50;
  dz = 30;
@@ -25,7 +24,7 @@ function makeICBCnetCDF(outpath)
  T = T0+dT*tanh((z-zmid)/dz);
  S = S0+dS*tanh((z-zmid)/dz);
  #
- storm = (1+tanh(t-3600*3))/2;
+ storm = (1+tanh(t-3))/2;
  nostorm = 1-storm;
  #
  J_sw = (50*storm+500*nostorm).*cos(2*pi*t/(3600*24));
@@ -148,4 +147,14 @@ function makeICBCnetCDF(outpath)
  descriptions = {descriptions{:},desc};
  writeCDF(filename,var_names,dim_names,dim_sizes,descriptions,values);
  unix(["ncgen -k 3 -o " ncname " " filename "&& rm " filename]);
+ LESinitialTS(ncname)
+ fileout = [outpath "bc.bc"]
+ outid = fopen(fileout,"w");
+ fprintf(outid,' text\n');
+ fprintf(outid,' \n');
+ fprintf(outid,' swf_top, hf_top, lhf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle\n');
+ for i=1:length(t);
+  fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',t(i),J_sw(i),J_lw(i),J_la(i),P(i),tau_x(i),tau_y(i),W_l(i),W_h(i),W_d(i))
+ end%for
+ fclose(outid)
 end%function
