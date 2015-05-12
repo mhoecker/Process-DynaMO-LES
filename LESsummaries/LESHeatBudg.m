@@ -1,11 +1,12 @@
-function HeatBudg(dagnc,bcfile,outdir)
+function LESHeatBudg(outdir,dagnc,bcfile)
 % figure 7 Heat Profiles
- abrev = "HeatBudg";
+ abrev = "LESHeatBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet] = DAGsfcflux(dagnc,bcfile,(trange-t0sim)*24*3600);
+ sfcflx = SurfFlx(dagnc,bcfile,(trange-t0sim)*24*3600);
+ # [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet]
  # Extract simulation data
  [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
@@ -52,7 +53,7 @@ function HeatBudg(dagnc,bcfile,outdir)
   [Ydayu,zzu2] = meshgrid(DAGheat.Yday,DAGheat.zzu);
   pcolor(Ydayu',-zzu2',log(DAGheat.t2_ave)); shading flat;
  else
-  binarray(tdag',[Jh,MLwt,MLwt2]',[dir.dat abrev "Jh.dat"]);
+  binarray(tdag',[sfcflx.Jh,MLwt,MLwt2]',[dir.dat abrev "Jh.dat"]);
   binarray(tdag',[MLD,MLwt]',[dir.dat abrev "ML.dat"]);
   binarray(tdag',[MLD2,MLwt2]',[dir.dat abrev "ML2.dat"]);
   binmatrix(DAGheat.Yday',DAGheat.zzw',DAGheat.hf_ave',[dir.dat abrev "hf.dat"]);

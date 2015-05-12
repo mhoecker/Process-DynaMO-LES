@@ -63,11 +63,11 @@ function allfigs(outdir,dagnc,bcnc,ic1nc,ic2nc)
 
  %% Heat Budget
 
- LESHeatBudg(outdir,dagnc);
+ LESHeatBudg(outdir,dagnc,bcnc);
 
  %% Salt Budget
 
- %LESSalBudg(outdir,dagnc);
+ LESSalBudg(outdir,dagnc,bcnc);
 
  %% Momentum Budget
 
