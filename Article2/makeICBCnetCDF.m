@@ -36,7 +36,7 @@ function makeICBCnetCDF(outpath)
  tau_y = 0*t;
  W_l = 100*nostorm+30*storm;
  W_h = W_l.*(nostorm/100+storm/10);
- W_d = 0*t;
+ W_d = 180*atan2(tau_x,tau_y)/pi;
  filename = [tmpdir "ICBC.cdf"];
  ncname = [tmpdir "ICBC.nc"];
  dim_names ={"t","Z"};
@@ -148,7 +148,7 @@ function makeICBCnetCDF(outpath)
  writeCDF(filename,var_names,dim_names,dim_sizes,descriptions,values);
  unix(["ncgen -k 3 -o " ncname " " filename "&& rm " filename]);
  LESinitialTS(ncname)
- fileout = [outpath "bc.bc"]
+ fileout = [outpath "bc.dat"]
  outid = fopen(fileout,"w");
  fprintf(outid,' text\n');
  fprintf(outid,' \n');
