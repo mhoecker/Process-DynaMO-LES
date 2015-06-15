@@ -1,4 +1,4 @@
-function makeICBCnetCDF(outpath)
+function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
   tmpdir = "/home/mhoecker/tmp/";
  if(nargin<1)
   outpath = tmpdir;
@@ -7,22 +7,34 @@ function makeICBCnetCDF(outpath)
  #
  z = 0:-5:-200; % meters
  t = (0:36); % seconds
- #Shape parameters for tanh profiles
+ #Shape parameters for default tanh profiles
  zmid = -50;
  dz = 30;
  # Velocity scale
  dU = .3;
+ U0 = dU;
  # Temperature scale and offset
  T0 = 20.5;
  dT = 8;
  # Salinity scale and offset
  S0 = 35;
  dS = .2;
- #
- u = dU*tanh((z-zmid)/dz);
+ # If no parameters are given use dfault values for U profile
+ if(nargin<3)
+  Uparams = [dU,zmid,dz,U0]
+ end%if
+ # If no parameters are given use dfault values for T profile
+ if(nargin<3)
+  Tparams = [dT,zmid,dz,T0]
+ end%if
+ # If no parameters are given use dfault values for T profile
+ if(nargin<3)
+  Sparams = [dS,zmid,dz,S0]
+ end%if
+ u = Uparams(1)*tanh((z-Uparams(2))/Uparams(3))+Uparams(4);
  v = 0*z;
- T = T0+dT*tanh((z-zmid)/dz);
- S = S0+dS*tanh((z-zmid)/dz);
+ T = Tparams(1)*tanh((z-Tparams(2))/Tparams(3))+Tparams(4);
+ S = Sparams(1)*tanh((z-Sparams(2))/Sparams(3))+Sparams(4);
  #
  storm = (1+tanh(t-3))/2;
  nostorm = 1-storm;
