@@ -17,20 +17,22 @@ set bmargin at screen bloc(row)
 row = nextrow(row)
 set key b c horizontal
 set format x ""
-set ytics 10 nomirror offset ytoff,0
-set yrange [0:27]
-set ylabel "U^s [cm/s]"
+set autoscale y
+set autoscale y2
+#set yrange [0:27]
+set ytics .5 nomirror offset ytoff,0
+set ylabel "U^s [m/s]"
 set y2label "L [m]" offset -yloff,0
-set y2tics scale .5 out 2
-set my2tics 4
+set y2tics scale .5 out 25
+set my2tics 5
 set y2tics nomirror offset -ytoff,0
-set y2range [0:5]
+#set y2range [0:5]
 set label 1 "a: Waves"
 altdatfile = datdir.abrev."surf.dat"
 plot \
-altdatfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 11 axes x1y1 title "U^s"\
+altdatfile binary format="%f%f%f%f%f%f%f" u 1:6 ls 11 axes x1y1 title "U^s"\
 ,\
-altdatfile binary format="%f%f%f%f%f%f%f" u 1:($7/(4*pi)) ls 12 axes x1y2 title "L"\
+altdatfile binary format="%f%f%f%f%f%f%f" u 1:5 ls 12 axes x1y2 title "L"\
 #,\
 
 set ylabel ""
@@ -56,7 +58,7 @@ set logscale y
 set label 1 "b"
 plot \
 datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($4)) ls 11 t " Hoenikker \#",\
-datdir.abrev."Lat.dat" binary form="%float%float" u 1:(phi($4)) ls 12 t " Turbulent Langmuir \#"
+datdir.abrev."Lat.dat" binary form="%float%float" u 1:(phi($2)) ls 12 t " Turbulent Langmuir \#"
 
 #datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($2)) ls 2 t " Ho_T",\
 #datdir.abrev."HoTS.dat" binary form="%float%float%float%float" u 1:(phi($3)) ls 1 t " Ho_S"

@@ -18,7 +18,7 @@ set bmargin at screen bloc(row)
 set xtics nomirror offset 0,xtoff
 set x2tics nomirror scale .5 	offset 0,-xtoff
 set yrange [-dsim:0]
-set ytics nomirror -70,20,-10 offset ytoff,0
+#set ytics nomirror -70,20,-10 offset ytoff,0
 set xlabel  "T [^oC]"
 set x2label "" offset  graph -.6, char -xloff
 set label 35 "S [g/kg]" at graph .5, graph 1 center nopoint offset character 0, 1.25

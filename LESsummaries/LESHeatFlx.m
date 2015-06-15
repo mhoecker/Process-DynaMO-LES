@@ -72,8 +72,8 @@ function LESHeatFlx(outdir,dagfile,bcfile)
   shading flat
   print([outdir abrev "Ho.png"],"-dpng")
  else
-  binarray(fluxes.t',[fluxes.Jh,fluxes.rain,fluxes.netp,fluxes.netp,fluxes.S_0,fluxes.sigH]',[outfile "surf.dat"])
-  binarray(fluxes.t',fluxes.La_t',[outfile "Lat.dat"])
+  binarray(fluxes.t',[fluxes.Jh,fluxes.rain,fluxes.netp,fluxes.lam,fluxes.S_0,fluxes.sigH]',[outfile "surf.dat"]);
+  binarray(fluxes.t',fluxes.La_t',[outfile "Lat.dat"]);
   binarray(fluxes.t',[fluxes.HoT,fluxes.HoS,fluxes.Ho]',[outfile "HoTS.dat"]);
   binarray(fluxes.t',[fluxes.LaBflx,fluxes.JhBflx,fluxes.SaBflx]',[outfile "Bflx.dat"]);
   binmatrix(t',Z',drhozs',[outfile "drhosz.dat"]);

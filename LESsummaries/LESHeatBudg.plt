@@ -12,7 +12,20 @@ cbform = "%+4.1te^{%+02T}"
 set autoscale cb
 set cbtics auto
 # heat flux
-hfxmax = 5e1
+hfxmax=0
+#
+stats datdir.abrev."dhfdz.dat" binary matrix u 3
+hfxmax = (STATS_max>hfxmax)? STATS_max : hfxmax
+hfxmax = (abs(STATS_min)>hfxmax)? abs(STATS_min) : hfxmax
+#
+stats datdir.abrev."dwtdz.dat" binary matrix u 3
+hfxmax = (STATS_max>hfxmax)? STATS_max : hfxmax
+hfxmax = (abs(STATS_min)>hfxmax)? abs(STATS_min) : hfxmax
+#"dTdt.dat"
+stats datdir.abrev."dTdt.dat"	 binary matrix u 3
+hfxmax = (STATS_max>hfxmax)? STATS_max : hfxmax
+hfxmax = (abs(STATS_min)>hfxmax)? abs(STATS_min) : hfxmax
+#
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -21,6 +34,7 @@ Tdispmin = 0.5
 set multiplot title "Heat Budget"
 # Heat flux
 load pltdir."sympal.plt"
+#set autoscale cb
 set cbrange [hfxmin:hfxmax]
 set cbtics hfxmin,(hfxmax-hfxmin)/2,hfxmax; set cbtics add ("0" 0)
 set format cb cbform
@@ -94,7 +108,6 @@ set cbtics auto
 # heat flux
 hdimax = hfxmax
 hdimin = -hfxmax
-hfxmax = 750
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -113,13 +126,10 @@ unset colorbox
 unset logscale
 unset cbtics
 set cbtics auto
-set autoscale cb
-set cbrange [hfxmin:hfxmax]
-unset cbtics
-set cbtics ("-500" -500 ,"0" 0, "+500" 500)
-set format cb ""
+set format cb "%3.0s%c"
 set cblabel "{/Symbol r}c_pw'T'\n[W/m^2]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set cbrange [hfxmin:hfxmax]
 set ylabel "z [m]"
 set label 1 "a"
 set format x ""
@@ -137,8 +147,8 @@ row = nextrow(row)
 set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
 set format x "%g"
-set yrange [-950:550]
-set ytics -1000,500,1000
+set autoscale y
+set ytics auto
 set ylabel "Heat flux [W/m^2]"
 set key horizontal
 #set key opaque

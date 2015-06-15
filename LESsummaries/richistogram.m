@@ -1,9 +1,9 @@
 function [SPcontour,pc] = richistogram(filename,outdir)
  if(nargin<1)
- filename = "/home/mhoecker/work/Dynamo/output/yellowstone12/dyn1024flxn_s_dag.nc"
+ filename = "/home/mhoecker/work/Dynamo/output/yellowstone12/dyn1024flxn_s_dag.nc";
  end%if
  if(nargin<2)
- outdir = "/home/mhoecker/work/Dynamo/plots/y12/"
+ outdir = "/home/mhoecker/work/Dynamo/plots/y12/";
  end%if
  %
  abrev = "richistogram";

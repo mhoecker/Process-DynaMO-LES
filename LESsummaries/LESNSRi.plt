@@ -12,12 +12,18 @@ load scriptdir."tlocbloc.plt"
 set multiplot
 #
 unset key
-Nsqmax = 4e-4
+Nsqmax = 0
+set autoscale y
+stats datdir.abrev."b.dat" binary matrix u 3
+Nsqmax = (STATS_max>Nsqmax)? STATS_max : Nsqmax
+stats datdir.abrev."c.dat" binary matrix u 3
+Nsqmax = (abs(STATS_min)>Nsqmax)? abs(STATS_min) : Nsqmax
 Nsqmin = 0
+set yrange [-dplt:0]
 cbform = "%1.0te^{%+02T}"
 rhotitle = " {/Symbol Dr}=100 g/m^3"
 rhocolor = "grey50"
-set cbtics (Nsqmin, "0" 0, Nsqmax)
+set cbtics auto
 set format x ""
 set format y "%3.0f"
 #
@@ -37,8 +43,9 @@ set bmargin at screen bloc(row)
 row = nextrow(row)
 set label 1 "a: N^2"
 plot \
-datdir.abrev."b.dat" binary matrix w image not,\
-datdir.abrev."e.tab" lc rgbcolor rhocolor notitle
+datdir.abrev."b.dat" binary matrix w image not
+#,\
+#datdir.abrev."e.tab" lc rgbcolor rhocolor notitle
 #datdir.abrev."b.tab" ls 1 title " N^2",\
 #datdir.abrev."c.tab" ls 2 title " S^2/4"
 unset colorbox
@@ -47,7 +54,9 @@ unset colorbox
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set label 1 "b: S^2/4"
-plot datdir.abrev."c.dat" binary matrix u 1:2:($3/4) w image not, datdir.abrev."e.tab" lc rgbcolor rhocolor notitle
+plot datdir.abrev."c.dat" binary matrix u 1:2:($3/4) w image not
+#,\
+#datdir.abrev."e.tab" lc rgbcolor rhocolor notitle
 unset colorbox
 unset logscale cb
 row = nextrow(row)
@@ -82,6 +91,7 @@ set format cb cbform
 set cblabel ""
 set palette maxcolors 8
 set cbrange [-1:1]
+unset logscale
 set cbtics add ("0" 0)
 set cbtics add ("+1/4" +.5,"+{/Symbol \245}" +1)
 set cbtics add ("-1/4" -.5,"-{/Symbol \245}" -1)

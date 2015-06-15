@@ -15,12 +15,12 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  %
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 0; % simulated start time is 0
- dsim = 60; % Maximum simulation depth
- dplt = 50; % Maximum depth of plots
- tfsim = t0sim+1.25; % Simulated stop time 2011 yearday
+ dsim = 192; % Maximum simulation depth
+ dplt = dsim*.8; % Maximum depth of plots
+ tfsim = t0sim+0.25; % Simulated stop time 2011 yearday
  palcolors = 11; % number of colors in the color bar palette
  trange = [t0sim,tfsim];
- if((useoctplot==0)&&(nargin>0))
+ if((useoctplot==0))
   [gnuplotterm,termsfx] = termselect("pngposter");
   %
   termfile = cstrcat(dir.plt, abrev, "term.plt");
@@ -42,8 +42,8 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
   depthticfile = cstrcat(dir.plt, abrev, "depthtics.plt");
   fid = fopen(depthticfile,"w");
   fprintf(fid,"set yrange [-dplt:0]\n");
-  fprintf(fid,"dytic = 15\n");
-  fprintf(fid,"set ytics -65,dytic,0\n");
+  fprintf(fid,"dytic = 10*floor(.1*3**(-1+log(dplt)/log(3)))\n");
+  fprintf(fid,"set ytics -4*dytic,dytic,0\n");
   fclose(fid);
   %
   timedepthfile = cstrcat(dir.plt, abrev, "timedepth.plt");

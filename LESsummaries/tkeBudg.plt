@@ -14,21 +14,57 @@ set lmargin at screen lloc(col)
 set rmargin at screen rloc(col)
 tkemax = 5e-3
 tkemin = 0
-dtkemin = -3e0
-dtkemax = +3e0
-Ftkemin = -6.5
-Ftkemax = +6.5
+dtkemax = 0
+Ftkemax = 0
 nullcolor = "grey20"
-cbform = "%+4.0te^{%+02T}"
-set xrange[t0sim:tfsim]
+cbform = "%3.0se%S"
 set yrange [-dplt:0]
 #
 # Set common color bar for production/dissipation
+field = "uudSdz"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+dtkemax = (STATS_up_quartile>dtkemax)? STATS_up_quartile : dtkemax
+dtkemax = (abs(STATS_lo_quartile)>dtkemax)? abs(STATS_lo_quartile) : dtkemax
+#
+field = "uudUdz"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+dtkemax = (STATS_up_quartile>dtkemax)? STATS_up_quartile : dtkemax
+dtkemax = (abs(STATS_lo_quartile)>dtkemax)? abs(STATS_lo_quartile) : dtkemax
+#
+field = "bw"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+dtkemax = (STATS_up_quartile>dtkemax)? STATS_up_quartile : dtkemax
+dtkemax = (abs(STATS_lo_quartile)>dtkemax)? abs(STATS_lo_quartile) : dtkemax
+#
+field = "diss"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+dtkemax = (STATS_up_quartile>dtkemax)? STATS_up_quartile : dtkemax
+dtkemax = (abs(STATS_lo_quartile)>dtkemax)? abs(STATS_lo_quartile) : dtkemax
+#
+dtkemax = 2*dtkemax
+dtkemin = -dtkemax
+#
+field = "wtke"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+Ftkemax = (STATS_up_quartile>Ftkemax)? STATS_up_quartile : Ftkemax
+Ftkemax = (abs(STATS_lo_quartile)>Ftkemax)? abs(STATS_lo_quartile) : Ftkemax
+field = "wpi"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+Ftkemax = (STATS_up_quartile>Ftkemax)? STATS_up_quartile : Ftkemax
+Ftkemax = (abs(STATS_lo_quartile)>Ftkemax)? abs(STATS_lo_quartile) : Ftkemax
+field = "sgs"
+stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
+Ftkemax = (STATS_up_quartile>Ftkemax)? STATS_up_quartile : Ftkemax
+Ftkemax = (abs(STATS_lo_quartile)>Ftkemax)? abs(STATS_lo_quartile) : Ftkemax
+#
+Ftkemax = 2*Ftkemax
+Ftkemin = -Ftkemax
+#
 set cbrange [dtkemin:dtkemax]
 load pltdir."sympal.plt"
-set format cb "%+3.1f"
-set cblabel "{/Symbol m}W/kg"
-set cbtics dtkemin,(dtkemax-dtkemin),dtkemax;set cbtics add ("0" 0)
+set format cb cbform
+set cblabel "W/kg"
+set cbtics auto
 set colorbox user origin rloc(col)+cbgap,bloc(rows-1) size cbwid,(rows-1)*vskip+cbhig
 # Plot Stokes Production
 set tmargin at screen tloc(row)
@@ -38,7 +74,7 @@ set xlabel ""
 field = "uudSdz"
 set ylabel "z [m]"
 set label 1 "a: StP"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 unset colorbox
 #
 # Plot Shear Production
@@ -49,11 +85,11 @@ field = "uudUdz"
 set label 1 "b: SP"
 if(exists("SPcontour")){
 set key b l
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not,\
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not,\
 SPcontour w lines lc -1 lw .5 title "".SPpc."%";\
 }
 else{
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 }
 #
 # Plot Buoyancy
@@ -62,7 +98,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 field = "bw"
 set label 1 "c: b'w'"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 #
 # Plot Dissipation
 row = nextrow(row)
@@ -72,7 +108,7 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 field = "diss"
 set label 1 "d: {/Symbol e}"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 unset multiplot
 #
 set output pngdir.abrev."flx".termsfx
@@ -109,10 +145,9 @@ set multiplot
 set cbrange [Ftkemin:Ftkemax]
 load pltdir."sympal.plt"
 load pltdir.abrev."timetics.plt"
-set format cb "%+4.0f"
+set format cb cbform
 set palette maxcolors 13
-set cblabel "Transport {/Symbol m}Wm/kg"
-set cbtics ceil(Ftkemin),2*floor(Ftkemax),floor(Ftkemax);set cbtics add ("0" 0)
+set cblabel "Transport Wm/kg"
 set colorbox user origin rloc(col)+cbgap,bloc(rows-2) size cbwid,(rows-2)*vskip+cbhig
 #set autoscale cb
 #set cbtics auto
@@ -125,7 +160,7 @@ set format x ""
 set xlabel ""
 field = "wtke"
 set label 1 "a: w'tke"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 # Plot Pressure transport
@@ -134,7 +169,7 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 field = "wpi"
 set label 1 "b: w'p'"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 unset colorbox
 #
@@ -146,7 +181,7 @@ set format x "%g"
 set xlabel "2011 UTC yearday" offset 0,xloff
 field = "sgs"
 set label 1 "c: sgs"
-plot datdir.abrev.field.".dat" binary matrix u 1:2:($3*1e6) w image not
+plot datdir.abrev.field.".dat" binary matrix u 1:2:3 w image not
 #outdir.abrev.field.".tab" lc rgbcolor nullcolor lt 4 notitle
 #
 unset multiplot

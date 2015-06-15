@@ -2,16 +2,14 @@ function LESSalBudg(outdir,dagnc,bcnc)
 % Salinity Flux Profiles
  abrev = "LESSalBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
- trange = [t0sim,tfsim];
+ trange = [t0sim,tfsim]
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- sfflx = SurfFlx(dagnc,bcnc,trange);
+ sfflx = SurfFlx(dagnc,bcnc,(trange-t0sim)*24*3600);
  # [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet]
  # Extract simulation data
  [DAGSal] = DAGSalprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  [tdag,zdag,Tavgdag,Savgdag] = DAGTSprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
- idxsf = find(zdag==0);
- sfsal = Savgdag(:,idxsf);
  #Mixed Layer Depth
  [MLD,MLI]=getMLD(Savgdag,Tavgdag,zdag);
  [MLD2,MLI2]=getMLD(Savgdag,Tavgdag,zdag,.1);
@@ -57,8 +55,10 @@ function LESSalBudg(outdir,dagnc,bcnc)
   pcolor(Ydayu',-zzu2',log(DAGSal.d2_ave)); shading flat;
  else
   datprfx = cstrcat(dir.dat,abrev);
-  binarray(DAGSal.Yday',[sfflx.netp.*sfsal*(1e-3/3600),MLws,MLws2]',cstrcat(datprfx,"SFC_ML_flx.dat"));
-  binarray(DAGSal.Yday',[MLD,MLws]',cstrcat(datprfx,"ML.dat"));
+  MLD0 = 0.*DAGSal.Yday;
+  MLws0 = sfflx.Salflx;
+  binarray(DAGSal.Yday',[MLD0,MLws0]',cstrcat(datprfx,"SFC.dat"))
+  binarray(DAGSal.Yday',[MLD ,MLws ]',cstrcat(datprfx,"ML.dat"));
   binarray(DAGSal.Yday',[MLD2,MLws2]',cstrcat(datprfx,"ML2.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.sf_ave',cstrcat(datprfx,"sf.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.ws_ave',cstrcat(datprfx,"ws.dat"));

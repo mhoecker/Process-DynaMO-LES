@@ -227,6 +227,7 @@ set ylabel "Abundance"
 set xlabel ""
 set format x "%g"
 set yrange [0:.07]
+set autoscale y
 set ytics 0,.03
 set format y "%g"
 set xtics out nomirror

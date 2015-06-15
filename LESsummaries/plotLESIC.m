@@ -48,12 +48,12 @@ function  plotLESIC(outdir,TSnc,UVnc)
   print([outdir 'fig2.png'],'-dpng')
  else
   %
-  Smid  = (max(S)+min(S))/2
-  Tmid = (max(T)+min(T))/2
+  Smid  = (max(S)+min(S))/2;
+  Tmid = (max(T)+min(T))/2;
   UVmid = (max([max(U),max(V)])+min([min(U),min(V)]))/2;
   %
-  DS  = (max(S)-min(S))/2
-  DT  = (max(T)-min(T))/2
+  DS  = (max(S)-min(S))/2;
+  DT  = (max(T)-min(T))/2;
   DUV = (max([max(U),max(V)])-min([min(U),min(V)]))/2;
   %
   alpha = gsw_alpha(Smid,Tmid,0);
@@ -62,7 +62,7 @@ function  plotLESIC(outdir,TSnc,UVnc)
   DrhoT = abs(alpha*DT);
   DrhoS = abs(beta*DS);
   %
-  pad = 1.1
+  pad = 1.1;
   UVmax = UVmid+pad*DUV;
   UVmin = UVmid-pad*DUV;
   if(DrhoT>DrhoS)
@@ -78,8 +78,8 @@ function  plotLESIC(outdir,TSnc,UVnc)
   end%if
   # save CT,SA,U,V profiles
   binarray(z,[T;S;U;V],[dir.dat abrev "TSUV.dat"]);
-  Trangetext = cstrcat('Tmin= ',num2str(Tmin,"%12f"),'\nTmax= ',num2str(Tmax,"%12f"))
-  Srangetext = cstrcat('Smin= ',num2str(Smin,"%12f"),'\nSmax= ',num2str(Smax,"%12f"))
+  Trangetext = cstrcat('Tmin= ',num2str(Tmin,"%12f"),'\nTmax= ',num2str(Tmax,"%12f"));
+  Srangetext = cstrcat('Smin= ',num2str(Smin,"%12f"),'\nSmax= ',num2str(Smax,"%12f"));
   UVrangetext = cstrcat('UVmin= ',num2str(UVmin,"%12f"),'\nUVmax= ',num2str(UVmax,"%12f"));
   unix(cstrcat('echo "',Trangetext,'">>',limitsfile));
   unix(cstrcat('echo "',Srangetext,'">>',limitsfile));

@@ -10,8 +10,19 @@ cbform = "%+4.1te^{%+02T}"
 #
 set autoscale cb
 set cbtics auto
-# heat flux
-sfxmax = 4.0e-5
+# salt flux
+sfxmax = 0
+stats datdir.abrev."dsfdz.dat" binary matrix u 3 nooutput
+sfxmax = (STATS_max>sfxmax)? STATS_max : sfxmax
+sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
+#stats datdir.abrev."dwsdz.dat" binary matrix u 3 nooutput
+#sfxmax = (STATS_max>sfxmax)? STATS_max : sfxmax
+#sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
+#stats datdir.abrev."dSdt.dat" binary matrix u 3 nooutput
+#sfxmax = (STATS_max>sfxmax)? STATS_max : sfxmax
+#sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
+#
+#sfmax = 1e-6
 sfxmin = -sfxmax
 #
 Tdispmax = 50.0
@@ -94,13 +105,16 @@ set cbtics auto
 Tdispmax = 50.0
 Tdispmin = 0.5
 #
-sfxmin = 0
-sfxmax = +1.0e-4
-set autoscale cb
+sfxmax = 0
+stats datdir.abrev."ws.dat" binary matrix u 3 nooutput
+sfxmax = (STATS_max>sfxmax)? STATS_max : sfxmax
+sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
+sfxmin = -sfxmax
+set cbrange [sfxmin:sfxmax]
 #
 set multiplot title "Salt Fluxes"
 # Heat flux
-load pltdir."pospal.plt"
+load pltdir."sympal.plt"
 load pltdir.abrev."timedepth.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
@@ -109,8 +123,8 @@ set xlabel ""
 set key left bottom horizontal
 set cbrange [sfxmin:sfxmax]
 unset cbtics
-set cbtics ("-0.1" -1e-4 ,"0" 0, "+0.1" 1e-4)
-set format cb ""
+set cbtics auto
+set format cb "%g"
 set cblabel "w'S'\n[psu mm/s]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "z [m]"
@@ -132,18 +146,18 @@ set bmargin at screen bloc(row)
 load pltdir."sympalnan.plt"
 set format x "%g"
 set xlabel "2011 UTC yearday"
-set yrange [0:.195]
-set ytics -1.2,.1,1.2
+set autoscale y
+set ytics auto
 set ylabel "Salt flux [psu mm/s]"
 set key horizontal
 set key top left
 set label 1 "b"
 plot \
-datdir.abrev."SFC_ML_flx.dat" binary format="%f%f%f%f" u 1:($2*1e3) lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC_ML_flx.dat" binary format="%f%f%f%f" u 1:($2*1e3) ls 13 title "Surface", \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($3*1e3) lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($3*1e3) ls 11 not, \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($4*1e3) lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($4*1e3) ls 12 not
+datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
+datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:3 ls 13 title "Surface", \
+datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:3 ls 11 not, \
+datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:3 ls 12 not
 #
 unset multiplot

@@ -51,7 +51,7 @@ function [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss,badStDr
  fave = fave+squeeze(dag{'vf_ave'}(dagtidx,dagzidx,1,1));
  fave = fave+squeeze(dag{'wf_ave'}(dagtidx,dagzidx,1,1));
  #
- tkePTra  = badPTra+badStDr-StDr;
+ tkePTra  = badPTra-StDr+badStDr;
  Diss  = squeeze(dag{'disp_ave'}(dagtidx,dagzidx,1,1));
  # Correct for convolved terms
  tkeAdve = tkeAdve-ShPr;

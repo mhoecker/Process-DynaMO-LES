@@ -6,7 +6,7 @@ function plotLESBC(outdir,bcnc)
  zrange = sort([0,-dsim]);
  trange = [t0sim,tfsim];
  % Extract Flux data
- field=["time";"lhf_top";"swf_top";"hf_top";"rain";"ustr_t";"vstr_t";"wave_l";"wave_h";"w_angle"]
+ field=["time";"lhf_top";"swf_top";"hf_top";"rain";"ustr_t";"vstr_t";"wave_l";"wave_h";"w_angle"];
  bc = bcvars(bcnc,field);
  bc.time = bc.time/3600/24;
  % Calculate Stokes Drift and wavenumber
@@ -57,6 +57,6 @@ function plotLESBC(outdir,bcnc)
    unix(cstrcat('echo "',xtictext,'">>',limitsfile));
    unix(cstrcat('echo "',mxtictext,'">>',limitsfile));
   end%if
-  unix(cstrcat("gnuplot ",limitsfile," ",dirs.script,abrev,".plt"))
+  unix(cstrcat("gnuplot ",limitsfile," ",dirs.script,abrev,".plt"));
  end%if
 end%function
