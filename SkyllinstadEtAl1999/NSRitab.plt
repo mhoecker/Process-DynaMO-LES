@@ -22,3 +22,7 @@ splot datroot."c.dat" binary matrix u 1:2:($3/4)
 set table outroot."b.tab"
 splot datroot."b.dat" binary matrix
 #
+# Richardson Number
+set cntrparam levels discrete .25
+set table outroot."d.tab"
+splot datroot."d.dat" binary matrix

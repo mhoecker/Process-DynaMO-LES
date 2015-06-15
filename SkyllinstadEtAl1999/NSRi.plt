@@ -76,8 +76,8 @@ row = nextrow(row)
 # Richardson Number
 load pltdir."sympal.plt"
 set tmargin at screen tloc(row)
-set bmargin at screen bloc(row)
-set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set bmargin at screen bloc(row+1)
+set colorbox user origin rloc(col)+cbgap,bloc(row+1) size cbwid,2*cbhig
 set format cb cbform
 set cblabel ""
 set palette maxcolors 8
@@ -93,6 +93,9 @@ set format x "%g"
 set xlabel "2011 UTC yearday"
 unset key
 set label 1 "c: Ri=N^2/S^2"
-plot datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not
+plot \
+ datdir.abrev."d.dat" binary matrix u 1:2:($3/(abs($3)+.25)) w image not,\
+ datdir.abrev."d.tab" lw 2 lc rgbcolor "#FFFFFF",\
+ datdir.abrev."d.tab" lw 1 lc rgbcolor "#000000"
 #
 unset multiplot
