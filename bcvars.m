@@ -18,7 +18,7 @@ function vars = bcvars(bcnc,field,trange)
  end%if
  vars.(deblank(field(1,:))) = squeeze(bc{deblank(field(1,:))}(tidx));
  % get and restict depth range
- Nt = length(tidx)
+ Nt = length(tidx);
  for i=2:length(field(:,1))
   fieldname = deblank(field(i,:));
   % if the variable is defined, return it
