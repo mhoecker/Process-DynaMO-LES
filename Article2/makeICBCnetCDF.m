@@ -1,12 +1,15 @@
-function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
+function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
   tmpdir = "/home/mhoecker/tmp/";
  if(nargin<1)
   outpath = tmpdir;
  end%if
  #
  #
- z = 0:-5:-200; % meters
- t = (0:36); % seconds
+ z = 0:-1:-300; % meters
+ t = 0:.5:36;    % hours
+ # Start the storm after 3 hours
+ storm = (1+tanh(t-3))/2;
+ nostorm = 1-storm;
  #Shape parameters for default tanh profiles
  zmid = -50;
  dz = 30;
@@ -19,8 +22,19 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
  # Salinity scale and offset
  S0 = 35;
  dS = .2;
+ if(nargin<5)
+  fluxes.JSW = [50,500];
+  fluxes.JLW = [-50,-50];
+  fluxes.JLA = [-100,-300];
+  fluxes.P = [0,50];
+  fluxes.Tx = [0,0.3];
+  fluxes.Ty = [0,0];
+  fluxes.Wl = [100,30];
+  fluxes.Wh = [fluxes.Wl(1)/100,fluxes.Wl(2)/10];
+  fluxes.Wd = 180*atan2(fluxes.Tx,fluxes.Ty)/pi;
+ end%if
  # If no parameters are given use dfault values for U profile
- if(nargin<3)
+ if(nargin<2)
   Uparams = [dU,zmid,dz,U0]
  end%if
  # If no parameters are given use dfault values for T profile
@@ -28,7 +42,7 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
   Tparams = [dT,zmid,dz,T0]
  end%if
  # If no parameters are given use dfault values for T profile
- if(nargin<3)
+ if(nargin<4)
   Sparams = [dS,zmid,dz,S0]
  end%if
  u = Uparams(1)*tanh((z-Uparams(2))/Uparams(3))+Uparams(4);
@@ -36,21 +50,19 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
  T = Tparams(1)*tanh((z-Tparams(2))/Tparams(3))+Tparams(4);
  S = Sparams(1)*tanh((z-Sparams(2))/Sparams(3))+Sparams(4);
  #
- storm = (1+tanh(t-3))/2;
- nostorm = 1-storm;
- #
- J_sw = (50*storm+500*nostorm).*cos(2*pi*t/(3600*24));
+ J_sw = (fluxes.JSW(2)*storm+fluxes.JSW(1)*nostorm).*cos(2*pi*t/(3600*24));
  J_sw = J_sw.*(1+sign(J_sw))/2;
  J_lw = -50*storm -50*nostorm;
  J_la = -300*storm-100*nostorm;
  P = 5*storm;
- tau_x = 0.3*storm;
- tau_y = 0*t;
- W_l = 100*nostorm+30*storm;
- W_h = W_l.*(nostorm/100+storm/10);
- W_d = 180*atan2(tau_x,tau_y)/pi;
+ tau_x = fluxes.Tx(1)*nostorm+fluxes.Tx(2)*storm;
+ tau_y = fluxes.Ty(1)*nostorm+fluxes.Ty(2)*storm;
+ W_l = fluxes.Wl(1)*nostorm+fluxes.Wl(2)*storm;
+ W_h = fluxes.Wh(1)*nostorm+fluxes.Wh(2)*storm;
+ W_d = fluxes.Wd(1)*nostorm+fluxes.Wd(2)*storm;
+ #
  filename = [tmpdir "ICBC.cdf"];
- ncname = [tmpdir "ICBC.nc"];
+ ncname = [outpath "ICBC.nc"];
  dim_names ={"t","Z"};
  dim_sizes =[length(t),length(z)];
  var_names = {dim_names{:},"U","V","CT","SA"};
@@ -158,8 +170,8 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams)
  desc = sprintf(':created = "%s";\n',date);
  descriptions = {descriptions{:},desc};
  writeCDF(filename,var_names,dim_names,dim_sizes,descriptions,values);
- unix(["ncgen -k 3 -o " ncname " " filename "&& rm " filename]);
- LESinitialTS(ncname)
+ unix(["ncgen -k 3 -o " ncname " " filename " && rm " filename]);
+ LESinitialTS(ncname,outpath)
  fileout = [outpath "bc.dat"]
  outid = fopen(fileout,"w");
  fprintf(outid,' text\n');
