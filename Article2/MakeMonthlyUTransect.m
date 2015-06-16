@@ -176,6 +176,13 @@ dZ   = min([dZ,min(abs(diff(Zbar190)))]);
 Z = 0:dZmin:Zmax;
 %
 U = zeros([12,6,length(Z)]);
+lonimg = min(londat):min(diff(londat))/5:max(londat);
+dlon = 0*lonimg+max(lonimg)-min(lonimg);
+for i=1:length(londat)
+ dlon = min([dlon;abs(lonimg-londat(i))]);
+end%for
+idxfar = find(dlon>min(diff(londat)));
+[llimg,ZZimg] = meshgrid(lonimg,Z);
 % Interpolate/Extrapolate onto common Z basis
 for m=1:12
  U(m,1,:) = interp1(Zbar081,Ubar081(m,:),Z,"nearest","extrap");
@@ -185,6 +192,10 @@ for m=1:12
  U(m,5,:) = interp1(Zbar165,Ubar165(m,:),Z,"nearest","extrap");
  U(m,6,:) = interp1(Zbar190,Ubar190(m,:),Z,"nearest","extrap");
  Um = squeeze(U(m,:,:))';
+ Ui = interp2(londat,Z,Um,llimg,ZZimg);
+ Ui(:,idxfar)=NaN;
  binmatrix(londat,-Z,Um,[paramdir.dat num2str(m,"%02i") ".dat"]);
+ binmatrix(lonimg,-Z,Ui,[paramdir.dat num2str(m,"%02i") "i.dat"]);
 end%for
 unix(["gnuplot " paramdir.initplt " " paramdir.script "MakeMonU.plt"])
+unix(["pngmovie.sh -t gif -l " paramdir.png "/MonU -n " outdir "/MonU -f 30"])
