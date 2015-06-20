@@ -32,6 +32,7 @@ set x2tics (328.67) offset 0,-.5
 unset xzeroaxis
 set key horizontal at graph 1,0 bottom Right
 set parametric
+set label 1 "a"
 plot \
 datdir."tkeBudgtkezavg.dat" binary format="%f%f" u 1:($2*1e3) ls 11 axis x1y2 t "tke",\
 datdir."ObsSurfEpsJhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:(sqrt($4**2+$5**2)) ls 12 t "|{/Symbol t}|",\
@@ -49,6 +50,7 @@ row=3
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 #plot t,t
+set label 1 "b" at screen lloc(col), tloc(row-1)
 set parametric
 set xrange [0:2*xytic]
 set yrange [0:2*xytic]
