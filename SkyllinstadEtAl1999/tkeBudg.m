@@ -122,6 +122,7 @@ function tkeBudg(dagnc,outdir,SPcontour,SPval)
   # save files for gnuplot
   # tke
   binmatrix(tdag',zdag',tkeavg',[dir.dat abrev "tke.dat"]);
+  binarray(tdag',mean(tkeavg'),[dir.dat abrev "tkezavg.dat"]);
   # d tke d t
   binmatrix(tdag',zdag',dtkedt',[dir.dat abrev "dtkedt.dat"]);
   binmatrix(zdag',tdag',dtkedt,[dir.dat abrev "dtkedtT.dat"]);
