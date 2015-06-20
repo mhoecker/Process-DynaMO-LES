@@ -6,8 +6,9 @@ prefix = "tanhfits";
 dir = plotparam(outdir,prefix);
 outdat  = [dir.dat prefix];
 findgsw;
-pofz = @(z,p) p(1)*tanh((z-p(2))/abs(p(3)))+p(4);
-# p = Delta/2 , Zmid , DZ/2, AVG
+% Move to it's ownm function so Velocity can use it too
+%pofz = @(z,p) p(1)*tanh((z-p(2))/abs(p(3)))+p(4);
+% p = Delta/2 , Zmid , DZ/2, AVG
 pT0 = [8,-100,40,20];
 pS0 = [.5,-100,20,35];
 Niter = 25;
@@ -44,7 +45,7 @@ for i=1:12
    if(pTj(1)==0)
     pTj(1) = (max(Tgood)-min(Tgood))/2;
    end%if
-   [Tj,pTj,cvg]=leasqr(Zgood,Tgood',pTj,pofz,SumTol,Niter,Wt);
+   [Tj,pTj,cvg]=leasqr(Zgood,Tgood',pTj,"pofz",SumTol,Niter,Wt);
    if(cvg==0)
     pTj=pTj*NaN;
     "Temperature did not converge"
@@ -59,7 +60,7 @@ for i=1:12
    if(pSj(1)==0)
     pSj(1) = (max(Sgood)-min(Sgood))/2;
    end%if
-   [Sj,pSj,cvg]=leasqr(Zgood,Sgood',pSj,pofz,SumTol,Niter,Wt);
+   [Sj,pSj,cvg]=leasqr(Zgood,Sgood',pSj,"pofz",SumTol,Niter,Wt);
    if(cvg==0)
     pSj=pSj*NaN;
     "Salinity did not converge"
