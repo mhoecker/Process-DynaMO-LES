@@ -47,26 +47,49 @@ Z165  = nc165{'depth'}(:);
 % find depth and spacing for mooring at 190E (170W)
 Z190  = nc190{'depth'}(:);
 %
-%Read in Zonal Currents
+% Read in Zonal Currents
 % Data are stored as an integer with scaling and offset
 u081  = nc081{'u'}(:);
 u081(u081==nc081{'u'}.missing_value) = NaN;
 u081 = (u081*nc081{'u'}.scale_factor+nc081{'u'}.add_offset)/100;
+v081  = nc081{'v'}(:);
+v081(v081==nc081{'v'}.missing_value) = NaN;
+v081 = (v081*nc081{'v'}.scale_factor+nc081{'v'}.add_offset)/100;
+%
 u090  = nc090{'u'}(:);
 u090(u090==nc090{'u'}.missing_value) = NaN;
 u090 = (u090*nc090{'u'}.scale_factor+nc090{'u'}.add_offset)/100;
+v090  = nc090{'v'}(:);
+v090(v090==nc090{'v'}.missing_value) = NaN;
+v090 = (v090*nc090{'v'}.scale_factor+nc090{'v'}.add_offset)/100;
+%
 u147  = nc147{'u'}(:);
 u147(u147==nc147{'u'}.missing_value) = NaN;
 u147 = (u147*nc147{'u'}.scale_factor+nc147{'u'}.add_offset)/100;
+v147  = nc147{'v'}(:);
+v147(v147==nc147{'v'}.missing_value) = NaN;
+v147 = (v147*nc147{'v'}.scale_factor+nc147{'v'}.add_offset)/100;
+%
 u156  = nc156{'u'}(:);
 u156(u156==nc156{'u'}.missing_value) = NaN;
 u156 = (u156*nc156{'u'}.scale_factor+nc156{'u'}.add_offset)/100;
+v156  = nc156{'v'}(:);
+v156(v156==nc156{'v'}.missing_value) = NaN;
+v156 = (v156*nc156{'v'}.scale_factor+nc156{'v'}.add_offset)/100;
+%
 u165  = nc165{'u'}(:);
 u165(u165==nc165{'u'}.missing_value) = NaN;
 u165 = (u165*nc165{'u'}.scale_factor+nc165{'u'}.add_offset)/100;
+v165  = nc165{'v'}(:);
+v165(u165==nc165{'v'}.missing_value) = NaN;
+v165 = (u165*nc165{'v'}.scale_factor+nc165{'v'}.add_offset)/100;
+%
 u190  = nc190{'u'}(:);
 u190(u190==nc190{'u'}.missing_value) = NaN;
 u190 = (u190*nc190{'u'}.scale_factor+nc190{'u'}.add_offset)/100;
+v190  = nc190{'v'}(:);
+v190(v190==nc190{'v'}.missing_value) = NaN;
+v190 = (v190*nc190{'v'}.scale_factor+nc190{'v'}.add_offset)/100;
 %
 %
 % Read in times and convert to months
@@ -114,51 +137,69 @@ Ubar147 = zeros(12,length(Z147));
 Ubar156 = zeros(12,length(Z156));
 Ubar165 = zeros(12,length(Z165));
 Ubar190 = zeros(12,length(Z190));
+Vbar081 = zeros(12,length(Z081));
+Vbar090 = zeros(12,length(Z090));
+Vbar147 = zeros(12,length(Z147));
+Vbar156 = zeros(12,length(Z156));
+Vbar165 = zeros(12,length(Z165));
+Vbar190 = zeros(12,length(Z190));
 %
 % Average over months
 for m=1:12
  idx = find(m081==m);
  Ubar081(m,:) = nanmean(u081(idx,:));
+ Vbar081(m,:) = nanmean(v081(idx,:));
 %
  idx = find(m090==m);
  Ubar090(m,:) = nanmean(u090(idx,:));
+ Vbar090(m,:) = nanmean(v090(idx,:));
 %
  idx = find(m147==m);
  Ubar147(m,:) = nanmean(u147(idx,:));
+ Vbar147(m,:) = nanmean(v147(idx,:));
 %
  idx = find(m156==m);
  Ubar156(m,:) = nanmean(u156(idx,:));
+ Vbar156(m,:) = nanmean(v156(idx,:));
 %
  idx = find(m165==m);
  Ubar165(m,:) = nanmean(u165(idx,:));
+ Vbar165(m,:) = nanmean(v165(idx,:));
 %
  idx = find(m190==m);
  Ubar190(m,:) = nanmean(u190(idx,:));
+ Vbar190(m,:) = nanmean(v190(idx,:));
 end%for
 %
 % Remove Depths with NaNs
-idxgood = find(~isnan(sum(Ubar081,1)));
+idxgood = find(~isnan(sum(Ubar081,1)+sum(Vbar081,1)));
 Ubar081 = Ubar081(:,idxgood);
+Vbar081 = Vbar081(:,idxgood);
 Zbar081 = Z081(idxgood);
 %
-idxgood = find(~isnan(sum(Ubar090,1)));
+idxgood = find(~isnan(sum(Ubar090,1)+sum(Vbar090,1)));
 Ubar090 = Ubar090(:,idxgood);
+Vbar090 = Vbar090(:,idxgood);
 Zbar090 = Z090(idxgood);
 %
-idxgood = find(~isnan(sum(Ubar147,1)));
+idxgood = find(~isnan(sum(Ubar147,1)+sum(Vbar147,1)));
 Ubar147 = Ubar147(:,idxgood);
+Vbar147 = Vbar147(:,idxgood);
 Zbar147 = Z147(idxgood);
 %
-idxgood = find(~isnan(sum(Ubar156,1)));
+idxgood = find(~isnan(sum(Ubar156,1)+sum(Vbar156,1)));
 Ubar156 = Ubar156(:,idxgood);
+Vbar156 = Vbar156(:,idxgood);
 Zbar156 = Z156(idxgood);
 %
-idxgood = find(~isnan(sum(Ubar165,1)));
+idxgood = find(~isnan(sum(Ubar165,1)+sum(Vbar165,1)));
 Ubar165 = Ubar165(:,idxgood);
+Vbar165 = Vbar165(:,idxgood);
 Zbar165 = Z165(idxgood);
 %
-idxgood = find(~isnan(sum(Ubar190,1)));
+idxgood = find(~isnan(sum(Ubar190,1)+sum(Vbar190,1)));
 Ubar190 = Ubar190(:,idxgood);
+Vbar190 = Ubar190(:,idxgood);
 Zbar190 = Z190(idxgood);
 %
 % Find maximum depth with Velocity
@@ -179,6 +220,7 @@ dZ   = min([dZ,min(abs(diff(Zbar190)))]);
 Z = 0:dZ:Zmax;
 %
 U = zeros([12,6,length(Z)]);
+V = zeros([12,6,length(Z)]);
 lonimg = min(londat):min(diff(londat))/5:max(londat);
 dlon = 0*lonimg+max(lonimg)-min(lonimg);
 for i=1:length(londat)
@@ -188,78 +230,142 @@ idxfar = find(dlon>min(diff(londat)));
 [llimg,ZZimg] = meshgrid(lonimg,Z);
 
 % Interpolate/Extrapolate onto common Z basis
-	% fit to Tanh Profile
+% fit to Tanh Profile
 DU   = zeros(12,length(londat));
-Zmid = zeros(12,length(londat));
-dZ   = zeros(12,length(londat));
+Zm_u = zeros(12,length(londat));
+dZ_u = zeros(12,length(londat));
 Uav  = zeros(12,length(londat));
-  p = [1,-100,50,.5];
+DV   = zeros(12,length(londat));
+Zm_v = zeros(12,length(londat));
+dZ_v = zeros(12,length(londat));
+Vav  = zeros(12,length(londat));
+p    = [1,-100,50,.5];
 for m=1:12
  U(m,1,:) = interp1(Zbar081,Ubar081(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar081(m,:))),-100,50,mean(Ubar081(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar081',Ubar081(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar081))||(p(2)<min(-Zbar081)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,1)   = p(1);
- Zmid(m,1) = p(2);
- dZ(m,1)   = abs(p(3));
+ Zm_u(m,1) = p(2);
+ dZ_u(m,1)   = abs(p(3));
  Uav(m,1)  = p(4);
+ V(m,1,:) = interp1(Zbar081,Vbar081(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar081(m,:))),-100,50,mean(Vbar081(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar081',Vbar081(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar081))||(p(2)<min(-Zbar081)))
+  p=p*NaN;
+ end%if
+ DV(m,1)   = p(1);
+ Zm_v(m,1) = p(2);
+ dZ_v(m,1)   = abs(p(3));
+ Vav(m,1)  = p(4);
  %
  U(m,2,:) = interp1(Zbar090,Ubar090(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar090(m,:))),-100,50,mean(Ubar090(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar090',Ubar090(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar090))||(p(2)<min(-Zbar090)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,2)   = p(1);
- Zmid(m,2) = p(2);
- dZ(m,2)   = abs(p(3));
+ Zm_u(m,2) = p(2);
+ dZ_u(m,2)   = abs(p(3));
  Uav(m,2)  = p(4);
+ V(m,2,:) = interp1(Zbar090,Vbar090(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar090(m,:))),-100,50,mean(Vbar090(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar090',Vbar090(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar090))||(p(2)<min(-Zbar090)))
+  p=p*NaN;
+ end%if
+ DV(m,2)   = p(1);
+ Zm_v(m,2) = p(2);
+ dZ_v(m,2)   = abs(p(3));
+ Vav(m,2)  = p(4);
  %
  U(m,3,:) = interp1(Zbar147,Ubar147(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar147(m,:))),-100,50,mean(Ubar147(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar147',Ubar147(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar147))||(p(2)<min(-Zbar147)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,3)   = p(1);
- Zmid(m,3) = p(2);
- dZ(m,3)   = abs(p(3));
+ Zm_u(m,3) = p(2);
+ dZ_u(m,3)   = abs(p(3));
  Uav(m,3)  = p(4);
+ V(m,3,:) = interp1(Zbar147,Vbar147(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar147(m,:))),-100,50,mean(Vbar147(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar147',Vbar147(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar147))||(p(2)<min(-Zbar147)))
+  p=p*NaN;
+ end%if
+ DV(m,3)   = p(1);
+ Zm_v(m,3) = p(2);
+ dZ_v(m,3)   = abs(p(3));
+ Vav(m,3)  = p(4);
  %
  U(m,4,:) = interp1(Zbar156,Ubar156(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar156(m,:))),-100,50,mean(Ubar156(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar156',Ubar156(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar156))||(p(2)<min(-Zbar156)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,4)   = p(1);
- Zmid(m,4) = p(2);
- dZ(m,4)   = abs(p(3));
+ Zm_u(m,4) = p(2);
+ dZ_u(m,4)   = abs(p(3));
  Uav(m,4)  = p(4);
+ V(m,4,:) = interp1(Zbar156,Vbar156(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar156(m,:))),-100,50,mean(Vbar156(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar156',Vbar156(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar156))||(p(2)<min(-Zbar156)))
+  p=p*NaN;
+ end%if
+ DV(m,4)   = p(1);
+ Zm_v(m,4) = p(2);
+ dZ_v(m,4)   = abs(p(3));
+ Vav(m,4)  = p(4);
  %
  U(m,5,:) = interp1(Zbar165,Ubar165(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar165(m,:))),-100,50,mean(Ubar165(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar165',Ubar165(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar165))||(p(2)<min(-Zbar165)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,5)   = p(1);
- Zmid(m,5) = p(2);
- dZ(m,5)   = abs(p(3));
+ Zm_u(m,5) = p(2);
+ dZ_u(m,5)   = abs(p(3));
  Uav(m,5)  = p(4);
+ V(m,5,:) = interp1(Zbar165,Vbar165(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar165(m,:))),-100,50,mean(Vbar165(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar165',Vbar165(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar165))||(p(2)<min(-Zbar165)))
+  p=p*NaN;
+ end%if
+ DV(m,5)   = p(1);
+ Zm_v(m,5) = p(2);
+ dZ_v(m,5)   = abs(p(3));
+ Vav(m,5)  = p(4);
  %
  U(m,6,:) = interp1(Zbar190,Ubar190(m,:),Z,"nearest","extrap");
  p = [.5*sum(diff(Ubar190(m,:))),-100,50,mean(Ubar190(m,:))];
  [umifit,p,cvg]=leasqr(-Zbar190',Ubar190(m,:),p,"pofz");
  if((cvg!=1)||(p(2)>max(-Zbar190))||(p(2)<min(-Zbar190)))
-  p=p*NaN
+  p=p*NaN;
  end%if
  DU(m,6)   = p(1);
- Zmid(m,6) = p(2);
- dZ(m,6)   = abs(p(3));
+ Zm_u(m,6) = p(2);
+ dZ_u(m,6)   = abs(p(3));
  Uav(m,6)  = p(4);
+ V(m,6,:) = interp1(Zbar190,Vbar190(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Vbar190(m,:))),-100,50,mean(Vbar190(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar190',Vbar190(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar190))||(p(2)<min(-Zbar190)))
+  p=p*NaN;
+ end%if
+ DV(m,6)   = p(1);
+ Zm_v(m,6) = p(2);
+ dZ_v(m,6)   = abs(p(3));
+ Vav(m,6)  = p(4);
  %
  Um = squeeze(U(m,:,:))';
  Ui = interp2(londat,Z,Um,llimg,ZZimg);
@@ -269,26 +375,37 @@ for m=1:12
 end%for
 
 Up = permute(U,[3,2,1]);
+Vp = permute(V,[3,2,1]);
 dim_names = {"month","lon","Z"};
-var_names = {dim_names{:},"U","DU","Zmid","dZ","U_ave"};
+var_names = {dim_names{:},"U","DU","Zm_u","dZ_u","U_ave","V","DV","Zm_v","dZ_v","V_ave"};
 dim_sizes = [12,length(londat),length(Z)];
-values = {1:12,londat(:),-Z(:),Up(:),DU(:),Zmid(:),dZ(:),Uav(:)};
+values = {1:12,londat(:),-Z(:),Up(:),DU'(:),Zm_u'(:),dZ_u'(:),Uav'(:),Vp(:),DV'(:),Zm_v'(:),dZ_v'(:),Vav'(:)};
 descriptions = {"integer month(month);\n"};
 descriptions = {descriptions{:},"float lon(lon);\n"};
 descriptions = {descriptions{:},"float Z(Z);\n"};
 descriptions = {descriptions{:},"float U(month,lon,Z);\n"};
 descriptions = {descriptions{:},"float DU(month,lon);\n"};
-descriptions = {descriptions{:},"float Zmid(month,lon);\n"};
-descriptions = {descriptions{:},"float dZ(month,lon);\n"};
+descriptions = {descriptions{:},"float Zm_u(month,lon);\n"};
+descriptions = {descriptions{:},"float dZ_u(month,lon);\n"};
 descriptions = {descriptions{:},"float U_ave(month,lon);\n"};
+descriptions = {descriptions{:},"float V(month,lon,Z);\n"};
+descriptions = {descriptions{:},"float DV(month,lon);\n"};
+descriptions = {descriptions{:},"float Zm_v(month,lon);\n"};
+descriptions = {descriptions{:},"float dZ_v(month,lon);\n"};
+descriptions = {descriptions{:},"float V_ave(month,lon);\n"};
 descriptions = {descriptions{:},"month:units = \"months\";\n"};
 descriptions = {descriptions{:},"lon:units = \"Degrees\";\n"};
 descriptions = {descriptions{:},"Z:units = \"m\";\n"};
 descriptions = {descriptions{:},"U:units = \"m/s\";\n"};
 descriptions = {descriptions{:},"DU:units = \"m/s\";\n"};
-descriptions = {descriptions{:},"Zmid:units = \"m\";\n"};
-descriptions = {descriptions{:},"dZ:units = \"m\";\n"};
+descriptions = {descriptions{:},"Zm_u:units = \"m\";\n"};
+descriptions = {descriptions{:},"dZ_u:units = \"m\";\n"};
 descriptions = {descriptions{:},"U_ave:units = \"m/s\";\n"};
+descriptions = {descriptions{:},"V:units = \"m/s\";\n"};
+descriptions = {descriptions{:},"DV:units = \"m/s\";\n"};
+descriptions = {descriptions{:},"Zm_v:units = \"m\";\n"};
+descriptions = {descriptions{:},"dZ_v:units = \"m\";\n"};
+descriptions = {descriptions{:},"V_ave:units = \"m/s\";\n"};
 metaname = "Seasonal_Average_Currents";
 writeCDF(cdfout,var_names,dim_names,dim_sizes,descriptions,values,metaname);
 unix(["/home/mhoecker/local/bin/ncgen " cdfout " -k 3  -o " netcdfout])
