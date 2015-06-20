@@ -7,6 +7,9 @@ paramdir    = plotparam(outdir,"MonU");
 Observation = [DYNAMO "/Observations"];
 monthlyRAMA = [Observation "/netCDF/RAMA/monthly"];
 monthlyTAO  = [Observation "/netCDF/TAO/monthly"];
+monthly     = [Observation "/netCDF/monthly"];
+cdfout   = [monthly "/RAMA_TAO.cdf"];
+netcdfout   = [monthly "/RAMA_TAO.nc"];
 %
 % Individual files
 % There is no ADCP at 067e or 180
@@ -173,7 +176,7 @@ dZ   = min([dZ,min(abs(diff(Zbar156)))]);
 dZ   = min([dZ,min(abs(diff(Zbar165)))]);
 dZ   = min([dZ,min(abs(diff(Zbar190)))]);
 % Create common Z co-ordiante
-Z = 0:dZmin:Zmax;
+Z = 0:dZ:Zmax;
 %
 U = zeros([12,6,length(Z)]);
 lonimg = min(londat):min(diff(londat))/5:max(londat);
@@ -183,19 +186,111 @@ for i=1:length(londat)
 end%for
 idxfar = find(dlon>min(diff(londat)));
 [llimg,ZZimg] = meshgrid(lonimg,Z);
+
 % Interpolate/Extrapolate onto common Z basis
+	% fit to Tanh Profile
+DU   = zeros(12,length(londat));
+Zmid = zeros(12,length(londat));
+dZ   = zeros(12,length(londat));
+Uav  = zeros(12,length(londat));
+  p = [1,-100,50,.5];
 for m=1:12
  U(m,1,:) = interp1(Zbar081,Ubar081(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar081(m,:))),-100,50,mean(Ubar081(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar081',Ubar081(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar081))||(p(2)<min(-Zbar081)))
+  p=p*NaN
+ end%if
+ DU(m,1)   = p(1);
+ Zmid(m,1) = p(2);
+ dZ(m,1)   = abs(p(3));
+ Uav(m,1)  = p(4);
+ %
  U(m,2,:) = interp1(Zbar090,Ubar090(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar090(m,:))),-100,50,mean(Ubar090(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar090',Ubar090(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar090))||(p(2)<min(-Zbar090)))
+  p=p*NaN
+ end%if
+ DU(m,2)   = p(1);
+ Zmid(m,2) = p(2);
+ dZ(m,2)   = abs(p(3));
+ Uav(m,2)  = p(4);
+ %
  U(m,3,:) = interp1(Zbar147,Ubar147(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar147(m,:))),-100,50,mean(Ubar147(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar147',Ubar147(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar147))||(p(2)<min(-Zbar147)))
+  p=p*NaN
+ end%if
+ DU(m,3)   = p(1);
+ Zmid(m,3) = p(2);
+ dZ(m,3)   = abs(p(3));
+ Uav(m,3)  = p(4);
+ %
  U(m,4,:) = interp1(Zbar156,Ubar156(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar156(m,:))),-100,50,mean(Ubar156(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar156',Ubar156(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar156))||(p(2)<min(-Zbar156)))
+  p=p*NaN
+ end%if
+ DU(m,4)   = p(1);
+ Zmid(m,4) = p(2);
+ dZ(m,4)   = abs(p(3));
+ Uav(m,4)  = p(4);
+ %
  U(m,5,:) = interp1(Zbar165,Ubar165(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar165(m,:))),-100,50,mean(Ubar165(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar165',Ubar165(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar165))||(p(2)<min(-Zbar165)))
+  p=p*NaN
+ end%if
+ DU(m,5)   = p(1);
+ Zmid(m,5) = p(2);
+ dZ(m,5)   = abs(p(3));
+ Uav(m,5)  = p(4);
+ %
  U(m,6,:) = interp1(Zbar190,Ubar190(m,:),Z,"nearest","extrap");
+ p = [.5*sum(diff(Ubar190(m,:))),-100,50,mean(Ubar190(m,:))];
+ [umifit,p,cvg]=leasqr(-Zbar190',Ubar190(m,:),p,"pofz");
+ if((cvg!=1)||(p(2)>max(-Zbar190))||(p(2)<min(-Zbar190)))
+  p=p*NaN
+ end%if
+ DU(m,6)   = p(1);
+ Zmid(m,6) = p(2);
+ dZ(m,6)   = abs(p(3));
+ Uav(m,6)  = p(4);
+ %
  Um = squeeze(U(m,:,:))';
  Ui = interp2(londat,Z,Um,llimg,ZZimg);
  Ui(:,idxfar)=NaN;
  binmatrix(londat,-Z,Um,[paramdir.dat num2str(m,"%02i") ".dat"]);
  binmatrix(lonimg,-Z,Ui,[paramdir.dat num2str(m,"%02i") "i.dat"]);
 end%for
+
+Up = permute(U,[3,2,1]);
+dim_names = {"month","lon","Z"};
+var_names = {dim_names{:},"U","DU","Zmid","dZ","U_ave"};
+dim_sizes = [12,length(londat),length(Z)];
+values = {1:12,londat(:),-Z(:),Up(:),DU(:),Zmid(:),dZ(:),Uav(:)};
+descriptions = {"integer month(month);\n"};
+descriptions = {descriptions{:},"float lon(lon);\n"};
+descriptions = {descriptions{:},"float Z(Z);\n"};
+descriptions = {descriptions{:},"float U(month,lon,Z);\n"};
+descriptions = {descriptions{:},"float DU(month,lon);\n"};
+descriptions = {descriptions{:},"float Zmid(month,lon);\n"};
+descriptions = {descriptions{:},"float dZ(month,lon);\n"};
+descriptions = {descriptions{:},"float U_ave(month,lon);\n"};
+descriptions = {descriptions{:},"month:units = \"months\";\n"};
+descriptions = {descriptions{:},"lon:units = \"Degrees\";\n"};
+descriptions = {descriptions{:},"Z:units = \"m\";\n"};
+descriptions = {descriptions{:},"U:units = \"m/s\";\n"};
+descriptions = {descriptions{:},"DU:units = \"m/s\";\n"};
+descriptions = {descriptions{:},"Zmid:units = \"m\";\n"};
+descriptions = {descriptions{:},"dZ:units = \"m\";\n"};
+descriptions = {descriptions{:},"U_ave:units = \"m/s\";\n"};
+metaname = "Seasonal_Average_Currents";
+writeCDF(cdfout,var_names,dim_names,dim_sizes,descriptions,values,metaname);
+unix(["/home/mhoecker/local/bin/ncgen " cdfout " -k 3  -o " netcdfout])
 unix(["gnuplot " paramdir.initplt " " paramdir.script "MakeMonU.plt"])
 unix(["pngmovie.sh -t gif -l " paramdir.png "/MonU -n " outdir "/MonU -f 30"])

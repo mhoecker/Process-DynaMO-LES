@@ -1,8 +1,10 @@
 # Test using fit
-ncdir = "/home/mhoecker/work/Dynamo/Observations/netCDF/MIMOC/";
-ncroot = [ncdir "MIMOC_Z_GRID_v2.2_CT_SA_month"];
-outdir = "/home/mhoecker/work/Dynamo/plots/MIMOC/";
-prefix = "tanhfits";
+Obsdir   = "/home/mhoecker/work/Dynamo/Observations/netCDF";
+MIMOCdir = [Obsdir "/MIMOC/"];
+ncroot   = [MIMOCdir "MIMOC_Z_GRID_v2.2_CT_SA_month"];
+Unc      = [Obsdir "/monthly/RAMA_TAO.nc"];
+outdir   = "/home/mhoecker/work/Dynamo/plots/MIMOC/";
+prefix   = "tanhfits";
 dir = plotparam(outdir,prefix);
 outdat  = [dir.dat prefix];
 findgsw;
