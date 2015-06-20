@@ -8,7 +8,7 @@ function writeCDFhead(cdffile,dim_names,dim_sizes,descriptions,metaname)
  # Declare Dimensions
  fprintf(cdfid,'dimensions:\n');
  for i=1:length(dim_sizes)
-  fprintf(cdfid,'%s=%i; ',dim_names{i},dim_sizes(i));
+  fprintf(cdfid,'%s=%i;\n',dim_names{i},dim_sizes(i));
  end%for
 fprintf(cdfid,'\n');
 # Declare Variables
