@@ -1,8 +1,25 @@
 # make a bunch of Initial conditions
 MIMOCfitpath = "/home/mhoecker/work/Dynamo/plots/MIMOC/dat/tanhfits";
-overalloutpath = "/home/mhoecker/work/Dynamo/output/CompareRuns/"
+overalloutpath = "/home/mhoecker/work/Dynamo/output/CompareRuns/";
+RAMATAOfitpath = "/home/mhoecker/work/Dynamo/Observations//netCDF/monthly/";
+RAMATAOfitfile = [RAMATAOfitpath "RAMA_TAO.nc"];
+%
+%
+%month for U;
+Umonth = 11;
+Unc = netcdf(RAMATAOfitfile,'r');
+lons = Unc{'lon'}(:);
+Uparams = zeros(4,length(lons));
+tidx = find(Unc{'month'}(:)==Umonth)
+Uparams(1,:) = Unc{'DU'}(tidx,:);
+Uparams(2,:) = Unc{'Zm_u'}(tidx,:);
+Uparams(3,:) = Unc{'dZ_u'}(tidx,:);
+Uparams(4,:) = Unc{'U_ave'}(tidx,:);
+ncclose(Unc);
+Uparams
+%
+%
 maxbadmonth = 2;
-lons = [65,81,90,147,156,165,180,190];
 % DYNAMO fluxes
   dynamo.JSW = [50,500];
   dynamo.JLW = [-50,-50];
@@ -82,7 +99,7 @@ plot(Tmean(1,:),Tmean(3,:),"r.",Smean(1,:),Smean(3,:),"b.")
 hold on
 plot(Tmean(1,:),Tmean(3,:)+Tmean(4,:),"r--",Smean(1,:),Smean(3,:)+Smean(4,:),"b--")
 plot(Tmean(1,:),Tmean(3,:)-Tmean(4,:),"r--",Smean(1,:),Smean(3,:)-Smean(4,:),"b--")
-axis([50,370,-300,0])
+axis([min(lons),max(lons),-300,0])
 xlabel("Longitude (deg)")
 ylabel("Depth (m)")
 hold off
@@ -109,6 +126,6 @@ Sparams(:,idxbadparam) = NaN;
 [lons',Tparams',NaN*lons',lons',Sparams']
 for i=1:length(lons)
  outpath = [overalloutpath num2str(lons(i),"%005.1f")];
- makeICBCnetCDF([outpath "dynamo"],Sparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
- makeICBCnetCDF([outpath "TOGACOARE"],Sparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
+ makeICBCnetCDF([outpath "dynamo"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
+ makeICBCnetCDF([outpath "TOGACOARE"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
 end%for
