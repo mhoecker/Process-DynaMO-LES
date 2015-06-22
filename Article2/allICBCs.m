@@ -105,25 +105,28 @@ ylabel("Depth (m)")
 hold off
 subplot(3,1,2)
 plot(Tmean(1,:),(g./rhobar).*Tmean(6,:)./Tmean(4,:),Smean(1,:),(g./rhobar).*Smean(6,:)./Smean(4,:))
-axis([50,370])
+axis([min(lons),max(lons)])
 xlabel("Longitude")
 ylabel("Stratification (rad/s)^2")
 subplot(3,1,3)
 plot(Tmean(1,:),Tmean(6,:),Smean(1,:),Smean(6,:))
-axis([50,370])
+axis([min(lons),max(lons)])
 xlabel("Longitude")
 ylabel("Density change (kg/m^3)")
 Tparams = zeros(4,length(lons));
 Sparams = zeros(4,length(lons));
 badparam = interp1(T(1,:),nodat,lons)
 for i=1:4
+ i
  Tparams(i,:) = interp1(Tmean(1,:),Tmean(i+1,:),lons);
  Sparams(i,:) = interp1(Smean(1,:),Smean(i+1,:),lons);
 end%for
 idxbadparam = find(badparam>maxbadmonth);
 Tparams(:,idxbadparam) = NaN;
 Sparams(:,idxbadparam) = NaN;
-[lons',Tparams',NaN*lons',lons',Sparams']
+[lons,Tparams']
+[lons,Sparams']
+[lons,Uparams']
 for i=1:length(lons)
  outpath = [overalloutpath num2str(lons(i),"%005.1f")];
  makeICBCnetCDF([outpath "dynamo"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
