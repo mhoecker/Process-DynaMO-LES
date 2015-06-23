@@ -129,6 +129,6 @@ Sparams(:,idxbadparam) = NaN;
 [lons,Uparams']
 for i=1:length(lons)
  outpath = [overalloutpath num2str(lons(i),"%005.1f")];
- makeICBCnetCDF([outpath "dynamo"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
- makeICBCnetCDF([outpath "TOGACOARE"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
+ makeICBCnetCDF([outpath "DYNAMO/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
+ makeICBCnetCDF([outpath "TOGACOARE/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
 end%for
