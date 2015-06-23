@@ -62,7 +62,7 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  W_d = fluxes.Wd(1)*nostorm+fluxes.Wd(2)*storm;
  #
  filename = [tmpdir "ICBC.cdf"];
- ncname = [outpath "ICBC.nc"];
+ ncname = [outpath "UVinit.nc"];
  dim_names ={"t","Z"};
  dim_sizes =[length(t),length(z)];
  var_names = {dim_names{:},"U","V","CT","SA"};

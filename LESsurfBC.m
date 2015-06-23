@@ -61,8 +61,8 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  wave_direct = meanfil(wave_direct,t,s,avgtime);
  wave_direct = mod(180+imag(log(wave_direct))*180/pi,360);
  %
- outname = [outloc "Surface_Flux_" int2str(floor(min(t))) "-" int2str(ceil(max(t)))];
- fileout = [outname ".bc"];
+ outname = [outloc "bc"];
+ fileout = [outname ".dat"];
  outid = fopen(fileout,"w");
  fprintf(outid,'Flux=%s.nc  waves=%s %sGMT-%sGMT\n',filename,"faked",datestr(min(t),"dd-mmm-yyyy HH"),datestr(max(t),"dd-mmm-yyyy HH"));
  fprintf(outid,' \n');

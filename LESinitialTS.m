@@ -28,8 +28,8 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  Sp = gsw_SP_from_SA(Sa,P,80.5,0);
  ncclose(nc);
  #
- outname = [outloc "TS_profiles0to" num2str(maxdepth) "m"];
- fileout = [outname ".ic"];
+ outname = [outloc "ts_profile"];
+ fileout = [outname ".dat"];
  outid = fopen(fileout,"w");
  fprintf(outid,'-z|Tc|Sp/%s\n',filename);
  if(max(z)<0)
