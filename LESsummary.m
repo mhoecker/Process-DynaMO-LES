@@ -16,13 +16,14 @@ function LESsummary()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- ModelDir = cstrcat(DynamoDir,'LES/olemb2d/out/');
- ICBCDir = cstrcat(DynamoDir,'LES/olemb2d/data/');
- outdir = cstrcat(DynamoDir,'plots/wart008/');
- dagnc  = cstrcat(ModelDir,'wart008_1_dag.nc');
+ RunDir    = cstrcat(DynamoDir,'output/yellowstoneCompareRuns/080.5DYNAMO/');
+ ModelDir = cstrcat(RunDir,'out/');
+ ICBCDir = cstrcat(RunDir,'data/');
+ outdir = cstrcat(DynamoDir,'plots/yCompare/080.5DYNAMO/');
+ dagnc  = cstrcat(ModelDir,'dag.nc');
  bcnc  = cstrcat(ICBCDir,'bc.nc');
  ic1nc  = cstrcat(ICBCDir,'ic.nc');
- ic2nc  = cstrcat(ICBCDir,'UVinit.nc');
+ ic2nc  = cstrcat(RunDir,'UVinit.nc');
  %
  % Add figure plotting comands to the PATH
  %ensureSkyllingstad1999;
