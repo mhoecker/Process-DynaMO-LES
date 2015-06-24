@@ -5,7 +5,7 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  end%if
  #
  #
- z = 0:-1:-300; % meters
+ z = -300:1:0; % meters
  t = 0:.5:36;    % hours
  # Start the storm after 3 hours
  storm = (1+tanh(t-3))/2;
@@ -45,10 +45,10 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  if(nargin<4)
   Sparams = [dS,zmid,dz,S0]
  end%if
- u = Uparams(1)*tanh((z-Uparams(2))/Uparams(3))+Uparams(4);
+ u = pofz(z,Uparams);
  v = 0*z;
- T = Tparams(1)*tanh((z-Tparams(2))/Tparams(3))+Tparams(4);
- S = Sparams(1)*tanh((z-Sparams(2))/Sparams(3))+Sparams(4);
+ T = pofz(z,Tparams);
+ S = pofz(z,Sparams);
  #
  J_sw = (fluxes.JSW(2)*storm+fluxes.JSW(1)*nostorm).*cos(2*pi*t/(3600*24));
  J_sw = J_sw.*(1+sign(J_sw))/2;
