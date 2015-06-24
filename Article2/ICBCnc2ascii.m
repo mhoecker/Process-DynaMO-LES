@@ -18,15 +18,23 @@ function [flxout,TSout,UVout] = ICBCnc2ascii(ICBCfile,outloc)
  TSout = LESinitialTS(ICBCfile,outloc);
  unix(["cp " ICBCfile " " outloc "UVinit.nc"]);
  nc = netcdf([outloc "UVinit.nc"],'r');
- subplot(1,2,1)
+ subplot(1,4,1)
  plot(nc{"U"}(:),nc{"Z"}(:))
  xlabel("U (m/s)")
  ylabel("Depth (m)")
- subplot(1,2,2)
+ subplot(1,4,2)
  plot(nc{"V"}(:),nc{"Z"}(:))
  xlabel("V (m/s)")
  ylabel("Depth (m)")
- print([outloc "UV.png"],"-dpng")
+ subplot(1,4,3)
+ plot(nc{"CT"}(:),nc{"Z"}(:))
+ xlabel("T (C)")
+ ylabel("Depth (m)")
+ subplot(1,4,4)
+ plot(nc{"SA"}(:),nc{"Z"}(:))
+ xlabel("S (g/kg)")
+ ylabel("Depth (m)")
+ print([outloc "UVTS.png"],"-dpng")
  ncclose(nc);
 end%function
 
