@@ -49,11 +49,11 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Surface and dissipation observations
  %
- ObsSurfEps(dagnc,bcdat,outdir);
+ %ObsSurfEps(dagnc,bcdat,outdir);
 
  %% Initial Conditions
  %
- initialTSUV(TSUVnc,outdir);
+ %initialTSUV(TSUVnc,outdir);
 
  % T,S,U plots
  %
@@ -66,19 +66,19 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Heat flux comparison
 
- Heatfluxcompare(dagnc,bcdat,outdir);
+ %Heatfluxcompare(dagnc,bcdat,outdir);
 
  %% Heat Budget
 
- HeatBudg(dagnc,bcdat,outdir);
+ %HeatBudg(dagnc,bcdat,outdir);
 
  %% Salt Budget
 
- SalBudg(dagnc,bcdat,outdir);
+ %SalBudg(dagnc,bcdat,outdir);
 
  %% Momentum Budget
 
- momflux(dagnc,bcdat,outdir)
+ %momflux(dagnc,bcdat,outdir)
 
  %% Richardson # histogram
 
@@ -88,10 +88,12 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  tkeBudg(dagnc,outdir,SPfile,pcval);
 
+ wplot
+
  %% Hourly tke Budget
- dt = 2*3600;
- imax = ceil(30*3600/dt);
- tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
+ %dt = 2*3600;
+ %imax = ceil(30*3600/dt);
+ %tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
 
 end%function
 

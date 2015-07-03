@@ -16,17 +16,17 @@ function LESsummary()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- RunDir    = cstrcat(DynamoDir,'output/yellowstoneCompareRuns/080.5DYNAMO/');
- ModelDir = cstrcat(RunDir,'out/');
- ICBCDir = cstrcat(RunDir,'data/');
- outdir = cstrcat(DynamoDir,'plots/yCompare/080.5DYNAMO/');
- dagnc  = cstrcat(ModelDir,'dag.nc');
- bcnc  = cstrcat(ICBCDir,'bc.nc');
- ic1nc  = cstrcat(ICBCDir,'ic.nc');
- ic2nc  = cstrcat(RunDir,'UVinit.nc');
+ RunDir    = cstrcat(DynamoDir,'output/testing/');
+ ModelDir  = cstrcat(RunDir,'out/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ outdir    = cstrcat(DynamoDir,'plots/testing/');
+ dagnc     = cstrcat(ModelDir,'test_dag.nc');
+ rstnc     = cstrcat(ModelDir,'test_14400_rst.nc');
+ bcnc      = cstrcat(ICBCDir,'bc.nc');
+ ic1nc     = cstrcat(ICBCDir,'ic.nc');
+ ic2nc     = cstrcat(RunDir,'UVinit.nc');
  %
  % Add figure plotting comands to the PATH
- %ensureSkyllingstad1999;
  %
  %mergedagfiles = "ncrcat -O ";
  %mergedagfiles =  [mergedagfiles ModelDir "001_dag.nc "];
@@ -35,12 +35,13 @@ function LESsummary()
  %mergedagfiles =  [mergedagfiles ModelDir "testing_4_dag.nc "];
  %mergedagfiles =  [mergedagfiles "-o " ModelDir "dag.nc "];
  %unix(mergedagfiles)
- allfigs(outdir,dagnc,bcnc,ic1nc,ic2nc)
+ ensurepath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/")
+ allfigs(outdir,dagnc,bcnc,rstnc,ic1nc,ic2nc)
  % Remove the figure ploting commands from the PATH
- %removeSkyllingstad1999;
+ rmpath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/");
 end%function
 
-function allfigs(outdir,dagnc,bcnc,ic1nc,ic2nc)
+function allfigs(outdir,dagnc,bcnc,rstnc,ic1nc,ic2nc)
  %
  %% Preliminaries
  %% Get plot parameters
@@ -94,11 +95,13 @@ function allfigs(outdir,dagnc,bcnc,ic1nc,ic2nc)
  %imax = ceil(30*3600/dt);
  %tkeframes(dt,imax,outdir,dagnc,SPfile,pcval,pyflowscript);
 
+ wplot(rstnc,outdir)
+
 end%function
 
 function tkenc = tkeframes(dt,imax,outdir,dagnc,SPfile,pcval,pyflowscript);
  [dagpath,dagname,dagext] = fileparts(dagnc)
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
+ [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam(outdir);
  %for i=1:1
  % trange = [-dt,0]+dt*i;
  % obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
