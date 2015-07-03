@@ -63,11 +63,11 @@ for i=1:12
   nodat = nodat+sign(sum(isnan(T)+isnan(S)));
  end%if
  for j=2:6
-  Tisbad = find(isnan(T(j,:)));
-  Tisgood = find(~isnan(T(j,:)));
+  Tisbad      = find(isnan(T(j,:)));
+  Tisgood     = find(~isnan(T(j,:)));
   T(j,Tisbad) = interp1(T(1,Tisgood),T(j,Tisgood),T(1,Tisbad));
-  Sisbad = find(isnan(S(j,:)));
-  Sisgood = find(~isnan(S(j,:)));
+  Sisbad      = find(isnan(S(j,:)));
+  Sisgood     = find(~isnan(S(j,:)));
   S(j,Sisbad) = interp1(S(1,Sisgood),S(j,Sisgood),S(1,Sisbad));
  end%for
 # Calculate means
@@ -83,36 +83,15 @@ end%for
 idxbad = find(nodat>=maxbadmonth);
 Tmean(:,idxbad) = NaN;
 Smean(:,idxbad) = NaN;
-Tmean = Tmean/12;
-Smean = Smean/12;
-idxgood = find(nodat<maxbadmonth);
-Tmean = Tmean(:,idxgood);
-Smean = Smean(:,idxgood);
+Tmean           = Tmean/12;
+Smean           = Smean/12;
+idxgood         = find(nodat<maxbadmonth);
+Tmean           = Tmean(:,idxgood);
+Smean           = Smean(:,idxgood);
 findgsw;
 g = gsw_grav(0);
 Pbar   = gsw_p_from_z((Tmean(3,:)+Smean(3,:))/2,0);
 rhobar = gsw_rho(Smean(5,:),Tmean(5,:),Pbar);
-#Tmean = [Tmean,Tmean.-[360,0,0,0,0,0]'];
-#Smean = [Smean,Smean.-[360,0,0,0,0,0]'];
-subplot(3,1,1)
-plot(Tmean(1,:),Tmean(3,:),"r.",Smean(1,:),Smean(3,:),"b.")
-hold on
-plot(Tmean(1,:),Tmean(3,:)+Tmean(4,:),"r--",Smean(1,:),Smean(3,:)+Smean(4,:),"b--")
-plot(Tmean(1,:),Tmean(3,:)-Tmean(4,:),"r--",Smean(1,:),Smean(3,:)-Smean(4,:),"b--")
-axis([min(lons),max(lons),-300,0])
-xlabel("Longitude (deg)")
-ylabel("Depth (m)")
-hold off
-subplot(3,1,2)
-plot(Tmean(1,:),(g./rhobar).*Tmean(6,:)./Tmean(4,:),Smean(1,:),(g./rhobar).*Smean(6,:)./Smean(4,:))
-axis([min(lons),max(lons)])
-xlabel("Longitude")
-ylabel("Stratification (rad/s)^2")
-subplot(3,1,3)
-plot(Tmean(1,:),Tmean(6,:),Smean(1,:),Smean(6,:))
-axis([min(lons),max(lons)])
-xlabel("Longitude")
-ylabel("Density change (kg/m^3)")
 Tparams = zeros(4,length(lons));
 Sparams = zeros(4,length(lons));
 badparam = interp1(T(1,:),nodat,lons)
