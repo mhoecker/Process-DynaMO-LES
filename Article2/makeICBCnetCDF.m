@@ -23,15 +23,15 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  S0 = 35;
  dS = .2;
  if(nargin<5)
-  fluxes.JSW = [50,500];
-  fluxes.JLW = [-50,-50];
-  fluxes.JLA = [-100,-300];
-  fluxes.P = [0,50];
-  fluxes.Tx = [0,0.3];
-  fluxes.Ty = [0,0];
-  fluxes.Wl = [100,30];
-  fluxes.Wh = [fluxes.Wl(1)/100,fluxes.Wl(2)/10];
-  fluxes.Wd = 180*atan2(fluxes.Tx,fluxes.Ty)/pi;
+  fluxes.JSW = [100 ,  100];
+  fluxes.JLW = [-50 ,  -50];
+  fluxes.JLA = [-10 , -300];
+  fluxes.P   = [0   ,    0];
+  fluxes.Tx  = [0   ,   .5];
+  fluxes.Ty  = [0   ,    0];
+  fluxes.Wl  = [100 ,  30];
+  fluxes.Wh  = [fluxes.Wl(1)/100,fluxes.Wl(2)/10];
+  fluxes.Wd  = 180*atan2(fluxes.Tx,fluxes.Ty)/pi;
  end%if
  # If no parameters are given use dfault values for U profile
  if(nargin<2)
@@ -50,16 +50,17 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  T = pofz(z,Tparams);
  S = pofz(z,Sparams);
  #
- J_sw = (fluxes.JSW(2)*storm+fluxes.JSW(1)*nostorm).*cos(2*pi*t/(3600*24));
- J_sw = J_sw.*(1+sign(J_sw))/2;
- J_lw = -50*storm -50*nostorm;
- J_la = -300*storm-100*nostorm;
- P = 5*storm;
- tau_x = fluxes.Tx(1)*nostorm+fluxes.Tx(2)*storm;
- tau_y = fluxes.Ty(1)*nostorm+fluxes.Ty(2)*storm;
- W_l = fluxes.Wl(1)*nostorm+fluxes.Wl(2)*storm;
- W_h = fluxes.Wh(1)*nostorm+fluxes.Wh(2)*storm;
- W_d = fluxes.Wd(1)*nostorm+fluxes.Wd(2)*storm;
+ J_sw  = cos(2*pi*t/(3600*24));
+ J_sw  = J_sw.*(1+sign(J_sw))/2;
+ J_sw  =(fluxes.JSW(1)*nostorm + fluxes.JSW(2)*storm).*J_sw ;
+ J_la  = fluxes.JLA(1)*nostorm + fluxes.JLA(2)*storm;
+ J_lw  = fluxes.JLW(1)*nostorm + fluxes.JLW(2)*storm + J_la;
+ P     = fluxes.P(1)*nostorm   + fluxes.P(2)*storm;
+ tau_x = fluxes.Tx(1)*nostorm  + fluxes.Tx(2)*storm;
+ tau_y = fluxes.Ty(1)*nostorm  + fluxes.Ty(2)*storm;
+ W_l   = fluxes.Wl(1)*nostorm  + fluxes.Wl(2)*storm;
+ W_h   = fluxes.Wh(1)*nostorm  + fluxes.Wh(2)*storm;
+ W_d   = fluxes.Wd(1)*nostorm  + fluxes.Wd(2)*storm;
  #
  filename = [tmpdir "ICBC.cdf"];
  ncname = [outpath "UVinit.nc"];
