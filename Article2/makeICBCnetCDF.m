@@ -52,15 +52,15 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  #
  J_sw  = cos(2*pi*t/(3600*24));
  J_sw  = J_sw.*(1+sign(J_sw))/2;
- J_sw  =(fluxes.JSW(1)*nostorm + fluxes.JSW(2)*storm).*J_sw ;
- J_la  = fluxes.JLA(1)*nostorm + fluxes.JLA(2)*storm;
- J_lw  = fluxes.JLW(1)*nostorm + fluxes.JLW(2)*storm + J_la;
- P     = fluxes.P(1)*nostorm   + fluxes.P(2)*storm;
- tau_x = fluxes.Tx(1)*nostorm  + fluxes.Tx(2)*storm;
- tau_y = fluxes.Ty(1)*nostorm  + fluxes.Ty(2)*storm;
- W_l   = fluxes.Wl(1)*nostorm  + fluxes.Wl(2)*storm;
- W_h   = fluxes.Wh(1)*nostorm  + fluxes.Wh(2)*storm;
- W_d   = fluxes.Wd(1)*nostorm  + fluxes.Wd(2)*storm;
+ J_sw  =(fluxes.JSW(1) * nostorm + fluxes.JSW(2) * storm).*J_sw ;
+ J_la  = fluxes.JLA(1) * nostorm + fluxes.JLA(2) * storm;
+ J_lw  = fluxes.JLW(1) * nostorm + fluxes.JLW(2) * storm + J_la;
+ P     = fluxes.P(  1) * nostorm + fluxes.P(  2) * storm;
+ tau_x = fluxes.Tx( 1) * nostorm + fluxes.Tx( 2) * storm;
+ tau_y = fluxes.Ty( 1) * nostorm + fluxes.Ty( 2) * storm;
+ W_l   = fluxes.Wl( 1) * nostorm + fluxes.Wl( 2) * storm;
+ W_h   = fluxes.Wh( 1) * nostorm + fluxes.Wh( 2) * storm;
+ W_d   = fluxes.Wd( 1) * nostorm + fluxes.Wd( 2) * storm;
  #
  filename = [tmpdir "ICBC.cdf"];
  ncname = [outpath "UVinit.nc"];
