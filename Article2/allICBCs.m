@@ -21,7 +21,7 @@ Uparams
 %
 maxbadmonth = 2;
 % DYNAMO fluxes
-  dynamo.JSW = [50,500];
+  dynamo.JSW = [500,50];
   dynamo.JLW = [-50,-50];
   dynamo.JLA = [-100,-300];
   dynamo.P   = [0,50];
