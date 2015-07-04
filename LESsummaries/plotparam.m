@@ -16,8 +16,8 @@ function [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,abrev)
  useoctplot=0; % 1 plot using octave syntax, 0 use gnuplot script
  t0sim = 0; % simulated start time is 0
  dsim = 128; % Maximum simulation depth
- dplt = dsim*.8; % Maximum depth of plots
- tfsim = t0sim+12./(24); % Simulated stop time 2011 yearday
+ dplt = dsim*1.0; % Maximum depth of plots
+ tfsim = t0sim+1./(24); % Simulated stop time 2011 yearday
  palcolors = 11; % number of colors in the color bar palette
  trange = [t0sim,tfsim];
  if((useoctplot==0))
