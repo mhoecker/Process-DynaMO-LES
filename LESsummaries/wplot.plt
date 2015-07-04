@@ -4,8 +4,10 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
-xytic = 128
-ijtic = 64
+xytic = 64
+ijtic = 128
+set zrange [-128:0]
+set ztics out 32 offset 2,0
 unset logscale cb
 unset mcbtics
 cbmax = .05
@@ -55,8 +57,6 @@ set label 1 "b" at screen lloc(col), tloc(row-1)
 set parametric
 set xrange [0:2*xytic+1]
 set yrange [0:2*xytic+1]
-set zrange [-128:0]
-set ztics out 64 offset 2,0
 set xtics xytic offset 0,0
 set ytics xytic offset .5,0
 set xlabel "x [m]"
