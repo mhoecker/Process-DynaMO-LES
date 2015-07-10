@@ -106,7 +106,6 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
 set xlabel ""
-set key left bottom horizontal
 set cbrange [sfxmin:sfxmax]
 unset cbtics
 set cbtics ("-0.1" -1e-4 ,"0" 0, "+0.1" 1e-4)
@@ -133,21 +132,20 @@ set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set format x ""
 set xlabel ""
-set key left bottom horizontal
 set cbrange [sfxmin:sfxmax]
 unset cbtics
 set cbtics .2
 set autoscale cb
 set format cb "%g"
-set cblabel "S\n[psu]"
+set cblabel "S [psu]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
 set ylabel "z [m]"
-set label 1 "a"
+set label 1 "b"
 plot datdir.abrev."S.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 not, \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
-datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 not
 #
 row = nextrow(row)
 row = nextrow(row)
@@ -159,15 +157,15 @@ set xlabel "2011 UTC yearday"
 set yrange [0:.195]
 set ytics -1.2,.1,1.2
 set ylabel "Salt flux [psu mm/s]"
-set key horizontal
-set key top left
-set label 1 "b"
+set key right top
+set key vertical reverse Left at screen 1, screen tloc(row-1) samplen 1
+set label 1 "c"
 plot \
 datdir.abrev."SFC_ML_flx.dat" binary format="%f%f%f%f" u 1:($2*1e3) lw 2 lc rgbcolor "white" not, \
 datdir.abrev."SFC_ML_flx.dat" binary format="%f%f%f%f" u 1:($2*1e3) ls 13 title "Surface", \
 datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($3*1e3) lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($3*1e3) ls 11 not, \
+datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($3*1e3) ls 11 title "0.01 kg/m^3 ", \
 datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($4*1e3) lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($4*1e3) ls 12 not
+datdir.abrev."SFC_ML_flx.dat" binary form="%f%f%f%f" u 1:($4*1e3) ls 12 title "0.10 kg/m^3 "
 #
 unset multiplot
