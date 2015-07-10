@@ -173,12 +173,15 @@ for i=1:Nvar
 #Declare global attributes
  fprintf(cdlid,':source = "%s";\n',[dagnc]);
  fprintf(cdlid,':Function_called = "%s";\n',mfilename);
+ fclose(cdlid)
 
 
- writeCDFdata(cdlid,val,vars);
- %"wrote CDF file"
+ writeCDFdata(cdffile,val,vars);
+% "wrote CDF file"
  unix(['ncgen -k1 -x -b ' cdffile ' -o ' outnc '&& rm ' cdffile]);
+% "Generateg netcdf file"
  unix(['ncwa -O -a z ' outnc ' ' outzavg]);
+% "Taking z avwerage"
  unix(['ncwa -O -a z,t ' outnc ' ' outAVG]);
  AVG = netcdf(outAVG,'r');
  ZVG = netcdf(outzavg,'r');
