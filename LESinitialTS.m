@@ -25,7 +25,7 @@ function fileout = LESinitialTS(filename,outloc,maxdepth)
  Tc = Tc(idxgood);
  Sa = Sa(idxgood);
  P = P(idxgood);
- Sp = gsw_SP_from_SA(Sa,P,80.5,0);
+ Sp = gsw_SP_from_SA(Sa,0,80.5,0);
  ncclose(nc);
  #
  outname = [outloc "ts_profile"];
