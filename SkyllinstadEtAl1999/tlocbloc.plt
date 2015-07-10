@@ -9,7 +9,7 @@ if(exists('rows')) vskip = tloc(0)-tloc(1)
 if(exists('rows')) cbhig = vskip-vgap
 nextrow(r) = (r+1)%rows
 # Horizontal Spacing
-rlocmax = .78
+rlocmax = .80
 cbwid = .1*(1-rlocmax)
 cbgap = .5*cbwid
 llocmin = .15
