@@ -16,12 +16,12 @@ function LESsummary()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- RunDir    = cstrcat(DynamoDir,'output/CompareRuns/080.5DYNAMO/');
+ RunDir    = cstrcat(DynamoDir,'output/testing/');
  ModelDir  = cstrcat(RunDir,'out/');
  ICBCDir   = cstrcat(RunDir,'data/');
- outdir    = cstrcat(DynamoDir,'plots/wartCompare/080.5DYNAMO/');
- dagnc     = cstrcat(ModelDir,'20150702_dag.nc');
- rstnc     = cstrcat(ModelDir,'20150702_600_rst.nc');
+ outdir    = cstrcat(DynamoDir,'plots/testing/');
+ dagnc     = cstrcat(ModelDir,'test_dag.nc');
+ rstnc     = cstrcat(ModelDir,'test_1200_rst.nc');
  bcnc      = cstrcat(ICBCDir,'bc.nc');
  ic1nc     = cstrcat(ICBCDir,'ic.nc');
  ic2nc     = cstrcat(RunDir,'UVinit.nc');

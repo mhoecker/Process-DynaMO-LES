@@ -41,7 +41,7 @@ stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
 dtkemax = (STATS_up_quartile>dtkemax)? STATS_up_quartile : dtkemax
 dtkemax = (abs(STATS_lo_quartile)>dtkemax)? abs(STATS_lo_quartile) : dtkemax
 #
-dtkemax = 2*dtkemax
+dtkemax = (dtkemax>0) ? 2*dtkemax : 1
 dtkemin = -dtkemax
 #
 field = "wtke"
@@ -57,7 +57,7 @@ stats datdir.abrev.field.".dat" binary matrix u 3 nooutput
 Ftkemax = (STATS_up_quartile>Ftkemax)? STATS_up_quartile : Ftkemax
 Ftkemax = (abs(STATS_lo_quartile)>Ftkemax)? abs(STATS_lo_quartile) : Ftkemax
 #
-Ftkemax = 2*Ftkemax
+Ftkemax = (Ftkemax>0) ? 2*Ftkemax : 1
 Ftkemin = -Ftkemax
 #
 set cbrange [dtkemin:dtkemax]

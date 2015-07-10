@@ -6,26 +6,27 @@ function wplot(rstfile,outdir)
  if(nargin<2)
   outdir = [DynamoDir, 'plots/wartCompare/080.5DYNAMO_small/'];
  end%if
- zlevels = -[5,30,60];
- xlevels = [0.5,63.5,127.5];
- ylevels = xlevels;
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir] = plotparam(outdir,"w");
  nc = netcdf(rstfile,'r');
  time = t0sim+nc{"time"}(:)/(24.0*60*60);
  zfull = nc{"zw"}(:);
- dz = mean(diff(zfull));
+ dz = mean(abs(diff(zfull)));
+ zfull = abs(zfull)-length(zfull)*dz;
  y = nc{"yu"}(:);
  x = nc{"xw"}(:);
  Nx = length(x);
  Ny = length(y);
+ Nz = length(zfull);
+ xlevels = [x(1),x(floor(Nx/2)),x(Nx)];
+ ylevels = xlevels;
+ zlevels = [-5,zfull(floor(Nz/2)),zfull(Nz)];
  Nz = length(zlevels);
  Nt = length(time);
  z = [];
- zfull = abs(zfull)-length(zfull)*dz;
  for i=1:Nz
-  xidx = find(abs(x-xlevels(i))<dz,1);
-  yidx = find(abs(y-ylevels(i))<dz,1);
-  zidx = find(abs(zfull-zlevels(i))<dz,1)
+  xidx = find(abs(x     - xlevels(i))<dz,1);
+  yidx = find(abs(y     - ylevels(i))<dz,1);
+  zidx = find(abs(zfull - zlevels(i))<dz,1);
   z = [z,zfull(zidx)];
   for j=1:Nt
    u = squeeze(nc{"um"}(j,zidx,:,:));

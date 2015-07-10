@@ -4,9 +4,10 @@ row = 0
 cols = 1
 col = 0
 load scriptdir."tlocbloc.plt"
-xytic = 64
-ijtic = 128
-set zrange [-128:0]
+xytic = 16
+ijtic = 16
+Ncpu = 1
+set zrange [-2*xytic/sqrt(Ncpu):0]
 set ztics out 32 offset 2,0
 unset logscale cb
 unset mcbtics

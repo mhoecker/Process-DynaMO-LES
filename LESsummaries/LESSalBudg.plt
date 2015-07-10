@@ -23,6 +23,7 @@ sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
 #sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
 #
 #sfmax = 1e-6
+sfxmax = (sfxmax>0) ? 2*sfxmax : 1
 sfxmin = -sfxmax
 #
 Tdispmax = 50.0
@@ -109,6 +110,7 @@ sfxmax = 0
 stats datdir.abrev."ws.dat" binary matrix u 3 nooutput
 sfxmax = (STATS_max>sfxmax)? STATS_max : sfxmax
 sfxmax = (abs(STATS_min)>sfxmax)? abs(STATS_min) : sfxmax
+sfxmax = (sfxmax>0) ? 2*sfxmax : 1
 sfxmin = -sfxmax
 set cbrange [sfxmin:sfxmax]
 #
@@ -135,6 +137,30 @@ datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "w
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+# Salinity
+row = nextrow(row)
+load pltdir."negpal.plt"
+load pltdir.abrev."timedepth.plt"
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set format x ""
+set xlabel ""
+set key left bottom horizontal
+set cbrange [sfxmin:sfxmax]
+unset cbtics
+set cbtics 1
+set autoscale cb
+set format cb "%g"
+set cblabel "S\n[psu]"
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set ylabel "z [m]"
+set label 1 "a"
+plot datdir.abrev."S.dat" binary matrix w image notitle, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+#
 unset colorbox
 unset label 32
 set size ratio 0

@@ -85,7 +85,7 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  binmatrix(frac,Z,phiSPrank' ,[dir.dat "phiSPrank.dat"]);
  binarray(flatfrac,[SPflat,Ssqflat,Riflat,phiflat,RiSPflat,phiSPflat]',[dir.dat "flat.dat"]);
  % Histograms cutoff
- SPbins = 200;
+ SPbins = 50;
  NH = floor(Nflat./SPbins);
  HRi = [];
  HLRi = [];

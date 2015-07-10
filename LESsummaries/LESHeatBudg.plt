@@ -26,6 +26,7 @@ stats datdir.abrev."dTdt.dat"	 binary matrix u 3
 hfxmax = (STATS_max>hfxmax)? STATS_max : hfxmax
 hfxmax = (abs(STATS_min)>hfxmax)? abs(STATS_min) : hfxmax
 #
+hfxmax = (hfxmax>0) ? hfxmax*2 : 1
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -139,6 +140,33 @@ datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "w
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3",\
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+#
+row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set key left bottom horizontal
+unset y2tics
+unset y2label
+load pltdir."pospal.plt"
+load pltdir.abrev."timedepth.plt"
+unset colorbox
+unset logscale
+unset cbtics
+set cbtics auto
+set format cb "%3.0s%c"
+set cblabel "T [C]"
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set autoscale cb
+set ylabel "z [m]"
+set label 1 "b"
+set format x ""
+set xlabel ""
+plot datdir.abrev."d.dat" binary matrix w image notitle, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 not,\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 not
+#
 unset colorbox
 set size ratio 0
 # Heat flux
