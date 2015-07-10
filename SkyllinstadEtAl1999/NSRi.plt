@@ -77,7 +77,7 @@ row = nextrow(row)
 load pltdir."sympal.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row+1)
-set colorbox user origin rloc(col)+cbgap,bloc(row+1) size cbwid,2*cbhig
+set colorbox user origin rloc(col)+cbgap,bloc(row+1) size cbwid,tloc(row)-bloc(row+1)
 set format cb cbform
 set cblabel ""
 set palette maxcolors 8
