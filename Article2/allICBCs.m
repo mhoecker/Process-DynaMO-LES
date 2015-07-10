@@ -1,7 +1,7 @@
 # make a bunch of Initial conditions
 MIMOCfitpath = "/home/mhoecker/work/Dynamo/plots/MIMOC/dat/tanhfits";
-overalloutpath = "/home/mhoecker/work/Dynamo/output/CompareRuns/";
-RAMATAOfitpath = "/home/mhoecker/work/Dynamo/Observations//netCDF/monthly/";
+overalloutpath = "/home/mhoecker/work/Dynamo/runs/";
+RAMATAOfitpath = "/home/mhoecker/work/Dynamo/Observations/netCDF/monthly/";
 RAMATAOfitfile = [RAMATAOfitpath "RAMA_TAO.nc"];
 %
 %
@@ -108,6 +108,25 @@ Sparams(:,idxbadparam) = NaN;
 [lons,Uparams']
 for i=1:length(lons)
  outpath = [overalloutpath num2str(lons(i),"%005.1f")];
- makeICBCnetCDF([outpath "DYNAMO/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
- makeICBCnetCDF([outpath "TOGACOARE/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
+ DYNAMOdir = [outpath "DYNAMO"];
+ DYNAMOdata = [DYNAMOdir "/data"];
+ TOGACOAREdir = [outpath "TOGACOARE"];
+ TOGACOAREdata = [TOGACOAREdir "/data"];
+ nancount = sum(isnan(Uparams(:,i)+Tparams(:,i)+Sparams(:,i)))
+ if(nancount==0)
+  if(exist(DYNAMOdir,"dir")==0)
+   unix(["mkdir " DYNAMOdir]);
+  end%if
+  if(exist(TOGACOAREdir,"dir")==0)
+   unix(["mkdir " TOGACOAREdir]);
+  end%if
+  if(exist(DYNAMOdata,"dir")==0)
+   unix(["mkdir " DYNAMOdata]);
+  end%if
+  if(exist(TOGACOAREdata,"dir")==0)
+   unix(["mkdir " TOGACOAREdata]);
+  end%if
+  makeICBCnetCDF([outpath "DYNAMO/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
+  makeICBCnetCDF([outpath "TOGACOARE/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
+ end%if
 end%for

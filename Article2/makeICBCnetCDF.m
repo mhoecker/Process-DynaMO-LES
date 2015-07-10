@@ -5,33 +5,33 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  end%if
  #
  #
- z = -300:1:0; % meters
+ z = -300.0:1.0:0.0; % meters
  t = 0:.5:36;    % hours
  # Start the storm after 3 hours
  storm = (1+tanh(t-3))/2;
  nostorm = 1-storm;
  #Shape parameters for default tanh profiles
- zmid = -50;
- dz = 30;
+ zmid = -15.0;
+ dz   =   5.0;
  # Velocity scale
- dU = .3;
- U0 = dU;
+ dU   = 0.0;
+ U0   = dU;
  # Temperature scale and offset
- T0 = 20.5;
- dT = 8;
+ T0   = 20.0;
+ dT   = 5.0;
  # Salinity scale and offset
- S0 = 35;
- dS = .2;
+ S0   = 35.0;
+ dS   = -0.5;
  if(nargin<5)
-  fluxes.JSW = [100 ,  100];
-  fluxes.JLW = [-50 ,  -50];
-  fluxes.JLA = [-10 , -300];
-  fluxes.P   = [0   ,    0];
-  fluxes.Tx  = [0   ,   .5];
-  fluxes.Ty  = [0   ,    0];
-  fluxes.Wl  = [100 ,  30];
-  fluxes.Wh  = [fluxes.Wl(1)/100,fluxes.Wl(2)/10];
-  fluxes.Wd  = 180*atan2(fluxes.Tx,fluxes.Ty)/pi;
+  fluxes.JSW = [20.0,20.0];
+  fluxes.JLW = [-10.0,-10.0];
+  fluxes.JLA = [-10.0,-10.0];
+  fluxes.P   = [0.5,0.5];
+  fluxes.Tx  = [0.01,0.01];
+  fluxes.Ty  = [0.0,0.0];
+  fluxes.Wl  = [10,10];
+  fluxes.Wh  = [0.2,0.2];
+  fluxes.Wd  = atan2(fluxes.Tx,fluxes.Ty)*180.0/pi
  end%if
  # If no parameters are given use dfault values for U profile
  if(nargin<2)
@@ -50,11 +50,11 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  T = pofz(z,Tparams);
  S = pofz(z,Sparams);
  #
- J_sw  = cos(2*pi*t/(3600*24));
+ J_sw  = cos(2*pi*t/24);
  J_sw  = J_sw.*(1+sign(J_sw))/2;
  J_sw  =(fluxes.JSW(1) * nostorm + fluxes.JSW(2) * storm).*J_sw ;
  J_la  = fluxes.JLA(1) * nostorm + fluxes.JLA(2) * storm;
- J_lw  = fluxes.JLW(1) * nostorm + fluxes.JLW(2) * storm + J_la;
+ J_lw  = fluxes.JLW(1) * nostorm + fluxes.JLW(2) * storm -J_la;
  P     = fluxes.P(  1) * nostorm + fluxes.P(  2) * storm;
  tau_x = fluxes.Tx( 1) * nostorm + fluxes.Tx( 2) * storm;
  tau_y = fluxes.Ty( 1) * nostorm + fluxes.Ty( 2) * storm;
