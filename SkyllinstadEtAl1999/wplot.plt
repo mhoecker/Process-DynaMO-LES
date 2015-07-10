@@ -29,6 +29,7 @@ set ytics  0,.3,.6
 set y2range [0:.9]
 set y2tics 0,.4,.8
 set x2tics (328.67) offset 0,-.5
+set xlabel "2011 UTC yearday"
 unset xzeroaxis
 set key horizontal at graph 1,0 bottom Right
 set parametric
