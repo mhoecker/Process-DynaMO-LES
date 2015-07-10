@@ -34,6 +34,27 @@ unset colorbox
 set size ratio 0
 #
 row = nextrow(row)
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+load pltdir."pospal.plt"
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set cbrange [0:1.2]
+set cbtics 0.6
+set format cb "%g"
+set cblabel "u (m/s)"
+set xtics format ""
+set label 1 "b"
+set key b r
+plot \
+datdir.abrev."u_ave.dat" binary matrix u 1:2:3 w image not,\
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 not, \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 not
+unset colorbox
+#
+#
+row = nextrow(row)
 row = nextrow(row)
 set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
@@ -41,7 +62,7 @@ load pltdir."sympalnan.plt"
 set xtics format "%g"
 set xlabel "2011 UTC yearday"
 load pltdir."sympal.plt"
-set label 1 "b"
+set label 1 "c"
 set autoscale y
 set ytics auto
 set yrange [-5.5:0]

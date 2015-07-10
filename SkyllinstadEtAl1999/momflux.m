@@ -45,6 +45,7 @@ function momflux(dagnc,bcdat,outdir)
  binarray(t0sim+tdag'/(24*3600),[MLD2,MLflx2]',[dir.dat abrev "ML2.dat"]);
  binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar1.zzu',ReyFlxDiv,[dir.dat abrev "duwdz.dat"]);
  binmatrix(t0sim+dagvar3.time'/(24*3600),-dagvar1.zzu',ReyFlx,[dir.dat abrev "uw.dat"]);
+ binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',dagvar1.u_ave',[dir.dat abrev "u_ave.dat"]);
  binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',dudt,[dir.dat abrev "dudt.dat"]);
  binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',diff,[dir.dat abrev "ddzkmddzu.dat"]);
  binmatrix(t0sim+dagvar1.time'/(24*3600),-dagvar1.zzu',rem,[dir.dat abrev "rem.dat"]);

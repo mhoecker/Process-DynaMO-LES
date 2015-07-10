@@ -125,6 +125,30 @@ unset colorbox
 unset label 32
 set size ratio 0
 #
+# Salinity
+row = nextrow(row)
+load pltdir."negpal.plt"
+load pltdir.abrev."timedepth.plt"
+set tmargin at screen tloc(row)
+set bmargin at screen bloc(row)
+set format x ""
+set xlabel ""
+set key left bottom horizontal
+set cbrange [sfxmin:sfxmax]
+unset cbtics
+set cbtics .2
+set autoscale cb
+set format cb "%g"
+set cblabel "S\n[psu]"
+set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
+set ylabel "z [m]"
+set label 1 "a"
+plot datdir.abrev."S.dat" binary matrix w image notitle, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+#
 row = nextrow(row)
 row = nextrow(row)
 set tmargin at screen tloc(row-1)
