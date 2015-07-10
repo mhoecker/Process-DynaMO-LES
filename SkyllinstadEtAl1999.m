@@ -41,7 +41,7 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
  %% parse file names
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs] = plotparam();
  [dagpath,dagname,dagext] = fileparts(dagnc)
- pyflowscript = cstrcat(dirs.script,"tkeflow.py");
+ pyflowscript = [dirs.script,"tkeflow.py"];
  %
  %% Richardson Number Defined by Surface Flux
  %
@@ -49,11 +49,11 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Surface and dissipation observations
  %
- %ObsSurfEps(dagnc,bcdat,outdir);
+ ObsSurfEps(dagnc,bcdat,outdir);
 
  %% Initial Conditions
  %
- %initialTSUV(TSUVnc,outdir);
+ initialTSUV(TSUVnc,outdir);
 
  % T,S,U plots
  %
@@ -66,19 +66,19 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Heat flux comparison
 
- %Heatfluxcompare(dagnc,bcdat,outdir);
+ Heatfluxcompare(dagnc,bcdat,outdir);
 
  %% Heat Budget
 
- %HeatBudg(dagnc,bcdat,outdir);
+ HeatBudg(dagnc,bcdat,outdir);
 
  %% Salt Budget
 
- %SalBudg(dagnc,bcdat,outdir);
+ SalBudg(dagnc,bcdat,outdir);
 
  %% Momentum Budget
 
- %momflux(dagnc,bcdat,outdir)
+ momflux(dagnc,bcdat,outdir)
 
  %% Richardson # histogram
 
@@ -90,41 +90,12 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  wplot
 
- %% Hourly tke Budget
- %dt = 2*3600;
- %imax = ceil(30*3600/dt);
- %tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript);
+ [outtke,dagzavg,outAVG,outAVGdat] = tkeBudget(dagnc)
+ %dagzavg = [dagpath,'/' dagname 'tkezavg.nc'];
+ tkebzavg(dagzavg,dagnc,outdir);
 
 end%function
 
-function tkenc = tkeframes(dt,imax,sfxnc,chmnc,outdir,dagnc,pyflowscript)
- [dagpath,dagname,dagext] = fileparts(dagnc)
- [useoctplot,t0sim,dsim,tfsim,limitsfile,scriptdir] = plotparam();
- %for i=1:1
- % trange = [-dt,0]+dt*i;
- % obtrange = ([-dt,0]+dt*i)/(24*3600)+t0sim;
- % namesfx = ["hourlytke" num2str(i,"%02i")];
- % outnc = [outdir '/dat/' dagname namesfx dagext];
- % [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,outnc,trange);
- % [tscale,tunit] = timeunits(trange);
- % ti = num2str(trange(1)/tscale,"%03.1f");
- % tf = num2str(trange(2)/tscale,"%03.1f");
- % plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
- % unix(["python " pyflowscript ' ' outdat ' ' outdir "png/" namesfx " " plotlab]);
- %end%for
- %% Overall tke Budget
- trange = [0,dt*imax];
- tkenc = [outdir '/dat/' dagname "tke" dagext];
- [outtke,outzavg,outAVG,outdat] = tkeBudget(dagnc,tkenc,trange);
- [tscale,tunit] = timeunits(trange);
- ti = num2str(trange(1)/tscale,"%03.1f");
- tf = num2str(trange(2)/tscale,"%03.1f");
- [tkepath,tkename,tkeext] = fileparts(tkenc);
- tkezavgnc = [tkepath '/' tkename 'zavg' tkeext];
- tkebzavg(tkezavgnc,dagnc,outdir);
- plotlab = ["'tke\ Budget\ " ti tunit "<t<" tf tunit "'"];
- unix(["python " pyflowscript " " outdat " " outdir "png/full " plotlab]);
-end%function
 
 function [tscale,tunit] = timeunits(trange)
   if(diff(trange)<6)
