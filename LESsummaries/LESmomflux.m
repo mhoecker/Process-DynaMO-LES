@@ -1,11 +1,11 @@
-function LESmomflux(outdir,dagnc,bcnc)
+function LESmomflux(outdir,dagnc)
  abrev = "LESmomflux";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [0,24*3600*(tfsim-t0sim)];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  # [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet]
- sfcflx = SurfFlx(dagnc,bcnc,trange);
+ sfcflx = SurfFlx(dagnc,trange);
  # Extract parameters needed for momentum flux
  # reynolds stress
  # mean velocity profile (for shear)

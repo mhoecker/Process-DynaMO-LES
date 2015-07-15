@@ -32,12 +32,15 @@ datfile binary format=datform u 1:5 ls 12 title "meridional"
 row = nextrow(row)
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
-set key b r horizontal
+set key c r horizontal
 #set ytics 500 nomirror offset ytoff,0
 set ylabel "J_h [W/m^2]"
 set y2label "P-E [mm/h]" offset -yloff,0
-set y2tics out 10
-set y2range [-22:22]
+set y2tics out 20
+unset xzeroaxis
+set y2range [-22:62]
+set yrange [-110:710]
+set ytics 100
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
 set format x "%g"

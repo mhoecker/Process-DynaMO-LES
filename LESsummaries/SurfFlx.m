@@ -1,4 +1,4 @@
-function vals = SurfFlx(dagnc,bcnc,trange)
+function vals = SurfFlx(dagnc,trange)
  % this function replaces surfaceflux in post processing of model runs
  % it pulls values from the dag file instead of from surface observations
  % Get surface values from sea surface teperature and salinity

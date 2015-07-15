@@ -1,11 +1,11 @@
-function LESHeatBudg(outdir,dagnc,bcfile)
+function LESHeatBudg(outdir,dagnc)
 % figure 7 Heat Profiles
  abrev = "LESHeatBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- sfcflx = SurfFlx(dagnc,bcfile,(trange-t0sim)*24*3600);
+ sfcflx = SurfFlx(dagnc,(trange-t0sim)*24*3600);
  # [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet]
  # Extract simulation data
  [DAGheat] = DAGheatprofiles(dagnc,(trange-t0sim)*24*3600,zrange);

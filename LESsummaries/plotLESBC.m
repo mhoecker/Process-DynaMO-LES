@@ -1,4 +1,4 @@
-function plotLESBC(outdir,bcnc)
+function plotLESBC(outdir,icnc)
  %function plotLESBC(outdir,bcnc)
  %
  abrev = "LESBC";
@@ -6,9 +6,23 @@ function plotLESBC(outdir,bcnc)
  zrange = sort([0,-dsim]);
  trange = [t0sim,tfsim];
  % Extract Flux data
- field=["time";"lhf_top";"swf_top";"hf_top";"rain";"ustr_t";"vstr_t";"wave_l";"wave_h";"w_angle"];
- bc = bcvars(bcnc,field);
- bc.time = bc.time/3600/24;
+ % Read:
+ % time, lhf_top, swf_top, hf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle
+ % from UVinit file
+ %bc = bcvars(bcnc,field);
+ %bc.time = bc.time/3600/24;
+ icread         = netcdf(icnc,'r');
+ bc.time        = icread{"t"}(:)/24;
+ bc.lhf_top     = icread{"J_la"}(:);
+ bc.swf_top     = icread{"J_sw"}(:);
+ bc.hf_top      = icread{"J_lw"}(:);
+ bc.rain        = icread{"P"}(:);
+ bc.ustr_t      = icread{"tau_x"}(:);
+ bc.vstr_t      = icread{"tau_y"}(:);
+ bc.wave_l      = icread{"W_l"}(:);
+ bc.wave_h      = icread{"W_h"}(:);
+ bc.wave_angle  = icread{"W_d"}(:);
+ ncclose(icread)
  % Calculate Stokes Drift and wavenumber
  findgsw;
  g = gsw_grav(0);

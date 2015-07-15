@@ -1,4 +1,4 @@
-function LESHeatFlx(outdir,dagfile,bcfile)
+function LESHeatFlx(outdir,dagfile)
 #
 #
 # function Heatfluxcompare(dagfile,z,outfile)
@@ -56,7 +56,7 @@ function LESHeatFlx(outdir,dagfile,bcfile)
  Jsgs = rho.*Cp.*[internalvars.hf_ave];
  Jwt  = rho.*Cp.*[internalvars.wt_ave];
  # Get Honikker # from Observations
- fluxes = SurfFlx(dagfile,bcfile,(trange-t0sim)*24*3600);
+ fluxes = SurfFlx(dagfile,(trange-t0sim)*24*3600);
  fluxes.t=fluxes.t/(24*3600);
  if(useoctplot==1)
   # Rescale

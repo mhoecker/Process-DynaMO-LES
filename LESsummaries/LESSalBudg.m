@@ -1,11 +1,11 @@
-function LESSalBudg(outdir,dagnc,bcnc)
+function LESSalBudg(outdir,dagnc)
 % Salinity Flux Profiles
  abrev = "LESSalBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
  trange = [t0sim,tfsim]
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
- sfflx = SurfFlx(dagnc,bcnc,(trange-t0sim)*24*3600);
+ sfflx = SurfFlx(dagnc,(trange-t0sim)*24*3600);
  # [tsfx,stress,p,Jh,wdir,sst,sal,SolarNet]
  # Extract simulation data
  [DAGSal] = DAGSalprofiles(dagnc,(trange-t0sim)*24*3600,zrange);

@@ -137,9 +137,9 @@ set format x ""
 set xlabel ""
 plot datdir.abrev."wt.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3",\
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 notitle,\
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not,\
-datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 notitle
 #
 row = nextrow(row)
 set tmargin at screen tloc(row)
@@ -180,15 +180,16 @@ set ytics auto
 set ylabel "Heat flux [W/m^2]"
 set key horizontal
 #set key opaque
-set key b r
-set label 1 "b"
+set key right top
+set key vertical reverse Left at screen 1, screen tloc(row-1) samplen 1
+set label 1 "c"
 set xlabel "2011 UTC yearday" offset 0,xloff
 plot \
 datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:2 lw 2 lc rgbcolor "white" not, \
 datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:2 ls 13 title "Surface", \
 datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:3 lw 2 lc rgbcolor "white" not, \
-datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:3 ls 11 not, \
+datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:3 ls 11 title "0.01 kg/m^3", \
 datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:4 lw 2 lc rgbcolor "white" not, \
-datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:4 ls 12 not
+datdir.abrev."Jh.dat" binary form="%float%float%float%float" u 1:4 ls 12 title "0.10 kg/m^3"
 #
 unset multiplot
