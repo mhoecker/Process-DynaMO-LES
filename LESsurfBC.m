@@ -13,6 +13,7 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  t = nc{'Yday'}(dateidx);
  s = min(t):avgtime:max(t);
  tmodel = (s-min(t))*24;
+ dtmodel = avgtime*24;
  shortw = -nc{'Solarup'}(dateidx)-nc{'Solardn'}(dateidx);
  shortw = meanfil(shortw,t,s,avgtime);
  %
@@ -32,7 +33,7 @@ function outname = LESsurfBC(filename,wantdates,outloc,avgtime,wavespecHL);
  latent = meanfil(latent,t,s,avgtime);
  %
  precip = nc{'P'}(dateidx);
- precip = meanfil(precip,t,s,avgtime);
+ precip = meanfil(precip,t,s,avgtime)*dtmodel;
  %
  Taux   = -nc{'stress'}(dateidx).*sin(nc{'Wdir'}(dateidx)*pi/180);
  Taux = meanfil(Taux,t,s,avgtime);

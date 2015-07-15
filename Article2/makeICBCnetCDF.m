@@ -1,7 +1,9 @@
 function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
-  tmpdir = "/home/mhoecker/tmp/";
+ tmpdir = "/home/mhoecker/tmp/";
  if(nargin<1)
   outpath = tmpdir;
+ else
+    if(exist(outpath,"dir")==0); unix(["mkdir " outpath]); end%if
  end%if
  #
  #
@@ -178,8 +180,9 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  fprintf(outid,' text\n');
  fprintf(outid,' \n');
  fprintf(outid,' swf_top, hf_top, lhf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle\n');
+ dthrs = abs(mean(diff(t)));
  for i=1:length(t);
-  fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',t(i),J_sw(i),J_lw(i),J_la(i),P(i),tau_x(i),tau_y(i),W_l(i),W_h(i),W_d(i))
+  fprintf(outid,'%f %f %f %f %f %f %f %f %f %f\n',t(i),J_sw(i),J_lw(i),J_la(i),P(i)*dthrs,tau_x(i),tau_y(i),W_l(i),W_h(i),W_d(i))
  end%for
  fclose(outid)
 end%function

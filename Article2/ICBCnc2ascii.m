@@ -46,12 +46,13 @@ function BCnc2ascii(ICBCfile,outloc)
  fprintf(outid,'Source File %s\n',ICBCfile);
  fprintf(outid,'Date %s \n',date);
  fprintf(outid,' swf_top, hf_top, lhf_top, rain, ustr_t, vstr_t, wave_l, wave_h, w_angle\n');
+ dthrs = abs(mean(diff(nc{"t"}(:))))/3600
  for i=1:length(nc{"t"}(:));
   fprintf(outid,'%f ',nc{"t"}(i)/3600);
   fprintf(outid,'%f ',nc{"J_sw"}(i));
   fprintf(outid,'%f ',nc{"J_lw"}(i));
   fprintf(outid,'%f ',nc{"J_la"}(i));
-  fprintf(outid,'%f ',nc{"P"}(i));
+  fprintf(outid,'%f ',nc{"P"}(i)*dthrs);
   fprintf(outid,'%f ',nc{"tau_x"}(i));
   fprintf(outid,'%f ',nc{"tau_y"}(i));
   fprintf(outid,'%f ',nc{"W_l"}(i));

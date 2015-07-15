@@ -16,15 +16,12 @@ function LESsummary()
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
  DynamoDir = '/home/mhoecker/work/Dynamo/';
- RunDir    = cstrcat(DynamoDir,'output/testing/');
- ModelDir  = cstrcat(RunDir,'out/');
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5TOGACOARE/');
+ outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
- outdir    = cstrcat(DynamoDir,'plots/testing/');
- dagnc     = cstrcat(ModelDir,'test_dag.nc');
- rstnc     = cstrcat(ModelDir,'test_1200_rst.nc');
- bcnc      = cstrcat(ICBCDir,'bc.nc');
- ic1nc     = cstrcat(ICBCDir,'ic.nc');
- ic2nc     = cstrcat(RunDir,'UVinit.nc');
+ icnc      = cstrcat(ICBCDir,'UVinit.nc');
+ ModelDir  = cstrcat(RunDir,'out/');
+ %rstnc     = cstrcat(ModelDir,'test_1200_rst.nc');
  %
  % Add figure plotting comands to the PATH
  %
@@ -36,67 +33,91 @@ function LESsummary()
  %mergedagfiles =  [mergedagfiles "-o " ModelDir "dag.nc "];
  %unix(mergedagfiles)
  ensurepath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/")
- allfigs(outdir,dagnc,bcnc,rstnc,ic1nc,ic2nc)
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5DYNAMO/');
+ outdir    = cstrcat(RunDir,'plots/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ icnc      = cstrcat(ICBCDir,'UVinit.nc');
+ ModelDir  = cstrcat(RunDir,'out/');
+ dagnc     = cstrcat(ModelDir,'dag.nc');
+ allfigs(outdir,icnc,dagnc)
+%
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5TOGACOARE/');
+ outdir    = cstrcat(RunDir,'plots/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ icnc      = cstrcat(ICBCDir,'UVinit.nc');
+ ModelDir  = cstrcat(RunDir,'out/');
+ dagnc     = cstrcat(ModelDir,'080_5tog_s-a_dag.nc');
+ allfigs(outdir,icnc,dagnc)
+%
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/090.0DYNAMO/');
+ outdir    = cstrcat(RunDir,'plots/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ icnc      = cstrcat(ICBCDir,'UVinit.nc');
+ ModelDir  = cstrcat(RunDir,'out/');
+ dagnc     = cstrcat(ModelDir,'090_0dyn_s-a_dag.nc');
+ allfigs(outdir,icnc,dagnc)
  % Remove the figure ploting commands from the PATH
  rmpath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/");
 end%function
 
-function allfigs(outdir,dagnc,bcnc,rstnc,ic1nc,ic2nc)
+function allfigs(outdir,icnc,dagnc,rstnc)
  %
  %% Preliminaries
  %% Get plot parameters
  %% parse file names
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dirs] = plotparam(outdir);
- [dagpath,dagname,dagext] = fileparts(dagnc);
  pyflowscript = cstrcat(dirs.script,"tkeflow.py");
  %
  %% Richardson Number Defined by Surface Flux
  %
  %figRi(sfxnc,outdir);
 
- %% Surface and dissipation observations
- %
- plotLESBC(outdir,bcnc);
-
  %% Initial Conditions
  %
- plotLESIC(outdir,ic1nc,ic2nc);
+ plotLESIC(outdir,icnc);
 
+ %% Surface and dissipation observations
+ %
+ plotLESBC(outdir,icnc);
+
+ if(nargin>2)
+  [dagpath,dagname,dagext] = fileparts(dagnc);
  %% Heat flux comparison
 
- LESHeatFlx(outdir,dagnc,bcnc);
+  LESHeatFlx(outdir,dagnc);
 
  %% Stability Criterion
  %
- LESNSRi(dagnc,outdir);
+  LESNSRi(dagnc,outdir);
 
  %% Heat Budget
 
- LESHeatBudg(outdir,dagnc,bcnc);
+  LESHeatBudg(outdir,dagnc);
 
  %% Salt Budget
 
- LESSalBudg(outdir,dagnc,bcnc);
+  LESSalBudg(outdir,dagnc);
 
  %% Momentum Budget
 
- LESmomflux(outdir,dagnc,bcnc)
+  LESmomflux(outdir,dagnc)
 
  %% Richardson # histogram
 
- [SPfile,pcval] = richistogram(dagnc,outdir);
+  [SPfile,pcval] = richistogram(dagnc,outdir);
 
  %% Turbulent Kinetic energy Budget plots
 
- tkeBudg(dagnc,outdir,SPfile,pcval);
+  tkeBudg(dagnc,outdir,SPfile,pcval);
 
  %% Hourly tke Budget
  %dt = 2*3600;
  %imax = ceil(30*3600/dt);
  %tkeframes(dt,imax,outdir,dagnc,SPfile,pcval,pyflowscript);
-
- wplot(rstnc,outdir)
-
+  if(nargin>3)
+%   wplot(rstnc,outdir)
+  end%if
+ end%if
 end%function
 
 function tkenc = tkeframes(dt,imax,outdir,dagnc,SPfile,pcval,pyflowscript);

@@ -24,12 +24,22 @@ maxbadmonth = 2;
   dynamo.JSW = [500,50];
   dynamo.JLW = [-50,-50];
   dynamo.JLA = [-100,-300];
-  dynamo.P   = [0,50];
+  dynamo.P   = [0,15];
   dynamo.Tx  = [0,0.3];
   dynamo.Ty  = [0,0];
   dynamo.Wl  = [100,30];
   dynamo.Wh  = [dynamo.Wl(1)/100,dynamo.Wl(2)/10];
   dynamo.Wd  = 180*atan2(dynamo.Tx,dynamo.Ty)/pi;
+% DYNAMO02 fluxes
+  dynamo02.JSW = [500,50];
+  dynamo02.JLW = [-50,-50];
+  dynamo02.JLA = [-100,-300];
+  dynamo02.P   = [0,20];
+  dynamo02.Tx  = [0,0.3];
+  dynamo02.Ty  = [0,0];
+  dynamo02.Wl  = [100,30];
+  dynamo02.Wh  = [dynamo.Wl(1)/100,dynamo.Wl(2)/10];
+  dynamo02.Wd  = 180*atan2(dynamo.Tx,dynamo.Ty)/pi;
 % TOGA/COARE fluxes
   togacoare.JSW = [700,700];
   togacoare.JLW = [-50,-50];
@@ -40,6 +50,16 @@ maxbadmonth = 2;
   togacoare.Wl  = [100,30];
   togacoare.Wh  = [togacoare.Wl(1)/100,togacoare.Wl(2)/10];
   togacoare.Wd  = 180*atan2(togacoare.Tx,togacoare.Ty)/pi;
+% TOGA/COARE2 fluxes
+  togacoare02.JSW = [700,700];
+  togacoare02.JLW = [-50,-50];
+  togacoare02.JLA = [-150,-150];
+  togacoare02.P   = [0,10];
+  togacoare02.Tx  = [0,0.1];
+  togacoare02.Ty  = [0,0];
+  togacoare02.Wl  = [100,30];
+  togacoare02.Wh  = [togacoare.Wl(1)/100,togacoare.Wl(2)/10];
+  togacoare02.Wd  = 180*atan2(togacoare.Tx,togacoare.Ty)/pi;
 
 for i=1:12
 # Read T parameters
@@ -108,25 +128,25 @@ Sparams(:,idxbadparam) = NaN;
 [lons,Uparams']
 for i=1:length(lons)
  outpath = [overalloutpath num2str(lons(i),"%005.1f")];
- DYNAMOdir = [outpath "DYNAMO"];
- DYNAMOdata = [DYNAMOdir "/data"];
- TOGACOAREdir = [outpath "TOGACOARE"];
- TOGACOAREdata = [TOGACOAREdir "/data"];
+ DYNAMOdir = [outpath "DYNAMO/"];
+ DYNAMO02dir = [outpath "DYNAMO02/"];
+ TOGACOAREdir = [outpath "TOGACOARE/"];
+ TOGACOARE02dir = [outpath "TOGACOARE02/"];
+ DYNAMOdata = [DYNAMOdir "data/"];
+ DYNAMO02data = [DYNAMO02dir "data/"];
+ TOGACOAREdata = [TOGACOAREdir "data/"];
+ TOGACOARE02data = [TOGACOARE02dir "data/"];
  nancount = sum(isnan(Uparams(:,i)+Tparams(:,i)+Sparams(:,i)))
  if(nancount==0)
-  if(exist(DYNAMOdir,"dir")==0)
-   unix(["mkdir " DYNAMOdir]);
-  end%if
-  if(exist(TOGACOAREdir,"dir")==0)
-   unix(["mkdir " TOGACOAREdir]);
-  end%if
-  if(exist(DYNAMOdata,"dir")==0)
-   unix(["mkdir " DYNAMOdata]);
-  end%if
-  if(exist(TOGACOAREdata,"dir")==0)
-   unix(["mkdir " TOGACOAREdata]);
-  end%if
-  makeICBCnetCDF([outpath "DYNAMO/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
-  makeICBCnetCDF([outpath "TOGACOARE/data/"],Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
+ % Create directories (if nececary)
+  if(exist(DYNAMOdir,"dir")==0);     unix(["mkdir " DYNAMOdir]);     end%if
+
+  if(exist(DYNAMO02dir,"dir")==0);   unix(["mkdir " DYNAMO02dir]);   end%if
+
+  if(exist(TOGACOAREdir,"dir")==0);  unix(["mkdir " TOGACOAREdir]);  end%if
+
+  makeICBCnetCDF(DYNAMOdata,Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo)
+  makeICBCnetCDF(DYNAMO02data,Uparams(:,i),Tparams(:,i),Sparams(:,i),dynamo02)
+  makeICBCnetCDF(TOGACOAREdata,Uparams(:,i),Tparams(:,i),Sparams(:,i),togacoare)
  end%if
 end%for
