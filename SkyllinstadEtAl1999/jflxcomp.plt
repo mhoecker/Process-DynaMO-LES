@@ -25,7 +25,7 @@ set y2tics scale .5 out 2
 set my2tics 4
 set y2tics nomirror offset -ytoff,0
 set y2range [0:5]
-set label 1 "a: Waves"
+set label 1 "a"
 altdatfile = datdir."ObsSurfEpsJhPrecipTxTyUk.dat"
 plot \
 altdatfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 11 axes x1y1 title "U^s"\
@@ -79,7 +79,7 @@ set format y "%g"
 set ytics -1.2,.4,2 nomirror
 set ytics add ("0" 0)
 set yrange [-1.19:0.5]
-set label 1 "c: Buoyancy Flux"
+set label 1 "c"
 #"Heat g{/Symbol a}J_h/{/Symbol r}C_P"
 #"Salt g{/Symbol b}S(E-P)"
 plot \

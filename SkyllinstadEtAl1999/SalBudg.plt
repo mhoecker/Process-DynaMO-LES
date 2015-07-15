@@ -117,9 +117,10 @@ set label 1 "a"
 set label 32 "*" front at first 328.8, -20
 plot datdir.abrev."ws.dat" binary matrix w image notitle, \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 title "0.01 kg/m^3", \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:2 ls 11 notitle, \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 lw 2 lc rgbcolor "white" notitle, \
-datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 title "0.10 kg/m^3"
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:2 ls 12 notitle
+
 unset colorbox
 unset label 32
 set size ratio 0
