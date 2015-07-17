@@ -33,7 +33,7 @@ function LESsummary()
  %mergedagfiles =  [mergedagfiles "-o " ModelDir "dag.nc "];
  %unix(mergedagfiles)
  ensurepath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/")
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5DYNAMO/');
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/080.5DYNAMO/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
@@ -41,7 +41,7 @@ function LESsummary()
  dagnc     = cstrcat(ModelDir,'dag.nc');
  allfigs(outdir,icnc,dagnc)
 %
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5TOGACOARE/');
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/080.5TOGACOARE/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
@@ -49,12 +49,28 @@ function LESsummary()
  dagnc     = cstrcat(ModelDir,'080_5tog_s-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
 %
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/090.0DYNAMO/');
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/090.0DYNAMO/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
  ModelDir  = cstrcat(RunDir,'out/');
  dagnc     = cstrcat(ModelDir,'090_0dyn_s-a_dag.nc');
+ allfigs(outdir,icnc,dagnc)
+%
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/FromEric20150716/080.5DYNAMO/');
+ outdir    = cstrcat(RunDir,'plots/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ icnc      = '';
+ ModelDir  = cstrcat(RunDir,'out/');
+ dagnc     = cstrcat(ModelDir,'080_5dyn_s-a_dag.nc');
+ allfigs(outdir,icnc,dagnc)
+%
+ RunDir    = cstrcat(DynamoDir,'output/EricCompare/FromEric20150716/156.0COARE/');
+ outdir    = cstrcat(RunDir,'plots/');
+ ICBCDir   = cstrcat(RunDir,'data/');
+ icnc      = '';
+ ModelDir  = cstrcat(RunDir,'out/');
+ dagnc     = cstrcat(ModelDir,'156_0tog_s-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
  % Remove the figure ploting commands from the PATH
  rmpath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/");
@@ -74,11 +90,13 @@ function allfigs(outdir,icnc,dagnc,rstnc)
 
  %% Initial Conditions
  %
- plotLESIC(outdir,icnc);
+ if(strcmp(icnc,'')!=1)
+  plotLESIC(outdir,icnc);
 
  %% Surface and dissipation observations
  %
- plotLESBC(outdir,icnc);
+  plotLESBC(outdir,icnc);
+ end%if
 
  if(nargin>2)
   [dagpath,dagname,dagext] = fileparts(dagnc);
