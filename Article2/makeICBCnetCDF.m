@@ -92,7 +92,7 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  J_sw  = J_sw.*(1+sign(J_sw))/2;
  J_sw  =(fluxes.JSW(1) * nostorm + fluxes.JSW(2) * storm).*J_sw ;
  J_la  = fluxes.JLA(1) * nostorm + fluxes.JLA(2) * storm;
- J_lw  = fluxes.JLW(1) * nostorm + fluxes.JLW(2) * storm -J_la;
+ J_lw  = fluxes.JLW(1) * nostorm + fluxes.JLW(2) * storm;
  P     = fluxes.P(  1) * nostorm + fluxes.P(  2) * storm;
  tau_x = fluxes.Tx( 1) * nostorm + fluxes.Tx( 2) * storm;
  tau_y = fluxes.Ty( 1) * nostorm + fluxes.Ty( 2) * storm;
