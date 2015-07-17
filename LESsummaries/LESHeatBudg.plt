@@ -176,6 +176,7 @@ set tmargin at screen tloc(row-1)
 set bmargin at screen bloc(row)
 set format x "%g"
 set autoscale y
+set yrange [-800:100]
 set ytics auto
 set ylabel "Heat flux [W/m^2]"
 set key horizontal

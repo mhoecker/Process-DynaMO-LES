@@ -173,18 +173,18 @@ load pltdir."sympalnan.plt"
 set format x "%g"
 set xlabel "2011 UTC yearday"
 set autoscale y
-set yrange [0:1]
+set yrange [0:.16]
 set ytics auto
 set ylabel "Salt flux [psu mm/s]"
 set key right top
 set key vertical reverse Left at screen 1, screen tloc(row-1) samplen 1
 set label 1 "b"
 plot \
-datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
-datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:3 ls 13 title "Surface", \
-datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
-datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:3 ls 11 title "0.01 kg/m^3 ", \
-datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:3 lw 2 lc rgbcolor "white" not, \
-datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:3 ls 12 title "0.10 kg/m^3 "
+datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:(1000*$3) lw 2 lc rgbcolor "white" not, \
+datdir.abrev."SFC.dat" binary form="%f%f%f" u 1:(1000*$3) ls 13 title "Surface", \
+datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:(1000*$3) lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML.dat"  binary form="%f%f%f" u 1:(1000*$3) ls 11 title "0.01 kg/m^3 ", \
+datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:(1000*$3) lw 2 lc rgbcolor "white" not, \
+datdir.abrev."ML2.dat" binary form="%f%f%f" u 1:(1000*$3) ls 12 title "0.10 kg/m^3 "
 #
 unset multiplot
