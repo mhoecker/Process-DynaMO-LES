@@ -1,6 +1,6 @@
 # make a bunch of Initial conditions
 MIMOCfitpath = "/home/mhoecker/work/Dynamo/plots/MIMOC/dat/tanhfits";
-overalloutpath = "/home/mhoecker/work/Dynamo/runs/";
+overalloutpath = "/home/mhoecker/work/Dynamo/output/EricCompare/20150717/";
 RAMATAOfitpath = "/home/mhoecker/work/Dynamo/Observations/netCDF/monthly/";
 RAMATAOfitfile = [RAMATAOfitpath "RAMA_TAO.nc"];
 %
@@ -27,8 +27,8 @@ maxbadmonth = 2;
   dynamo.P   = [0,15];
   dynamo.Tx  = [0,0.3];
   dynamo.Ty  = [0,0];
-  dynamo.Wl  = [100,30];
-  dynamo.Wh  = [dynamo.Wl(1)/100,dynamo.Wl(2)/10];
+  dynamo.Wl  = [1000,30.1];
+  dynamo.Wh  = [0,1.65];
   dynamo.Wd  = 180*atan2(dynamo.Tx,dynamo.Ty)/pi;
 % DYNAMO02 fluxes
   dynamo02.JSW = [500,50];
@@ -37,8 +37,8 @@ maxbadmonth = 2;
   dynamo02.P   = [0,20];
   dynamo02.Tx  = [0,0.3];
   dynamo02.Ty  = [0,0];
-  dynamo02.Wl  = [100,30];
-  dynamo02.Wh  = [dynamo.Wl(1)/100,dynamo.Wl(2)/10];
+  dynamo02.Wl  = [1000,30.1];
+  dynamo02.Wh  = [0,1.65];
   dynamo02.Wd  = 180*atan2(dynamo.Tx,dynamo.Ty)/pi;
 % TOGA/COARE fluxes
   togacoare.JSW = [700,700];
@@ -47,8 +47,8 @@ maxbadmonth = 2;
   togacoare.P   = [0,10];
   togacoare.Tx  = [0,0.2];
   togacoare.Ty  = [0,0];
-  togacoare.Wl  = [100,30];
-  togacoare.Wh  = [togacoare.Wl(1)/100,togacoare.Wl(2)/10];
+  togacoare.Wl  = [1000,7.5];
+  togacoare.Wh  = [0,0.4];
   togacoare.Wd  = 180*atan2(togacoare.Tx,togacoare.Ty)/pi;
 % TOGA/COARE2 fluxes
   togacoare02.JSW = [700,700];
@@ -57,8 +57,8 @@ maxbadmonth = 2;
   togacoare02.P   = [0,10];
   togacoare02.Tx  = [0,0.1];
   togacoare02.Ty  = [0,0];
-  togacoare02.Wl  = [100,30];
-  togacoare02.Wh  = [togacoare.Wl(1)/100,togacoare.Wl(2)/10];
+  togacoare02.Wl  = [1000,7.5];
+  togacoare02.Wh  = [0,0.4];
   togacoare02.Wd  = 180*atan2(togacoare.Tx,togacoare.Ty)/pi;
 
 for i=1:12
