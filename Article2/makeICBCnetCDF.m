@@ -10,7 +10,9 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  z = -300.0:1.0:0.0; % meters
  t = 0:.5:36;    % hours
  # Start the storm after 3 hours
- storm = (1+tanh(t-3))/2;
+ t_s = 3.0;
+ dt_s = 1.0;
+ storm = (1+tanh(t-t_s)/dt_s)/2;
  nostorm = 1-storm;
  #Shape parameters for default tanh profiles
  zmid = -15.0;
@@ -47,6 +49,40 @@ function makeICBCnetCDF(outpath,Uparams,Tparams,Sparams,fluxes)
  if(nargin<4)
   Sparams = [dS,zmid,dz,S0]
  end%if
+ %
+ % write out input parameters
+ textout = [outpath "prameters.txt"];
+ txtid   = fopen(textout,"w");
+ fprintf(txtid,'_\t_\t_\t_\t_\t_\t_\t_\n');
+ fprintf(txtid,'Parameters for run in = %s\n',outpath);
+ fprintf(txtid,'profile = amplitude*tanh((z-mid-depth)/abs(thickness))+mean\n',outpath);
+ fprintf(txtid,'Field\tamplitude\tmid-depth\tthickness\tmean\t\n');
+ fprintf(txtid,'U\t%f\t%f\t%f\t%f\n',Uparams(1),Uparams(2),Uparams(3),Uparams(4));
+ fprintf(txtid,'T\t%f\t%f\t%f\t%f\n',Tparams(1),Tparams(2),Tparams(3),Tparams(4));
+ fprintf(txtid,'S\t%f\t%f\t%f\t%f\n',Sparams(1),Sparams(2),Sparams(3),Sparams(4));
+ fprintf(txtid,'\n');
+ fprintf(txtid,'Start time t_0 = 12 hrs (noon)\n');
+ fprintf(txtid,'Storm start time t_s = noon + 3 hours\n');
+ fprintf(txtid,'Storm transition time dt_s = 1 hour\n');
+ fprintf(txtid,'Calm/Storm transition function A(t) = (1+tanh(t-t_s)/dt_s)/2\n');
+ fprintf(txtid,'Diurnal Short Wave Envelope A_sw(t) = max (sin((t+t0)/24 hrs),0)\n');
+ fprintf(txtid,'Flux = (1-A)*Calm + A*Storm\n');
+ fprintf(txtid,'Short Wave Flux = A_sw* ( (1-A)*Calm + A*Storm )\n');
+ fprintf(txtid,'Flux\t\tCalm\t\tStorm\n');
+ fprintf(txtid,'Short Wave\t%f\t%f\n',fluxes.JSW(1),fluxes.JSW(2));
+ fprintf(txtid,'Long Wave\t%f\t%f\n',fluxes.JLW(1),fluxes.JLW(2));
+ fprintf(txtid,'Latent Heat\t%f\t%f\n',fluxes.JLA(1),fluxes.JLA(2));
+ fprintf(txtid,'Precipitation\t%f\t%f\n',fluxes.P(1),fluxes.P(2));
+ fprintf(txtid,'Zonal Stress\t%f\t%f\n',fluxes.Tx(1),fluxes.Tx(2));
+ fprintf(txtid,'Merid. Stress\t%f\t%f\n',fluxes.Ty(1),fluxes.Ty(2));
+ fprintf(txtid,'Wave Length\t%f\t%f\n',fluxes.Wl(1),fluxes.Wl(2));
+ fprintf(txtid,'Wave Height\t%f\t%f\n',fluxes.Wh(1),fluxes.Wh(2));
+ fprintf(txtid,'Wave Direction\t%f\t%f\n',fluxes.Wd(1),fluxes.Wd(2));
+ fprintf(txtid,'Finished Parameters for run in = %s\n',outpath);
+ fprintf(txtid,'-\t-\t-\t-\t-\t-\t-\t-\n');
+ fclose(txtid);
+ %
+ %
  u = pofz(z,Uparams);
  v = 0*z;
  T = pofz(z,Tparams);
