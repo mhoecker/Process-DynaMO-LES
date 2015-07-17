@@ -49,7 +49,7 @@ function plotLESBC(outdir,icnc)
   print([outdir 'fig1.png'],'-dpng')
  else
   % Save Flux data
-  binarray(bc.time',[bc.hf_top+bc.lhf_top+bc.swf_top,bc.rain,bc.ustr_t,bc.vstr_t,bc.wave_h,bc.wave_l]',cstrcat(dirs.dat,abrev,".dat"));
+  binarray(bc.time',[-(bc.hf_top+bc.lhf_top+bc.swf_top),bc.rain,bc.ustr_t,bc.vstr_t,bc.wave_h,bc.wave_l]',cstrcat(dirs.dat,abrev,".dat"));
   if(nargin>3)
    trange
    dtplot = diff(trange);

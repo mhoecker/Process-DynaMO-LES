@@ -39,7 +39,7 @@ set y2label "P-E [mm/h]" offset -yloff,0
 set y2tics out 20
 unset xzeroaxis
 set y2range [-22:62]
-set yrange [-110:710]
+set yrange [-710:110]
 set ytics 100
 set y2tics nomirror offset -ytoff,0
 set label 1 "b"
