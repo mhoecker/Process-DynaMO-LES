@@ -15,12 +15,6 @@ function LESsummary()
 % Upper-ocean turbulence during a westerly wind burst:
 % A comparison of large-eddy simulation results and microstructure measurements
 % Journal of physical oceanography, 1999, 29, 5-28
- DynamoDir = '/home/mhoecker/work/Dynamo/';
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/080.5TOGACOARE/');
- outdir    = cstrcat(RunDir,'plots/');
- ICBCDir   = cstrcat(RunDir,'data/');
- icnc      = cstrcat(ICBCDir,'UVinit.nc');
- ModelDir  = cstrcat(RunDir,'out/');
  %rstnc     = cstrcat(ModelDir,'test_1200_rst.nc');
  %
  % Add figure plotting comands to the PATH
@@ -33,44 +27,38 @@ function LESsummary()
  %mergedagfiles =  [mergedagfiles "-o " ModelDir "dag.nc "];
  %unix(mergedagfiles)
  ensurepath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/")
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/080.5DYNAMO/');
+ DynamoDir = '/home/mhoecker/work/Dynamo/output/EricCompare/20150717/';
+ %
+ RunDir    = cstrcat(DynamoDir,'080.5DYNAMO/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
- ModelDir  = cstrcat(RunDir,'out/');
- dagnc     = cstrcat(ModelDir,'dag.nc');
+ ModelDir  = cstrcat(RunDir,'');
+ dagnc     = cstrcat(ModelDir,'080_5dyn-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
-%
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/080.5TOGACOARE/');
+ %
+ RunDir    = cstrcat(DynamoDir,'080.5TOGACOARE/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
- ModelDir  = cstrcat(RunDir,'out/');
- dagnc     = cstrcat(ModelDir,'080_5tog_s-a_dag.nc');
+ ModelDir  = cstrcat(RunDir,'');
+ dagnc     = cstrcat(ModelDir,'080_5tog-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
-%
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/bad01/090.0DYNAMO/');
+ %
+ RunDir    = cstrcat(DynamoDir,'090.0DYNAMO/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
  icnc      = cstrcat(ICBCDir,'UVinit.nc');
- ModelDir  = cstrcat(RunDir,'out/');
- dagnc     = cstrcat(ModelDir,'090_0dyn_s-a_dag.nc');
+ ModelDir  = cstrcat(RunDir,'');
+ dagnc     = cstrcat(ModelDir,'090_0dyn-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
-%
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/FromEric20150716/080.5DYNAMO/');
+ %
+ RunDir    = cstrcat(DynamoDir,'090.0TOGACOARE/');
  outdir    = cstrcat(RunDir,'plots/');
  ICBCDir   = cstrcat(RunDir,'data/');
- icnc      = '';
- ModelDir  = cstrcat(RunDir,'out/');
- dagnc     = cstrcat(ModelDir,'080_5dyn_s-a_dag.nc');
- allfigs(outdir,icnc,dagnc)
-%
- RunDir    = cstrcat(DynamoDir,'output/EricCompare/FromEric20150716/156.0COARE/');
- outdir    = cstrcat(RunDir,'plots/');
- ICBCDir   = cstrcat(RunDir,'data/');
- icnc      = '';
- ModelDir  = cstrcat(RunDir,'out/');
- dagnc     = cstrcat(ModelDir,'156_0tog_s-a_dag.nc');
+ icnc      = cstrcat(ICBCDir,'UVinit.nc');
+ ModelDir  = cstrcat(RunDir,'');
+ dagnc     = cstrcat(ModelDir,'090_0tog-a_dag.nc');
  allfigs(outdir,icnc,dagnc)
  % Remove the figure ploting commands from the PATH
  rmpath("/home/mhoecker/work/Dynamo/octavescripts/LESsummaries/");

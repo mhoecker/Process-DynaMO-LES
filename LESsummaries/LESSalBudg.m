@@ -2,7 +2,7 @@ function LESSalBudg(outdir,dagnc)
 % Salinity Flux Profiles
  abrev = "LESSalBudg";
  [useoctplot,t0sim,dsim,tfsim,limitsfile,dir]=plotparam(outdir,abrev);
- trange = [t0sim,tfsim]
+ trange = [t0sim,tfsim];
  zrange = sort([0,-dsim]);
  # Extract surface fluxes
  sfflx = SurfFlx(dagnc,(trange-t0sim)*24*3600);
@@ -57,7 +57,7 @@ function LESSalBudg(outdir,dagnc)
   datprfx = cstrcat(dir.dat,abrev);
   MLD0 = 0.*DAGSal.Yday;
   MLws0 = sfflx.Salflx;
-  binarray(DAGSal.Yday',[MLD0,MLws0]',cstrcat(datprfx,"SFC.dat"))
+  binarray(DAGSal.Yday',[MLD0,MLws0]',cstrcat(datprfx,"SFC.dat"));
   binarray(DAGSal.Yday',[MLD ,MLws ]',cstrcat(datprfx,"ML.dat"));
   binarray(DAGSal.Yday',[MLD2,MLws2]',cstrcat(datprfx,"ML2.dat"));
   binmatrix(DAGSal.Yday',DAGSal.zzw',DAGSal.sf_ave',cstrcat(datprfx,"sf.dat"));

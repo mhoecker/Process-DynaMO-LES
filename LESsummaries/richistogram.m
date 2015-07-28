@@ -102,15 +102,9 @@ function [SPcontour,pc] = richistogram(filename,outdir)
   NHi = floor(i*NH)+1;
   NHf = floor((i+1)*NH);
   SPcutval = [SPcutval,SPflat(NHi)];
-  HRii = histc(RiSPflat(NHi:NHf),Rirange);
-  HRii = HRii./sum(HRii);
-  HRi = [HRi,HRii];
   HLRii = histc(LRiSPflat(NHi:NHf),LRirange);
   HLRii = HLRii./sum(HLRii);
   HLRi = [HLRi,HLRii];
-  Hphii = histc(phiSPflat(NHi:NHf),phirange);
-  Hphii = Hphii./sum(Hphii);
-  Hphi = [Hphi,Hphii];
  end%for
  cntrfile = [dir.plt "SPcntr.plt"];
  fid = fopen(cntrfile,"w");
@@ -130,14 +124,6 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  fclose(fid);
  %
  % Do some sums of lower percentiel and upper percentile
- % distributions of Ri and phi
- %
- Hphi80p = sum(Hphi(:,j:end),2);
- Hphi80m = sum(Hphi(:,1:j-1),2);
- Nphi80 = sum(Hphi80p)+sum(Hphi80m);
- Hphi80p = Hphi80p./Nphi80;
- Hphi80m = Hphi80m./Nphi80;
- binarray(phirange,[Hphi80p,Hphi80m]',[dir.dat "HphiPM.dat"]);
  %
  HLRi80p = sum(HLRi(:,j:end),2);
  HLRi80m = sum(HLRi(:,1:j-1),2);
@@ -146,8 +132,6 @@ function [SPcontour,pc] = richistogram(filename,outdir)
  HLRi80m = HLRi80m./NLRi80;
  binarray(LRirange,[HLRi80p,HLRi80m]',[dir.dat "HLRiPM.dat"]);
  binmatrix(t,Z,SP',[dir.dat "SP.dat"])
- binmatrix(phirange,SPcutoff,Hphi',[dir.dat "Hphi.dat"]);
- binmatrix(Rirange,SPcutoff,HRi',[dir.dat "HRi.dat"]);
  binmatrix(LRirange,SPcutoff,HLRi',[dir.dat "HLRi.dat"]);
  unix(["gnuplot " limitsfile " " dir.plt "SPcntr.plt"])
  SPpcval = ['SPpc = ' num2str(pc) '\n'];

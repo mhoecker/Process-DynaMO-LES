@@ -7,20 +7,20 @@ function tkeBudg(dagnc,outdir,SPcontour,SPval)
  # Extract simulation data
  [tdag,zdag,tkeavg,tkePTra,tkeAdve,BuoyPr,tkeSGTr,ShPr,StDr,Diss] = DAGtkeprofiles(dagnc,(trange-t0sim)*24*3600,zrange);
  # convert to yearday
- tdag = t0sim+tdag/(24*3600);
+ tdag = t0sim+tdag./(24*3600);
  # calculate d/dt matrix in units of 1/sec
- ddtM = ddz(tdag)/(24*3600);
+ ddtM = ddz(tdag)./(24*3600);
  # calculate dz for integrals
  dz = trapdiff(zdag)';
  # Calculate the time rate of change of tke
  dtkedt = ddtM*tkeavg;
  # Calculate Integrated Fluxes
- wpi = cumsum(tkePTra,2).*dz;
+ wpi = bsxfun(@times,cumsum(tkePTra,2),dz);
  #idxtop = find(abs(zdag)<=abs(1))
  #zdag(idxtop)
  #wpi(idxtop) = NaN;
- wtke = -cumsum(tkeAdve,2).*dz;
- sgs = -cumsum(tkeSGTr,2).*dz;
+ wtke = -bsxfun(@times,cumsum(tkeAdve,2),dz);
+ sgs = -bsxfun(@times,cumsum(tkeSGTr,2),dz);
  # save files for gnuplot
  # tke
  binmatrix(tdag',zdag',tkeavg',[dir.dat abrev "tke.dat"]);
