@@ -28,6 +28,7 @@ function HeatBudg(dagnc,bcfile,outdir)
  #
  DAGheat.hf_ave = DAGheat.hf_ave*4e6;
  DAGheat.wt_ave = DAGheat.wt_ave*4e6;
+ %DAGheat.wt_ave = DAGheat.wt_ave+DAGheat.hf_ave;
  DAGheat.dTdt_ave = ddt*DAGheat.t_ave*4e6;
  DAGheat.dhfdz_ave = -DAGheat.hf_ave*ddzw';
  DAGheat.dwtdz_ave = -DAGheat.wt_ave*ddzw';

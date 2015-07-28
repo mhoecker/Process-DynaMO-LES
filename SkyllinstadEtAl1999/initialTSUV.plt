@@ -28,19 +28,19 @@ set ylabel "z [m]" offset yloff,0
 set border 7
 set key t c title "a"
 set xrange [Tmin:Tmax]
-set xtics in .5
+set xtics in .5,1
 set xtics rangelimited
 set x2range [Smin:Smax]
-set x2tics 35,.3,36 rangelimited
-set x2tics add (35.3,35.9)
+set x2tics 35.3,.2,35.8 rangelimited
+#set x2tics add (35.4,35.8)
 plot \
 datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 2:1 w lines axes x1y1 title "T" ls 11,\
 datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 3:1 w lines axes x2y1 title "S" ls 12
 unset label 35
 #
-col = nextcol(col)
-set lmargin at screen lloc(col)
-set rmargin at screen rloc(col)
+#col = nextcol(col)
+set lmargin at screen 1-rloc(col)
+set rmargin at screen 1-lloc(col)
 unset ytics
 set ylabel ""
 set y2label ""
@@ -52,7 +52,7 @@ set xlabel  "Vel. [m/s]" offset graph 0, char +xloff
 set xtics .2
 unset x2tics
 set yzeroaxis
-set key b c
+set key t c
 set key title "b"
 plot \
 datdir.abrev."TSUV.dat" binary format="%f%f%f%f%f" u 4:1 w lines axes x1y1 title "U "   ls 11 ,\

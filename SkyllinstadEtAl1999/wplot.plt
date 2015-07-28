@@ -28,16 +28,21 @@ set yrange [0:.6]
 set ytics  0,.3,.6
 set y2range [0:.9]
 set y2tics 0,.4,.8
-set x2tics (328.67) offset 0,-.5
-set xlabel "2011 UTC yearday"
+tw = 328.67
+#set x2tics ( "" 328.67) offset 0,-.5
+set arrow 1 from  tw, graph 1 to  tw, graph 0 nohead ls 0
+set x2label "2011 UTC yearday" offset 0,-.5
 unset xzeroaxis
 set key horizontal at graph 1,0 bottom Right
 set parametric
 set label 1 "a"
 plot \
 datdir."tkeBudgtkezavg.dat" binary format="%f%f" u 1:($2*1e3) ls 11 axis x1y2 t "tke",\
-datdir."ObsSurfEpsJhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:(sqrt($4**2+$5**2)) ls 12 t "|{/Symbol t}|",\
-328.67,t lt 0 not
+datdir."ObsSurfEpsJhPrecipTxTyUk.dat" binary format="%f%f%f%f%f%f%f" u 1:(sqrt($4**2+$5**2)) ls 12 t "|{/Symbol t}|"
+#,\
+#328.67,t lt 0 not
+unset x2label
+unset arrow 1
 
 row=1
 set tmargin at screen tloc(row)
@@ -82,6 +87,7 @@ datdir.name.'xy010'.ti.'.dat' u 1:2:(-5):3 every :::255 binary matrix w image no
 datdir.name.'xz020'.ti.'.dat' u 1:(128):2:3 binary matrix w image not,\
 datdir.name.'xz010'.ti.'.dat' u 1:(000):2:3 binary matrix w image not,\
 datdir.name.'yz030'.ti.'.dat' u (256):1:2:3 every ::255 binary matrix w image not
+
 unset multiplot
 #
 #name = "tke"

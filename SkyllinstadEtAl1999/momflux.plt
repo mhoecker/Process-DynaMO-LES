@@ -62,21 +62,22 @@ load pltdir."sympalnan.plt"
 set xtics format "%g"
 set xlabel "2011 UTC yearday"
 load pltdir."sympal.plt"
-set label 1 "c"
 set autoscale y
 set ytics auto
 set yrange [-5.5:0]
 set ytics -5,5,5
 set ylabel "u'w' [(cm/s)^2]"
+unset key
 set key right top
 set key vertical reverse Left at screen 1, screen tloc(row-1) samplen 1
+set label 1 "c"
 plot \
 datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10) w lines lw 2 lc rgbcolor "white"not, \
 datdir.abrev."ustr.dat" binary format="%f%f" u 1:(-$2*10) w lines ls 13 title "Surface", \
 datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) lw 2 lc rgbcolor "white"not, \
-datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 11 title "0.01kg/m^3 ", \
+datdir.abrev."ML.dat" binary form="%float%float%float" u 1:($3*1e4) ls 11 title "0.01 kg/m^3 ", \
 datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:($3*1e4)  lw 2 lc rgbcolor "white"not, \
-datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:($3*1e4) ls 12 title "0.10kg/m^3 "
+datdir.abrev."ML2.dat" binary form="%float%float%float" u 1:($3*1e4) ls 12 title "0.10 kg/m^3 "
 
 #
 #

@@ -245,7 +245,7 @@ load pltdir."grey.plt"
 set ytics 0,100 out nomirror
 set ylabel "SP percentile"
 set yrange [0:100]
-set cbrange [10**(-3):1]
+set cbrange [10**(-2):1]
 set logscale cb 10
 set cblabel "Abundance"
 set format cb "10^{%T}"
@@ -256,7 +256,9 @@ set ytics add (SPpc)
 set xlabel "Richardson Number"
 set colorbox
 set label 1 "b"
-plot datdir."HLRi.dat" binary matrix u ($1/2):(100*$2):3 w image not, SPpc lc 0 not
+plot datdir."HLRi.dat" binary matrix u ($1/2):(100*$2):3 w image not,\
+SPpc lc rgbcolor "white" lw 1 not,\
+SPpc lt 0 lc 0 not
 unset logscale cb
 unset multiplot
 unset logscale

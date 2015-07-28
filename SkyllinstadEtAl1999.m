@@ -49,11 +49,11 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Surface and dissipation observations
  %
- ObsSurfEps(dagnc,bcdat,outdir);
+ %ObsSurfEps(dagnc,bcdat,outdir);
 
  %% Initial Conditions
  %
- initialTSUV(TSUVnc,outdir);
+ %initialTSUV(TSUVnc,outdir);
 
  % T,S,U plots
  %
@@ -62,23 +62,23 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Stability Criterion
  %
- NSRi(adcpnc,sfxnc,dagnc,outdir);
+ %NSRi(adcpnc,sfxnc,dagnc,outdir);
 
  %% Heat flux comparison
 
- Heatfluxcompare(dagnc,bcdat,outdir);
+ %Heatfluxcompare(dagnc,bcdat,outdir);
 
  %% Heat Budget
 
- HeatBudg(dagnc,bcdat,outdir);
+ %HeatBudg(dagnc,bcdat,outdir);
 
  %% Salt Budget
 
- SalBudg(dagnc,bcdat,outdir);
+ %SalBudg(dagnc,bcdat,outdir);
 
  %% Momentum Budget
 
- momflux(dagnc,bcdat,outdir)
+ %momflux(dagnc,bcdat,outdir)
 
  %% Richardson # histogram
 
@@ -86,13 +86,13 @@ function allfigs(chmnc,adcpnc,sfxnc,dagnc,bcdat,TSUVnc,outdir)
 
  %% Turbulent Kinetic energy Budget plots
 
- tkeBudg(dagnc,outdir,SPfile,pcval);
+ %tkeBudg(dagnc,outdir,SPfile,pcval);
 
- wplot
+ %wplot
 
- [outtke,dagzavg,outAVG,outAVGdat] = tkeBudget(dagnc)
+ %[outtke,dagzavg,outAVG,outAVGdat] = tkeBudget(dagnc)
  %dagzavg = [dagpath,'/' dagname 'tkezavg.nc'];
- tkebzavg(dagzavg,dagnc,outdir);
+ %tkebzavg(dagzavg,dagnc,outdir);
 
 end%function
 

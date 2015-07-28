@@ -19,7 +19,7 @@ set key b c horizontal
 set format x ""
 set ytics 10 nomirror offset ytoff,0
 set yrange [0:27]
-set ylabel "U^s [cm/s]"
+set ylabel "u^s [cm/s]"
 set y2label "L [m]" offset -yloff,0
 set y2tics scale .5 out 2
 set my2tics 4
@@ -28,7 +28,7 @@ set y2range [0:5]
 set label 1 "a"
 altdatfile = datdir."ObsSurfEpsJhPrecipTxTyUk.dat"
 plot \
-altdatfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 11 axes x1y1 title "U^s"\
+altdatfile binary format="%f%f%f%f%f%f%f" u 1:(100*$6) ls 11 axes x1y1 title "u^s"\
 ,\
 altdatfile binary format="%f%f%f%f%f%f%f" u 1:($7/(4*pi)) ls 12 axes x1y2 title "L"\
 #,\

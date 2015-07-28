@@ -94,7 +94,7 @@ set cbtics auto
 # heat flux
 hdimax = hfxmax
 hdimin = -hfxmax
-hfxmax = 750
+hfxmax = 550
 hfxmin = -hfxmax
 #
 Tdispmax = 50.0
@@ -141,11 +141,11 @@ load pltdir.abrev."timedepth.plt"
 unset colorbox
 unset logscale
 unset cbtics
-set cbtics .6
+set cbtics 29.1,.5
+set cbrange [29.1:30.1]
 set format cb "%3.1s%c"
 set cblabel "T [C]"
 set colorbox user origin rloc(col)+cbgap,bloc(row) size cbwid,cbhig
-set autoscale cb
 set ylabel "z [m]"
 set label 1 "b"
 set format x ""
