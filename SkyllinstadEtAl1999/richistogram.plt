@@ -223,7 +223,7 @@ load pltdir."grey.plt"
 set tmargin at screen tloc(row)
 set bmargin at screen bloc(row)
 set key t r
-set ylabel "Abundance"
+set ylabel "Fraction"
 set xlabel ""
 set format x "%g"
 set yrange [0:.07]
@@ -247,7 +247,7 @@ set ylabel "SP percentile"
 set yrange [0:100]
 set cbrange [10**(-2):1]
 set logscale cb 10
-set cblabel "Abundance"
+set cblabel "Fraction"
 set format cb "10^{%T}"
 set format y "%g"
 set xtics ("1/4" -1,  "1" 0, "4" 1)
