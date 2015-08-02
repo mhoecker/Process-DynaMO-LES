@@ -108,6 +108,10 @@ function [dCTdz,dSAdz,Z,LAT,LON] = MIMOCdz(FD,ML)
  NsqSAML = zeros(size(ZML))+NaN;
  NsqML = zeros(size(ZML))+NaN;
  Nsqmax = zeros(size(ZML))+NaN;
+ dCTdzmyML = zeros(size(ZML))+NaN;
+ dSAdzmyML = zeros(size(ZML))+NaN;
+ NsqCTmyML = zeros(size(ZML))+NaN;
+ NsqSAmyML = zeros(size(ZML))+NaN;
  myML = zeros(size(ZML))+NaN;
 # For each Lat,Lon pair
  for i=1:NY
@@ -127,9 +131,10 @@ function [dCTdz,dSAdz,Z,LAT,LON] = MIMOCdz(FD,ML)
     idxmax = find(Nsqmax(i,j)==Nsqij(idxgood),1);
     imax = idxgood(idxmax);
     myML(i,j) = -Z(imax,i);
-   else
-    Nsqmax(i,j) = NaN;
-    myML(i,j) = NaN;
+    dCTdzmyML(i,j) = dCTdz(imax,i,j);
+    dSAdzmyML(i,j) = dSAdz(imax,i,j);
+    NsqCTmyML(i,j) = NsqCT(imax,i,j);
+    NsqSAmyML(i,j) = NsqSA(imax,i,j);
    end%if
   end%for
  end%for
@@ -140,6 +145,10 @@ function [dCTdz,dSAdz,Z,LAT,LON] = MIMOCdz(FD,ML)
  ncaddfloat(NsqML,'Nsq_ML',{'LATITUDE','LONGITUDE'},MLnc);
  ncaddfloat(myML,'Pycnocline',{'LATITUDE','LONGITUDE'},MLnc);
  ncaddfloat(Nsqmax,'Nsq_max',{'LATITUDE','LONGITUDE'},MLnc);
+ ncaddfloat(dCTdzmyML,'dCTdz_Nmax',{'LATITUDE','LONGITUDE'},MLnc);
+ ncaddfloat(dSAdzmyML,'dSAdz_Nmax',{'LATITUDE','LONGITUDE'},MLnc);
+ ncaddfloat(NsqCTmyML,'Nsq_CT_Nmax',{'LATITUDE','LONGITUDE'},MLnc);
+ ncaddfloat(NsqSAmyML,'Nsq_SA_Nmax',{'LATITUDE','LONGITUDE'},MLnc);
  ncclose(MLnc);
 end%function
 
